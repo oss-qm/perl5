@@ -1,0 +1,256 @@
+#!/usr/bin/make -f
+
+#
+# debian/rules for perl.
+#
+
+export SHELL = /bin/sh
+
+fullversion := $(shell /bin/sh debian/config.debian --full-version)
+version     := $(shell /bin/sh debian/config.debian --version)
+installtype := $(shell /bin/sh debian/config.debian --install-type)
+srcdir      := $(shell pwd)
+bin         = debian/tmp/usr/bin
+man         = debian/tmp/usr/share/man
+lib         = debian/tmp/usr/lib/perl/$(fullversion)
+share       = debian/tmp/usr/share/perl/$(fullversion)
+patches     = patches-applied
+
+# debhelper (see debian/debhelper/README)
+dh_dir = debian/debhelper
+dh = ./perl.static -I$(dh_dir)/lib:lib $(dh_dir)/bin/dh_
+
+# control file substitutions
+subst_upstream = -VUpstream-Version=$(fullversion)
+subst_perlapi  = -Vperlapi:Provides="$$(./perl.static debian/mkprovides)"
+
+export DH_COMPAT = 3
+export DH_AUTOSCRIPTDIR = $(srcdir)/$(dh_dir)/lib/autoscripts
+
+# run post compile tests
+test_target = test
+
+d_arch = $(shell dpkg --print-architecture)
+
+# Disable the test target for some architectures
+ifeq ($(d_arch),hppa)
+  test_target = 
+endif
+ifeq ($(d_arch),ia64)
+  test_target = 
+endif
+
+build: build-stamp
+install: install-stamp
+
+build-stamp: perl.static perl.debug libperl.so.$(fullversion)
+	touch $@
+
+config.over: debian/config.over
+	cp $? $@
+
+perl.static: config.over 
+	test -f debian/control # dh_testdir
+	-$(RM) libperl.so.* # must be built last
+	-$(MAKE) distclean
+	$(SHELL) debian/config.debian --static
+	$(MAKE) perl $(test_target)
+	mv perl perl.static
+	mv libperl.a libperl-static
+
+perl.debug: config.over 
+	test -f debian/control # dh_testdir
+	-$(RM) libperl.so.* # must be built last
+	-$(MAKE) distclean
+	$(SHELL) debian/config.debian --debug
+	$(MAKE) perl
+	mv perl perl.debug
+	mv libperl.a libperl-debug
+
+libperl.so.$(fullversion): config.over
+	test -f debian/control # dh_testdir
+	-$(MAKE) distclean
+	$(SHELL) debian/config.debian --shared
+	$(MAKE) SHRPLDFLAGS='$$(LDDLFLAGS) -Wl,-soname,libperl.so.$(version)' $@
+	ln -s libperl.so.$(fullversion) libperl.so.$(version)
+	$(MAKE) all $(test_target)
+
+clean:
+	test -f debian/control	# dh_testdir
+	test -w /etc/passwd	# dh_testroot
+	test -f $(patches)	# maintainer sanity check
+	-$(dh)clean || dh_clean	# the former needs perl.static, try dh_clean too
+	-$(MAKE) distclean
+	-rmdir lib/Sys # distclean doesn't remove this
+	-$(RM) config.over perl.static perl.debug libperl-static \
+	    libperl-debug libperl.so.* build-stamp install-stamp \
+	    debian/shlibs.local debian/perl-base.substvars
+
+install-stamp: build-stamp
+	$(SHELL) debian/checkperl
+	$(dh)testdir
+	$(dh)testroot
+	$(dh)clean
+	$(dh)installdirs
+
+	$(MAKE) install
+	# remove temporary prefix on install vars and switch man
+	# extensions to 1p and 3pm for vendor module installs
+	./perl.static -i -pe 's!^(install.*='\'')/.*/debian/tmp!$$1!;' \
+	    -e 's/^(man1ext=).*/$$1'\''1p'\''/;' \
+	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' $(lib)/Config.pm
+
+	# convert required header files
+	-cd /usr/include; $(srcdir)/perl.static -I $(srcdir)/lib \
+	    $(srcdir)/utils/h2ph -a -d $(srcdir)/$(lib) \
+	    `cat $(srcdir)/debian/headers`
+
+	# fix up generated headers
+	./perl.static debian/fixheaders $(lib)
+
+	# remove some cruft
+	$(RM) $(bin)/suidperl
+	$(RM) $(lib)/.packlist
+	$(RM) $(lib)/CORE/sperl.o
+	$(RM) $(share)/unicode/mktables.PL
+
+	# these are empty
+	$(RM) $(man)/man3/B::Stash.3perl
+	$(RM) $(man)/man3/warnings::register.3perl
+
+	# installperl copies the symlink as a file
+	$(RM) $(lib)/CORE/libperl.so.$(version)
+
+	# in libfilter-perl
+	$(RM) $(man)/man1/perlfilter.1
+	$(RM) $(lib)/pod/perlfilter.pod
+
+	# remove versioned binary, relink after dh_movefiles
+	$(RM) $(bin)/perl$(fullversion)
+
+	# relocate perl libraries and create links
+	cp libperl-static debian/tmp/usr/lib/libperl.a
+	cp libperl-debug debian/tmp/usr/lib/libdebugperl.a
+	mv $(lib)/CORE/libperl.so.$(fullversion) debian/tmp/usr/lib
+
+	ln -s libperl.so.$(fullversion) debian/tmp/usr/lib/libperl.so.$(version)
+	ln -s libperl.so.$(version) debian/tmp/usr/lib/libperl.so
+
+	# create shlibs.local
+	echo 'libperl $(version) libperl$(version) (= $${Source-Version})' \
+	    >debian/shlibs.local
+
+ifeq ($(installtype),static)
+	cp perl.static $(bin)/perl
+endif
+
+	# install debug binary as debugperl
+	cp perl.debug $(bin)/debugperl
+
+	# split packages
+	$(dh)movefiles
+
+	# move pod out of -base modules and into .pod files in -doc
+	./perl.static debian/splitdoc debian/perl-base
+
+	# re-create versioned link so that suidperl works
+	ln debian/perl-base/usr/bin/perl \
+	    debian/perl-base/usr/bin/perl$(fullversion)
+
+	# provide -version link
+	ln debian/perl-base/usr/bin/perl \
+	    debian/perl-base/usr/bin/perl-$(version)
+
+	# provide suidperl link
+	ln debian/perl-suid/usr/bin/sperl$(fullversion) \
+	    debian/perl-suid/usr/bin/suidperl
+
+	# move section 1 manual pages back to perl for installed programs
+	find debian/perl/usr/bin -type f -printf "%f\n" | \
+	    while read prog; \
+	    do \
+		mv debian/perl-doc/usr/share/man/man1/$$prog.1 \
+		   debian/perl/usr/share/man/man1 2>/dev/null; \
+	    done
+
+	# the diagnostics module needs perldiag.pod
+	mkdir debian/perl-modules/usr/share/perl/$(fullversion)/pod
+	mv debian/perl-doc/usr/share/perl/$(fullversion)/pod/perldiag.pod \
+	    debian/perl-modules/usr/share/perl/$(fullversion)/pod
+
+	# copy dummy perldoc to perl package
+	cp debian/perl.perldoc debian/perl/usr/bin/perldoc
+	chmod 755 debian/perl/usr/bin/perldoc
+
+	# install rename example to bin
+	cp eg/rename debian/perl/usr/bin
+	chmod 755 debian/perl/usr/bin/rename
+	./perl.static -Ilib debian/perl/usr/bin/pod2man --official \
+	    debian/perl/usr/bin/rename >debian/perl/usr/share/man/man1/rename.1
+
+	# create links
+	$(dh)link
+
+	# ensure that all file have been moved from debian/tmp
+	test `find debian/tmp ! -type d | wc -l` -eq 0
+
+	touch $@
+
+# Build architecture-independent files here.
+binary-indep: build-stamp install-stamp
+	$(dh)testdir
+	$(dh)testroot
+	$(dh)installdocs	-i
+	$(dh)installexamples	-pperl-doc
+	$(dh)installchangelogs	-plibcgi-fast-perl
+
+	# installed by perl-base
+	$(RM) debian/perl-doc/usr/share/doc/perl/copyright
+
+	$(dh)compress		-i
+	$(dh)fixperms		-i
+	$(dh)installdeb		-i
+	$(dh)gencontrol		-i -- $(subst_upstream)
+	$(dh)md5sums		-i
+	$(dh)builddeb		-i
+
+# Build architecture-dependent files here.
+binary-arch: build-stamp install-stamp
+	$(dh)testdir
+	$(dh)testroot
+	$(dh)installdocs	-a
+	$(dh)installchangelogs	-pperl-base
+	$(dh)installchangelogs	-pperl Changes
+
+	# installed by perl-base
+	$(RM) debian/perl/usr/share/doc/perl/changelog.Debian
+	$(RM) debian/perl/usr/share/doc/perl/copyright
+
+	$(dh)strip		-a -Xdebugperl
+	$(dh)compress		-a
+	$(dh)fixperms		-a
+
+	# suidperl needs to be...
+	chmod u+s debian/perl-suid/usr/bin/sperl$(fullversion)
+
+	$(dh)makeshlibs		-a -m$(version) -V
+	$(dh)installdeb		-a
+	$(dh)shlibdeps		-a -l/usr/lib:debian/libperl$(version)/usr/lib
+	$(dh)gencontrol		-a -- $(subst_perlapi)
+	$(dh)md5sums		-a
+	$(dh)builddeb		-a
+
+binary: binary-indep binary-arch
+
+# maintainer targets
+patch:
+	test ! -f $(patches) # already patched
+	ls debian/patches/* >$(patches)
+	cat `cat $(patches)` | patch -p1
+
+unpatch:
+	test -f $(patches) # not patched
+	cat `tac $(patches)` | patch -Rp1
+	-$(RM) $(patches)
+
+.PHONY: build clean binary-indep binary-arch binary install patch unpatch

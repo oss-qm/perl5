@@ -1,0 +1,47 @@
+Change 10531 by jhi@alpha on 2001/06/12 12:35:02
+
+	Subject: [PATCH 20010612.002] $^S almost entirely broken with 5.6.1
+	From: Abhijit Menon-Sen <ams@wiw.org>
+	Date: Tue, 12 Jun 2001 17:35:55 +0530
+	Message-ID: <20010612173555.A32426@lustre.linux.in>
+
+Affected files ...
+
+... //depot/perl/mg.c#179 edit
+... //depot/perl/t/op/magic.t#28 edit
+
+Differences ...
+
+[adjusted to 5.6.1]
+
+diff -Naur perl-5.6.1.orig/mg.c perl-5.6.1/mg.c
+--- perl-5.6.1.orig/mg.c	Thu Mar 22 16:05:02 2001
++++ perl-5.6.1/mg.c	Mon Dec  3 23:37:43 2001
+@@ -562,6 +562,8 @@
+ 		(void)SvOK_off(sv);
+ 	    else if (PL_in_eval)
+  		sv_setiv(sv, PL_in_eval & ~(EVAL_INREQUIRE));
++	    else
++		sv_setiv(sv, 0);
+ 	}
+ 	break;
+     case '\024':		/* ^T */
+diff -Naur perl-5.6.1.orig/t/op/magic.t perl-5.6.1/t/op/magic.t
+--- perl-5.6.1.orig/t/op/magic.t	Fri Mar 16 02:25:20 2001
++++ perl-5.6.1/t/op/magic.t	Mon Dec  3 23:39:39 2001
+@@ -27,7 +27,7 @@
+ $Is_Cygwin   = $^O eq 'cygwin';
+ $PERL = ($Is_MSWin32 ? '.\perl' : './perl');
+ 
+-print "1..35\n";
++print "1..37\n";
+ 
+ eval '$ENV{"FOO"} = "hi there";';	# check that ENV is inited inside eval
+ if ($Is_MSWin32) { ok 1, `cmd /x /c set FOO` eq "FOO=hi there\n"; }
+@@ -226,3 +226,6 @@
+     ok "34 # skipped: no caseless %ENV support",1;
+     ok "35 # skipped: no caseless %ENV support",1;
+ }
++
++ok 36, $^S == 0;
++eval { ok 37, $^S };

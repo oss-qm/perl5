@@ -1,0 +1,54 @@
+Re-order pod docs so that the NAME paragraph occurs before the 
+perl_archive_after method.
+
+diff -ur perl-5.6.1.orig/lib/ExtUtils/MM_OS2.pm perl-5.6.1/lib/ExtUtils/MM_OS2.pm
+--- perl-5.6.1.orig/lib/ExtUtils/MM_OS2.pm	Tue Mar  6 03:40:11 2001
++++ perl-5.6.1/lib/ExtUtils/MM_OS2.pm	Sun Jun 10 00:46:16 2001
+@@ -10,6 +10,26 @@
+ 
+ unshift @MM::ISA, 'ExtUtils::MM_OS2';
+ 
++=head1 NAME
++
++ExtUtils::MM_OS2 - methods to override UN*X behaviour in ExtUtils::MakeMaker
++
++=head1 SYNOPSIS
++
++ use ExtUtils::MM_OS2; # Done internally by ExtUtils::MakeMaker if needed
++
++=head1 DESCRIPTION
++
++See ExtUtils::MM_Unix for a documentation of the methods provided
++there. This package overrides the implementation of these methods, not
++the semantics.
++
++=head1 METHODS
++
++=over 4
++
++=cut
++
+ sub dlsyms {
+     my($self,%attribs) = @_;
+ 
+@@ -118,17 +138,8 @@
+ 1;
+ __END__
+ 
+-=head1 NAME
+-
+-ExtUtils::MM_OS2 - methods to override UN*X behaviour in ExtUtils::MakeMaker
+-
+-=head1 SYNOPSIS
+-
+- use ExtUtils::MM_OS2; # Done internally by ExtUtils::MakeMaker if needed
+-
+-=head1 DESCRIPTION
++=pod
+ 
+-See ExtUtils::MM_Unix for a documentation of the methods provided
+-there. This package overrides the implementation of these methods, not
+-the semantics.
++=back
+ 
++=cut

@@ -1,0 +1,27 @@
+Security update:  re-using a safe compartment can be a potential
+security issue.
+
+    http://www.iss.net/security_center/static/10574.php
+    http://use.perl.org/articles/02/10/06/1118222.shtml?tid=5
+
+diff -ur perl-5.6.1.orig/ext/Opcode/Safe.pm perl-5.6.1/ext/Opcode/Safe.pm
+--- perl-5.6.1.orig/ext/Opcode/Safe.pm	Fri Feb 23 13:57:54 2001
++++ perl-5.6.1/ext/Opcode/Safe.pm	Wed Nov 20 23:02:24 2002
+@@ -213,7 +213,7 @@
+     # Create anon sub ref in root of compartment.
+     # Uses a closure (on $expr) to pass in the code to be executed.
+     # (eval on one line to keep line numbers as expected by caller)
+-	my $evalcode = sprintf('package %s; sub { eval $expr; }', $root);
++	my $evalcode = sprintf('package %s; sub { @_ = (); eval $expr; }', $root);
+     my $evalsub;
+ 
+ 	if ($strict) { use strict; $evalsub = eval $evalcode; }
+@@ -227,7 +227,7 @@
+     my $root = $obj->{Root};
+ 
+     my $evalsub = eval
+-	    sprintf('package %s; sub { do $file }', $root);
++	    sprintf('package %s; sub { @_ = (); do $file }', $root);
+     return Opcode::_safe_call_sv($root, $obj->{Mask}, $evalsub);
+ }
+ 

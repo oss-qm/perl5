@@ -1,0 +1,2768 @@
+Update to podlators 1.18
+
+diff -Naur perl-5.6.1.orig/lib/Pod/Man.pm perl-5.6.1/lib/Pod/Man.pm
+--- perl-5.6.1.orig/lib/Pod/Man.pm	Fri Feb 23 13:57:55 2001
++++ perl-5.6.1/lib/Pod/Man.pm	Wed Nov 28 12:14:28 2001
+@@ -1,31 +1,32 @@
+ # Pod::Man -- Convert POD data to formatted *roff input.
+-# $Id: Man.pm,v 1.15 2001/02/10 06:50:22 eagle Exp $
++# $Id: Man.pm,v 1.30 2001/11/28 01:14:28 eagle Exp $
+ #
+ # Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>
+ #
+-# This program is free software; you can redistribute it and/or modify it
++# This program is free software; you may redistribute it and/or modify it
+ # under the same terms as Perl itself.
+ #
+-# This module is intended to be a replacement for the pod2man script
+-# distributed with versions of Perl prior to 5.6, and attempts to match its
+-# output except for some specific circumstances where other decisions seemed
+-# to produce better output.  It uses Pod::Parser and is designed to be easy
+-# to subclass.
++# This module translates POD documentation into *roff markup using the man
++# macro set, and is intended for converting POD documents written as Unix
++# manual pages to manual pages that can be read by the man(1) command.  It is
++# a replacement for the pod2man command distributed with versions of Perl
++# prior to 5.6.
+ #
+ # Perl core hackers, please note that this module is also separately
+ # maintained outside of the Perl core as part of the podlators.  Please send
+ # me any patches at the address above in addition to sending them to the
+ # standard Perl mailing lists.
+ 
+-############################################################################
++##############################################################################
+ # Modules and declarations
+-############################################################################
++##############################################################################
+ 
+ package Pod::Man;
+ 
+-require 5.004;
++require 5.005;
+ 
+ use Carp qw(carp croak);
++use Pod::ParseLink qw(parselink);
+ use Pod::Parser ();
+ 
+ use strict;
+@@ -34,23 +35,21 @@
+ 
+ @ISA = qw(Pod::Parser);
+ 
+-# Don't use the CVS revision as the version, since this module is also in
+-# Perl core and too many things could munge CVS magic revision strings.
+-# This number should ideally be the same as the CVS revision in podlators,
+-# however.
+-$VERSION = 1.15;
++# Don't use the CVS revision as the version, since this module is also in Perl
++# core and too many things could munge CVS magic revision strings.  This
++# number should ideally be the same as the CVS revision in podlators, however.
++$VERSION = 1.30;
+ 
+ 
+-############################################################################
++##############################################################################
+ # Preamble and *roff output tables
+-############################################################################
++##############################################################################
+ 
+ # The following is the static preamble which starts all *roff output we
+ # generate.  It's completely static except for the font to use as a
+ # fixed-width font, which is designed by @CFONT@, and the left and right
+-# quotes to use for C<> text, designated by @LQOUTE@ and @RQUOTE@.
+-# $PREAMBLE should therefore be run through s/\@CFONT\@/<font>/g before
+-# output.
++# quotes to use for C<> text, designated by @LQOUTE@ and @RQUOTE@.  $PREAMBLE
++# should therefore be run through s/\@CFONT\@/<font>/g before output.
+ $PREAMBLE = <<'----END OF PREAMBLE----';
+ .de Sh \" Subsection heading
+ .br
+@@ -64,12 +63,6 @@
+ .if t .sp .5v
+ .if n .sp
+ ..
+-.de Ip \" List item
+-.br
+-.ie \\n(.$>=3 .ne \\$3
+-.el .ne 3
+-.IP "\\$1" \\$2
+-..
+ .de Vb \" Begin verbatim text
+ .ft @CFONT@
+ .nf
+@@ -83,9 +76,9 @@
+ .\" Set up some character translations and predefined strings.  \*(-- will
+ .\" give an unbreakable dash, \*(PI will give pi, \*(L" will give a left
+ .\" double quote, and \*(R" will give a right double quote.  | will give a
+-.\" real vertical bar.  \*(C+ will give a nicer C++.  Capital omega is used
+-.\" to do unbreakable dashes and therefore won't be available.  \*(C` and
+-.\" \*(C' expand to `' in nroff, nothing in troff, for use with C<>
++.\" real vertical bar.  \*(C+ will give a nicer C++.  Capital omega is used to
++.\" do unbreakable dashes and therefore won't be available.  \*(C` and \*(C'
++.\" expand to `' in nroff, nothing in troff, for use with C<>.
+ .tr \(*W-|\(bv\*(Tr
+ .ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
+ .ie n \{\
+@@ -105,10 +98,10 @@
+ .    ds R" ''
+ 'br\}
+ .\"
+-.\" If the F register is turned on, we'll generate index entries on stderr
+-.\" for titles (.TH), headers (.SH), subsections (.Sh), items (.Ip), and
+-.\" index entries marked with X<> in POD.  Of course, you'll have to process
+-.\" the output yourself in some meaningful fashion.
++.\" If the F register is turned on, we'll generate index entries on stderr for
++.\" titles (.TH), headers (.SH), subsections (.Sh), items (.Ip), and index
++.\" entries marked with X<> in POD.  Of course, you'll have to process the
++.\" output yourself in some meaningful fashion.
+ .if \nF \{\
+ .    de IX
+ .    tm Index:\\$1\t\\n%\t"\\$2"
+@@ -117,14 +110,13 @@
+ .    rr F
+ .\}
+ .\"
+-.\" For nroff, turn off justification.  Always turn off hyphenation; it
+-.\" makes way too many mistakes in technical documents.
++.\" For nroff, turn off justification.  Always turn off hyphenation; it makes
++.\" way too many mistakes in technical documents.
+ .hy 0
+ .if n .na
+ .\"
+ .\" Accent mark definitions (@(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2).
+ .\" Fear.  Run.  Save yourself.  No user-serviceable parts.
+-.bd B 3
+ .    \" fudge factors for nroff and troff
+ .if n \{\
+ .    ds #H 0
+@@ -194,6 +186,7 @@
+ # uniformly for backslash for readability.
+ %ESCAPES = (
+     'amp'       =>    '&',      # ampersand
++    'apos'      =>    "'",      # apostrophe
+     'lt'        =>    '<',      # left chevron, less-than
+     'gt'        =>    '>',      # right chevron, greater-than
+     'quot'      =>    '"',      # double quote
+@@ -262,17 +255,20 @@
+     'Yacute'    =>    "Y\\*'",  # capital Y, acute accent
+     'yacute'    =>    "y\\*'",  # small y, acute accent
+     'yuml'      =>    'y\\*:',  # small y, dieresis or umlaut mark
++
++    'nbsp'      =>    '\\ ',    # non-breaking space
++    'shy'       =>    '',       # soft (discretionary) hyphen
+ );
+ 
+ 
+-############################################################################
++##############################################################################
+ # Static helper functions
+-############################################################################
++##############################################################################
+ 
+-# Protect leading quotes and periods against interpretation as commands.
+-# Also protect anything starting with a backslash, since it could expand
+-# or hide something that *roff would interpret as a command.  This is
+-# overkill, but it's much simpler than trying to parse *roff here.
++# Protect leading quotes and periods against interpretation as commands.  Also
++# protect anything starting with a backslash, since it could expand or hide
++# something that *roff would interpret as a command.  This is overkill, but
++# it's much simpler than trying to parse *roff here.
+ sub protect {
+     local $_ = shift;
+     s/^([.\'\\])/\\&$1/mg;
+@@ -283,21 +279,21 @@
+ sub toescape { (length ($_[0]) > 1 ? '\f(' : '\f') . $_[0] }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Initialization
+-############################################################################
++##############################################################################
+ 
+-# Initialize the object.  Here, we also process any additional options
+-# passed to the constructor or set up defaults if none were given.  center
+-# is the centered title, release is the version number, and date is the date
+-# for the documentation.  Note that we can't know what file name we're
+-# processing due to the architecture of Pod::Parser, so that *has* to either
+-# be passed to the constructor or set separately with Pod::Man::name().
++# Initialize the object.  Here, we also process any additional options passed
++# to the constructor or set up defaults if none were given.  center is the
++# centered title, release is the version number, and date is the date for the
++# documentation.  Note that we can't know what file name we're processing due
++# to the architecture of Pod::Parser, so that *has* to either be passed to the
++# constructor or set separately with Pod::Man::name().
+ sub initialize {
+     my $self = shift;
+ 
+-    # Figure out the fixed-width font.  If user-supplied, make sure that
+-    # they are the right length.
++    # Figure out the fixed-width font.  If user-supplied, make sure that they
++    # are the right length.
+     for (qw/fixed fixedbold fixeditalic fixedbolditalic/) {
+         if (defined $$self{$_}) {
+             if (length ($$self{$_}) < 1 || length ($$self{$_}) > 2) {
+@@ -309,15 +305,15 @@
+         }
+     }
+ 
+-    # Set the default fonts.  We can't be sure what fixed bold-italic is
+-    # going to be called, so default to just bold.
++    # Set the default fonts.  We can't be sure what fixed bold-italic is going
++    # to be called, so default to just bold.
+     $$self{fixed}           ||= 'CW';
+     $$self{fixedbold}       ||= 'CB';
+     $$self{fixeditalic}     ||= 'CI';
+     $$self{fixedbolditalic} ||= 'CB';
+ 
+-    # Set up a table of font escapes.  First number is fixed-width, second
+-    # is bold, third is italic.
++    # Set up a table of font escapes.  First number is fixed-width, second is
++    # bold, third is italic.
+     $$self{FONTS} = { '000' => '\fR', '001' => '\fI',
+                       '010' => '\fB', '011' => '\f(BI',
+                       '100' => toescape ($$self{fixed}),
+@@ -328,12 +324,12 @@
+     # Extra stuff for page titles.
+     $$self{center} = 'User Contributed Perl Documentation'
+         unless defined $$self{center};
+-    $$self{indent}  = 4 unless defined $$self{indent};
++    $$self{indent} = 4 unless defined $$self{indent};
+ 
+-    # We used to try first to get the version number from a local binary,
+-    # but we shouldn't need that any more.  Get the version from the running
+-    # Perl.  Work a little magic to handle subversions correctly under both
+-    # the pre-5.6 and the post-5.6 version numbering schemes.
++    # We used to try first to get the version number from a local binary, but
++    # we shouldn't need that any more.  Get the version from the running Perl.
++    # Work a little magic to handle subversions correctly under both the
++    # pre-5.6 and the post-5.6 version numbering schemes.
+     if (!defined $$self{release}) {
+         my @version = ($] =~ /^(\d+)\.(\d{3})(\d{0,3})$/);
+         $version[2] ||= 0;
+@@ -361,17 +357,12 @@
+         croak qq(Invalid quote specification "$$self{quotes}");
+     }
+ 
+-    # Double the first quote; note that this should not be s///g as two
+-    # double quotes is represented in *roff as three double quotes, not
+-    # four.  Weird, I know.
++    # Double the first quote; note that this should not be s///g as two double
++    # quotes is represented in *roff as three double quotes, not four.  Weird,
++    # I know.
+     $$self{LQUOTE} =~ s/\"/\"\"/;
+     $$self{RQUOTE} =~ s/\"/\"\"/;
+ 
+-    $$self{INDENT}  = 0;        # Current indentation level.
+-    $$self{INDENTS} = [];       # Stack of indentations.
+-    $$self{INDEX}   = [];       # Index keys waiting to be printed.
+-    $$self{ITEMS}   = 0;        # The number of consecutive =items.
+-
+     $self->SUPER::initialize;
+ }
+ 
+@@ -386,32 +377,56 @@
+         $name = $self->input_file;
+         $section = 3 if (!$$self{section} && $name =~ /\.pm\z/i);
+         $name =~ s/\.p(od|[lm])\z//i;
+-        if ($section =~ /^1/) {
++        if ($section !~ /^3/) {
+             require File::Basename;
+             $name = uc File::Basename::basename ($name);
+         } else {
+-            # Lose everything up to the first of
+-            #     */lib/*perl*      standard or site_perl module
+-            #     */*perl*/lib      from -D prefix=/opt/perl
+-            #     */*perl*/         random module hierarchy
+-            # which works.  Should be fixed to use File::Spec.  Also handle
+-            # a leading lib/ since that's what ExtUtils::MakeMaker creates.
+-            for ($name) {
+-                s%//+%/%g;
+-                if (     s%^.*?/lib/[^/]*perl[^/]*/%%si
+-                      or s%^.*?/[^/]*perl[^/]*/(?:lib/)?%%si) {
+-                    s%^site(_perl)?/%%s;      # site and site_perl
+-                    s%^(.*-$^O|$^O-.*)/%%so;  # arch
+-                    s%^\d+\.\d+%%s;           # version
++            # Assume that we're dealing with a module.  We want to figure out
++            # the full module name from the path to the file, but we don't
++            # want to include too much of the path into the module name.  Lose
++            # everything up to the first of:
++            #
++            #     */lib/*perl*/         standard or site_perl module
++            #     */*perl*/lib/         from -Dprefix=/opt/perl
++            #     */*perl*/             random module hierarchy
++            #
++            # which works.  Also strip off a leading site or site_perl
++            # component, any OS-specific component, and any version number
++            # component, and strip off an initial component of "lib" or
++            # "blib/lib" since that's what ExtUtils::MakeMaker creates.
++            # splitdir requires at least File::Spec 0.8.
++            require File::Spec;
++            my ($volume, $dirs, $file) = File::Spec->splitpath ($name);
++            my @dirs = File::Spec->splitdir ($dirs);
++            my $cut = 0;
++            my $i;
++            for ($i = 0; $i < scalar @dirs; $i++) {
++                if ($dirs[$i] eq 'lib' && $dirs[$i + 1] =~ /perl/) {
++                    $cut = $i + 2;
++                    last;
++                } elsif ($dirs[$i] =~ /perl/) {
++                    $cut = $i + 1;
++                    $cut++ if $dirs[$i + 1] eq 'lib';
++                    last;
+                 }
+-                s%^lib/%%;
+-                s%/%::%g;
+             }
++            if ($cut > 0) {
++                splice (@dirs, 0, $cut);
++                shift @dirs if ($dirs[0] =~ /^site(_perl)?$/);
++                shift @dirs if ($dirs[0] =~ /^[\d.]+$/);
++                shift @dirs if ($dirs[0] =~ /^(.*-$^O|$^O-.*|$^O)$/);
++            }
++            shift @dirs if $dirs[0] eq 'lib';
++            splice (@dirs, 0, 2) if ($dirs[0] eq 'blib' && $dirs[1] eq 'lib');
++
++            # Remove empty directories when building the module name; they
++            # occur too easily on Unix by doubling slashes.
++            $name = join ('::', (grep { $_ ? $_ : () } @dirs), $file);
+         }
+     }
+ 
+-    # If $name contains spaces, quote it; this mostly comes up in the case
+-    # of input from stdin.
++    # If $name contains spaces, quote it; this mostly comes up in the case of
++    # input from stdin.
+     $name = '"' . $name . '"' if ($name =~ /\s/);
+ 
+     # Modification date header.  Try to use the modification time of our
+@@ -424,36 +439,47 @@
+         $$self{date} = sprintf ('%4d-%02d-%02d', $year, $month, $day);
+     }
+ 
+-    # Now, print out the preamble and the title.
++    # Now, print out the preamble and the title.  The meaning of the arguments
++    # to .TH unfortunately vary by system; some systems consider the fourth
++    # argument to be a "source" and others use it as a version number.
++    # Generally it's just presented as the left-side footer, though, so it
++    # doesn't matter too much if a particular system gives it another
++    # interpretation.
++    #
++    # The order of date and release used to be reversed in older versions of
++    # this module, but this order is correct for both Solaris and Linux.
+     local $_ = $PREAMBLE;
+     s/\@CFONT\@/$$self{fixed}/;
+     s/\@LQUOTE\@/$$self{LQUOTE}/;
+     s/\@RQUOTE\@/$$self{RQUOTE}/;
+     chomp $_;
++    my $pversion = $Pod::Parser::VERSION;
+     print { $self->output_handle } <<"----END OF HEADER----";
+-.\\" Automatically generated by Pod::Man version $VERSION
+-.\\" @{[ scalar localtime ]}
++.\\" Automatically generated by Pod::Man v$VERSION, Pod::Parser v$pversion
+ .\\"
+ .\\" Standard preamble:
+-.\\" ======================================================================
++.\\" ========================================================================
+ $_
+-.\\" ======================================================================
++.\\" ========================================================================
+ .\\"
+ .IX Title "$name $section"
+-.TH $name $section "$$self{release}" "$$self{date}" "$$self{center}"
++.TH $name $section "$$self{date}" "$$self{release}" "$$self{center}"
+ .UC
+ ----END OF HEADER----
+-#"# for cperl-mode
+ 
+     # Initialize a few per-file variables.
+-    $$self{INDENT} = 0;
+-    $$self{NEEDSPACE} = 0;
++    $$self{INDENT}    = 0;      # Current indentation level.
++    $$self{INDENTS}   = [];     # Stack of indentations.
++    $$self{INDEX}     = [];     # Index keys waiting to be printed.
++    $$self{ITEMS}     = 0;      # The number of consecutive =items.
++    $$self{SHIFTWAIT} = 0;      # Whether there is a shift waiting.
++    $$self{SHIFTS}    = [];     # Stack of .RS shifts.
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Core overrides
+-############################################################################
++##############################################################################
+ 
+ # Called for each command paragraph.  Gets the command, the associated
+ # paragraph, the line number, and a Pod::Paragraph object.  Just dispatches
+@@ -463,11 +489,11 @@
+     my $self = shift;
+     my $command = shift;
+     return if $command eq 'pod';
+-   return if ($$self{EXCLUDE} && $command ne 'end');
++    return if ($$self{EXCLUDE} && $command ne 'end');
+     if ($self->can ('cmd_' . $command)) {
+         $command = 'cmd_' . $command;
+         $self->$command (@_);
+-     } else {
++    } else {
+         my ($text, $line, $paragraph) = @_;
+         my $file;
+         ($file, $line) = $paragraph->file_line;
+@@ -478,10 +504,10 @@
+     }
+ }
+ 
+-# Called for a verbatim paragraph.  Gets the paragraph, the line number, and
+-# a Pod::Paragraph object.  Rofficate backslashes, untabify, put a
+-# zero-width character at the beginning of each line to protect against
+-# commands, and wrap in .Vb/.Ve.
++# Called for a verbatim paragraph.  Gets the paragraph, the line number, and a
++# Pod::Paragraph object.  Rofficate backslashes, untabify, put a zero-width
++# character at the beginning of each line to protect against commands, and
++# wrap in .Vb/.Ve.
+ sub verbatim {
+     my $self = shift;
+     return if $$self{EXCLUDE};
+@@ -497,138 +523,123 @@
+     $$self{NEEDSPACE} = 0;
+ }
+ 
+-# Called for a regular text block.  Gets the paragraph, the line number, and
+-# a Pod::Paragraph object.  Perform interpolation and output the results.
++# Called for a regular text block.  Gets the paragraph, the line number, and a
++# Pod::Paragraph object.  Perform interpolation and output the results.
+ sub textblock {
+     my $self = shift;
+     return if $$self{EXCLUDE};
+     $self->output ($_[0]), return if $$self{VERBATIM};
+ 
+-    # Perform a little magic to collapse multiple L<> references.  We'll
+-    # just rewrite the whole thing into actual text at this part, bypassing
+-    # the whole internal sequence parsing thing.
++    # Parse the tree.  collapse knows about references to scalars as well as
++    # scalars and does the right thing with them.  Tidy up any trailing
++    # whitespace.
+     my $text = shift;
+-    $text =~ s{
+-        (L<                     # A link of the form L</something>.
+-              /
+-              (
+-                  [:\w]+        # The item has to be a simple word...
+-                  (\(\))?       # ...or simple function.
+-              )
+-          >
+-          (
+-              ,?\s+(and\s+)?    # Allow lots of them, conjuncted.
+-              L<
+-                  /
+-                  ( [:\w]+ ( \(\) )? )
+-              >
+-          )+
+-        )
+-    } {
+-        local $_ = $1;
+-        s{ L< / ( [^>]+ ) > } {$1}xg;
+-        my @items = split /(?:,?\s+(?:and\s+)?)/;
+-        my $string = 'the ';
+-        my $i;
+-        for ($i = 0; $i < @items; $i++) {
+-            $string .= $items[$i];
+-            $string .= ', ' if @items > 2 && $i != $#items;
+-            $string .= ' ' if @items == 2 && $i == 2;
+-            $string .= 'and ' if ($i == $#items - 1);
+-        }
+-        $string .= ' entries elsewhere in this document';
+-        $string;
+-    }gex;
+-
+-    # Parse the tree and output it.  collapse knows about references to
+-    # scalars as well as scalars and does the right thing with them.
+     $text = $self->parse ($text, @_);
+     $text =~ s/\n\s*$/\n/;
++
++    # Output the paragraph.  We also have to handle =over without =item.  If
++    # there's an =over without =item, NEWINDENT will be set, and we need to
++    # handle creation of the indent here.  Set WEIRDINDENT so that it will be
++    # cleaned up on =back.
+     $self->makespace;
++    if ($$self{SHIFTWAIT}) {
++        $self->output (".RS $$self{INDENT}\n");
++        push (@{ $$self{SHIFTS} }, $$self{INDENT});
++        $$self{SHIFTWAIT} = 0;
++    }
+     $self->output (protect $self->textmapfonts ($text));
+     $self->outindex;
+     $$self{NEEDSPACE} = 1;
+ }
+ 
+-# Called for an interior sequence.  Takes a Pod::InteriorSequence object and
++# Called for a formatting code.  Takes a Pod::InteriorSequence object and
+ # returns a reference to a scalar.  This scalar is the final formatted text.
+-# It's returned as a reference so that other interior sequences above us
+-# know that the text has already been processed.
++# It's returned as a reference to an array so that other formatting codes
++# above us know that the text has already been processed.
+ sub sequence {
+     my ($self, $seq) = @_;
+     my $command = $seq->cmd_name;
+ 
+-    # Zero-width characters.
+-    if ($command eq 'Z') {
+-        # Workaround to generate a blessable reference, needed by 5.005.
+-        my $tmp = '\&';
+-        return bless \ "$tmp", 'Pod::Man::String';
++    # We have to defer processing of the inside of an L<> formatting code.  If
++    # this code is nested inside an L<> code, return the literal raw text of
++    # it.
++    my $parent = $seq->nested;
++    while (defined $parent) {
++        return $seq->raw_text if ($parent->cmd_name eq 'L');
++        $parent = $parent->nested;
+     }
+ 
++    # Zero-width characters.
++    return [ '\&' ] if ($command eq 'Z');
++
+     # C<>, L<>, X<>, and E<> don't apply guesswork to their contents.  C<>
+     # needs some additional special handling.
+     my $literal = ($command =~ /^[CELX]$/);
+-    $literal++ if $command eq 'C';
+-    local $_ = $self->collapse ($seq->parse_tree, $literal);
++    local $_ = $self->collapse ($seq->parse_tree, $literal, $command eq 'C');
+ 
+-    # Handle E<> escapes.
++    # Handle E<> escapes.  Numeric escapes that match one of the supported ISO
++    # 8859-1 characters don't work at present.
+     if ($command eq 'E') {
+         if (/^\d+$/) {
+-            return bless \ chr ($_), 'Pod::Man::String';
++            return [ chr ($_) ];
+         } elsif (exists $ESCAPES{$_}) {
+-            return bless \ "$ESCAPES{$_}", 'Pod::Man::String';
++            return [ $ESCAPES{$_} ];
+         } else {
+-            carp "Unknown escape E<$1>";
+-            return bless \ "E<$_>", 'Pod::Man::String';
++            my ($file, $line) = $seq->file_line;
++            warn "$file:$line: Unknown escape E<$_>\n";
++            return [ "E<$_>" ];
+         }
+     }
+ 
+-    # For all the other sequences, empty content produces no output.
++    # For all the other codes, empty content produces no output.
+     return '' if $_ eq '';
+ 
+-    # Handle formatting sequences.
++    # Handle simple formatting codes.
+     if ($command eq 'B') {
+-        return bless \ ('\f(BS' . $_ . '\f(BE'), 'Pod::Man::String';
+-    } elsif ($command eq 'F') {
+-        return bless \ ('\f(IS' . $_ . '\f(IE'), 'Pod::Man::String';
+-    } elsif ($command eq 'I') {
+-        return bless \ ('\f(IS' . $_ . '\f(IE'), 'Pod::Man::String';
++        return [ '\f(BS' . $_ . '\f(BE' ];
++    } elsif ($command eq 'F' || $command eq 'I') {
++        return [ '\f(IS' . $_ . '\f(IE' ];
+     } elsif ($command eq 'C') {
+-        return bless \ ('\f(FS\*(C`' . $_ . "\\*(C'\\f(FE"),
+-            'Pod::Man::String';
++        return [ $self->quote_literal ($_) ];
+     }
+ 
+     # Handle links.
+     if ($command eq 'L') {
+-        # A bug in lvalue subs in 5.6 requires the temporary variable.
+-        my $tmp = $self->buildlink ($_);
+-        return bless \ "$tmp", 'Pod::Man::String';
++        my ($text, $type) = (parselink ($_))[1,4];
++        return '' unless $text;
++        my ($file, $line) = $seq->file_line;
++        $text = $self->parse ($text, $line);
++        $text = '<' . $text . '>' if $type eq 'url';
++        return [ $text ];
+     }
+ 
+     # Whitespace protection replaces whitespace with "\ ".
+     if ($command eq 'S') {
+         s/\s+/\\ /g;
+-        return bless \ "$_", 'Pod::Man::String';
++        return [ $_ ];
+     }
+ 
+     # Add an index entry to the list of ones waiting to be output.
+-    if ($command eq 'X') { push (@{ $$self{INDEX} }, $_); return '' }
++    if ($command eq 'X') {
++        push (@{ $$self{INDEX} }, $_);
++        return '';
++    }
+ 
+     # Anything else is unknown.
+-    carp "Unknown sequence $command<$_>";
++    my ($file, $line) = $seq->file_line;
++    warn "$file:$line: Unknown formatting code $command<$_>\n";
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Command paragraphs
+-############################################################################
++##############################################################################
+ 
+ # All command paragraphs take the paragraph and the line number.
+ 
+ # First level heading.  We can't output .IX in the NAME section due to a bug
+ # in some versions of catman, so don't output a .IX for that section.  .SH
+-# already uses small caps, so remove any E<> sequences that would cause
+-# them.
++# already uses small caps, so remove \s1 and \s-1.
+ sub cmd_head1 {
+     my $self = shift;
+     local $_ = $self->parse (@_);
+@@ -670,7 +681,7 @@
+         $self->output (".PD\n");
+     }
+     $self->makespace;
+-    $self->output ($self->switchquotes ('.I', $self->mapfonts ($_)));
++    $self->output ($self->textmapfonts ('\f(IS' . $_ . '\f(IE') . "\n");
+     $self->outindex ('Subsection', $_);
+     $$self{NEEDSPACE} = 1;
+ }
+@@ -697,11 +708,13 @@
+     my $self = shift;
+     local $_ = shift;
+     unless (/^[-+]?\d+\s+$/) { $_ = $$self{indent} }
+-    if (@{ $$self{INDENTS} } > 0) {
++    if (@{ $$self{SHIFTS} } < @{ $$self{INDENTS} }) {
+         $self->output (".RS $$self{INDENT}\n");
++        push (@{ $$self{SHIFTS} }, $$self{INDENT});
+     }
+     push (@{ $$self{INDENTS} }, $$self{INDENT});
+     $$self{INDENT} = ($_ + 0);
++    $$self{SHIFTWAIT} = 1;
+ }
+ 
+ # End a list.  If we've closed an embedded indent, we've mangled the hanging
+@@ -711,27 +724,28 @@
+     my $self = shift;
+     $$self{INDENT} = pop @{ $$self{INDENTS} };
+     unless (defined $$self{INDENT}) {
+-        carp "Unmatched =back";
++        my ($file, $line, $paragraph) = @_;
++        ($file, $line) = $paragraph->file_line;
++        warn "$file:$line: Unmatched =back\n";
+         $$self{INDENT} = 0;
+     }
+-    if ($$self{WEIRDINDENT}) {
++    if (@{ $$self{SHIFTS} } > @{ $$self{INDENTS} }) {
+         $self->output (".RE\n");
+-        $$self{WEIRDINDENT} = 0;
++        pop @{ $$self{SHIFTS} };
+     }
+     if (@{ $$self{INDENTS} } > 0) {
+         $self->output (".RE\n");
+         $self->output (".RS $$self{INDENT}\n");
+-        $$self{WEIRDINDENT} = 1;
+     }
+     $$self{NEEDSPACE} = 1;
++    $$self{SHIFTWAIT} = 0;
+ }
+ 
+ # An individual list item.  Emit an index entry for anything that's
+ # interesting, but don't emit index entries for things like bullets and
+-# numbers.  rofficate bullets too while we're at it (so for nice output, use
+-# * for your lists rather than o or . or - or some other thing).  Newlines
+-# in an item title are turned into spaces since *roff can't handle them
+-# embedded.
++# numbers.  rofficate bullets too while we're at it (so for nice output, use *
++# for your lists rather than o or . or - or some other thing).  Newlines in an
++# item title are turned into spaces since *roff can't handle them embedded.
+ sub cmd_item {
+     my $self = shift;
+     local $_ = $self->parse (@_);
+@@ -742,17 +756,19 @@
+         $index = $_;
+         $index =~ s/^\s*[-*+o.]?(?:\s+|\Z)//;
+     }
++    $_ = '*' unless $_;
+     s/^\*(\s|\Z)/\\\(bu$1/;
+-    if ($$self{WEIRDINDENT}) {
++    if (@{ $$self{SHIFTS} } == @{ $$self{INDENTS} }) {
+         $self->output (".RE\n");
+-        $$self{WEIRDINDENT} = 0;
++        pop @{ $$self{SHIFTS} };
+     }
+     $_ = $self->textmapfonts ($_);
+     $self->output (".PD 0\n") if ($$self{ITEMS} == 1);
+-    $self->output ($self->switchquotes ('.Ip', $_, $$self{INDENT}));
++    $self->output ($self->switchquotes ('.IP', $_, $$self{INDENT}));
+     $self->outindex ($index ? ('Item', $index) : ());
+     $$self{NEEDSPACE} = 0;
+     $$self{ITEMS}++;
++    $$self{SHIFTWAIT} = 0;
+ }
+ 
+ # Begin a block for a particular translator.  Setting VERBATIM triggers
+@@ -786,90 +802,23 @@
+ }
+ 
+ 
+-############################################################################
+-# Link handling
+-############################################################################
+-
+-# Handle links.  We can't actually make real hyperlinks, so this is all to
+-# figure out what text and formatting we print out.
+-sub buildlink {
+-    my $self = shift;
+-    local $_ = shift;
+-
+-    # Smash whitespace in case we were split across multiple lines.
+-    s/\s+/ /g;
+-
+-    # If we were given any explicit text, just output it.
+-    if (m{ ^ ([^|]+) \| }x) { return $1 }
+-
+-    # Okay, leading and trailing whitespace isn't important.
+-    s/^\s+//;
+-    s/\s+$//;
+-
+-    # If the argument looks like a URL, return it verbatim.  This only
+-    # handles URLs that use the server syntax.
+-    if (m%^[a-z]+://\S+$%) { return $_ }
+-
+-    # Default to using the whole content of the link entry as a section
+-    # name.  Note that L<manpage/> forces a manpage interpretation, as does
+-    # something looking like L<manpage(section)>.  Do the same thing to
+-    # L<manpage(section)> as we would to manpage(section) without the L<>;
+-    # see guesswork().  If we've added italics, don't add the "manpage"
+-    # text; markup is sufficient.
+-    my ($manpage, $section) = ('', $_);
+-    if (/^"\s*(.*?)\s*"$/) {
+-        $section = '"' . $1 . '"';
+-    } elsif (m{ ^ [-:.\w]+ (?: \( \S+ \) )? $ }x) {
+-        ($manpage, $section) = ($_, '');
+-        $manpage =~ s/^([^\(]+)\(/'\f(IS' . $1 . '\f(IE\|('/e;
+-    } elsif (m%/%) {
+-        ($manpage, $section) = split (/\s*\/\s*/, $_, 2);
+-        if ($manpage =~ /^[-:.\w]+(?:\(\S+\))?$/) {
+-            $manpage =~ s/^([^\(]+)\(/'\f(IS' . $1 . '\f(IE\|'/e;
+-        }
+-        $section =~ s/^\"\s*//;
+-        $section =~ s/\s*\"$//;
+-    }
+-    if ($manpage && $manpage !~ /\\f\(IS/) {
+-        $manpage = "the $manpage manpage";
+-    }
+-
+-    # Now build the actual output text.
+-    my $text = '';
+-    if (!length ($section) && !length ($manpage)) {
+-        carp "Invalid link $_";
+-    } elsif (!length ($section)) {
+-        $text = $manpage;
+-    } elsif ($section =~ /^[:\w]+(?:\(\))?/) {
+-        $text .= 'the ' . $section . ' entry';
+-        $text .= (length $manpage) ? " in $manpage"
+-                                   : " elsewhere in this document";
+-    } else {
+-        if ($section !~ /^".*"$/) { $section = '"' . $section . '"' }
+-        $text .= 'the section on ' . $section;
+-        $text .= " in $manpage" if length $manpage;
+-    }
+-    $text;
+-}
+-
+-
+-############################################################################
++##############################################################################
+ # Escaping and fontification
+-############################################################################
++##############################################################################
+ 
+ # At this point, we'll have embedded font codes of the form \f(<font>[SE]
+-# where <font> is one of B, I, or F.  Turn those into the right font start
+-# or end codes.  The old pod2man didn't get B<someI<thing> else> right;
+-# after I<> it switched back to normal text rather than bold.  We take care
+-# of this by using variables as a combined pointer to our current font
+-# sequence, and set each to the number of current nestings of start tags for
+-# that font.  Use them as a vector to look up what font sequence to use.
++# where <font> is one of B, I, or F.  Turn those into the right font start or
++# end codes.  The old pod2man didn't get B<someI<thing> else> right; after I<>
++# it switched back to normal text rather than bold.  We take care of this by
++# using variables as a combined pointer to our current font sequence, and set
++# each to the number of current nestings of start tags for that font.  Use
++# them as a vector to look up what font sequence to use.
+ #
+ # \fP changes to the previous font, but only one previous font is kept.  We
+ # don't know what the outside level font is; normally it's R, but if we're
+-# inside a heading it could be something else.  So arrange things so that
+-# the outside font is always the "previous" font and end with \fP instead of
+-# \fR.  Idea from Zack Weinberg.
++# inside a heading it could be something else.  So arrange things so that the
++# outside font is always the "previous" font and end with \fP instead of \fR.
++# Idea from Zack Weinberg.
+ sub mapfonts {
+     my $self = shift;
+     local $_ = shift;
+@@ -896,9 +845,9 @@
+ 
+ # Unfortunately, there is a bug in Solaris 2.6 nroff (not present in GNU
+ # groff) where the sequence \fB\fP\f(CW\fP leaves the font set to B rather
+-# than R, presumably because \f(CW doesn't actually do a font change.  To
+-# work around this, use a separate textmapfonts for text blocks where the
+-# default font is always R and only use the smart mapfonts for headings.
++# than R, presumably because \f(CW doesn't actually do a font change.  To work
++# around this, use a separate textmapfonts for text blocks where the default
++# font is always R and only use the smart mapfonts for headings.
+ sub textmapfonts {
+     my $self = shift;
+     local $_ = shift;
+@@ -913,9 +862,9 @@
+ }
+ 
+ 
+-############################################################################
+-# *roff-specific parsing
+-############################################################################
++##############################################################################
++# *roff-specific parsing and magic
++##############################################################################
+ 
+ # Called instead of parse_text, calls parse_text with the right flags.
+ sub parse {
+@@ -924,37 +873,35 @@
+                          -expand_ptree => 'collapse' }, @_);
+ }
+ 
+-# Takes a parse tree and a flag saying whether or not to treat it as literal
+-# text (not call guesswork on it), and returns the concatenation of all of
+-# the text strings in that parse tree.  If the literal flag isn't true,
+-# guesswork() will be called on all plain scalars in the parse tree.
+-# Otherwise, just escape backslashes in the normal case.  If collapse is
+-# being called on a C<> sequence, literal is set to 2, and we do some
+-# additional cleanup.  Assumes that everything in the parse tree is either a
+-# scalar or a reference to a scalar.
++# Takes a parse tree, a flag saying whether or not to treat it as literal text
++# (not call guesswork on it), and a flag saying whether or not to clean some
++# things up for *roff, and returns the concatenation of all of the text
++# strings in that parse tree.  If the literal flag isn't true, guesswork()
++# will be called on all plain scalars in the parse tree.  Otherwise, just
++# escape backslashes in the normal case.  If collapse is being called on a C<>
++# code, $cleanup should be set to true and some additional cleanup will be
++# done.  Assumes that everything in the parse tree is either a scalar or a
++# reference to a scalar.
+ sub collapse {
+-    my ($self, $ptree, $literal) = @_;
+-    if ($literal) {
+-        return join ('', map {
+-            if (ref $_) {
+-                $$_;
+-            } else {
++    my ($self, $ptree, $literal, $cleanup) = @_;
++    return join ('', map {
++        if (ref $_) {
++            join ('', @$_);
++        } elsif ($literal) {
++            if ($cleanup) {
+                 s/\\/\\e/g;
+-                s/-/\\-/g    if $literal > 1;
+-                s/__/_\\|_/g if $literal > 1;
+-                $_;
++                s/-/\\-/g;
++                s/__/_\\|_/g;
+             }
+-        } $ptree->children);
+-    } else {
+-        return join ('', map {
+-            ref ($_) ? $$_ : $self->guesswork ($_)
+-        } $ptree->children);
+-    }
++            $_;
++        } else {
++            $self->guesswork ($_);
++        }
++    } $ptree->children);
+ }
+ 
+ # Takes a text block to perform guesswork on; this is guaranteed not to
+-# contain any interior sequences.  Returns the text block with remapping
+-# done.
++# contain any formatting codes.  Returns the text block with remapping done.
+ sub guesswork {
+     my $self = shift;
+     local $_ = shift;
+@@ -965,34 +912,52 @@
+     # Ensure double underbars have a tiny space between them.
+     s/__/_\\|_/g;
+ 
+-    # Make all caps a little smaller.  Be careful here, since we don't want
+-    # to make @ARGV into small caps, nor do we want to fix the MIME in
++    # Leave hyphens only if they're part of regular words and there is only
++    # one dash at a time.  Leave a dash after the first character as a regular
++    # non-breaking dash, but don't let it mark the rest of the word invalid
++    # for hyphenation.
++    s/-/\\-/g;
++    s{
++      ( (?:\G|^|\s) [a-zA-Z] ) ( \\- )?
++      ( (?: [a-zA-Z]+ \\-)+ )
++      ( [a-zA-Z]+ ) (?=\s|\Z)
++      \b
++     } {
++         my ($prefix, $hyphen, $main, $suffix) = ($1, $2, $3, $4);
++         $hyphen ||= '';
++         $main =~ s/\\-/-/g;
++         $prefix . $hyphen . $main . $suffix;
++    }egx;
++
++    # Translate -- into a real em dash if it's used like one.
++    s{ (\s) \\-\\- (\s) }                         { $1 . '\*(--' . $2 }egx;
++    s{ (\b[a-zA-Z]+) \\-\\- (\s|\Z|[a-zA-Z]+\b) } { $1 . '\*(--' . $2 }egx;
++
++    # Make all caps a little smaller.  Be careful here, since we don't want to
++    # make @ARGV into small caps, nor do we want to fix the MIME in
+     # MIME-Version, since it looks weird with the full-height V.
+     s{
+         ( ^ | [\s\(\"\'\`\[\{<>] )
+-        ( [A-Z] [A-Z] [/A-Z+:\d_\$&-]* )
+-        (?: (?= [\s>\}\]\)\'\".?!,;:] | -- ) | $ )
++        ( [A-Z] [A-Z] (?: [/A-Z+:\d_\$&] | \\- )* )
++        (?= [\s>\}\]\(\)\'\".?!,;] | \\*\(-- | $ )
+     } { $1 . '\s-1' . $2 . '\s0' }egx;
+ 
+-    # Turn PI into a pretty pi.
+-    s{ (?: \\s-1 | \b ) PI (?: \\s0 | \b ) } {\\*\(PI}gx;
+-
+     # Italize functions in the form func().
+     s{
+-        \b
++        ( \b | \\s-1 )
+         (
+-            [:\w]+ (?:\\s-1)? \(\)
++            [A-Za-z_] ([:\w]|\\s-?[01])+ \(\)
+         )
+-    } { '\f(IS' . $1 . '\f(IE' }egx;
++    } { $1 . '\f(IS' . $2 . '\f(IE' }egx;
+ 
+     # func(n) is a reference to a manual page.  Make it \fIfunc\fR\|(n).
+     s{
+-        \b
+-        (\w[-:.\w]+ (?:\\s-1)?)
++        ( \b | \\s-1 )
++        ( [A-Za-z_] (?:[.:\w]|\\-|\\s-?[01])+ )
+         (
+-            \( [^\)] \)
++            \( \d [a-z]* \)
+         )
+-    } { '\f(IS' . $1 . '\f(IE\|' . $2 }egx;
++    } { $1 . '\f(IS' . $2 . '\f(IE\|' . $3 }egx;
+ 
+     # Convert simple Perl variable references to a fixed-width font.
+     s{
+@@ -1001,24 +966,6 @@
+         (?! \( )
+     } { $1 . '\f(FS' . $2 . '\f(FE'}egx;
+ 
+-    # Translate -- into a real em dash if it's used like one and fix up
+-    # dashes, but keep hyphens hyphens.
+-    s{ (\G|^|.) (-+) (\b|.) } {
+-        my ($pre, $dash, $post) = ($1, $2, $3);
+-        if (length ($dash) == 1) {
+-            ($pre =~ /[a-zA-Z]/) ? "$pre-$post" : "$pre\\-$post";
+-        } elsif (length ($dash) == 2
+-                 && ((!$pre && !$post)
+-                     || ($pre =~ /\w/ && !$post)
+-                     || ($pre eq ' ' && $post eq ' ')
+-                     || ($pre eq '=' && $post ne '=')
+-                     || ($pre ne '=' && $post eq '='))) {
+-            "$pre\\*(--$post";
+-        } else {
+-            $pre . ('\-' x length $dash) . $post;
+-        }
+-    }egxs;
+-
+     # Fix up double quotes.
+     s{ \" ([^\"]+) \" } { '\*(L"' . $1 . '\*(R"' }egx;
+ 
+@@ -1029,10 +976,42 @@
+     $_;
+ }
+ 
++# Handles C<> text, deciding whether to put \*C` around it or not.  This is a
++# whole bunch of messy heuristics to try to avoid overquoting, originally from
++# Barrie Slaymaker.  This largely duplicates similar code in Pod::Text.
++sub quote_literal {
++    my $self = shift;
++    local $_ = shift;
++
++    # A regex that matches the portion of a variable reference that's the
++    # array or hash index, separated out just because we want to use it in
++    # several places in the following regex.
++    my $index = '(?: \[.*\] | \{.*\} )?';
++
++    # Check for things that we don't want to quote, and if we find any of
++    # them, return the string with just a font change and no quoting.
++    m{
++      ^\s*
++      (?:
++         ( [\'\`\"] ) .* \1                             # already quoted
++       | \` .* \'                                       # `quoted'
++       | \$+ [\#^]? \S $index                           # special ($^Foo, $")
++       | [\$\@%&*]+ \#? [:\'\w]+ $index                 # plain var or func
++       | [\$\@%&*]* [:\'\w]+ (?: -> )? \(\s*[^\s,]\s*\) # 0/1-arg func call
++       | [+-]? [\d.]+ (?: [eE] [+-]? \d+ )?             # a number
++       | 0x [a-fA-F\d]+                                 # a hex constant
++      )
++      \s*\z
++     }xo && return '\f(FS' . $_ . '\f(FE';
+ 
+-############################################################################
++    # If we didn't return, go ahead and quote the text.
++    return '\f(FS\*(C`' . $_ . "\\*(C'\\f(FE";
++}
++
++
++##############################################################################
+ # Output formatting
+-############################################################################
++##############################################################################
+ 
+ # Make vertical whitespace.
+ sub makespace {
+@@ -1043,27 +1022,28 @@
+         if $$self{NEEDSPACE};
+ }
+ 
+-# Output any pending index entries, and optionally an index entry given as
+-# an argument.  Support multiple index entries in X<> separated by slashes,
+-# and strip special escapes from index entries.
++# Output any pending index entries, and optionally an index entry given as an
++# argument.  Support multiple index entries in X<> separated by slashes, and
++# strip special escapes from index entries.
+ sub outindex {
+     my ($self, $section, $index) = @_;
+     my @entries = map { split m%\s*/\s*% } @{ $$self{INDEX} };
+     return unless ($section || @entries);
+     $$self{INDEX} = [];
+-    my $output;
++    my @output;
+     if (@entries) {
+-        my $output = '.IX Xref "'
+-            . join (' ', map { s/\"/\"\"/; $_ } @entries)
+-            . '"' . "\n";
++        push (@output, [ 'Xref', join (' ', @entries) ]);
+     }
+     if ($section) {
+-        $index =~ s/\"/\"\"/;
+         $index =~ s/\\-/-/g;
+         $index =~ s/\\(?:s-?\d|.\(..|.)//g;
+-        $output .= ".IX $section " . '"' . $index . '"' . "\n";
++        push (@output, [ $section, $index ]);
++    }
++    for (@output) {
++        my ($type, $entry) = @$_;
++        $entry =~ s/\"/\"\"/g;
++        $self->output (".IX $type " . '"' . $entry . '"' . "\n");
+     }
+-    $self->output ($output);
+ }
+ 
+ # Output text to the output device.
+@@ -1086,21 +1066,41 @@
+     # We also have to deal with \*C` and \*C', which are used to add the
+     # quotes around C<> text, since they may expand to " and if they do this
+     # confuses the .SH macros and the like no end.  Expand them ourselves.
+-    # If $extra is set, we're dealing with =item, which in most nroff macro
+-    # sets requires an extra level of quoting of double quotes.
++    # Also separate troff from nroff if there are any fixed-width fonts in use
++    # to work around problems with Solaris nroff.
+     my $c_is_quote = ($$self{LQUOTE} =~ /\"/) || ($$self{RQUOTE} =~ /\"/);
+-    if (/\"/ || ($c_is_quote && /\\\*\(C[\'\`]/)) {
++    my $fixedpat = join ('|', @{ $$self{FONTS} }{'100', '101', '110', '111'});
++    $fixedpat =~ s/\\/\\\\/g;
++    $fixedpat =~ s/\(/\\\(/g;
++    if (/\"/ || /$fixedpat/) {
+         s/\"/\"\"/g;
++        my $nroff = $_;
+         my $troff = $_;
+         $troff =~ s/\"\"([^\"]*)\"\"/\`\`$1\'\'/g;
+-        s/\\\*\(C\`/$$self{LQUOTE}/g;
+-        s/\\\*\(C\'/$$self{RQUOTE}/g;
+-        $troff =~ s/\\\*\(C[\'\`]//g;
+-        s/\"/\"\"/g if $extra;
+-        $troff =~ s/\"/\"\"/g if $extra;
+-        $_ = qq("$_") . ($extra ? " $extra" : '');
++        if ($c_is_quote && /\\\*\(C[\'\`]/) {
++            $nroff =~ s/\\\*\(C\`/$$self{LQUOTE}/g;
++            $nroff =~ s/\\\*\(C\'/$$self{RQUOTE}/g;
++            $troff =~ s/\\\*\(C[\'\`]//g;
++        }
++        $nroff = qq("$nroff") . ($extra ? " $extra" : '');
+         $troff = qq("$troff") . ($extra ? " $extra" : '');
+-        return ".if n $command $_\n.el $command $troff\n";
++
++        # Work around the Solaris nroff bug where \f(CW\fP leaves the font set
++        # to Roman rather than the actual previous font when used in headings.
++        # troff output may still be broken, but at least we can fix nroff by
++        # just switching the font changes to the non-fixed versions.
++        $nroff =~ s/\Q$$self{FONTS}{100}\E(.*)\\f[PR]/$1/g;
++        $nroff =~ s/\Q$$self{FONTS}{101}\E(.*)\\f([PR])/\\fI$1\\f$2/g;
++        $nroff =~ s/\Q$$self{FONTS}{110}\E(.*)\\f([PR])/\\fB$1\\f$2/g;
++        $nroff =~ s/\Q$$self{FONTS}{111}\E(.*)\\f([PR])/\\f\(BI$1\\f$2/g;
++
++        # Now finally output the command.  Only bother with .ie if the nroff
++        # and troff output isn't the same.
++        if ($nroff ne $troff) {
++            return ".ie n $command $nroff\n.el $command $troff\n";
++        } else {
++            return "$command $nroff\n";
++        }
+     } else {
+         $_ = qq("$_") . ($extra ? " $extra" : '');
+         return "$command $_\n";
+@@ -1109,39 +1109,9 @@
+ 
+ __END__
+ 
+-.\" These are some extra bits of roff that I don't want to lose track of
+-.\" but that have been removed from the preamble to make it a bit shorter
+-.\" since they're not currently being used.  They're accents and special
+-.\" characters we don't currently have escapes for.
+-.if n \{\
+-.    ds ? ?
+-.    ds ! !
+-.    ds q
+-.\}
+-.if t \{\
+-.    ds ? \s-2c\h'-\w'c'u*7/10'\u\h'\*(#H'\zi\d\s+2\h'\w'c'u*8/10'
+-.    ds ! \s-2\(or\s+2\h'-\w'\(or'u'\v'-.8m'.\v'.8m'
+-.    ds q o\h'-\w'o'u*8/10'\s-4\v'.4m'\z\(*i\v'-.4m'\s+4\h'\w'o'u*8/10'
+-.\}
+-.ds v \\k:\h'-(\\n(.wu*9/10-\*(#H)'\v'-\*(#V'\*(#[\s-4v\s0\v'\*(#V'\h'|\\n:u'\*(#]
+-.ds _ \\k:\h'-(\\n(.wu*9/10-\*(#H+(\*(#F*2/3))'\v'-.4m'\z\(hy\v'.4m'\h'|\\n:u'
+-.ds . \\k:\h'-(\\n(.wu*8/10)'\v'\*(#V*4/10'\z.\v'-\*(#V*4/10'\h'|\\n:u'
+-.ds 3 \*(#[\v'.2m'\s-2\&3\s0\v'-.2m'\*(#]
+-.ds oe o\h'-(\w'o'u*4/10)'e
+-.ds Oe O\h'-(\w'O'u*4/10)'E
+-.if \n(.H>23 .if \n(.V>19 \
+-\{\
+-.    ds v \h'-1'\o'\(aa\(ga'
+-.    ds _ \h'-1'^
+-.    ds . \h'-1'.
+-.    ds 3 3
+-.    ds oe oe
+-.    ds Oe OE
+-.\}
+-
+-############################################################################
++##############################################################################
+ # Documentation
+-############################################################################
++##############################################################################
+ 
+ =head1 NAME
+ 
+@@ -1163,13 +1133,13 @@
+ Pod::Man is a module to convert documentation in the POD format (the
+ preferred language for documenting Perl) into *roff input using the man
+ macro set.  The resulting *roff code is suitable for display on a terminal
+-using nroff(1), normally via man(1), or printing using troff(1).  It is
+-conventionally invoked using the driver script B<pod2man>, but it can also
+-be used directly.
++using L<nroff(1)>, normally via L<man(1)>, or printing using L<troff(1)>.
++It is conventionally invoked using the driver script B<pod2man>, but it can
++also be used directly.
+ 
+ As a derived class from Pod::Parser, Pod::Man supports the same methods and
+ interfaces.  See L<Pod::Parser> for all the details; briefly, one creates a
+-new parser with C<Pod::Man-E<gt>new()> and then calls either
++new parser with C<< Pod::Man->new() >> and then calls either
+ parse_from_filehandle() or parse_from_file().
+ 
+ new() can take options, in the form of key/value pairs that control the
+@@ -1190,14 +1160,14 @@
+ fixed-width output.
+ 
+ Besides the obvious pod conversions, Pod::Man also takes care of formatting
+-func(), func(n), and simple variable references like $foo or @bar so you
++func(), func(3), and simple variable references like $foo or @bar so you
+ don't have to use code escapes for them; complex expressions like
+ C<$fred{'stuff'}> will still need to be escaped, though.  It also translates
+ dashes that aren't used as hyphens into en dashes, makes long dashes--like
+-this--into proper em dashes, fixes "paired quotes," makes C++ and PI look
+-right, puts a little space between double underbars, makes ALLCAPS a teeny
+-bit smaller in troff(1), and escapes stuff that *roff treats as special so
+-that you don't have to.
++this--into proper em dashes, fixes "paired quotes," makes C++ look right,
++puts a little space between double underbars, makes ALLCAPS a teeny bit
++smaller in B<troff>, and escapes stuff that *roff treats as special so that
++you don't have to.
+ 
+ The recognized options to new() are as follows.  All options take a single
+ argument.
+@@ -1219,26 +1189,35 @@
+ =item fixed
+ 
+ The fixed-width font to use for vertabim text and code.  Defaults to CW.
+-Some systems may want CR instead.  Only matters for troff(1) output.
++Some systems may want CR instead.  Only matters for B<troff> output.
+ 
+ =item fixedbold
+ 
+ Bold version of the fixed-width font.  Defaults to CB.  Only matters for
+-troff(1) output.
++B<troff> output.
+ 
+ =item fixeditalic
+ 
+ Italic version of the fixed-width font (actually, something of a misnomer,
+ since most fixed-width fonts only have an oblique version, not an italic
+-version).  Defaults to CI.  Only matters for troff(1) output.
++version).  Defaults to CI.  Only matters for B<troff> output.
+ 
+ =item fixedbolditalic
+ 
+ Bold italic (probably actually oblique) version of the fixed-width font.
+ Pod::Man doesn't assume you have this, and defaults to CB.  Some systems
+-(such as Solaris) have this font available as CX.  Only matters for troff(1)
++(such as Solaris) have this font available as CX.  Only matters for B<troff>
+ output.
+ 
++=item name
++
++Set the name of the manual page.  Without this option, the manual name is
++set to the uppercased base name of the file being converted unless the
++manual section is 3, in which case the path is parsed to see if it is a Perl
++module path.  If it is, a path like C<.../lib/Pod/Man.pm> is converted into
++a name like C<Pod::Man>.  This option, if given, overrides any automatic
++determination of the name.
++
+ =item quotes
+ 
+ Sets the quote marks used to surround CE<lt>> text.  If the value is a
+@@ -1292,13 +1271,13 @@
+ (F) You specified a *roff font (using C<fixed>, C<fixedbold>, etc.) that
+ wasn't either one or two characters.  Pod::Man doesn't support *roff fonts
+ longer than two characters, although some *roff extensions do (the canonical
+-versions of nroff(1) and troff(1) don't either).
++versions of B<nroff> and B<troff> don't either).
+ 
+ =item Invalid link %s
+ 
+-(W) The POD source contained a C<LE<lt>E<gt>> sequence that Pod::Man was
+-unable to parse.  You should never see this error message; it probably
+-indicates a bug in Pod::Man.
++(W) The POD source contained a C<LE<lt>E<gt>> formatting code that
++Pod::Man was unable to parse.  You should never see this error message; it
++probably indicates a bug in Pod::Man.
+ 
+ =item Invalid quote specification "%s"
+ 
+@@ -1310,22 +1289,17 @@
+ (W) The POD source contained a non-standard command paragraph (something of
+ the form C<=command args>) that Pod::Man didn't know about.  It was ignored.
+ 
+-=item Unknown escape EE<lt>%sE<gt>
++=item %s:%d: Unknown escape EE<lt>%sE<gt>
+ 
+ (W) The POD source contained an C<EE<lt>E<gt>> escape that Pod::Man didn't
+ know about.  C<EE<lt>%sE<gt>> was printed verbatim in the output.
+ 
+-=item Unknown sequence %s
++=item %s:%d: Unknown formatting code %s
+ 
+-(W) The POD source contained a non-standard interior sequence (something of
++(W) The POD source contained a non-standard formatting code (something of
+ the form C<XE<lt>E<gt>>) that Pod::Man didn't know about.  It was ignored.
+ 
+-=item %s: Unknown command paragraph "%s" on line %d.
+-
+-(W) The POD source contained a non-standard command paragraph (something of
+-the form C<=command args>) that Pod::Man didn't know about. It was ignored.
+-
+-=item Unmatched =back
++=item %s:%d: Unmatched =back
+ 
+ (W) Pod::Man encountered a C<=back> command that didn't correspond to an
+ C<=over> command.
+@@ -1334,24 +1308,26 @@
+ 
+ =head1 BUGS
+ 
+-The lint-like features and strict POD format checking done by B<pod2man> are
+-not yet implemented and should be, along with the corresponding C<lax>
+-option.
++Eight-bit input data isn't handled at all well at present.  The correct
++approach would be to map EE<lt>E<gt> escapes to the appropriate UTF-8
++characters and then do a translation pass on the output according to the
++user-specified output character set.  Unfortunately, we can't send eight-bit
++data directly to the output unless the user says this is okay, since some
++vendor *roff implementations can't handle eight-bit data.  If the *roff
++implementation can, however, that's far superior to the current hacked
++characters that only work under troff.
++
++There is currently no way to turn off the guesswork that tries to format
++unmarked text appropriately, and sometimes it isn't wanted (particularly
++when using POD to document something other than Perl).
+ 
+ The NAME section should be recognized specially and index entries emitted
+ for everything in that section.  This would have to be deferred until the
+ next section, since extraneous things in NAME tends to confuse various man
+ page processors.
+ 
+-The handling of hyphens, en dashes, and em dashes is somewhat fragile, and
+-one may get the wrong one under some circumstances.  This should only matter
+-for troff(1) output.
+-
+-When and whether to use small caps is somewhat tricky, and Pod::Man doesn't
+-necessarily get it right.
+-
+ Pod::Man doesn't handle font names longer than two characters.  Neither do
+-most troff(1) implementations, but GNU troff does as an extension.  It would
++most B<troff> implementations, but GNU troff does as an extension.  It would
+ be nice to support as an option for those who want to use it.
+ 
+ The preamble added to each output file is rather verbose, and most of it is
+@@ -1359,29 +1335,43 @@
+ characters.  It would ideally be nice if all of those definitions were only
+ output if needed, perhaps on the fly as the characters are used.
+ 
+-Some of the automagic applied to file names assumes Unix directory
+-separators.
+-
+ Pod::Man is excessively slow.
+ 
++=head1 CAVEATS
++
++The handling of hyphens and em dashes is somewhat fragile, and one may get
++the wrong one under some circumstances.  This should only matter for
++B<troff> output.
++
++When and whether to use small caps is somewhat tricky, and Pod::Man doesn't
++necessarily get it right.
++
+ =head1 SEE ALSO
+ 
+-L<Pod::Parser|Pod::Parser>, perlpod(1), pod2man(1), nroff(1), troff(1),
+-man(1), man(7)
++L<Pod::Parser>, L<perlpod(1)>, L<pod2man(1)>, L<nroff(1)>, L<troff(1)>,
++L<man(1)>, L<man(7)>
+ 
+ Ossanna, Joseph F., and Brian W. Kernighan.  "Troff User's Manual,"
+ Computing Science Technical Report No. 54, AT&T Bell Laboratories.  This is
+-the best documentation of standard nroff(1) and troff(1).  At the time of
+-this writing, it's available at http://www.cs.bell-labs.com/cm/cs/cstr.html.
+-
+-The man page documenting the man macro set may be man(5) instead of man(7)
+-on your system.  Also, please see pod2man(1) for extensive documentation on
+-writing manual pages if you've not done it before and aren't familiar with
+-the conventions.
++the best documentation of standard B<nroff> and B<troff>.  At the time of
++this writing, it's available at
++L<http://www.cs.bell-labs.com/cm/cs/cstr.html>.
++
++The man page documenting the man macro set may be L<man(5)> instead of
++L<man(7)> on your system.  Also, please see L<pod2man(1)> for extensive
++documentation on writing manual pages if you've not done it before and
++aren't familiar with the conventions.
+ 
+ =head1 AUTHOR
+ 
+-Russ Allbery E<lt>rra@stanford.eduE<gt>, based I<very> heavily on the
+-original B<pod2man> by Tom Christiansen E<lt>tchrist@mox.perl.comE<gt>.
++Russ Allbery <rra@stanford.edu>, based I<very> heavily on the original
++B<pod2man> by Tom Christiansen <tchrist@mox.perl.com>.
++
++=head1 COPYRIGHT AND LICENSE
++
++Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>.
++
++This program is free software; you may redistribute it and/or modify it
++under the same terms as Perl itself.
+ 
+ =cut
+diff -Naur perl-5.6.1.orig/lib/Pod/ParseLink.pm perl-5.6.1/lib/Pod/ParseLink.pm
+--- perl-5.6.1.orig/lib/Pod/ParseLink.pm	Thu Jan  1 10:00:00 1970
++++ perl-5.6.1/lib/Pod/ParseLink.pm	Sat Dec  1 12:34:49 2001
+@@ -0,0 +1,177 @@
++# Pod::ParseLink -- Parse an L<> formatting code in POD text.
++# $Id: ParseLink.pm,v 1.5 2001/12/01 01:34:49 eagle Exp $
++#
++# Copyright 2001 by Russ Allbery <rra@stanford.edu>
++#
++# This program is free software; you may redistribute it and/or modify it
++# under the same terms as Perl itself.
++#
++# This module implements parsing of the text of an L<> formatting code as
++# defined in perlpodspec.  It should be suitable for any POD formatter.  It
++# exports only one function, parselink(), which returns the five-item parse
++# defined in perlpodspec.
++#
++# Perl core hackers, please note that this module is also separately
++# maintained outside of the Perl core as part of the podlators.  Please send
++# me any patches at the address above in addition to sending them to the
++# standard Perl mailing lists.
++
++##############################################################################
++# Modules and declarations
++##############################################################################
++
++package Pod::ParseLink;
++
++require 5.004;
++
++use strict;
++use vars qw(@EXPORT @ISA $VERSION);
++
++use Exporter;
++@ISA    = qw(Exporter);
++@EXPORT = qw(parselink);
++
++# Don't use the CVS revision as the version, since this module is also in Perl
++# core and too many things could munge CVS magic revision strings.  This
++# number should ideally be the same as the CVS revision in podlators, however.
++$VERSION = 1.05;
++
++
++##############################################################################
++# Implementation
++##############################################################################
++
++# Parse the name and section portion of a link into a name and section.
++sub _parse_section {
++    my ($link) = @_;
++    $link =~ s/^\s+//;
++    $link =~ s/\s+$//;
++
++    # If the whole link is enclosed in quotes, interpret it all as a section
++    # even if it contains a slash.
++    return (undef, $1) if ($link =~ /^"\s*(.*?)\s*"$/);
++
++    # Split into page and section on slash, and then clean up quoting in the
++    # section.  If there is no section and the name contains spaces, also
++    # guess that it's an old section link.
++    my ($page, $section) = split (/\s*\/\s*/, $link, 2);
++    $section =~ s/^"\s*(.*?)\s*"$/$1/ if $section;
++    if ($page && $page =~ / / && !defined ($section)) {
++        $section = $page;
++        $page = undef;
++    } else {
++        $page = undef unless $page;
++        $section = undef unless $section;
++    }
++    return ($page, $section);
++}
++
++# Infer link text from the page and section.
++sub _infer_text {
++    my ($page, $section) = @_;
++    my $inferred;
++    if ($page && !$section) {
++        $inferred = $page;
++    } elsif (!$page && $section) {
++        $inferred = '"' . $section . '"';
++    } elsif ($page && $section) {
++        $inferred = '"' . $section . '" in ' . $page;
++    }
++    return $inferred;
++}
++
++# Given the contents of an L<> formatting code, parse it into the link text,
++# the possibly inferred link text, the name or URL, the section, and the type
++# of link (pod, man, or url).
++sub parselink {
++    my ($link) = @_;
++    $link =~ s/\s+/ /g;
++    if ($link =~ /\A\w+:[^:\s]\S*\Z/) {
++        return (undef, $link, $link, undef, 'url');
++    } else {
++        my $text;
++        if ($link =~ /\|/) {
++            ($text, $link) = split (/\|/, $link, 2);
++        }
++        my ($name, $section) = _parse_section ($link);
++        my $inferred = $text || _infer_text ($name, $section);
++        my $type = ($name && $name =~ /\(\S*\)/) ? 'man' : 'pod';
++        return ($text, $inferred, $name, $section, $type);
++    }
++}
++
++
++##############################################################################
++# Module return value and documentation
++##############################################################################
++
++# Ensure we evaluate to true.
++1;
++__END__
++
++=head1 NAME
++
++Pod::ParseLink -- Parse an LE<lt>E<gt> formatting code in POD text
++
++=head1 SYNOPSIS
++
++    use Pod::ParseLink;
++    my ($text, $inferred, $name, $section, $type) = parselink ($link);
++
++=head1 DESCRIPTION
++
++This module only provides a single function, parselink(), which takes the
++text of an LE<lt>E<gt> formatting code and parses it.  It returns the anchor
++text for the link (if any was given), the anchor text possibly inferred from
++the name and section, the name or URL, the section if any, and the type of
++link.  The type will be one of 'url', 'pod', or 'man', indicating a URL, a
++link to a POD page, or a link to a Unix manual page.
++
++Parsing is implemented per L<perlpodspec>.  For backward compatibility,
++links where there is no section and name contains spaces, or links where the
++entirety of the link (except for the anchor text if given) is enclosed in
++double-quotes are interpreted as links to a section (LE<lt>/sectionE<gt>).
++
++The inferred anchor text is implemented per L<perlpodspec>:
++
++    L<name>         =>  L<name|name>
++    L</section>     =>  L<"section"|/section>
++    L<name/section> =>  L<"section" in name|name/section>
++
++The name may contain embedded EE<lt>E<gt> and ZE<lt>E<gt> formatting codes,
++and the section, anchor text, and inferred anchor text may contain any
++formatting codes.  Any double quotes around the section are removed as part
++of the parsing, as is any leading or trailing whitespace.
++
++If the text of the LE<lt>E<gt> escape is entirely enclosed in double quotes,
++it's interpreted as a link to a section for backwards compatibility.
++
++No attempt is made to resolve formatting codes.  This must be done after
++calling parselink (since EE<lt>E<gt> formatting codes can be used to escape
++characters that would otherwise be significant to the parser and resolving
++them before parsing would result in an incorrect parse of a formatting code
++like:
++
++    L<verticalE<verbar>barE<sol>slash>
++
++which should be interpreted as a link to the C<vertical|bar/slash> POD page
++and not as a link to the C<slash> section of the C<bar> POD page with an
++anchor text of C<vertical>.  Note that not only the anchor text will need to
++have formatting codes expanded, but so will the target of the link (to deal
++with EE<lt>E<gt> and ZE<lt>E<gt> formatting codes), and special handling of
++the section may be necessary depending on whether the translator wants to
++consider markup in sections to be significant when resolving links.  See
++L<perlpodspec> for more information.
++
++=head1 AUTHOR
++
++Russ Allbery <rra@stanford.edu>.
++
++=head1 COPYRIGHT AND LICENSE
++
++Copyright 2001 by Russ Allbery <rra@stanford.edu>.
++
++This program is free software; you may redistribute it and/or modify it
++under the same terms as Perl itself.
++
++=cut
+diff -Naur perl-5.6.1.orig/lib/Pod/Text/Color.pm perl-5.6.1/lib/Pod/Text/Color.pm
+--- perl-5.6.1.orig/lib/Pod/Text/Color.pm	Fri Feb 23 13:57:55 2001
++++ perl-5.6.1/lib/Pod/Text/Color.pm	Wed Nov 28 12:16:54 2001
+@@ -1,18 +1,18 @@
+ # Pod::Text::Color -- Convert POD data to formatted color ASCII text
+-# $Id: Color.pm,v 0.6 2000/12/25 12:52:39 eagle Exp $
++# $Id: Color.pm,v 1.3 2001/11/28 01:16:54 eagle Exp $
+ #
+-# Copyright 1999 by Russ Allbery <rra@stanford.edu>
++# Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>
+ #
+-# This program is free software; you can redistribute it and/or modify it
++# This program is free software; you may redistribute it and/or modify it
+ # under the same terms as Perl itself.
+ #
+-# This is just a basic proof of concept.  It should later be modified to
+-# make better use of color, take options changing what colors are used for
+-# what text, and the like.
++# This is just a basic proof of concept.  It should later be modified to make
++# better use of color, take options changing what colors are used for what
++# text, and the like.
+ 
+-############################################################################
++##############################################################################
+ # Modules and declarations
+-############################################################################
++##############################################################################
+ 
+ package Pod::Text::Color;
+ 
+@@ -26,16 +26,15 @@
+ 
+ @ISA = qw(Pod::Text);
+ 
+-# Don't use the CVS revision as the version, since this module is also in
+-# Perl core and too many things could munge CVS magic revision strings.
+-# This number should ideally be the same as the CVS revision in podlators,
+-# however.
+-$VERSION = 0.06;
++# Don't use the CVS revision as the version, since this module is also in Perl
++# core and too many things could munge CVS magic revision strings.  This
++# number should ideally be the same as the CVS revision in podlators, however.
++$VERSION = 1.03;
+ 
+ 
+-############################################################################
++##############################################################################
+ # Overrides
+-############################################################################
++##############################################################################
+ 
+ # Make level one headings bold.
+ sub cmd_head1 {
+@@ -53,11 +52,18 @@
+     $self->SUPER::cmd_head2 (colored ($_, 'bold'));
+ }
+ 
+-# Fix the various interior sequences.
++# Fix the various formatting codes.
+ sub seq_b { return colored ($_[1], 'bold')   }
+ sub seq_f { return colored ($_[1], 'cyan')   }
+ sub seq_i { return colored ($_[1], 'yellow') }
+ 
++# Output any included code in green.
++sub output_code {
++    my ($self, $code) = @_;
++    $code = colored ($code, 'green');
++    $self->output ($code);
++}
++
+ # We unfortunately have to override the wrapping code here, since the normal
+ # wrapping code gets really confused by all the escape sequences.
+ sub wrap {
+@@ -79,9 +85,9 @@
+     $output;
+ }
+ 
+-############################################################################
++##############################################################################
+ # Module return value and documentation
+-############################################################################
++##############################################################################
+ 
+ 1;
+ __END__
+@@ -119,10 +125,17 @@
+ 
+ =head1 SEE ALSO
+ 
+-L<Pod::Text|Pod::Text>, L<Pod::Parser|Pod::Parser>
++L<Pod::Text>, L<Pod::Parser>
+ 
+ =head1 AUTHOR
+ 
+-Russ Allbery E<lt>rra@stanford.eduE<gt>.
++Russ Allbery <rra@stanford.edu>.
++
++=head1 COPYRIGHT AND LICENSE
++
++Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>.
++
++This program is free software; you may redistribute it and/or modify it
++under the same terms as Perl itself.
+ 
+ =cut
+diff -Naur perl-5.6.1.orig/lib/Pod/Text/Overstrike.pm perl-5.6.1/lib/Pod/Text/Overstrike.pm
+--- perl-5.6.1.orig/lib/Pod/Text/Overstrike.pm	Fri Feb 23 13:57:55 2001
++++ perl-5.6.1/lib/Pod/Text/Overstrike.pm	Wed Nov 28 12:16:54 2001
+@@ -1,10 +1,10 @@
+ # Pod::Text::Overstrike -- Convert POD data to formatted overstrike text
+-# $Id: Overstrike.pm,v 1.1 2000/12/25 12:51:23 eagle Exp $
++# $Id: Overstrike.pm,v 1.6 2001/11/28 01:16:54 eagle Exp $
+ #
+ # Created by Joe Smith <Joe.Smith@inwap.com> 30-Nov-2000
+ #   (based on Pod::Text::Color by Russ Allbery <rra@stanford.edu>)
+ #
+-# This program is free software; you can redistribute it and/or modify it
++# This program is free software; you may redistribute it and/or modify it
+ # under the same terms as Perl itself.
+ #
+ # This was written because the output from:
+@@ -18,9 +18,9 @@
+ # and because both Pod::Text::Color and Pod::Text::Termcap are not device
+ # independent.
+ 
+-############################################################################
++##############################################################################
+ # Modules and declarations
+-############################################################################
++##############################################################################
+ 
+ package Pod::Text::Overstrike;
+ 
+@@ -33,57 +33,75 @@
+ 
+ @ISA = qw(Pod::Text);
+ 
+-# Don't use the CVS revision as the version, since this module is also in
+-# Perl core and too many things could munge CVS magic revision strings.
+-# This number should ideally be the same as the CVS revision in podlators,
+-# however.
+-$VERSION = 1.01;
++# Don't use the CVS revision as the version, since this module is also in Perl
++# core and too many things could munge CVS magic revision strings.  This
++# number should ideally be the same as the CVS revision in podlators, however.
++$VERSION = 1.06;
+ 
+ 
+-############################################################################
++##############################################################################
+ # Overrides
+-############################################################################
++##############################################################################
+ 
+ # Make level one headings bold, overridding any existing formatting.
+ sub cmd_head1 {
+-    my $self = shift;
+-    local $_ = shift;
+-    s/\s+$//;
+-    s/(.)\cH\1//g;
+-    s/_\cH//g;
+-    s/(.)/$1\b$1/g;
+-    $self->SUPER::cmd_head1 ($_);
++    my ($self, $text, $line) = @_;
++    $text =~ s/\s+$//;
++    $text = $self->strip_format ($self->interpolate ($text, $line));
++    $text =~ s/(.)/$1\b$1/g;
++    $self->SUPER::cmd_head1 ($text);
+ }
+ 
+ # Make level two headings bold, overriding any existing formatting.
+ sub cmd_head2 {
+-    my $self = shift;
+-    local $_ = shift;
+-    s/\s+$//;
+-    s/(.)\cH\1//g;
+-    s/_\cH//g;
+-    s/(.)/$1\b$1/g;
+-    $self->SUPER::cmd_head2 ($_);
++    my ($self, $text, $line) = @_;
++    $text =~ s/\s+$//;
++    $text = $self->strip_format ($self->interpolate ($text, $line));
++    $text =~ s/(.)/$1\b$1/g;
++    $self->SUPER::cmd_head2 ($text);
+ }
+ 
+ # Make level three headings underscored, overriding any existing formatting.
+ sub cmd_head3 {
+-    my $self = shift;
+-    local $_ = shift;
+-    s/\s+$//;
+-    s/(.)\cH\1//g;
+-    s/_\cH//g;
+-    s/(.)/_\b$1/g;
+-    $self->SUPER::cmd_head3 ($_);
++    my ($self, $text, $line) = @_;
++    $text =~ s/\s+$//;
++    $text = $self->strip_format ($self->interpolate ($text, $line));
++    $text =~ s/(.)/_\b$1/g;
++    $self->SUPER::cmd_head3 ($text);
++}
++
++# Level four headings look like level three headings.
++sub cmd_head4 {
++    my ($self, $text, $line) = @_;
++    $text =~ s/\s+$//;
++    $text = $self->strip_format ($self->interpolate ($text, $line));
++    $text =~ s/(.)/_\b$1/g;
++    $self->SUPER::cmd_head4 ($text);
+ }
+ 
+-# Fix the various interior sequences.
+-sub seq_b { local $_ = $_[1]; s/(.)\cH\1//g; s/_\cH//g; s/(.)/$1\b$1/g; $_ }
+-sub seq_f { local $_ = $_[1]; s/(.)\cH\1//g; s/_\cH//g; s/(.)/_\b$1/g; $_ }
+-sub seq_i { local $_ = $_[1]; s/(.)\cH\1//g; s/_\cH//g; s/(.)/_\b$1/g; $_ }
++# The common code for handling all headers.  We have to override to avoid
++# interpolating twice and because we don't want to honor alt.
++sub heading {
++    my ($self, $text, $line, $indent, $marker) = @_;
++    $self->item ("\n\n") if defined $$self{ITEM};
++    $text .= "\n" if $$self{loose};
++    $self->output (' ' x $indent . $text . "\n");
++}
++
++# Fix the various formatting codes.
++sub seq_b { local $_ = strip_format (@_); s/(.)/$1\b$1/g; $_ }
++sub seq_f { local $_ = strip_format (@_); s/(.)/_\b$1/g; $_ }
++sub seq_i { local $_ = strip_format (@_); s/(.)/_\b$1/g; $_ }
++
++# Output any included code in bold.
++sub output_code {
++    my ($self, $code) = @_;
++    $code =~ s/(.)/$1\b$1/g;
++    $self->output ($code);
++}
+ 
+ # We unfortunately have to override the wrapping code here, since the normal
+-# wrapping code gets really confused by all the escape sequences.
++# wrapping code gets really confused by all the backspaces.
+ sub wrap {
+     my $self = shift;
+     local $_ = shift;
+@@ -91,7 +109,7 @@
+     my $spaces = ' ' x $$self{MARGIN};
+     my $width = $$self{width} - $$self{MARGIN};
+     while (length > $width) {
+-        if (s/^((?:(?:[^\n]\cH)?[^\n]){0,$width})\s+//
++        if (s/^((?:(?:[^\n]\cH)?[^\n]){0,$width})(\Z|\s+)//
+             || s/^((?:(?:[^\n]\cH)?[^\n]){$width})//) {
+             $output .= $spaces . $1 . "\n";
+         } else {
+@@ -103,9 +121,22 @@
+     $output;
+ }
+ 
+-############################################################################
++##############################################################################
++# Utility functions
++##############################################################################
++
++# Strip all of the formatting from a provided string, returning the stripped
++# version.
++sub strip_format {
++    my ($self, $text) = @_;
++    $text =~ s/(.)\cH\1/$1/g;
++    $text =~ s/_\cH//g;
++    return $text;
++}
++
++##############################################################################
+ # Module return value and documentation
+-############################################################################
++##############################################################################
+ 
+ 1;
+ __END__
+@@ -150,11 +181,19 @@
+ 
+ =head1 SEE ALSO
+ 
+-L<Pod::Text|Pod::Text>, L<Pod::Parser|Pod::Parser>
++L<Pod::Text>, L<Pod::Parser>
+ 
+ =head1 AUTHOR
+ 
+-Joe Smith E<lt>Joe.Smith@inwap.comE<gt>, using the framework created by Russ
+-Allbery E<lt>rra@stanford.eduE<gt>.
++Joe Smith <Joe.Smith@inwap.com>, using the framework created by Russ Allbery
++<rra@stanford.edu>.
++
++=head1 COPYRIGHT AND LICENSE
++
++Copyright 2000 by Joe Smith <Joe.Smith@inwap.com>.
++Copyright 2001 by Russ Allbery <rra@stanford.edu>.
++
++This program is free software; you may redistribute it and/or modify it
++under the same terms as Perl itself.
+ 
+ =cut
+diff -Naur perl-5.6.1.orig/lib/Pod/Text/Termcap.pm perl-5.6.1/lib/Pod/Text/Termcap.pm
+--- perl-5.6.1.orig/lib/Pod/Text/Termcap.pm	Fri Feb 23 13:57:55 2001
++++ perl-5.6.1/lib/Pod/Text/Termcap.pm	Wed Nov 28 16:44:09 2001
+@@ -1,18 +1,18 @@
+ # Pod::Text::Termcap -- Convert POD data to ASCII text with format escapes.
+-# $Id: Termcap.pm,v 1.0 2000/12/25 12:52:48 eagle Exp $
++# $Id: Termcap.pm,v 1.6 2001/11/28 05:44:09 eagle Exp $
+ #
+-# Copyright 1999 by Russ Allbery <rra@stanford.edu>
++# Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>
+ #
+-# This program is free software; you can redistribute it and/or modify it
++# This program is free software; you may redistribute it and/or modify it
+ # under the same terms as Perl itself.
+ #
+ # This is a simple subclass of Pod::Text that overrides a few key methods to
+-# output the right termcap escape sequences for formatted text on the
+-# current terminal type.
++# output the right termcap escape sequences for formatted text on the current
++# terminal type.
+ 
+-############################################################################
++##############################################################################
+ # Modules and declarations
+-############################################################################
++##############################################################################
+ 
+ package Pod::Text::Termcap;
+ 
+@@ -27,36 +27,44 @@
+ 
+ @ISA = qw(Pod::Text);
+ 
+-# Don't use the CVS revision as the version, since this module is also in
+-# Perl core and too many things could munge CVS magic revision strings.
+-# This number should ideally be the same as the CVS revision in podlators,
+-# however.
+-$VERSION = 1.00;
++# Don't use the CVS revision as the version, since this module is also in Perl
++# core and too many things could munge CVS magic revision strings.  This
++# number should ideally be the same as the CVS revision in podlators, however.
++$VERSION = 1.06;
+ 
+ 
+-############################################################################
++##############################################################################
+ # Overrides
+-############################################################################
++##############################################################################
+ 
+ # In the initialization method, grab our terminal characteristics as well as
+ # do all the stuff we normally do.
+ sub initialize {
+     my $self = shift;
++    my ($ospeed, $term, $termios);
+ 
+     # The default Term::Cap path won't work on Solaris.
+     $ENV{TERMPATH} = "$ENV{HOME}/.termcap:/etc/termcap"
+         . ":/usr/share/misc/termcap:/usr/share/lib/termcap";
+ 
+-    my $termios = POSIX::Termios->new;
+-    $termios->getattr;
+-    my $ospeed = $termios->getospeed;
+-    my $term = Tgetent Term::Cap { TERM => undef, OSPEED => $ospeed };
+-    $$self{BOLD} = $$term{_md} or die 'BOLD';
+-    $$self{UNDL} = $$term{_us} or die 'UNDL';
+-    $$self{NORM} = $$term{_me} or die 'NORM';
++    # Fall back on a hard-coded terminal speed if POSIX::Termios isn't
++    # available (such as on VMS).
++    eval { $termios = POSIX::Termios->new };
++    if ($@) {
++        $ospeed = '9600';
++    } else {
++        $termios->getattr;
++        $ospeed = $termios->getospeed;
++    }
++
++    # Fall back on the ANSI escape sequences if Term::Cap doesn't work.
++    eval { $term = Tgetent Term::Cap { TERM => undef, OSPEED => $ospeed } };
++    $$self{BOLD} = $$term{_md} || "\e[1m";
++    $$self{UNDL} = $$term{_us} || "\e[4m";
++    $$self{NORM} = $$term{_me} || "\e[m";
+ 
+     unless (defined $$self{width}) {
+-        $$self{width} = $ENV{COLUMNS} || $$term{_co} || 78;
++        $$self{width} = $ENV{COLUMNS} || $$term{_co} || 80;
+         $$self{width} -= 2;
+     }
+ 
+@@ -83,6 +91,12 @@
+ sub seq_b { my $self = shift; return "$$self{BOLD}$_[0]$$self{NORM}" }
+ sub seq_i { my $self = shift; return "$$self{UNDL}$_[0]$$self{NORM}" }
+ 
++# Output any included code in bold.
++sub output_code {
++    my ($self, $code) = @_;
++    $self->output ($$self{BOLD} . $code . $$self{NORM});
++}
++
+ # Override the wrapping code to igore the special sequences.
+ sub wrap {
+     my $self = shift;
+@@ -105,9 +119,9 @@
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Module return value and documentation
+-############################################################################
++##############################################################################
+ 
+ 1;
+ __END__
+@@ -134,12 +148,27 @@
+ Apart from the format codes, it in all ways functions like Pod::Text.  See
+ L<Pod::Text> for details and available options.
+ 
++=head1 NOTES
++
++This module uses Term::Cap to retrieve the formatting escape sequences for
++the current terminal, and falls back on the ECMA-48 (the same in this
++regard as ANSI X3.64 and ISO 6429, the escape codes also used by DEC VT100
++terminals) if the bold, underline, and reset codes aren't set in the
++termcap information.
++
+ =head1 SEE ALSO
+ 
+-L<Pod::Text|Pod::Text>, L<Pod::Parser|Pod::Parser>
++L<Pod::Text>, L<Pod::Parser>, L<Term::Cap>
+ 
+ =head1 AUTHOR
+ 
+-Russ Allbery E<lt>rra@stanford.eduE<gt>.
++Russ Allbery <rra@stanford.edu>.
++
++=head1 COPYRIGHT AND LICENSE
++
++Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>.
++
++This program is free software; you may redistribute it and/or modify it
++under the same terms as Perl itself.
+ 
+ =cut
+diff -Naur perl-5.6.1.orig/lib/Pod/Text.pm perl-5.6.1/lib/Pod/Text.pm
+--- perl-5.6.1.orig/lib/Pod/Text.pm	Fri Feb 23 13:57:55 2001
++++ perl-5.6.1/lib/Pod/Text.pm	Wed Nov 28 12:15:50 2001
+@@ -1,19 +1,25 @@
+ # Pod::Text -- Convert POD data to formatted ASCII text.
+-# $Id: Text.pm,v 2.8 2001/02/10 06:50:23 eagle Exp $
++# $Id: Text.pm,v 2.16 2001/11/28 01:15:50 eagle Exp $
+ #
+ # Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>
+ #
+-# This program is free software; you can redistribute it and/or modify it
++# This program is free software; you may redistribute it and/or modify it
+ # under the same terms as Perl itself.
+ #
+-# This module is intended to be a replacement for Pod::Text, and attempts to
+-# match its output except for some specific circumstances where other
+-# decisions seemed to produce better output.  It uses Pod::Parser and is
+-# designed to be very easy to subclass.
++# This module converts POD to formatted text.  It replaces the old Pod::Text
++# module that came with versions of Perl prior to 5.6.0 and attempts to match
++# its output except for some specific circumstances where other decisions
++# seemed to produce better output.  It uses Pod::Parser and is designed to be
++# very easy to subclass.
++#
++# Perl core hackers, please note that this module is also separately
++# maintained outside of the Perl core as part of the podlators.  Please send
++# me any patches at the address above in addition to sending them to the
++# standard Perl mailing lists.
+ 
+-############################################################################
++##############################################################################
+ # Modules and declarations
+-############################################################################
++##############################################################################
+ 
+ package Pod::Text;
+ 
+@@ -21,35 +27,36 @@
+ 
+ use Carp qw(carp croak);
+ use Exporter ();
++use Pod::ParseLink qw(parselink);
+ use Pod::Select ();
+ 
+ use strict;
+ use vars qw(@ISA @EXPORT %ESCAPES $VERSION);
+ 
+-# We inherit from Pod::Select instead of Pod::Parser so that we can be used
+-# by Pod::Usage.
++# We inherit from Pod::Select instead of Pod::Parser so that we can be used by
++# Pod::Usage.
+ @ISA = qw(Pod::Select Exporter);
+ 
+ # We have to export pod2text for backward compatibility.
+ @EXPORT = qw(pod2text);
+ 
+-# Don't use the CVS revision as the version, since this module is also in
+-# Perl core and too many things could munge CVS magic revision strings.
+-# This number should ideally be the same as the CVS revision in podlators,
+-# however.
+-$VERSION = 2.08;
++# Don't use the CVS revision as the version, since this module is also in Perl
++# core and too many things could munge CVS magic revision strings.  This
++# number should ideally be the same as the CVS revision in podlators, however.
++$VERSION = 2.16;
+ 
+ 
+-############################################################################
++##############################################################################
+ # Table of supported E<> escapes
+-############################################################################
++##############################################################################
+ 
+-# This table is taken near verbatim from Pod::PlainText in Pod::Parser,
+-# which got it near verbatim from the original Pod::Text.  It is therefore
+-# credited to Tom Christiansen, and I'm glad I didn't have to write it.  :)
+-# "iexcl" to "divide" added by Tim Jenness.
++# This table is taken near verbatim from Pod::PlainText in Pod::Parser, which
++# got it near verbatim from the original Pod::Text.  It is therefore credited
++# to Tom Christiansen, and I'm glad I didn't have to write it.  :)  "iexcl" to
++# "divide" added by Tim Jenness.
+ %ESCAPES = (
+     'amp'       =>    '&',      # ampersand
++    'apos'      =>    "'",      # apostrophe
+     'lt'        =>    '<',      # left chevron, less-than
+     'gt'        =>    '>',      # right chevron, greater-than
+     'quot'      =>    '"',      # double quote
+@@ -82,12 +89,12 @@
+     "eth"       =>    "\xF0",   # small eth, Icelandic
+     "Euml"      =>    "\xCB",   # capital E, dieresis or umlaut mark
+     "euml"      =>    "\xEB",   # small e, dieresis or umlaut mark
+-    "Iacute"    =>    "\xCC",   # capital I, acute accent
+-    "iacute"    =>    "\xEC",   # small i, acute accent
++    "Iacute"    =>    "\xCD",   # capital I, acute accent
++    "iacute"    =>    "\xED",   # small i, acute accent
+     "Icirc"     =>    "\xCE",   # capital I, circumflex accent
+     "icirc"     =>    "\xEE",   # small i, circumflex accent
+-    "Igrave"    =>    "\xCD",   # capital I, grave accent
+-    "igrave"    =>    "\xED",   # small i, grave accent
++    "Igrave"    =>    "\xCC",   # capital I, grave accent
++    "igrave"    =>    "\xEC",   # small i, grave accent
+     "Iuml"      =>    "\xCF",   # capital I, dieresis or umlaut mark
+     "iuml"      =>    "\xEF",   # small i, dieresis or umlaut mark
+     "Ntilde"    =>    "\xD1",   # capital N, tilde
+@@ -135,7 +142,7 @@
+     "copy"      =>    "\xA9",   # Copyright symbol
+     "ordf"      =>    "\xAA",   # feminine ordinal indicator
+     "not"       =>    "\xAC",   # not sign
+-    "shy"       =>    "\xAD",   # soft hyphen
++    "shy"       =>    '',       # soft (discretionary) hyphen
+     "reg"       =>    "\xAE",   # registered trademark
+     "macr"      =>    "\xAF",   # macron, overline
+     "deg"       =>    "\xB0",   # degree sign
+@@ -155,12 +162,14 @@
+     "iquest"    =>    "\xBF",   # inverted question mark
+     "times"     =>    "\xD7",   # multiplication sign
+     "divide"    =>    "\xF7",   # division sign
++
++    "nbsp"      =>    "\x01",   # non-breaking space
+ );
+ 
+ 
+-############################################################################
++##############################################################################
+ # Initialization
+-############################################################################
++##############################################################################
+ 
+ # Initialize the object.  Must be sure to call our parent initializer.
+ sub initialize {
+@@ -190,12 +199,15 @@
+     $$self{MARGIN}   = $$self{indent};  # Current left margin in spaces.
+ 
+     $self->SUPER::initialize;
++
++    # Tell Pod::Parser that we want the non-POD stuff too if code was set.
++    $self->parseopts ('-want_nonPODs' => 1) if $$self{code};
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Core overrides
+-############################################################################
++##############################################################################
+ 
+ # Called for each command paragraph.  Gets the command, the associated
+ # paragraph, the line number, and a Pod::Paragraph object.  Just dispatches
+@@ -206,7 +218,6 @@
+     my $command = shift;
+     return if $command eq 'pod';
+     return if ($$self{EXCLUDE} && $command ne 'end');
+-    $self->item ("\n") if defined $$self{ITEM};
+     if ($self->can ('cmd_' . $command)) {
+         $command = 'cmd_' . $command;
+         $self->$command (@_);
+@@ -221,9 +232,9 @@
+     }
+ }
+ 
+-# Called for a verbatim paragraph.  Gets the paragraph, the line number, and
+-# a Pod::Paragraph object.  Just output it verbatim, but with tabs converted
+-# to spaces.
++# Called for a verbatim paragraph.  Gets the paragraph, the line number, and a
++# Pod::Paragraph object.  Just output it verbatim, but with tabs converted to
++# spaces.
+ sub verbatim {
+     my $self = shift;
+     return if $$self{EXCLUDE};
+@@ -234,8 +245,8 @@
+     $self->output ($_);
+ }
+ 
+-# Called for a regular text block.  Gets the paragraph, the line number, and
+-# a Pod::Paragraph object.  Perform interpolation and output the results.
++# Called for a regular text block.  Gets the paragraph, the line number, and a
++# Pod::Paragraph object.  Perform interpolation and output the results.
+ sub textblock {
+     my $self = shift;
+     return if $$self{EXCLUDE};
+@@ -243,46 +254,7 @@
+     local $_ = shift;
+     my $line = shift;
+ 
+-    # Perform a little magic to collapse multiple L<> references.  This is
+-    # here mostly for backwards-compatibility.  We'll just rewrite the whole
+-    # thing into actual text at this part, bypassing the whole internal
+-    # sequence parsing thing.
+-    s{
+-        (
+-          L<                    # A link of the form L</something>.
+-              /
+-              (
+-                  [:\w]+        # The item has to be a simple word...
+-                  (\(\))?       # ...or simple function.
+-              )
+-          >
+-          (
+-              ,?\s+(and\s+)?    # Allow lots of them, conjuncted.
+-              L<
+-                  /
+-                  (
+-                      [:\w]+
+-                      (\(\))?
+-                  )
+-              >
+-          )+
+-        )
+-    } {
+-        local $_ = $1;
+-        s%L</([^>]+)>%$1%g;
+-        my @items = split /(?:,?\s+(?:and\s+)?)/;
+-        my $string = "the ";
+-        my $i;
+-        for ($i = 0; $i < @items; $i++) {
+-            $string .= $items[$i];
+-            $string .= ", " if @items > 2 && $i != $#items;
+-            $string .= " and " if ($i == $#items - 1);
+-        }
+-        $string .= " entries elsewhere in this document";
+-        $string;
+-    }gex;
+-
+-    # Now actually interpolate and output the paragraph.
++    # Interpolate and output the paragraph.
+     $_ = $self->interpolate ($_, $line);
+     s/\s+$/\n/;
+     if (defined $$self{ITEM}) {
+@@ -292,34 +264,47 @@
+     }
+ }
+ 
+-# Called for an interior sequence.  Gets the command, argument, and a
++# Called for a formatting code.  Gets the command, argument, and a
+ # Pod::InteriorSequence object and is expected to return the resulting text.
+-# Calls code, bold, italic, file, and link to handle those types of
+-# sequences, and handles S<>, E<>, X<>, and Z<> directly.
++# Calls methods for code, bold, italic, file, and link to handle those types
++# of codes, and handles S<>, E<>, X<>, and Z<> directly.
+ sub interior_sequence {
+-    my $self = shift;
+-    my $command = shift;
+-    local $_ = shift;
++    local $_;
++    my ($self, $command, $seq);
++    ($self, $command, $_, $seq) = @_;
++
++    # We have to defer processing of the inside of an L<> formatting code.  If
++    # this code is nested inside an L<> code, return the literal raw text of
++    # it.
++    my $parent = $seq->nested;
++    while (defined $parent) {
++        return $seq->raw_text if ($parent->cmd_name eq 'L');
++        $parent = $parent->nested;
++    }
++
++    # Index entries are ignored in plain text.
+     return '' if ($command eq 'X' || $command eq 'Z');
+ 
+-    # Expand escapes into the actual character now, carping if invalid.
++    # Expand escapes into the actual character now, warning if invalid.
+     if ($command eq 'E') {
+         if (/^\d+$/) {
+             return chr;
+         } else {
+             return $ESCAPES{$_} if defined $ESCAPES{$_};
+-            carp "Unknown escape: E<$_>";
++            my $seq = shift;
++            my ($file, $line) = $seq->file_line;
++            warn "$file:$line: Unknown escape: E<$_>\n";
+             return "E<$_>";
+         }
+     }
+ 
+-    # For all the other sequences, empty content produces no output.
++    # For all the other formatting codes, empty content produces no output.
+     return if $_ eq '';
+ 
+     # For S<>, compress all internal whitespace and then map spaces to \01.
+     # When we output the text, we'll map this back.
+     if ($command eq 'S') {
+-        s/\s{2,}/ /g;
++        s/\s+/ /g;
+         tr/ /\01/;
+         return $_;
+     }
+@@ -329,83 +314,62 @@
+     elsif ($command eq 'C') { return $self->seq_c ($_) }
+     elsif ($command eq 'F') { return $self->seq_f ($_) }
+     elsif ($command eq 'I') { return $self->seq_i ($_) }
+-    elsif ($command eq 'L') { return $self->seq_l ($_) }
+-    else { carp "Unknown sequence $command<$_>" }
++    elsif ($command eq 'L') { return $self->seq_l ($_, $seq) }
++    else {
++        my $seq = shift;
++        my ($file, $line) = $seq->file_line;
++        warn "$file:$line: Unknown formatting code $command<$_>\n";
++    }
+ }
+ 
+ # Called for each paragraph that's actually part of the POD.  We take
+-# advantage of this opportunity to untabify the input.
++# advantage of this opportunity to untabify the input.  Also, if given the
++# code option, we may see paragraphs that aren't part of the POD and need to
++# output them directly.
+ sub preprocess_paragraph {
+     my $self = shift;
+     local $_ = shift;
+     1 while s/^(.*?)(\t+)/$1 . ' ' x (length ($2) * 8 - length ($1) % 8)/me;
++    $self->output_code ($_) if $self->cutting;
+     $_;
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Command paragraphs
+-############################################################################
++##############################################################################
+ 
+ # All command paragraphs take the paragraph and the line number.
+ 
+ # First level heading.
+ sub cmd_head1 {
+-    my $self = shift;
+-    local $_ = shift;
+-    s/\s+$//;
+-    $_ = $self->interpolate ($_, shift);
+-    if ($$self{alt}) {
+-        $self->output ("\n==== $_ ====\n\n");
+-    } else {
+-        $_ .= "\n" if $$self{loose};
+-        $self->output ($_ . "\n");
+-    }
++    my ($self, $text, $line) = @_;
++    $self->heading ($text, $line, 0, '====');
+ }
+ 
+ # Second level heading.
+ sub cmd_head2 {
+-    my $self = shift;
+-    local $_ = shift;
+-    s/\s+$//;
+-    $_ = $self->interpolate ($_, shift);
+-    if ($$self{alt}) {
+-        $self->output ("\n==   $_   ==\n\n");
+-    } else {
+-        $self->output (' ' x ($$self{indent} / 2) . $_ . "\n\n");
+-    }
++    my ($self, $text, $line) = @_;
++    $self->heading ($text, $line, $$self{indent} / 2, '==  ');
+ }
+ 
+ # Third level heading.
+ sub cmd_head3 {
+-    my $self = shift;
+-    local $_ = shift;
+-    s/\s+$//;
+-    $_ = $self->interpolate ($_, shift);
+-    if ($$self{alt}) {
+-        $self->output ("\n=    $_    =\n\n");
+-    } else {
+-        $self->output (' ' x ($$self{indent} * 2 / 3 + 0.5) . $_ . "\n\n");
+-    }
++    my ($self, $text, $line) = @_;
++    $self->heading ($text, $line, $$self{indent} * 2 / 3 + 0.5, '=   ');
+ }
+ 
+ # Third level heading.
+ sub cmd_head4 {
+-    my $self = shift;
+-    local $_ = shift;
+-    s/\s+$//;
+-    $_ = $self->interpolate ($_, shift);
+-    if ($$self{alt}) {
+-        $self->output ("\n-    $_    -\n\n");
+-    } else {
+-        $self->output (' ' x ($$self{indent} * 3 / 4 + 0.5) . $_ . "\n\n");
+-    }
++    my ($self, $text, $line) = @_;
++    $self->heading ($text, $line, $$self{indent} * 3 / 4 + 0.5, '-   ');
+ }
+ 
+ # Start a list.
+ sub cmd_over {
+     my $self = shift;
+     local $_ = shift;
++    $self->item ("\n\n") if defined $$self{ITEM};
+     unless (/^[-+]?\d+\s+$/) { $_ = $$self{indent} }
+     push (@{ $$self{INDENTS} }, $$self{MARGIN});
+     $$self{MARGIN} += ($_ + 0);
+@@ -413,10 +377,13 @@
+ 
+ # End a list.
+ sub cmd_back {
+-    my $self = shift;
++    my ($self, $text, $line, $paragraph) = @_;
++    $self->item ("\n\n") if defined $$self{ITEM};
+     $$self{MARGIN} = pop @{ $$self{INDENTS} };
+     unless (defined $$self{MARGIN}) {
+-        carp "Unmatched =back";
++        my $file;
++        ($file, $line) = $paragraph->file_line;
++        warn "$file:$line: Unmatched =back\n";
+         $$self{MARGIN} = $$self{indent};
+     }
+ }
+@@ -427,7 +394,7 @@
+     if (defined $$self{ITEM}) { $self->item }
+     local $_ = shift;
+     s/\s+$//;
+-    $$self{ITEM} = $self->interpolate ($_);
++    $$self{ITEM} = $_ ? $self->interpolate ($_) : '*';
+ }
+ 
+ # Begin a block for a particular translator.  Setting VERBATIM triggers
+@@ -462,88 +429,100 @@
+ }
+ 
+ 
+-############################################################################
+-# Interior sequences
+-############################################################################
++##############################################################################
++# Formatting codes
++##############################################################################
+ 
+-# The simple formatting ones.  These are here mostly so that subclasses can
+-# override them and do more complicated things.
++# The simple ones.  These are here mostly so that subclasses can override them
++# and do more complicated things.
+ sub seq_b { return $_[0]{alt} ? "``$_[1]''" : $_[1] }
+ sub seq_f { return $_[0]{alt} ? "\"$_[1]\"" : $_[1] }
+ sub seq_i { return '*' . $_[1] . '*' }
+-sub seq_c {
+-    return $_[0]{alt} ? "``$_[1]''" : "$_[0]{LQUOTE}$_[1]$_[0]{RQUOTE}"
+-}
+ 
+-# The complicated one.  Handle links.  Since this is plain text, we can't
+-# actually make any real links, so this is all to figure out what text we
+-# print out.
+-sub seq_l {
++# Apply a whole bunch of messy heuristics to not quote things that don't
++# benefit from being quoted.  These originally come from Barrie Slaymaker and
++# largely duplicate code in Pod::Man.
++sub seq_c {
+     my $self = shift;
+     local $_ = shift;
+ 
+-    # Smash whitespace in case we were split across multiple lines.
+-    s/\s+/ /g;
+-
+-    # If we were given any explicit text, just output it.
+-    if (/^([^|]+)\|/) { return $1 }
++    # A regex that matches the portion of a variable reference that's the
++    # array or hash index, separated out just because we want to use it in
++    # several places in the following regex.
++    my $index = '(?: \[.*\] | \{.*\} )?';
++
++    # Check for things that we don't want to quote, and if we find any of
++    # them, return the string with just a font change and no quoting.
++    m{
++      ^\s*
++      (?:
++         ( [\'\`\"] ) .* \1                             # already quoted
++       | \` .* \'                                       # `quoted'
++       | \$+ [\#^]? \S $index                           # special ($^Foo, $")
++       | [\$\@%&*]+ \#? [:\'\w]+ $index                 # plain var or func
++       | [\$\@%&*]* [:\'\w]+ (?: -> )? \(\s*[^\s,]\s*\) # 0/1-arg func call
++       | [+-]? [\d.]+ (?: [eE] [+-]? \d+ )?             # a number
++       | 0x [a-fA-F\d]+                                 # a hex constant
++      )
++      \s*\z
++     }xo && return $_;
++
++    # If we didn't return, go ahead and quote the text.
++    return $$self{alt} ? "``$_''" : "$$self{LQUOTE}$_$$self{RQUOTE}";
++}
++
++# Handle links.  Since this is plain text, we can't actually make any real
++# links, so this is all to figure out what text we print out.  Most of the
++# work is done by Pod::ParseLink.
++sub seq_l {
++    my ($self, $link, $seq) = @_;
++    my ($text, $type) = (parselink ($link))[1,4];
++    my ($file, $line) = $seq->file_line;
++    $text = $self->interpolate ($text, $line);
++    $text = '<' . $text . '>' if $type eq 'url';
++    return $text || '';
++}
+ 
+-    # Okay, leading and trailing whitespace isn't important; get rid of it.
+-    s/^\s+//;
+-    s/\s+$//;
+ 
+-    # If the argument looks like a URL, return it verbatim.  This only
+-    # handles URLs that use the server syntax.
+-    if (m%^[a-z]+://\S+$%) { return $_ }
+-
+-    # Default to using the whole content of the link entry as a section
+-    # name.  Note that L<manpage/> forces a manpage interpretation, as does
+-    # something looking like L<manpage(section)>.  The latter is an
+-    # enhancement over the original Pod::Text.
+-    my ($manpage, $section) = ('', $_);
+-    if (/^"\s*(.*?)\s*"$/) {
+-        $section = '"' . $1 . '"';
+-    } elsif (m/^[-:.\w]+(?:\(\S+\))?$/) {
+-        ($manpage, $section) = ($_, '');
+-    } elsif (m%/%) {
+-        ($manpage, $section) = split (/\s*\/\s*/, $_, 2);
+-    }
+-
+-    # Now build the actual output text.
+-    my $text = '';
+-    if (!length $section) {
+-        $text = "the $manpage manpage" if length $manpage;
+-    } elsif ($section =~ /^[:\w]+(?:\(\))?/) {
+-        $text .= 'the ' . $section . ' entry';
+-        $text .= (length $manpage) ? " in the $manpage manpage"
+-                                   : " elsewhere in this document";
++##############################################################################
++# Header handling
++##############################################################################
++
++# The common code for handling all headers.  Takes the interpolated header
++# text, the line number, the indentation, and the surrounding marker for the
++# alt formatting method.
++sub heading {
++    my ($self, $text, $line, $indent, $marker) = @_;
++    $self->item ("\n\n") if defined $$self{ITEM};
++    $text =~ s/\s+$//;
++    $text = $self->interpolate ($text, $line);
++    if ($$self{alt}) {
++        my $closemark = reverse (split (//, $marker));
++        $self->output ("\n" . "$marker $text $closemark" . "\n\n");
+     } else {
+-        $section =~ s/^\"\s*//;
+-        $section =~ s/\s*\"$//;
+-        $text .= 'the section on "' . $section . '"';
+-        $text .= " in the $manpage manpage" if length $manpage;
++        $text .= "\n" if $$self{loose};
++        $self->output (' ' x $indent . $text . "\n");
+     }
+-    $text;
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # List handling
+-############################################################################
++##############################################################################
+ 
+-# This method is called whenever an =item command is complete (in other
+-# words, we've seen its associated paragraph or know for certain that it
+-# doesn't have one).  It gets the paragraph associated with the item as an
+-# argument.  If that argument is empty, just output the item tag; if it
+-# contains a newline, output the item tag followed by the newline.
+-# Otherwise, see if there's enough room for us to output the item tag in the
+-# margin of the text or if we have to put it on a separate line.
++# This method is called whenever an =item command is complete (in other words,
++# we've seen its associated paragraph or know for certain that it doesn't have
++# one).  It gets the paragraph associated with the item as an argument.  If
++# that argument is empty, just output the item tag; if it contains a newline,
++# output the item tag followed by the newline.  Otherwise, see if there's
++# enough room for us to output the item tag in the margin of the text or if we
++# have to put it on a separate line.
+ sub item {
+     my $self = shift;
+     local $_ = shift;
+     my $tag = $$self{ITEM};
+     unless (defined $tag) {
+-        carp "item called without tag";
++        carp "Item called without tag";
+         return;
+     }
+     undef $$self{ITEM};
+@@ -556,9 +535,16 @@
+         $$self{MARGIN} = $indent;
+         my $output = $self->reformat ($tag);
+         $output =~ s/\n*$/\n/;
++
++        # If the text is just whitespace, we have an empty item paragraph;
++        # this can result from =over/=item/=back without any intermixed
++        # paragraphs.  Insert some whitespace to keep the =item from merging
++        # into the next paragraph.
++        $output .= "\n" if $_ && $_ =~ /^\s*$/;
++
+         $self->output ($output);
+         $$self{MARGIN} = $margin;
+-        $self->output ($self->reformat ($_)) if /\S/;
++        $self->output ($self->reformat ($_)) if $_ && /\S/;
+     } else {
+         $_ = $self->reformat ($_);
+         s/^ /:/ if ($$self{alt} && $indent > 0);
+@@ -569,14 +555,14 @@
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Output formatting
+-############################################################################
++##############################################################################
+ 
+-# Wrap a line, indenting by the current left margin.  We can't use
+-# Text::Wrap because it plays games with tabs.  We can't use formline, even
+-# though we'd really like to, because it screws up non-printing characters.
+-# So we have to do the wrapping ourselves.
++# Wrap a line, indenting by the current left margin.  We can't use Text::Wrap
++# because it plays games with tabs.  We can't use formline, even though we'd
++# really like to, because it screws up non-printing characters.  So we have to
++# do the wrapping ourselves.
+ sub wrap {
+     my $self = shift;
+     local $_ = shift;
+@@ -601,8 +587,8 @@
+     my $self = shift;
+     local $_ = shift;
+ 
+-    # If we're trying to preserve two spaces after sentences, do some
+-    # munging to support that.  Otherwise, smash all repeated whitespace.
++    # If we're trying to preserve two spaces after sentences, do some munging
++    # to support that.  Otherwise, smash all repeated whitespace.
+     if ($$self{sentence}) {
+         s/ +$//mg;
+         s/\.\n/. \n/g;
+@@ -617,10 +603,15 @@
+ # Output text to the output device.
+ sub output { $_[1] =~ tr/\01/ /; print { $_[0]->output_handle } $_[1] }
+ 
++# Output a block of code (something that isn't part of the POD text).  Called
++# by preprocess_paragraph only if we were given the code option.  Exists here
++# only so that it can be overridden by subclasses.
++sub output_code { $_[0]->output ($_[1]) }
+ 
+-############################################################################
++
++##############################################################################
+ # Backwards compatibility
+-############################################################################
++##############################################################################
+ 
+ # The old Pod::Text module did everything in a pod2text() function.  This
+ # tries to provide the same interface for legacy applications.
+@@ -644,9 +635,9 @@
+     my $parser = Pod::Text->new (@args);
+ 
+     # If two arguments were given, the second argument is going to be a file
+-    # handle.  That means we want to call parse_from_filehandle(), which
+-    # means we need to turn the first argument into a file handle.  Magic
+-    # open will handle the <&STDIN case automagically.
++    # handle.  That means we want to call parse_from_filehandle(), which means
++    # we need to turn the first argument into a file handle.  Magic open will
++    # handle the <&STDIN case automagically.
+     if (defined $_[1]) {
+         my @fhs = @_;
+         local *IN;
+@@ -662,9 +653,9 @@
+ }
+ 
+ 
+-############################################################################
++##############################################################################
+ # Module return value and documentation
+-############################################################################
++##############################################################################
+ 
+ 1;
+ __END__
+@@ -693,7 +684,7 @@
+ 
+ As a derived class from Pod::Parser, Pod::Text supports the same methods and
+ interfaces.  See L<Pod::Parser> for all the details; briefly, one creates a
+-new parser with C<Pod::Text-E<gt>new()> and then calls either
++new parser with C<< Pod::Text->new() >> and then calls either
+ parse_from_filehandle() or parse_from_file().
+ 
+ new() can take options, in the form of key/value pairs, that control the
+@@ -707,6 +698,12 @@
+ things, uses a different heading style and marks C<=item> entries with a
+ colon in the left margin.  Defaults to false.
+ 
++=item code
++
++If set to a true value, the non-POD parts of the input file will be included
++in the output.  Useful for viewing code documented with POD blocks with the
++POD rendered and the code left intact.
++
+ =item indent
+ 
+ The number of spaces to indent regular text, and the default indentation for
+@@ -759,8 +756,10 @@
+ 
+ =item Bizarre space in item
+ 
+-(W) Something has gone wrong in internal C<=item> processing.  This message
+-indicates a bug in Pod::Text; you should never see it.
++=item Item called without tag
++
++(W) Something has gone wrong in internal C<=item> processing.  These
++messages indicate a bug in Pod::Text; you should never see them.
+ 
+ =item Can't open %s for reading: %s
+ 
+@@ -777,17 +776,17 @@
+ (W) The POD source contained a non-standard command paragraph (something of
+ the form C<=command args>) that Pod::Man didn't know about.  It was ignored.
+ 
+-=item Unknown escape: %s
++=item %s:%d: Unknown escape: %s
+ 
+ (W) The POD source contained an C<EE<lt>E<gt>> escape that Pod::Text didn't
+ know about.
+ 
+-=item Unknown sequence: %s
++=item %s:%d: Unknown formatting code: %s
+ 
+-(W) The POD source contained a non-standard internal sequence (something of
++(W) The POD source contained a non-standard formatting code (something of
+ the form C<XE<lt>E<gt>>) that Pod::Text didn't know about.
+ 
+-=item Unmatched =back
++=item %s:%d: Unmatched =back
+ 
+ (W) Pod::Text encountered a C<=back> command that didn't correspond to an
+ C<=over> command.
+@@ -810,18 +809,23 @@
+ The original Pod::Text contained code to do formatting via termcap
+ sequences, although it wasn't turned on by default and it was problematic to
+ get it to work at all.  This rewrite doesn't even try to do that, but a
+-subclass of it does.  Look for L<Pod::Text::Termcap|Pod::Text::Termcap>.
++subclass of it does.  Look for L<Pod::Text::Termcap>.
+ 
+ =head1 SEE ALSO
+ 
+-L<Pod::Parser|Pod::Parser>, L<Pod::Text::Termcap|Pod::Text::Termcap>,
+-pod2text(1)
++L<Pod::Parser>, L<Pod::Text::Termcap>, L<pod2text(1)>
+ 
+ =head1 AUTHOR
+ 
+-Russ Allbery E<lt>rra@stanford.eduE<gt>, based I<very> heavily on the
+-original Pod::Text by Tom Christiansen E<lt>tchrist@mox.perl.comE<gt> and
+-its conversion to Pod::Parser by Brad Appleton
+-E<lt>bradapp@enteract.comE<gt>.
++Russ Allbery <rra@stanford.edu>, based I<very> heavily on the original
++Pod::Text by Tom Christiansen <tchrist@mox.perl.com> and its conversion to
++Pod::Parser by Brad Appleton <bradapp@enteract.com>.
++
++=head1 COPYRIGHT AND LICENSE
++
++Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>.
++
++This program is free software; you may redistribute it and/or modify it
++under the same terms as Perl itself.
+ 
+ =cut

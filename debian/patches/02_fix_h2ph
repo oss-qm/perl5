@@ -1,0 +1,53 @@
+Handle glibc constant defintions using enum with intervening #defines:
+
+    enum
+    {
+	FOO = 0,
+    #define FOO FOO
+        BAR,
+    #define BAR BAR
+    }
+
+Allow spaces after the macro name such as in this example from
+sys/cdefs.h (patch from Michael G Schwern):
+
+    # if defined __cplusplus && __GNUC_PREREQ (2,8)
+
+diff -ur perl-5.6.1.orig/utils/h2ph.PL perl-5.6.1/utils/h2ph.PL
+--- perl-5.6.1.orig/utils/h2ph.PL	Mon Mar 19 14:03:34 2001
++++ perl-5.6.1/utils/h2ph.PL	Tue May  8 23:37:07 2001
+@@ -255,15 +255,19 @@
+ 	    } elsif(/^ident\s+(.*)/) {
+ 		print OUT $t, "# $1\n";
+ 	    }
+- 	} elsif(/^\s*(typedef\s*)?enum\s*(\s+[a-zA-Z_]\w*\s*)?\{/) {
+-	    until(/\}.*?;/) {
+-		chomp($next = <IN>);
++	} elsif(/^\s*(typedef\s*)?enum\s*(\s+[a-zA-Z_]\w*\s*)?/) {
++	    until(/\{[^}]*\}.*;/ || /;/) {
++		last unless defined ($next = <IN>);
++		chomp $next;
++		# drop "#define FOO FOO" in enums
++		$next =~ s/^\s*#\s*define\s+(\w+)\s+\1\s*$//;
+ 		$_ .= $next;
+ 		print OUT "# $next\n" if $opt_D;
+ 	    }
++	    s/#\s*if.*?#\s*endif//g; # drop #ifdefs
+ 	    s@/\*.*?\*/@@g;
+ 	    s/\s+/ /g;
+-	    /^\s?(typedef\s?)?enum\s?([a-zA-Z_]\w*)?\s?\{(.*)\}\s?([a-zA-Z_]\w*)?\s?;/;
++	    next unless /^\s?(typedef\s?)?enum\s?([a-zA-Z_]\w*)?\s?\{(.*)\}\s?([a-zA-Z_]\w*)?\s?;/;
+ 	    (my $enum_subs = $3) =~ s/\s//g;
+ 	    my @enum_subs = split(/,/, $enum_subs);
+ 	    my $enum_val = -1;
+@@ -387,8 +391,8 @@
+ 		$new .= '->' if /^[\[\{]/;
+ 	    } elsif ($id eq 'defined') {
+ 		$new .= 'defined';
+-	    } elsif (/^\(/) {
+-		s/^\((\w),/("$1",/ if $id =~ /^_IO[WR]*$/i;	# cheat
++	    } elsif (/^\s*\(/) {
++		s/^\s*\((\w),/("$1",/ if $id =~ /^_IO[WR]*$/i;	# cheat
+ 		$new .= " &$id";
+ 	    } elsif ($isatype{$id}) {
+ 		if ($new =~ /{\s*$/) {

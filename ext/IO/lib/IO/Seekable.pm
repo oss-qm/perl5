@@ -41,7 +41,7 @@ corresponding built-in functions:
 
 =over 4
 
-=item $io->setpos ( POS, WHENCE )
+=item $io->seek ( POS, WHENCE )
 
 Seek the IO::File to position POS, relative to WHENCE:
 

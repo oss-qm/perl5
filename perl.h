@@ -3432,6 +3432,19 @@ typedef struct am_table_short AMTS;
 #   define PERL_MOUNT_NOSUID M_NOSUID
 #endif
 
+#if !defined(PERL_MOUNT_NOEXEC) && defined(MOUNT_NOEXEC)
+#    define PERL_MOUNT_NOEXEC MOUNT_NOEXEC
+#endif
+#if !defined(PERL_MOUNT_NOEXEC) && defined(MNT_NOEXEC)
+#    define PERL_MOUNT_NOEXEC MNT_NOEXEC
+#endif
+#if !defined(PERL_MOUNT_NOEXEC) && defined(MS_NOEXEC)
+#   define PERL_MOUNT_NOEXEC MS_NOEXEC
+#endif
+#if !defined(PERL_MOUNT_NOEXEC) && defined(M_NOEXEC)
+#   define PERL_MOUNT_NOEXEC M_NOEXEC
+#endif
+
 #endif /* IAMSUID */
 
 #ifdef I_LIBUTIL

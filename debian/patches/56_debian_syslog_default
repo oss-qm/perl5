@@ -1,0 +1,24 @@
+Debian's syslogd doesn't listen on udp/syslog by default.
+
+diff -ur perl-5.6.1.orig/ext/Sys/Syslog/Syslog.pm perl-5.6.1/ext/Sys/Syslog/Syslog.pm
+--- perl-5.6.1.orig/ext/Sys/Syslog/Syslog.pm	Fri Feb 23 13:57:54 2001
++++ perl-5.6.1/ext/Sys/Syslog/Syslog.pm	Sun May 20 02:01:58 2001
+@@ -76,7 +76,9 @@
+ C<_PATH_LOG> is unavailable or if getservbyname() fails, returns undef.  Any
+ other value croaks.
+ 
+-The default is for the INET socket to be used.
++The default on Debian systems is for the UNIX socket to be used (as the
++standard syslogd configuration on such systems does not accept INET
++connections).  Note that as distributed, the default is INET.
+ 
+ =item closelog
+ 
+@@ -140,6 +142,7 @@
+ bootstrap Sys::Syslog $VERSION;
+ 
+ $maskpri = &LOG_UPTO(&LOG_DEBUG);
++$sock_type = length _PATH_LOG() > 0;
+ 
+ sub openlog {
+     ($ident, $logopt, $facility) = @_;  # package vars

@@ -1,0 +1,35 @@
+#!./perl.static -w
+
+#
+# Fix up generated .ph files
+#
+
+BEGIN { unshift @INC, 'lib' }
+use strict;
+use File::Find;
+use Config;
+
+my @args = @ARGV;
+@ARGV = ();
+find sub { push @ARGV, $File::Find::name if -f and /\.ph$/ }, @args;
+
+$^I = '';
+
+while (<>)
+{
+    # discard casts
+    s/(&__const\s+)?\\'struct[^\\']+\\'[^;]*;/1;/g;
+
+    # don't undef __need_size_t, redefine as 0
+    s/undef\(&__need_size_t\)/eval { sub __need_size_t () { 0 } }/g;
+
+    # constants are occaisionally mucked up
+    s/\{\s*&(\d+)L\s*;?\s*\}/{ $1 }/g;
+
+    # some 64 bit constants are generated which are unparsable, in
+    # particular RLIM_INFINITY in sys/resource.h not sure of a better
+    # way to handle this than:
+    s/0xf{9,}/(~0)/ unless $Config{use64bitint};
+
+    print;
+}

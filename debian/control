@@ -1,0 +1,123 @@
+Source: perl
+Section: interpreters
+Priority: standard
+Maintainer: Brendan O'Dea <bod@debian.org>
+Standards-Version: 3.5.5
+Build-Depends: file, libdb2-dev, libgdbmg1-dev, netbase [!i386-hurd]
+
+Package: perl-base
+Essential: yes
+Section: base
+Priority: required
+Architecture: any
+Pre-Depends: ${shlibs:Depends}
+Conflicts: perl-5.004-base (<< 6), perl-5.005-base (<< 6), perl-5.6-base (<< 6), data-dumper
+Replaces: perl-5.005-base (<< 6), perl-5.6-base (<< 6), perl (<< 5.6.1-1), perl-modules (<< 5.6.1-4)
+Provides: perl5-base, ${perlapi:Provides}, data-dumper
+Suggests: perl
+Description: The Pathologically Eclectic Rubbish Lister.
+ A scripting language with delusions of full language-hood, Perl is used
+ in many system scripts and utilities.
+ .
+ This is a stripped down Perl with only essential libraries.  To make
+ full use of Perl, you'll want to install the `perl', `perl-modules' and
+ optionally `perl-doc' packages which supplement this one.
+
+Package: libcgi-fast-perl
+Priority: extra
+Architecture: all
+Depends: perl (>= ${Source-Version}), libfcgi-perl
+Conflicts: libcgi-pm-perl
+Description: CGI::Fast Perl module. 
+ CGI::Fast is a subclass of the CGI object created by CGI.pm.  It is
+ specialized to work well with the Open Market FastCGI standard, which
+ greatly speeds up CGI scripts by turning them into persistently running
+ server processes.  Scripts that perform time-consuming initialization
+ processes, such as loading large modules or opening persistent database
+ connections, will see large performance improvements.
+
+Package: perl-doc
+Section: doc
+Priority: optional
+Architecture: all
+Depends: perl (>= ${Source-Version})
+Conflicts: perl-5.004-doc (<< 6), perl-5.005-doc (<< 6), perl-5.6-doc (<< 6)
+Replaces: perl-5.005-doc (<< 6), perl-5.6-doc (<< 6)
+Suggests: man-browser, groff
+Description: Perl documentation.
+ Perl manual pages and POD docs.  If you are writing Perl programs, you
+ almost certainly need this.
+
+Package: perl-modules
+Priority: standard
+Architecture: all
+Depends: perl (>= ${Upstream-Version}-1)
+Conflicts: libpod-parser-perl (<< 1.09-1), libansicolor-perl (<< 1.03-1), libfile-temp-perl (<< 0.12-1)
+Replaces: libpod-parser-perl, libansicolor-perl, libfile-temp-perl
+Provides: libpod-parser-perl, libansicolor-perl, libfile-temp-perl
+Description: Core Perl modules.
+ Architecture independent library files for Perl.
+
+Package: perl-debug
+Priority: optional
+Architecture: any
+Depends: perl (= ${Source-Version}), ${shlibs:Depends}
+Conflicts: perl-5.004-debug (<< 6), perl-5.005-debug (<< 6), perl-5.6-debug (<< 6)
+Replaces: perl-5.005-debug (<< 6), perl-5.6-debug (<< 6)
+Description: Debug-enabled Perl interpreter.
+ debugperl provides a debug-enabled version of Perl which can produce
+ extensive information about the interpreter as it compiles and executes
+ a program (see the -D switch in perlrun(1)).
+ .
+ Note that this package is primarily of use in debugging *Perl* rather
+ than perl programs, which may be traced/debugged using the standard
+ perl binary using the -d switch (see perldebug(1)).
+
+Package: perl-suid
+Priority: optional
+Architecture: any
+Depends: perl (= ${Source-Version}), ${shlibs:Depends}
+Conflicts: perl-5.004-suid (<< 6), perl-5.005-suid (<< 6), perl-5.6-suid (<< 6)
+Replaces: perl-5.005-suid (<< 6), perl-5.6-suid (<< 6)
+Description: Runs setuid Perl scripts.
+ This can be a security hole but it is much safer than shell scripts and
+ with -Tw can be much safer than setuid executables.
+
+Package: libperl5.6
+Section: libs
+Priority: required
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: perl-base (= ${Source-Version})
+Description: Shared Perl library.
+ Provides a shared library for programs which embed a Perl
+ interpreter.  This includes the /usr/bin/perl binary on architectures other
+ than i386 (where there is a measured performance hit when perl is
+ dynamically linked).
+
+Package: libperl-dev
+Section: devel
+Priority: optional
+Architecture: any
+Depends: libperl5.6 (= ${Source-Version})
+Description: Perl library: development files.
+ Files for developing applications which embed a Perl interpreter and for
+ programs compiled with perlcc.
+
+Package: perl
+Priority: standard
+Architecture: any
+Depends: perl-base (= ${Source-Version}), perl-modules (>= ${Source-Version}), ${shlibs:Depends}
+Conflicts: perl-5.004 (<< 6), perl-5.005 (<< 6), perl-5.6 (<< 6)
+Replaces: perl-5.005 (<< 6), perl-5.6 (<< 6), perl-doc (<< 5.6.1-1)
+Provides: perl5
+Suggests: perl-doc, libterm-readline-perl-perl
+Description: Larry Wall's Practical Extraction and Report Language.
+ An interpreted scripting language, known among some as "Unix's Swiss
+ Army Chainsaw".
+ .
+ Perl is optimised for scanning arbitrary text files and system
+ administration.  It has built-in extended regular expression matching
+ and replacement, a data-flow mechanism to improve security with
+ setuid scripts and is extensible via modules that can interface to C
+ libraries.

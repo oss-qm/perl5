@@ -1,0 +1,14 @@
+Correct typo.
+
+diff -ur perl-5.6.1.orig/pod/perlfunc.pod perl-5.6.1/pod/perlfunc.pod
+--- perl-5.6.1.orig/pod/perlfunc.pod	Mon Mar 19 14:03:34 2001
++++ perl-5.6.1/pod/perlfunc.pod	Fri Jan 11 03:25:03 2002
+@@ -4370,7 +4370,7 @@
+ 
+ produces the output 'h:i:t:h:e:r:e'.
+ 
+-Empty leading (or trailing) fields are produced when there positive width
++Empty leading (or trailing) fields are produced when there are positive width
+ matches at the beginning (or end) of the string; a zero-width match at the
+ beginning (or end) of the string does not produce an empty field.  For
+ example:

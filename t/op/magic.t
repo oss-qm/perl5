@@ -27,7 +27,7 @@ $Is_os2   = $^O eq 'os2';
 $Is_Cygwin   = $^O eq 'cygwin';
 $PERL = ($Is_MSWin32 ? '.\perl' : './perl');
 
-print "1..35\n";
+print "1..37\n";
 
 eval '$ENV{"FOO"} = "hi there";';	# check that ENV is inited inside eval
 if ($Is_MSWin32) { ok 1, `cmd /x /c set FOO` eq "FOO=hi there\n"; }
@@ -226,3 +226,6 @@ else {
     ok "34 # skipped: no caseless %ENV support",1;
     ok "35 # skipped: no caseless %ENV support",1;
 }
+
+ok 36, $^S == 0;
+eval { ok 37, $^S };

@@ -31,12 +31,7 @@ case "$useshrplib" in
 true)
 	# Prefix all runs of 'miniperl' and 'perl' with 
 	# $ldlibpth so that ./perl finds *this* shared libperl.
-	case "$LD_LIBRARY_PATH" in
-	'')
-		ldlibpth="LD_LIBRARY_PATH=`pwd`";;
-	*)
-		ldlibpth="LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}";;
-	esac
+	ldlibpth=LD_LIBRARY_PATH=`pwd`'$${LD_LIBRARY_PATH:+:}$$LD_LIBRARY_PATH'
 
 	pldlflags="$cccdlflags"
 	case "${osname}${osvers}" in
@@ -84,7 +79,7 @@ true)
 	    ;;
 	esac
 	case "$ldlibpthname" in
-	'') ;;
+	''|LD_LIBRARY_PATH) ;;
 	*)
 	    case "$osname" in
 	    os2)
@@ -300,7 +295,7 @@ lintflags = -hbvxac
 .c$(OBJ_EXT):
 	$(CCCMD) $(PLDLFLAGS) $*.c
 
-all: $(FIRSTMAKEFILE) miniperl extra.pods $(private) $(public) $(dynamic_ext) $(nonxs_ext)
+all: $(FIRSTMAKEFILE) miniperl extra.pods $(private) $(public) $(nonxs_ext) $(dynamic_ext)
 	@echo " ";
 	@echo "	Everything is up to date. 'make test' to run test suite."
 
@@ -805,7 +800,7 @@ makedepend: makedepend.SH config.sh
 
 # Cannot delegate rebuilding of t/perl to make to allow interlaced
 # test and minitest
-test-prep: miniperl perl preplibrary utilities $(dynamic_ext) $(nonxs_ext) $(TEST_PERL_DLL)
+test-prep: miniperl perl preplibrary utilities $(nonxs_ext) $(dynamic_ext) $(TEST_PERL_DLL)
 	cd t && (rm -f perl$(EXE_EXT); $(LNS) ../perl$(EXE_EXT) perl$(EXE_EXT))
 
 # Second branch is for testing without a tty or controling terminal.

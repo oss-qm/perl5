@@ -1,0 +1,12 @@
+diff -Naur perl-5.6.1.orig/ext/IO/lib/IO/Seekable.pm perl-5.6.1/ext/IO/lib/IO/Seekable.pm
+--- perl-5.6.1.orig/ext/IO/lib/IO/Seekable.pm	Fri Feb 23 13:57:54 2001
++++ perl-5.6.1/ext/IO/lib/IO/Seekable.pm	Mon Dec  3 23:25:08 2001
+@@ -41,7 +41,7 @@
+ 
+ =over 4
+ 
+-=item $io->setpos ( POS, WHENCE )
++=item $io->seek ( POS, WHENCE )
+ 
+ Seek the IO::File to position POS, relative to WHENCE:
+ 

@@ -315,6 +315,7 @@ sub searchfor {
     $global_target = (splitdir $s)[-1];   # XXX: why not use File::Basename?
     for ($i=0; $i<@dirs; $i++) {
 	$dir = $dirs[$i];
+	next unless -d $dir; # some dirs in @INC are optional
 	($dir = VMS::Filespec::unixpath($dir)) =~ s!/\z!! if $Is_VMS;
 	if (       ( $ret = check_file $dir,"$s.pod")
 		or ( $ret = check_file $dir,"$s.pm")

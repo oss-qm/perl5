@@ -1,0 +1,19 @@
+Prune the list of libs wanted to what we actually need.  We want to
+keep the dependencies on perl-base as small as possible, and some of
+the original list may be present on buildds (see Bug#128355).
+
+--- perl-5.6.1/Configure.orig	Thu Jan 10 22:27:57 2002
++++ perl-5.6.1/Configure	Thu Jan 10 22:32:03 2002
+@@ -1029,11 +1029,7 @@
+ defvoidused=15
+ 
+ : List of libraries we want.
+-: If anyone needs -lnet, put it in a hint file.
+-libswanted='sfio socket bind inet nsl nm ndbm gdbm dbm db malloc dl'
+-libswanted="$libswanted dld ld sun m c cposix posix"
+-libswanted="$libswanted ndir dir crypt sec"
+-libswanted="$libswanted ucb bsd BSD PW x iconv util"
++libswanted='gdbm db dl m c crypt'
+ : We probably want to search /usr/shlib before most other libraries.
+ : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
+ glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`

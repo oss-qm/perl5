@@ -1,0 +1,16 @@
+This was correct in 5.005, but broken somewhere down the track. 
+Including the cv there creates a cast of the form (ret (*cv)()) where
+it should be just (ret (*)()).
+
+diff -ur perl-5.6.1.orig/XSUB.h perl-5.6.1/XSUB.h
+--- perl-5.6.1.orig/XSUB.h	Fri Feb 23 13:57:53 2001
++++ perl-5.6.1/XSUB.h	Mon May 21 04:32:05 2001
+@@ -74,7 +74,7 @@
+ #  define XSINTERFACE_CVT(ret,name) ret (*name)()
+ #endif
+ #define dXSFUNCTION(ret)		XSINTERFACE_CVT(ret,XSFUNCTION)
+-#define XSINTERFACE_FUNC(ret,cv,f)	((XSINTERFACE_CVT(ret,cv))(f))
++#define XSINTERFACE_FUNC(ret,cv,f)	((XSINTERFACE_CVT(ret,))(f))
+ #define XSINTERFACE_FUNC_SET(cv,f)	\
+ 		CvXSUBANY(cv).any_dptr = (void (*) (pTHXo_ void*))(f)
+ 

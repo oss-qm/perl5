@@ -258,6 +258,7 @@ Anyway, here it is.  Should run on perl v4 or greater.  Maybe less.
 
 $RCSID = '$Id: c2ph,v 1.7 95/10/28 10:41:47 tchrist Exp Locker: tchrist $';
 
+use File::Temp;
 
 ######################################################################
 
@@ -446,6 +447,13 @@ sub defvar {
     printf "%-16s%-15s  %s\n", $var, eval "\$$var", $msg;
 }
 
+sub safedir {
+    $SAFEDIR = File::Temp::tempdir("c2ph.XXXXXX", TMPDIR => 1, CLEANUP => 1)
+      unless (defined($SAFEDIR));
+}
+
+undef $SAFEDIR;
+
 $recurse = 1;
 
 if (@ARGV) {
@@ -461,14 +469,15 @@ if (@ARGV) {
     }
     elsif (@ARGV == 1 && $ARGV[0] =~ /\.c$/) {
 	local($dir, $file) = $ARGV[0] =~ m#(.*/)?(.*)$#;
-	$chdir = "cd $dir; " if $dir;
+	$chdir = "cd $dir && " if $dir;
 	&system("$chdir$CC $CFLAGS $DEFINES $file") && exit 1;
 	$ARGV[0] =~ s/\.c$/.s/;
     }
     else {
-	$TMP = "/tmp/c2ph.$$.c";
+	&safedir;
+	$TMP = "$SAFEDIR/c2ph.$$.c";
 	&system("cat @ARGV > $TMP") && exit 1;
-	&system("cd /tmp; $CC $CFLAGS $DEFINES $TMP") && exit 1;
+	&system("cd $SAFEDIR && $CC $CFLAGS $DEFINES $TMP") && exit 1;
 	unlink $TMP;
 	$TMP =~ s/\.c$/.s/;
 	@ARGV = ($TMP);
@@ -1239,7 +1248,8 @@ sub fetch_template {
 }
 
 sub compute_intrinsics {
-    local($TMP) = "/tmp/c2ph-i.$$.c";
+    &safedir;
+    local($TMP) = "$SAFEDIR/c2ph-i.$$.c";
     open (TMP, ">$TMP") || die "can't open $TMP: $!";
     select(TMP);
 
@@ -1267,7 +1277,7 @@ EOF
     close TMP;
 
     select(STDOUT);
-    open(PIPE, "cd /tmp && $CC $TMP && /tmp/a.out|");
+    open(PIPE, "cd $SAFEDIR && $CC $TMP && $SAFEDIR/a.out|");
     while (<PIPE>) {
 	chop;
 	split(' ',$_,2);;
@@ -1276,7 +1286,7 @@ EOF
 	$intrinsics{$_[1]} = $template{$_[0]};
     }
     close(PIPE) || die "couldn't read intrinsics!";
-    unlink($TMP, '/tmp/a.out');
+    unlink($TMP, "$SAFEDIR/a.out");
     print STDERR "done\n" if $trace;
 }
 

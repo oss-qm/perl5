@@ -1,0 +1,77 @@
+#!/bin/sh
+
+fullver=$(expr $(pwd) : '.*-\([1-9][0-9.]*\)$')
+ver=$(expr $fullver : '\([1-9][0-9.]*\)\.[0-9]*$')
+ccflags=-DDEBIAN
+
+arch=$(dpkg --print-installation-architecture)
+case "$arch" in
+    hurd-*) archname=$(expr "$arch" : 'hurd-\(.*\)')-gnu;;
+    *)	    archname="$arch-linux"
+esac
+
+case "$archname" in
+    alpha-*) ccflags="$ccflags -mieee";;
+esac
+
+case "$1" in
+    --static) # static perl
+	opts="-Uuseshrplib -Dd_dosuid";;
+
+    --debug) # debugperl
+	opts="-Uuseshrplib -Doptimize=-g";;
+
+    --shared) # shared library
+	opts="-Duseshrplib -Dlibperl=libperl.so.$fullver -Dd_dosuid"
+	# ARM has problems with an optimised libperl
+	[ "$archname" = arm-linux ] && opts="$opts -Doptimize=-O1";;
+
+    --version)
+	exec echo $ver;;
+
+    --full-version)
+	exec echo $fullver;;
+
+    --install-type)
+	# The default installation type for /usr/bin/perl of shared or
+	# static may be changed by including x-perl-static or x-perl-shared
+	# in DEB_BUILD_OPTIONS.  The default is shared except for i386 where
+	# there is a measurable performance penalty, and arm-linux since
+	# libperl is unoptimised.
+	case ",$DEB_BUILD_OPTIONS," in
+	    *,x-perl-static,*)	exec echo static;;
+	    *,x-perl-shared,*)	exec echo shared;;
+	esac
+	case "$archname" in
+	    i386-*|arm-linux)	exec echo static;;
+	    *)			exec echo shared;;
+	esac
+	;;
+
+    *)	echo "$0: need --shared, --static, or --debug option"
+    	exit 2;;
+esac
+
+# need bash when sourcing config.over
+/bin/bash Configure				\
+    -Dccflags="$ccflags"			\
+    -Dcccdlflags=-fPIC				\
+    -Darchname=$archname			\
+    -Dprefix=/usr				\
+    -Dprivlib=/usr/share/perl/$fullver		\
+    -Darchlib=/usr/lib/perl/$fullver		\
+    -Dvendorprefix=/usr				\
+    -Dvendorlib=/usr/share/perl5		\
+    -Dvendorarch=/usr/lib/perl5			\
+    -Dsiteprefix=/usr/local			\
+    -Dsitelib=/usr/local/share/perl/$fullver	\
+    -Dsitearch=/usr/local/lib/perl/$fullver	\
+    -Dman1dir=/usr/share/man/man1		\
+    -Dman3dir=/usr/share/man/man3		\
+    -Dman1ext=1					\
+    -Dman3ext=3perl				\
+    -Dpager=/usr/bin/sensible-pager		\
+    -Uafs					\
+    -Ud_csh					\
+    -Uusesfio					\
+    $opts -des

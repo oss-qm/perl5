@@ -72,7 +72,7 @@ sub parse {
     next if !defined($value);
     my @values = ();
     if ($value ne '') {
-      @values = map CGI::unescape($_),split(/[&;]/,$value.'&dmy');
+      @values = map unescape($_),split(/[&;]/,$value.'&dmy');
       pop @values;
     }
     $key = unescape($key);
@@ -363,7 +363,7 @@ same semantics as fetch(), but performs no unescaping.
 You may also retrieve cookies that were stored in some external
 form using the parse() class method:
 
-       $COOKIES = `cat /usr/tmp/Cookie_stash`;
+       $COOKIES = `cat /var/run/www/Cookie_stash`;
        %cookies = parse CGI::Cookie($COOKIES);
 
 =head2 Manipulating Cookies

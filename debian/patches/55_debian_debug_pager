@@ -1,0 +1,14 @@
+Use /usr/bin/pager if $PAGER is not defined rather than more.
+
+diff -ur perl-5.6.1.orig/lib/perl5db.pl perl-5.6.1/lib/perl5db.pl
+--- perl-5.6.1.orig/lib/perl5db.pl	Fri Feb 23 13:57:55 2001
++++ perl-5.6.1/lib/perl5db.pl	Fri May 11 15:14:38 2001
+@@ -290,7 +290,7 @@
+ 	? $ENV{PAGER}
+ 	: ($^O eq 'os2' 
+ 	   ? 'cmd /c more' 
+-	   : 'more'))) unless defined $pager;
++	   : '/usr/bin/pager'))) unless defined $pager;
+ setman();
+ &recallCommand("!") unless defined $prc;
+ &shellBang("!") unless defined $psh;

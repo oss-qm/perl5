@@ -1,0 +1,14 @@
+Install pod2latex man page.
+
+diff -Naur perl-5.6.1.orig/installman perl-5.6.1/installman
+--- perl-5.6.1.orig/installman	Fri Feb 23 13:57:55 2001
++++ perl-5.6.1/installman	Mon Dec  3 23:21:14 2001
+@@ -79,7 +79,7 @@
+ runpod2man('x2p', $opts{man1dir}, $opts{man1ext}, 's2p', 'a2p.pod',
+ 	   'find2perl');
+ runpod2man('pod', $opts{man1dir}, $opts{man1ext}, 'pod2man', 'pod2html',
+-	   'pod2text', 'pod2usage', 'podchecker', 'podselect');
++	   'pod2latex', 'pod2text', 'pod2usage', 'podchecker', 'podselect');
+ 
+ # It would probably be better to have this page linked
+ # to the c2ph man page.  Or, this one could say ".so man1/c2ph.1",

@@ -898,7 +898,7 @@ The generated Makefile enables the user of the extension to invoke
 The Makefile to be produced may be altered by adding arguments of the
 form C<KEY=VALUE>. E.g.
 
-  perl Makefile.PL PREFIX=/tmp/myperl5
+  perl Makefile.PL PREFIX=~/myperl5
 
 Other interesting targets in the generated Makefile are
 

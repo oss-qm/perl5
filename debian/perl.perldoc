@@ -1,0 +1,4 @@
+#!/bin/sh
+# place-holder, diverted by perl-doc
+echo You need to install the perl-doc package to use this program.
+exit 1

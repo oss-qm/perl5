@@ -1,0 +1,7 @@
+This directory contains a subset of debhelper (version 3.0.51) to
+avoid a circular build-dependency (perl->debhelper->perl).
+
+debhelper is available from http://packages.debian.org/debhelper,
+copyright (GPLv2) Joey Hess <joeyh@debian.org>.
+
+ -- Brendan O'Dea <bod@debian.org>

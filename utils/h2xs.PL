@@ -811,8 +811,9 @@ END
 
 unless( $opt_X || $opt_c || $opt_A ){
 	# we'll have an AUTOLOAD(), and it will have $AUTOLOAD and
-	# will want Carp.
+	# will want Carp and Errno
 	print PM <<'END';
+use Errno;
 use Carp;
 END
 }
@@ -897,7 +898,7 @@ sub AUTOLOAD {
     croak "&$module::constant not defined" if \$constname eq 'constant';
     my \$val = constant(\$constname, \@_ ? \$_[0] : 0);
     if (\$! != 0) {
-	if (\$! =~ /Invalid/ || \$!{EINVAL}) {
+	if (\$!{EINVAL}) {
 	    \$AutoLoader::AUTOLOAD = \$AUTOLOAD;
 	    goto &AutoLoader::AUTOLOAD;
 	}
