@@ -758,8 +758,6 @@ all POD files in MAN1PODS and MAN3PODS.
 sub manifypods_target {
     my($self) = shift;
 
-    my $man1pods      = '';
-    my $man3pods      = '';
     my $dependencies  = '';
 
     # populate manXpods & dependencies:
@@ -775,7 +773,7 @@ END
     foreach my $section (qw(1 3)) {
         my $pods = $self->{"MAN${section}PODS"};
         push @man_cmds, $self->split_command(<<CMD, %$pods);
-	\$(NOECHO) \$(POD2MAN) --section=$section --perm_rw=\$(PERM_RW)
+	\$(NOECHO) \$(POD2MAN) --section=\$(MAN${section}EXT) --perm_rw=\$(PERM_RW)
 CMD
     }
 
@@ -1681,9 +1679,11 @@ sub init_INSTALL_from_PREFIX {
         $self->{SITEPREFIX}   ||= $sprefix;
         $self->{VENDORPREFIX} ||= $vprefix;
 
-        # Lots of MM extension authors like to use $(PREFIX) so we
-        # put something sensible in there no matter what.
-        $self->{PREFIX} = '$('.uc $self->{INSTALLDIRS}.'PREFIX)';
+	my $p = $self->{PREFIX} = $self->{PERLPREFIX};
+	for my $t (qw/PERL SITE VENDOR/)
+	{
+	    $self->{"${t}PREFIX"} =~ s!^\Q$p\E(?=/|$)!\$(PREFIX)!;
+	}
     }
 
     my $arch    = $Config{archname};
