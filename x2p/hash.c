@@ -1,6 +1,7 @@
 /* $RCSfile: hash.c,v $$Revision: 4.1 $$Date: 92/08/07 18:29:20 $
  *
- *    Copyright (c) 1991-2001, Larry Wall
+ *    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2002,
+ *    by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -12,6 +13,10 @@
 #include "EXTERN.h"
 #include "a2p.h"
 #include "util.h"
+
+#ifdef NETWARE
+char *savestr(char *str);
+#endif
 
 STR *
 hfetch(register HASH *tb, char *key)
@@ -137,7 +142,7 @@ hsplit(HASH *tb)
     register HENT **oentry;
 
     a = (HENT**) saferealloc((char*)tb->tbl_array, newsize * sizeof(HENT*));
-    bzero((char*)&a[oldsize], oldsize * sizeof(HENT*)); /* zero second half */
+    memset(&a[oldsize], 0, oldsize * sizeof(HENT*)); /* zero second half */
     tb->tbl_max = --newsize;
     tb->tbl_array = a;
 
@@ -171,7 +176,7 @@ hnew(void)
     tb->tbl_fill = 0;
     tb->tbl_max = 7;
     hiterinit(tb);	/* so each() will start off right */
-    bzero((char*)tb->tbl_array, 8 * sizeof(HENT*));
+    memset(tb->tbl_array, 0, 8 * sizeof(HENT*));
     return tb;
 }
 

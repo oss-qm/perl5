@@ -1,7 +1,7 @@
 # Pod::Text -- Convert POD data to formatted ASCII text.
-# $Id: Text.pm,v 2.16 2001/11/28 01:15:50 eagle Exp $
+# $Id: Text.pm,v 2.21 2002/08/04 03:34:58 eagle Exp $
 #
-# Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>
+# Copyright 1999, 2000, 2001, 2002 by Russ Allbery <rra@stanford.edu>
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -43,7 +43,7 @@ use vars qw(@ISA @EXPORT %ESCAPES $VERSION);
 # Don't use the CVS revision as the version, since this module is also in Perl
 # core and too many things could munge CVS magic revision strings.  This
 # number should ideally be the same as the CVS revision in podlators, however.
-$VERSION = 2.16;
+$VERSION = 2.21;
 
 
 ##############################################################################
@@ -177,6 +177,7 @@ sub initialize {
 
     $$self{alt}      = 0  unless defined $$self{alt};
     $$self{indent}   = 4  unless defined $$self{indent};
+    $$self{margin}   = 0  unless defined $$self{margin};
     $$self{loose}    = 0  unless defined $$self{loose};
     $$self{sentence} = 0  unless defined $$self{sentence};
     $$self{width}    = 76 unless defined $$self{width};
@@ -195,8 +196,11 @@ sub initialize {
         croak qq(Invalid quote specification "$$self{quotes}");
     }
 
-    $$self{INDENTS}  = [];              # Stack of indentations.
-    $$self{MARGIN}   = $$self{indent};  # Current left margin in spaces.
+    # Stack of indentations.
+    $$self{INDENTS}  = [];
+
+    # Current left margin.
+    $$self{MARGIN} = $$self{indent} + $$self{margin};
 
     $self->SUPER::initialize;
 
@@ -227,7 +231,7 @@ sub command {
         ($file, $line) = $paragraph->file_line;
         $text =~ s/\n+\z//;
         $text = " $text" if ($text =~ /^\S/);
-        warn qq($file:$line: Unknown command paragraph "=$command$text"\n);
+        warn qq($file:$line: Unknown command paragraph: =$command$text\n);
         return;
     }
 }
@@ -291,7 +295,6 @@ sub interior_sequence {
             return chr;
         } else {
             return $ESCAPES{$_} if defined $ESCAPES{$_};
-            my $seq = shift;
             my ($file, $line) = $seq->file_line;
             warn "$file:$line: Unknown escape: E<$_>\n";
             return "E<$_>";
@@ -316,9 +319,8 @@ sub interior_sequence {
     elsif ($command eq 'I') { return $self->seq_i ($_) }
     elsif ($command eq 'L') { return $self->seq_l ($_, $seq) }
     else {
-        my $seq = shift;
         my ($file, $line) = $seq->file_line;
-        warn "$file:$line: Unknown formatting code $command<$_>\n";
+        warn "$file:$line: Unknown formatting code: $command<$_>\n";
     }
 }
 
@@ -461,7 +463,7 @@ sub seq_c {
        | \$+ [\#^]? \S $index                           # special ($^Foo, $")
        | [\$\@%&*]+ \#? [:\'\w]+ $index                 # plain var or func
        | [\$\@%&*]* [:\'\w]+ (?: -> )? \(\s*[^\s,]\s*\) # 0/1-arg func call
-       | [+-]? [\d.]+ (?: [eE] [+-]? \d+ )?             # a number
+       | [+-]? ( \d[\d.]* | \.\d+ ) (?: [eE][+-]?\d+ )? # a number
        | 0x [a-fA-F\d]+                                 # a hex constant
       )
       \s*\z
@@ -498,10 +500,12 @@ sub heading {
     $text = $self->interpolate ($text, $line);
     if ($$self{alt}) {
         my $closemark = reverse (split (//, $marker));
-        $self->output ("\n" . "$marker $text $closemark" . "\n\n");
+        my $margin = ' ' x $$self{margin};
+        $self->output ("\n" . "$margin$marker $text $closemark" . "\n\n");
     } else {
         $text .= "\n" if $$self{loose};
-        $self->output (' ' x $indent . $text . "\n");
+        my $margin = ' ' x ($$self{margin} + $indent);
+        $self->output ($margin . $text . "\n");
     }
 }
 
@@ -528,12 +532,12 @@ sub item {
     undef $$self{ITEM};
     my $indent = $$self{INDENTS}[-1];
     unless (defined $indent) { $indent = $$self{indent} }
-    my $space = ' ' x $indent;
-    $space =~ s/^ /:/ if $$self{alt};
+    my $margin = ' ' x $$self{margin};
     if (!$_ || /^\s+$/ || ($$self{MARGIN} - $indent < length ($tag) + 1)) {
-        my $margin = $$self{MARGIN};
+        my $realindent = $$self{MARGIN};
         $$self{MARGIN} = $indent;
         my $output = $self->reformat ($tag);
+        $output =~ s/^$margin /$margin:/ if ($$self{alt} && $indent > 0);
         $output =~ s/\n*$/\n/;
 
         # If the text is just whitespace, we have an empty item paragraph;
@@ -543,11 +547,13 @@ sub item {
         $output .= "\n" if $_ && $_ =~ /^\s*$/;
 
         $self->output ($output);
-        $$self{MARGIN} = $margin;
+        $$self{MARGIN} = $realindent;
         $self->output ($self->reformat ($_)) if $_ && /\S/;
     } else {
+        my $space = ' ' x $indent;
+        $space =~ s/^$margin /$margin:/ if $$self{alt};
         $_ = $self->reformat ($_);
-        s/^ /:/ if ($$self{alt} && $indent > 0);
+        s/^$margin /$margin:/ if ($$self{alt} && $indent > 0);
         my $tagspace = ' ' x length $tag;
         s/^($space)$tagspace/$1$tag/ or warn "Bizarre space in item";
         $self->output ($_);
@@ -718,6 +724,13 @@ it's the expected formatting for manual pages; if you're formatting
 arbitrary text documents, setting this to true may result in more pleasing
 output.
 
+=item margin
+
+The width of the left margin in spaces.  Defaults to 0.  This is the margin
+for all text, including headings, not the amount by which regular text is
+indented; for the latter, see the I<indent> option.  To set the right
+margin, see the I<width> option.
+
 =item quotes
 
 Sets the quote marks used to surround CE<lt>> text.  If the value is a
@@ -771,7 +784,7 @@ and the input file it was given could not be opened.
 (F) The quote specification given (the quotes option to the constructor) was
 invalid.  A quote specification must be one, two, or four characters long.
 
-=item %s:%d: Unknown command paragraph "%s".
+=item %s:%d: Unknown command paragraph: %s
 
 (W) The POD source contained a non-standard command paragraph (something of
 the form C<=command args>) that Pod::Man didn't know about.  It was ignored.
@@ -815,6 +828,10 @@ subclass of it does.  Look for L<Pod::Text::Termcap>.
 
 L<Pod::Parser>, L<Pod::Text::Termcap>, L<pod2text(1)>
 
+The current version of this module is always available from its web site at
+L<http://www.eyrie.org/~eagle/software/podlators/>.  It is also part of the
+Perl core distribution as of 5.6.0.
+
 =head1 AUTHOR
 
 Russ Allbery <rra@stanford.edu>, based I<very> heavily on the original
@@ -823,7 +840,7 @@ Pod::Parser by Brad Appleton <bradapp@enteract.com>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>.
+Copyright 1999, 2000, 2001, 2002 by Russ Allbery <rra@stanford.edu>.
 
 This program is free software; you may redistribute it and/or modify it
 under the same terms as Perl itself.

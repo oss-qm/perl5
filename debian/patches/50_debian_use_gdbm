@@ -1,0 +1,44 @@
+Use gdbm for ODBM_File/NDBM_File.  The compatability header is named
+gdbm-ndbm.h on debian machines.  Explicitly link against -lgdbm_compat.
+
+diff -Naur --exclude=debian perl-5.8.4.orig/Configure perl-5.8.4/Configure
+--- perl-5.8.4.orig/Configure	2004-04-01 23:48:18.000000000 +1000
++++ perl-5.8.4/Configure	2004-05-02 10:23:22.000000000 +1000
+@@ -19508,7 +19508,7 @@
+ eval $inhdr
+ 
+ : see if ndbm.h is available
+-set ndbm.h t_ndbm
++set gdbm-ndbm.h t_ndbm
+ eval $inhdr
+ 
+ case "$t_ndbm" in
+diff -Naur --exclude=debian perl-5.8.4.orig/ext/NDBM_File/NDBM_File.xs perl-5.8.4/ext/NDBM_File/NDBM_File.xs
+--- perl-5.8.4.orig/ext/NDBM_File/NDBM_File.xs	2002-08-23 14:00:51.000000000 +1000
++++ perl-5.8.4/ext/NDBM_File/NDBM_File.xs	2004-05-02 10:23:22.000000000 +1000
+@@ -1,7 +1,7 @@
+ #include "EXTERN.h"
+ #include "perl.h"
+ #include "XSUB.h"
+-#include <ndbm.h>
++#include <gdbm-ndbm.h>
+ 
+ typedef struct {
+ 	DBM * 	dbp ;
+diff -Naur --exclude=debian perl-5.8.4.orig/ext/NDBM_File/hints/linux.pl perl-5.8.4/ext/NDBM_File/hints/linux.pl
+--- perl-5.8.4.orig/ext/NDBM_File/hints/linux.pl	2001-07-03 06:20:22.000000000 +1000
++++ perl-5.8.4/ext/NDBM_File/hints/linux.pl	2004-05-02 10:23:22.000000000 +1000
+@@ -3,4 +3,4 @@
+ # (no null key support)
+ # Jonathan Stowe <gellyfish@gellyfish.com>
+ use Config;
+-$self->{LIBS} = ['-lgdbm'] if $Config{libs} =~ /(?:^|\s)-lgdbm(?:\s|$)/;
++$self->{LIBS} = ['-lgdbm_compat'] if $Config{libs} =~ /(?:^|\s)-lgdbm_compat(?:\s|$)/;
+diff -Naur --exclude=debian perl-5.8.4.orig/ext/ODBM_File/hints/linux.pl perl-5.8.4/ext/ODBM_File/hints/linux.pl
+--- perl-5.8.4.orig/ext/ODBM_File/hints/linux.pl	2002-07-09 18:52:08.000000000 +1000
++++ perl-5.8.4/ext/ODBM_File/hints/linux.pl	2004-05-02 10:23:22.000000000 +1000
+@@ -1,3 +1,3 @@
+ # uses GDBM dbm compatibility feature - at least on SuSE 8.0
+-$self->{LIBS} = ['-lgdbm'];
++$self->{LIBS} = ['-lgdbm_compat'];
+ 

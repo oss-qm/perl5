@@ -1,30 +1,27 @@
-#!/bin/sh
+#!/bin/bash
 
-fullver=$(expr $(pwd) : '.*-\([1-9][0-9.]*\)$')
-ver=$(expr $fullver : '\([1-9][0-9.]*\)\.[0-9]*$')
+eval $(echo '#include "./patchlevel.h"
+SETver=PERL_REVISION.PERL_VERSION;
+SETfullver=$ver.PERL_SUBVERSION' | gcc -E - | sed -n '/^SET/{s///;s/ //gp;}')
+
 ccflags=-DDEBIAN
-
-arch=$(dpkg --print-installation-architecture)
-case "$arch" in
-    hurd-*) archname=$(expr "$arch" : 'hurd-\(.*\)')-gnu;;
-    *)	    archname="$arch-linux"
-esac
-
-case "$archname" in
-    alpha-*) ccflags="$ccflags -mieee";;
-esac
+archname=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
+optimize=
 
 case "$1" in
     --static) # static perl
+    	build_type=static
 	opts="-Uuseshrplib -Dd_dosuid";;
 
     --debug) # debugperl
-	opts="-Uuseshrplib -Doptimize=-g";;
+    	build_type=debug
+	optimize=-g
+	ccflags="$ccflags -DPERL_DEBUGGING_MSTATS"
+	opts="-Dusemymalloc -Uuseshrplib";;
 
     --shared) # shared library
-	opts="-Duseshrplib -Dlibperl=libperl.so.$fullver -Dd_dosuid"
-	# ARM has problems with an optimised libperl
-	[ "$archname" = arm-linux ] && opts="$opts -Doptimize=-O1";;
+    	build_type=shared
+	opts="-Duseshrplib -Dlibperl=libperl.so.$fullver -Dd_dosuid";;
 
     --version)
 	exec echo $ver;;
@@ -32,34 +29,64 @@ case "$1" in
     --full-version)
 	exec echo $fullver;;
 
+    --strip)
+    	case ",$DEB_BUILD_OPTIONS," in
+	    *[,\ ]nostrip[,\ ]*)	exec echo no;;
+	    *)				exec echo yes;;
+	esac;;
+
     --install-type)
 	# The default installation type for /usr/bin/perl of shared or
 	# static may be changed by including x-perl-static or x-perl-shared
 	# in DEB_BUILD_OPTIONS.  The default is shared except for i386 where
-	# there is a measurable performance penalty, and arm-linux since
-	# libperl is unoptimised.
+	# there is a measurable performance penalty.
 	case ",$DEB_BUILD_OPTIONS," in
-	    *,x-perl-static,*)	exec echo static;;
-	    *,x-perl-shared,*)	exec echo shared;;
+	    *[,\ ]x-perl-static[,\ ]*)	exec echo static;;
+	    *[,\ ]x-perl-shared[,\ ]*)	exec echo shared;;
 	esac
 	case "$archname" in
-	    i386-*|arm-linux)	exec echo static;;
-	    *)			exec echo shared;;
-	esac
-	;;
+	    i386-*)			exec echo static;;
+	    *)				exec echo shared;;
+	esac;;
+
+    --test-target)
+    	case ",$DEB_BUILD_OPTIONS," in
+	    *[,\ ]x-perl-notest[,\ ]*)	exit;;
+	    *)				exec echo test;;
+	esac;;
 
     *)	echo "$0: need --shared, --static, or --debug option"
     	exit 2;;
 esac
 
+case "$archname:$build_type" in
+    alpha-*) # required to correctly handle floating point on alpha
+    	ccflags="$ccflags -mieee";;
+
+    m68k-*:shared) # work around an optimiser bug
+	ccflags="$ccflags -fno-regmove";;
+
+    arm-*) # gcc defaults are currently incorrect
+    	ccflags="$ccflags -march=armv3";;
+esac
+
+case ",$DEB_BUILD_OPTIONS," in
+    *[,\ ]noopt[,\ ]*)
+	optimize="$optimize${optimize:+ }-O0";;
+esac
+
+test -n "$optimize" && opts="$opts -Doptimize='$optimize'"
+
 # need bash when sourcing config.over
-/bin/bash Configure				\
-    -Dccflags="$ccflags"			\
+eval /bin/bash Configure			\
+    -Dusethreads				\
+    -Duselargefiles				\
+    -Dccflags=\'$ccflags\'			\
     -Dcccdlflags=-fPIC				\
     -Darchname=$archname			\
     -Dprefix=/usr				\
-    -Dprivlib=/usr/share/perl/$fullver		\
-    -Darchlib=/usr/lib/perl/$fullver		\
+    -Dprivlib=/usr/share/perl/$ver		\
+    -Darchlib=/usr/lib/perl/$ver		\
     -Dvendorprefix=/usr				\
     -Dvendorlib=/usr/share/perl5		\
     -Dvendorarch=/usr/lib/perl5			\
@@ -68,10 +95,13 @@ esac
     -Dsitearch=/usr/local/lib/perl/$fullver	\
     -Dman1dir=/usr/share/man/man1		\
     -Dman3dir=/usr/share/man/man3		\
+    -Dsiteman1dir=/usr/local/man/man1		\
+    -Dsiteman3dir=/usr/local/man/man3		\
     -Dman1ext=1					\
     -Dman3ext=3perl				\
     -Dpager=/usr/bin/sensible-pager		\
     -Uafs					\
     -Ud_csh					\
     -Uusesfio					\
+    -Uusenm					\
     $opts -des

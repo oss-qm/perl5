@@ -14,6 +14,7 @@ use IO::File;
 my @args = @ARGV;
 @ARGV = ();
 find sub { push @ARGV, $File::Find::name if -f and /\.pm$/ }, @args;
+die "$0: no modules under @args?\n" unless @ARGV;
 
 $^I = '';
 $/ = '';

@@ -10,7 +10,7 @@
 package Pod::Usage;
 
 use vars qw($VERSION);
-$VERSION = 1.14;  ## Current version of this package
+$VERSION = 1.16;  ## Current version of this package
 require  5.005;    ## requires this Perl version or later
 
 =head1 NAME
@@ -381,6 +381,8 @@ similar to the following:
 
 =head1 AUTHOR
 
+Please report bugs using L<http://rt.cpan.org>.
+
 Brad Appleton E<lt>bradapp@enteract.comE<gt>
 
 Based on code for B<Pod::Text::pod2text()> written by
@@ -469,7 +471,8 @@ sub pod2usage {
     }
 
     ## Default the output file
-    $opts{"-output"} = ($opts{"-exitval"} < 2) ? \*STDOUT : \*STDERR
+    $opts{"-output"} = (lc($opts{"-exitval"}) eq "noexit" ||
+                        $opts{"-exitval"} < 2) ? \*STDOUT : \*STDERR
             unless (defined $opts{"-output"});
     ## Default the input file
     $opts{"-input"} = $0  unless (defined $opts{"-input"});
@@ -478,7 +481,7 @@ sub pod2usage {
     unless ((ref $opts{"-input"}) || (-e $opts{"-input"})) {
         my ($dirname, $basename) = ('', $opts{"-input"});
         my $pathsep = ($^O =~ /^(?:dos|os2|MSWin32)$/) ? ";"
-                            : (($^O eq 'MacOS') ? ',' :  ":");
+                            : (($^O eq 'MacOS' || $^O eq 'VMS') ? ',' :  ":");
         my $pathspec = $opts{"-pathlist"} || $ENV{PATH} || $ENV{PERL5LIB};
 
         my @paths = (ref $pathspec) ? @$pathspec : split($pathsep, $pathspec);
@@ -506,7 +509,7 @@ sub pod2usage {
              and  $opts{"-output"} == \*STDOUT )
     {
        ## spit out the entire PODs. Might as well invoke perldoc
-       my $progpath = File::Spec->catfile($Config{bin}, "perldoc");
+       my $progpath = File::Spec->catfile($Config{scriptdir}, "perldoc");
        system($progpath, $opts{"-input"});
     }
     else {
@@ -557,3 +560,4 @@ sub preprocess_paragraph {
     return  $self->SUPER::preprocess_paragraph($_);
 }
 
+1; # keep require happy

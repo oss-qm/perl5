@@ -1,0 +1,36 @@
+Work around toolchain breakage on ia64, arm and powerpc - #247176
+
+diff -Naur --exclude=debian perl-5.8.4.orig/cflags.SH perl-5.8.4/cflags.SH
+--- perl-5.8.4.orig/cflags.SH	2002-09-30 20:59:07.000000000 +1000
++++ perl-5.8.4/cflags.SH	2004-10-25 01:05:29.000000000 +1000
+@@ -107,8 +107,11 @@
+     perlmain) ;;
+     perly) ;;
+     pp) ;;
+-    pp_ctl) ;;
+-    pp_hot) ;;
++    pp_ctl|pp_hot|pp_sort)
++    case $archname in
++        arm-*|ia64-*|powerpc-*)
++        optimize=-O1;;
++    esac;;
+     pp_pack) ;;
+     pp_sys) ;;
+     regcomp) ;;
+diff -Naur --exclude=debian perl-5.8.4.orig/hints/linux.sh perl-5.8.4/hints/linux.sh
+--- perl-5.8.4.orig/hints/linux.sh	2004-04-18 00:36:15.000000000 +1000
++++ perl-5.8.4/hints/linux.sh	2004-10-25 01:02:56.000000000 +1000
+@@ -88,13 +88,6 @@
+ # use -O2 by default ; -O3 doesn't seem to bring significant benefits with gcc
+ '')
+     optimize='-O2'
+-    case "`uname -m`" in
+-        ppc*)
+-            # on ppc, it seems that gcc (at least gcc 3.3.2) isn't happy
+-	    # with -O2 ; so downgrade to -O1.
+-            optimize='-O1'
+-        ;;
+-    esac
+     ;;
+ esac
+ 

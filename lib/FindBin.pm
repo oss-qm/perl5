@@ -39,9 +39,29 @@ directory.
  $RealBin     - $Bin with all links resolved
  $RealScript  - $Script with all links resolved
 
+=head1 KNOWN ISSUES
+
+If there are two modules using C<FindBin> from different directories
+under the same interpreter, this won't work. Since C<FindBin> uses a
+C<BEGIN> block, it'll be executed only once, and only the first caller
+will get it right. This is a problem under mod_perl and other persistent
+Perl environments, where you shouldn't use this module. Which also means
+that you should avoid using C<FindBin> in modules that you plan to put
+on CPAN. To make sure that C<FindBin> will work is to call the C<again>
+function:
+
+  use FindBin;
+  FindBin::again(); # or FindBin->again;
+
+In former versions of FindBin there was no C<again> function. The
+workaround was to force the C<BEGIN> block to be executed again:
+
+  delete $INC{'FindBin.pm'};
+  require FindBin;
+
 =head1 KNOWN BUGS
 
-if perl is invoked as
+If perl is invoked as
 
    perl filename
 
@@ -82,9 +102,9 @@ use File::Spec;
 %EXPORT_TAGS = (ALL => [qw($Bin $Script $RealBin $RealScript $Dir $RealDir)]);
 @ISA = qw(Exporter);
 
-$VERSION = "1.42";
+$VERSION = "1.44";
 
-BEGIN
+sub init
 {
  *Dir = \$Bin;
  *RealDir = \$RealBin;
@@ -107,15 +127,15 @@ BEGIN
     }
    else
     {
-     my $IsWin32 = $^O eq 'MSWin32';
-     unless(($script =~ m#/# || ($IsWin32 && $script =~ m#\\#))
+     my $dosish = ($^O eq 'MSWin32' or $^O eq 'os2');
+     unless(($script =~ m#/# || ($dosish && $script =~ m#\\#))
             && -f $script)
       {
        my $dir;
        foreach $dir (File::Spec->path)
 	{
         my $scr = File::Spec->catfile($dir, $script);
-	if(-r $scr && (!$IsWin32 || -x _))
+	if(-r $scr && (!$dosish || -x _))
          {
           $script = $scr;
 
@@ -164,6 +184,10 @@ BEGIN
     }
   }
 }
+
+BEGIN { init }
+
+*again = \&init;
 
 1; # Keep require happy
 

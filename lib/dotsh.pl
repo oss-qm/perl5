@@ -59,14 +59,12 @@ sub dotsh {
       open (_SH_ENV, "$shell \". $command $args && set \" |") || die;
    }
 
-   open (_SH_ENV, "/tmp/_sh_env$$") || die "Could not open /tmp/_sh_env$$!\n";
    while (<_SH_ENV>) {
        chop;
        m/^([^=]*)=(.*)/s;
        $ENV{$1} = $2;
    }
    close (_SH_ENV);
-   system "rm -f /tmp/_sh_env$$";
 
    foreach $key (keys(%ENV)) {
        $tmp .= "\$$key = \$ENV{'$key'};" if $key =~ /^[A-Za-z]\w*$/;

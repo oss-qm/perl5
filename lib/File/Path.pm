@@ -40,6 +40,15 @@ the numeric mode to use when creating the directories
 It returns a list of all directories (including intermediates, determined
 using the Unix '/' separator) created.
 
+If a system error prevents a directory from being created, then the
+C<mkpath> function throws a fatal error with C<Carp::croak>. This error
+can be trapped with an C<eval> block:
+
+  eval { mkpath($dir) };
+  if ($@) {
+    print "Couldn't create $dir: $@";
+  }
+
 Similarly, the C<rmtree> function provides a convenient way to delete a
 subtree from the directory structure, much like the Unix command C<rm -r>.
 C<rmtree> takes three arguments:
@@ -74,14 +83,17 @@ modes for the owner.
 It returns the number of files successfully deleted.  Symlinks are
 simply deleted and not followed.
 
-B<NOTE:> If the third parameter is not TRUE, C<rmtree> is B<unsecure>
-in the face of failure or interruption.  Files and directories which
-were not deleted may be left with permissions reset to allow world
-read and write access.  Note also that the occurrence of errors in
-rmtree can be determined I<only> by trapping diagnostic messages
-using C<$SIG{__WARN__}>; it is not apparent from the return value.
-Therefore, you must be extremely careful about using C<rmtree($foo,$bar,0>
-in situations where security is an issue.
+=head1 DIAGNOSTICS
+
+=over 4
+
+=item *
+
+On Windows, if C<mkpath> gives you the warning: B<No such file or
+directory>, this may mean that you've exceeded your filesystem's
+maximum path length.
+
+=back
 
 =head1 AUTHORS
 
@@ -90,14 +102,15 @@ Charles Bailey <F<bailey@newman.upenn.edu>>
 
 =cut
 
-use 5.005_64;
+use 5.006;
 use Carp;
 use File::Basename ();
 use Exporter ();
 use strict;
+use warnings;
 use Cwd 'getcwd';
 
-our $VERSION = "1.0404";
+our $VERSION = "1.06";
 our @ISA = qw( Exporter );
 our @EXPORT = qw( mkpath rmtree );
 

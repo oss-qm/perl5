@@ -1,4 +1,11 @@
-perl (5.6.1-8.9) stable-security; urgency=high
+perl (5.8.4-8) unstable; urgency=low
+
+  * Remove $!{ENOENT} test from rmtree; File::Path is used during the
+    build process before Errno is installed.
+
+ -- Brendan O'Dea <bod@debian.org>  Tue,  8 Mar 2005 19:30:38 +1100
+
+perl (5.8.4-7) unstable; urgency=low
 
   * SECURITY [CAN-2005-0448]: rewrite File::Path::rmtree to avoid race
     condition which allows an attacker with write permission on
@@ -6,95 +13,506 @@ perl (5.6.1-8.9) stable-security; urgency=high
     remove arbitrary files (closes: #286905, #286922).  Supersedes
     the previous patch for CAN-2004-0452.
 
- -- Brendan O'Dea <bod@debian.org>  Fri, 18 Mar 2005 22:22:25 +1100
+  * Add PERL_DEBUGGING_MSTATS for debugperl (closes: #178243).
+  * Escape dashes in verbatim text to have groff render them as-is
+    rather than as \x{2010} (closes: #250877).
 
-perl (5.6.1-8.8) stable-security; urgency=low
+  * CGI: handle escaped newlines in URLs (closes: #289709).
+  * Net::NNTP: fix precedence error in article routine (closes: #275142).
+  * Devel::Dprof: refer to executable as `perl' (closes: #198855).
+  * Remove spurious undefined warning in getopts.pl (closes: #255919).
+  * Remove XSI-isms from maintainer scripts (closes: #256731).
+  * Revise MakeMaker patch to defer expansion of $(MANnEXT) until
+    runtime (closes: #263325).
+
+  * Normalise case of a2p man page OPTIONS section, place optional
+    filename in brackets (closes: #281091, #281092).
+
+  * Fix octal glitch in perlreref(1) (closes: #281437).
+  * Have perl suggest both ReadLine variants (gnu, perl).
+  * Upgrade suggestion on perl-doc to recommends now that dselect is
+    less pedantic about the latter.
+
+ -- Brendan O'Dea <bod@debian.org>  Mon,  7 Mar 2005 10:22:01 +1100
+
+perl (5.8.4-6) unstable; urgency=high
+
+  * SECURITY [CAN-2005-0155, CAN-2005-0156]: apply Mandrake patch to
+    perlio.c which removes a privilege escalation in debug mode and a
+    buffer overflow.
+
+  * Make close return false if the stream had prior errors (patch from
+    Jim Meyering; closes: #285435).
+
+  * Fix enc2xs to handle missing entries symlinks in @INC, and missing
+    directories (thanks to Sven Hartge; closes: #290336).
+
+  * Add --no-backup-if-mismatch to patch/unpatch rules.
+  * Correct some minor errors in 09_fix_insecure_tempfiles:  wrong
+    quoting in c2ph.PL, documentation of .perldbtty in perldebug.pod .
+
+ -- Brendan O'Dea <bod@debian.org>  Wed,  2 Feb 2005 23:55:27 +1100
+
+perl (5.8.4-5) unstable; urgency=low
 
   * SECURITY [CAN-2004-0452]: use less permissive chmods in rmtree.
+  * Move utf8_heavy.pl from perl-modules to perl-base (closes: #280596).
+  * Change ext/*/hints/gnuk{net,free}bsd.pl to use "./hints/linux.pl"
+    (added leading "./").
+
+  * Add debian/watch file.
+  * Install correct MANIFEST.SKIP for ExtUtils (closes: #283802).
+  * Fix error in perlipc documentation of "|-" (closes: #282110).
+  * Add replaces for libclass-multimethods-perl which erroneously
+    included /usr/lib/perl/5.8 (closes: #284489).
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 11 Dec 2004 22:50:44 +1100
+
+perl (5.8.4-4) unstable; urgency=low
+
   * SECURITY [CAN-2004-0976]: patches from Trustix for insecure temp
-    file usage (thanks to Joey Hess for analysis).
-    - Some unsafe examples in the DB_File POD
-    - Use of hard coded temp file name in ext/IO/t/io_unix.t
-    - Hardcoded tmp file in ext/ODBM_File/ODBM_File.xs
-    - Some potentially unsafe examples in POSIX pod
-    - Hardcoded tmp file path in example of Socket.pm
-    - Example in Cookie.pm that uses /usr/tmp
+    file usage (thanks to Joey Hess for analysis; closes #278404).
+    - Some unsafe examples in the DB_File POD.
+    - Use of the unsafe tmpnam in the ext/DB_File/t/db-recno.t test
+      script.
+    - Use of unsafe temporary file names in ext/Devel/PPPort/PPPort.pm .
     - An example in MakeMaker.pm that suggets setting PREFIX=/tmp/myperl5
-    - Insecure use of /tmp file in ExtUtils/inst
-    - Insecure use of /tmp file in docs of Shell.pm
-    - Insecure use of /tmp file in docs of dotsh.pl
-    - Insecure use of /tmp file in setterm() function of lib/perl5db.pl
-    - Insecure use of /tmp file in mpeix/nm
-    - Insecure use of /tmp file in perly.fixer
-    - Insecure use of /tmp file in perldbmfilter.pod, perldebug.pod
-    - Various fixes in the FAQ
-    - perlfunc.pod, ditto
-    - perlipc.pod, ditto
-    - perllexwarn.pod, ditto
-    - perlobj.pod, ditto
-    - perlop.pod, ditto
-    - perlopentut.pod, ditto
-    - Insecure use of /tmp in utils/c2ph.PL, utils/perlbug.PL
+      and another that suggets setting DESTDIR=/tmp/ .
+    - Insecure use of /tmp file in instmodsh.
+    - Insecure use of /tmp file in lib/Memoize/t/tie.t, tie_gdbm.t, tie_ndbm.t,
+      tie_sdbm.t, tie_storable.t, probably exploitable at build time if these
+      tests are run.
+    - Use of insecure temp file in POD docs in lib/perl5db.pl
+      and also an insecure temp file in the setterm() function in that
+      program.
 
- -- Brendan O'Dea <bod@debian.org>  Wed, 22 Dec 2004 23:55:54 +1100
+  * Fix "bizarre copy of ARRAY" error (thanks to Frank Lichtenheld for
+    pointing out upstream change 22781; closes #275298).
 
-perl (5.6.1-8.7) stable-security; urgency=high
+  * Re-order DESCRIPTION paragraph of perl(1) (closes: #278323).
+  * Escape - in character class in Encode::Alias (closes: #278874).
+  * Add hints/gnuk{net,free}bsd.pl which sources hints/linux.pl to
+    some extensions (closes: #248184).
 
-  * Non-maintainer upload by the Security Team
-  * Updated 20_fix_suidperl from Brendan O'Dea with yet more complete fix for
-    CAN-2003-0618
+ -- Brendan O'Dea <bod@debian.org>  Sun,  7 Nov 2004 02:19:25 +1100
 
- -- Matt Zimmerman <mdz@debian.org>  Sat,  3 Apr 2004 21:02:08 -0800
+perl (5.8.4-3) unstable; urgency=low
 
-perl (5.6.1-8.6) stable-security; urgency=high
+  * Cleanup NMU:
+    - make patch apply/unapply cleanly (closes: #276969).
+    - update libmime-base64-perl conflicts to 3.04 .
 
-  * Non-maintainer upload by the Security Team
-  * Fix more cases where information was leaked by suidperl
-    (exit codes, punctuation in one message).  Still CAN-2003-0618.
-    [debian/patches/20_fix_suidperl]
+  * Add -D_GNU_SOURCE to hints/gnu.sh (closes: #258618).
+  * Add hints/gnuk{net,free}bsd.sh (closes: #248184).
+  * Fix IO blocking method on sparc.
+  * Use -O1 selectively on powerpc (as with ia64, arm).
 
- -- Matt Zimmerman <mdz@debian.org>  Thu, 11 Sep 2003 19:18:49 -0400
+ -- Brendan O'Dea <bod@debian.org>  Mon, 25 Oct 2004 01:07:00 +1000
 
-perl (5.6.1-8.5) stable-security; urgency=high
+perl (5.8.4-2.3) unstable; urgency=high
 
-  * Non-maintainer upload by the Security Team
-  * Apply upstream patch to avoid information disclosure by masking more
-    errors returned by suidperl (CAN-2003-0618)
-    [debian/patches/20_fix_suidperl]
+  * NMU.
+  * Update MIME::Base64 to version 3.03, needed by MIME-tools 5.413.
+  * Fix lintian warnings in synopsis of some binary packages.
 
- -- Matt Zimmerman <mdz@debian.org>  Thu, 11 Sep 2003 18:35:04 -0400
+ -- Matthias Klose <doko@debian.org>  Sun, 19 Sep 2004 15:07:29 +0200
 
-perl (5.6.1-8.3) stable-security; urgency=high
+perl (5.8.4-2.2) unstable; urgency=low
 
-  * Non-maintainer upload by the Security Team
-  * Patch from maintainer to fix cross-site scripting in CGI.pm
-    (CAN-2003-0615)
-    [debian/patches/19_fix_cgi_xss]
+  * NMU, aided by Adam Conrad.
+  * Make debian package autobuildable by integrating the handholding developed
+    by the people working on #247176 into the package infrastructure.
+    - on ARM and ia64 set optimize=-O1 for selected files
+      (63_debian_optim_workaround)
+    - Build with cpp-2.95/gcc-2.95 on m68k.
 
- -- Matt Zimmerman <mdz@debian.org>  Mon,  4 Aug 2003 21:49:58 -0400
+ -- Andreas Metzler <ametzler@debian.org>  Wed,  1 Sep 2004 11:51:10 +0200
 
-perl (5.6.1-8.2) stable-security; urgency=high
+perl (5.8.4-2) unstable; urgency=low
 
-  * Removed test target for some architectures (hppa, ia64) after advice
-    from Brendan O'Dea since it fails on some of them (hope that doesn't
-    leave Perl unusable...)
+  * Revert DynaLoader version permit programs linked with pre-5.8.4 perl
+    to libperl.so to work (closes: #247291).
 
- -- Martin Schulze <joey@infodrom.org>  Sat, 30 Nov 2002 16:14:41 +0100
+  * Modify MakeMaker to pass the full section name to pod2man (closes:
+    #247370).
 
-perl (5.6.1-8.1) stable-security; urgency=high
+ -- Brendan O'Dea <bod@debian.org>  Tue, 11 May 2004 23:29:02 +1000
 
-  * Rebuilt for security
+perl (5.8.4-1) unstable; urgency=low
 
- -- Martin Schulze <joey@infodrom.org>  Thu, 21 Nov 2002 22:13:29 +0100
+  * New upstream version.
+  * DB_File now uses to db4.2 (previously db4.0; closes: #240771).
+  * Update perl conflict versions for:
+      libmime-base64-perl (3.01),
+      libtime-hires-perl (1.59) and
+      libstorable-perl (2.12).
 
-perl (5.6.1-8) stable-security testing-security; urgency=medium
+  * Update perl-module conflict versions for:
+      libansicolor-perl (1.08),
+      libcgi-pm-perl (3.04),
+      liblocale-maketext-perl (1.08) and
+      libmath-bigint-perl (1.70).
 
-  * Security update for Safe.pm:
+  * Add conflicts/replaces/provides for liblocale-codes-perl.  As there
+    are some core changes to this module not reflected in the CPAN
+    package fake up version as 2.06.1-1 (closes: #240497).
+
+  * Fixed debian/config.debian to pass -Doptimize correctly (changes in
+    5.8.3-3 broke perl-debug; closes: #246326).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun,  2 May 2004 09:46:25 +1000
+
+perl (5.8.3-3) unstable; urgency=medium
+
+  * [CAN-2003-0618] Apply Paul Szabo's suidperl fixes to prevent path
+    disclosure (upstream change 22563; closes: #220486).
+
+  * Add build option to supress regression tests; document
+    perl-specific DEB_BUILD_OPTIONS values in README.Debian.
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 27 Mar 2004 11:23:37 +1100
+
+perl (5.8.3-2) unstable; urgency=low
+
+  * Supress spurious pseudohash warning (closes: #231619).
+  * Add patch from Go"ran Weinholt for hurd (closes: #230710).
+  * Create the correct site directory for perllocal (closes: #232074).
+  * Documentation fixes from Julian Gilbey for Encode and perluniintro
+    (closes: #219297, #219308).
+
+  * Issue a warning for missing section 1 manual pages and add missing
+    instmodsh documentation (closes: #230730).
+
+  * cpan script moved to the perl package (from perl-modules) in
+    5.8.1-1; add replaces (closes: #232705).
+
+  * Add conflict for libapache-mod-perl which segfaults with 5.8.2+
+    libperl5.8 (closes: #232537).
+
+  * Set default Makefile.PL arg of 'INSTALLDIRS=site' for CPAN.
+  * Ensure that the version of perl-doc matching Upstream-Version is
+    installed (via depend on perl-doc and conflict on perl).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 15 Feb 2004 12:40:09 +1100
+
+perl (5.8.3-1) unstable; urgency=low
+
+  * New upstream version.
+  * Update conflict versions for updated core modules.
+  * Add epoch to conflict for libscalar-list-utils-perl, move to
+    perl-base (closes: #225873).
+
+  * Use generic values for $Config{myhostname} and $Config{mydomain}.
+  * Include more information on packaging details in README.Debian.
+  * Clarify signal handling during system (closes: #224235).
+  * Add -march=armv3 for arm until gcc defaults are fixed (closes:
+    #230010).
+
+  * Drop sub-version from privlib/archlib directories to match the
+    libperl soname, preventing problems for programs embedding an
+    interpreter when upgrading libperl to a new sub-version.
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 29 Jan 2004 13:39:00 +1100
+
+perl (5.8.2-2) unstable; urgency=low
+
+  * Remove empty directories from /usr/share/perl (closes: #220422).
+  * Upstream change 21719: empty subroutine segfaults (closes: #220277).
+  * Add reentr.pl patch from Chip to fix C++ API (closes: #220840).
+  * Add Conflicts/Replaces/Provides for libscalar-list-utils-perl (in
+    core since 5.8.0; closes #218356).
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 15 Nov 2003 14:54:26 +1100
+
+perl (5.8.2-1) unstable; urgency=low
+
+  * New upstream version.
+  * Update module conflicts.
+
+ -- Brendan O'Dea <bod@debian.org>  Sat,  8 Nov 2003 01:19:29 +1100
+
+perl (5.8.1-4) unstable; urgency=low
+
+  * ODBM_File/NDBM_File: dbm/ndbm compatability libraries are now in
+    libgdbm_compat.so. 
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 23 Oct 2003 22:10:22 +1000
+
+perl (5.8.1-3) unstable; urgency=low
+
+  * Don't mark srand as being called when setting the hash seed
+    otherwise all forked processes end up with the same seed.
+
+  * Move Net::Config back to /usr/share/perl and set location of
+    libnet.cfg to /etc/perl/Net (closes #215730).
+
+  * Apply Nicholas Clark's "Plan C" for foiling the algorithmic
+    complexity attack (based on Chip's plan A (binary compatibility with
+    5.8.0 and 5.8.1).  Closes: #213976, #214938.
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 18 Oct 2003 09:41:16 +1000
+
+perl (5.8.1-2) unstable; urgency=low
+
+  * Added missing Provides: libstorable-perl (closes: #213320).
+  * Remove temporary build dir from install{priv,arch}lib Config
+    variables (closes: #213355).
+
+ -- Brendan O'Dea <bod@debian.org>  Tue, 30 Sep 2003 09:10:33 +1000
+
+perl (5.8.1-1) unstable; urgency=low
+
+  * New upstream version.
+    Closes: #211967 (problem with Term::Complete).
+
+  * Remove cpan script in favour of upstream replacement.
+  * Update conflict versions for core modules.
+  * Add note to suidperl package description about possible timing
+    attacks (as noted in #203426).
+
+  * Kludge around missing __LONG_MAX__ definition in generated .ph
+    headers (closes: #212708).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 28 Sep 2003 20:53:25 +1000
+
+perl (5.8.0-21) unstable; urgency=high
+
+  * Security: further changes for suidperl path disclosure [CAN-2003-0618]
+    to correct exit values and removes extraneous period (closes: #203426).
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 11 Sep 2003 17:58:19 +1000
+
+perl (5.8.0-20) unstable; urgency=high
+
+  * Security: path disclosure via suidperl [CAN-2003-0618] fixed by
+    application of upstream change 21045 (thanks Jarkko; closes:
+    #203426).
+
+  * Add dependency on the exact version of perl-base to libperl5.8 to
+    ensure that the correct base modules are available to programs
+    embedding an interpreter (closes: 182089).
+
+    Move shared library to the perl-base package on architectures
+    where /usr/bin/perl is dynamically linked to the library
+    (everything other than i386) to avoid a dependency loop.
+
+  * Change sections to match overrides (new perl and libdevel sections).
+  * Apply upstream change 18471 to correct behaviour of tell on files
+    opened O_APPEND (reported by Sergio Rua).
+
+  * Apply upstream change 21031 to alter the distribution conditions
+    of perlreftut(1) (see #202723).  Include this manual page in
+    perl-doc once again.  Many thanks to Kevin Carlson of TPJ and to
+    Mark Jason Dominus for their cooperation and assistance with this
+    licence change.
+
+  * Apply patch from Matt Kraai making braced-group macro expressions
+    conditional on !__cplusplus (fixes abiword build on m68k; closes:
+    #204859).
+
+  * Ensure all dependencies of libperl are directly linked (previously
+    -lm and -lpthread were not) for prelink (closes: #187372).
+
+  * Fix permissions on DEBIAN directories in build (closes: #207332).
+  * Expand perl-modules description (closes: #210096).
+  * Add some documentation to README.Debian about the source package.
+  * Backport some changes from DB_File 1.806 to set some tie argument
+    defaults (reported by Sergio Rua).
+
+  * Apply upstream fix for h2ph from Kurt Starsinic to suppress
+    redefinition warnings.
+
+ -- Brendan O'Dea <bod@debian.org>  Wed, 10 Sep 2003 17:25:10 +1000
+
+perl (5.8.0-19) unstable; urgency=low
+
+  * Security: cross site scripting vulnerability in CGI (closes: #202367).
+  * Fix in perlvar.pod (closes: #202784).
+  * Remove non-free perlreftut(1) manual page and POD (closes: #202723).
+  * Change architecture check to use variables set by
+    dpkg-buildpackage or from dpkg-architecture (closes #201240).
+
+ -- Brendan O'Dea <bod@debian.org>  Tue, 29 Jul 2003 23:59:58 +1000
+
+perl (5.8.0-18) unstable; urgency=low
+
+  * Add build-depends for new libgdbm.
+  * Add -fno-regmove for shared build on m68k to work around an
+    optimiser bug.
+
+ -- Brendan O'Dea <bod@debian.org>  Thu,  5 Jun 2003 23:18:20 +1000
+
+perl (5.8.0-17) unstable; urgency=low
+
+  * Correct patch to ext/threads/t/join.t (closes: #181306).
+
+ -- Brendan O'Dea <bod@debian.org>  Mon, 17 Feb 2003 20:53:25 +1100
+
+perl (5.8.0-16) unstable; urgency=low
+
+  * Add conflict on earlier versions of perl-doc to perl (closes: #180260).
+  * Fix build issue with localised cpp output (closes: #177458).
+  * Backport upstream changes to make $0 writable (closes: #178404).
+  * Backport upstream changes to remove implicit utf8 I/O (closes: #164717).
+  * Apply upstream fix for debugging speed issue (closes: #180591,
+    thanks to Chip Salzenberg for the patch).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 16 Feb 2003 22:16:19 +1100
+
+perl (5.8.0-15) unstable; urgency=low
+
+  * Fix insecure use of /tmp by c2ph/pstruct (closes: #173241).
+  * Apply upstream fix for POSIX ctype functions (closes: #175867).
+  * Adjust dprofpp output to screen width (closes: #175956).
+  * Modify splain description to have meaningful apropos (closes: #175584).
+  * Remove bash-ism from debian/rules (closes: #171865).
+  * Fix documentation of S_IMODE macro (closes: #161618).
+  * Fix documentation of -i option (closes: #161636).
+  * Remove hppa/mips* special cases as all arches should now use gcc
+    3.2.  Add gcc build-depend.
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 11 Jan 2003 21:58:54 +1100
+
+perl (5.8.0-14) unstable; urgency=low
+
+  * Security update for Safe.pm (closes: #169794):
 
     http://www.iss.net/security_center/static/10574.php
     http://use.perl.org/articles/02/10/06/1118222.shtml?tid=5
 
- -- Brendan O'Dea <bod@debian.org>  Wed, 20 Nov 2002 23:06:23 +1100
+ -- Brendan O'Dea <bod@debian.org>  Wed, 20 Nov 2002 23:24:12 +1100
+
+perl (5.8.0-13) unstable; urgency=low
+
+  * Use gcc 3.2 to build on some architectures (hppa, mips*).
+  * Fix examples in perlembed to work with a threaded perl.
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 14 Sep 2002 23:05:37 +1000
+
+perl (5.8.0-12) unstable; urgency=low
+
+  * Move Attribute/Handlers/demo to perl-doc.
+  * Skip manpages for podless modules (closes: #159504).
+
+ -- Brendan O'Dea <bod@debian.org>  Sat,  7 Sep 2002 00:48:39 +1000
+
+perl (5.8.0-11) unstable; urgency=low
+
+  * Add accessor methods for POSIX::SigAction (closes: #158587).
+  * Remove conflict on libcgi-pm-perl from libcgi-fast-perl (as
+    perl-modules now C/R/P libcgi-pm-perl).  Closes: #159217.
+
+ -- Brendan O'Dea <bod@debian.org>  Wed,  4 Sep 2002 03:09:07 +1000
+
+perl (5.8.0-10) unstable; urgency=low
+
+  * Copy import/export argument list in lib.pm (closes: #158627).
+  * Term::Cap: deal with comments in infocmp output (closes: #158453).
+  * Update perl-base replaces versions for perl and perl-modules.
+  * libcgi-pm-perl contains CGI.pm rather than libcgi-perl, fix
+    conflicts/replaces/provides (closes: #158645).
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 29 Aug 2002 22:12:21 +1000
+
+perl (5.8.0-9) unstable; urgency=low
+
+  * More modules for perl-base (closes: #158499).
+  * Temporarily special-case hppa to use -O1 until gcc-3.2 is the
+    default compiler (issues with 3.0; closes: #158290).
+
+  * Add build-dep on cpio (used when splitting packages) and add an
+    assertion to debian/splitdoc checking that expected modules were
+    found (closes: #158603).
+
+  * Modify ext/Sys/Syslog/syslog.t test to work on buildds where syslogd
+    may not be running.
+
+ -- Brendan O'Dea <bod@debian.org>  Wed, 28 Aug 2002 23:51:30 +1000
+
+perl (5.8.0-8) unstable; urgency=low
+
+  * Some modules for perl-base had moved (lib, Cwd), revise
+    debian/perl-base.files (closes: #158094).
+
+  * Add dependency on the current version of perl to libperl-dev.
+  * Move module documentation from dirs under /usr/share/perl to
+    /usr/share/doc/perl/_module_.
+
+ -- Brendan O'Dea <bod@debian.org>  Mon, 26 Aug 2002 18:29:45 +1000
+
+perl (5.8.0-7) unstable; urgency=low
+
+  * New upstream release.
+  * NOTE: this release breaks binary compatability with previous
+    versions of perl.  Users will need to upgrade to newer versions of
+    binary module packages (if/when available) and re-build any
+    locally installed modules.
+
+  * NOTE: DB_File now uses libdb4.0 (previously libdb2).  Any DB_File
+    databases created with earlier perl packages will need to be
+    upgraded before being used with the current module with the
+    db4.0_upgrade program (in the libdb4.0-util package, with HTML docs
+    in db4.0-doc).
+
+  * NOTE: suidperl is now deprecated upstream and support is expected
+    to be discontinued for 5.10.  Package description amended.
+
+  * Add Conflicts/Replaces/Provides for modules now included in core:
+      libdigest-md5-perl, libmime-base64-perl, libnet-perl,
+      libtime-hires-perl, libstorable-perl,
+      libattribute-handlers-perl, libcgi-perl, libi18n-langtags-perl,
+      liblocale-maketext-perl, libmath-bigint-perl, libnet-ping-perl,
+      libtest-harness-perl, libtest-simple-perl
+
+  * Update versions of conflicts on libpod-parser-perl,
+    libansicolor-perl and libfile-temp-perl.
+
+  * Add conflict for autoconf2.13 pre 2.13-45 which breaks with this
+    perl (closes: #155064).
+
+  * Enable threads (closes: #107909, #126233).
+  * Add -f (--force) option to /usr/bin/rename (closes: #140746).
+  * Add -n (--no-act) option to /usr/bin/rename (suggested by
+    frederik@ugcs.caltech.edu).
+
+  * Correct rename(1) manual page (closes: #153458, #153757).
+  * Prepend /etc/perl to @INC to provide a standard location for
+    configuration modules:
+      /etc/perl/Net/Config.pm (note: previously /etc/Net in libnet-perl)
+      /etc/perl/CPAN/Config.pm (closes: #138167, #103055).
+
+  * Add an option for CPAN.pm to skip version check (closes: #98235).
+  * Include /usr/bin/cpan script (closes: #136159).
+  * Modify perldoc to format pages simarly to man-db when stdout is a
+    terminal (closes: #135318).
+
+  * perldoc place-holder now outputs to stderr (closes: #140448).
+  * Add a note in ExtUtils::Embed(3perl) to the effect that the on
+    Debian systems the libperl-dev package is required (closes: #155319).
+
+  * Allow accept to return addresses > sockaddr_in (closes: #156284).
+  * Modify debian/rules to remove libperl.so* on failure (closes: #157953).
+  * This version appears to correct the following bugs:
+    Closes: #54987: perl: goto inside for(;;) clears variables ?!?
+    Closes: #66702: Redefining running sub dumps core.
+    Closes: #67479: perl-5.005: Sys::Hostname pollutes package main...
+    Closes: #68876: perlipc(1p) has broken examples
+    Closes: #80141: One-liner that makes perl segfault
+    Closes: #88470: perl segfaults
+    Closes: #102163: Bug in perl 5.6.1 when using /sg in regular expressions
+    Closes: #103576: perl: Still links libdb2...
+    Closes: #104414: Taint checking bypassed on read-write file opening
+    Closes: #125735: perl: segfaults on "Ode to My Thesis"
+    Closes: #127973: perl crashes on simple one liner
+    Closes: #131714: perl-base: Perl segfaults with this script
+    Closes: #133803: perl: segfault
+    Closes: #140787: perl: trivial segfault
+    Closes: #144618: perl: segfault parsing bad tie() statement
+    Closes: #149304: perl: chomp function makes perl segfault
+    Closes: #150590: perl-base: Carp::confess() ... overloaded "" operator
+    Closes: #157152: Pod::Man says that all Pod is 3rd Berkeley Distribution
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 24 Aug 2002 14:53:35 +1000
 
 perl (5.6.1-7) unstable; urgency=medium
 

@@ -1,7 +1,7 @@
 # Pod::Man -- Convert POD data to formatted *roff input.
-# $Id: Man.pm,v 1.30 2001/11/28 01:14:28 eagle Exp $
+# $Id: Man.pm,v 1.37 2003/03/30 22:34:11 eagle Exp $
 #
-# Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>
+# Copyright 1999, 2000, 2001, 2002, 2003 by Russ Allbery <rra@stanford.edu>
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -38,7 +38,7 @@ use vars qw(@ISA %ESCAPES $PREAMBLE $VERSION);
 # Don't use the CVS revision as the version, since this module is also in Perl
 # core and too many things could munge CVS magic revision strings.  This
 # number should ideally be the same as the CVS revision in podlators, however.
-$VERSION = 1.30;
+$VERSION = 1.37;
 
 
 ##############################################################################
@@ -70,7 +70,6 @@ $PREAMBLE = <<'----END OF PREAMBLE----';
 ..
 .de Ve \" End verbatim text
 .ft R
-
 .fi
 ..
 .\" Set up some character translations and predefined strings.  \*(-- will
@@ -464,14 +463,15 @@ $_
 .\\"
 .IX Title "$name $section"
 .TH $name $section "$$self{date}" "$$self{release}" "$$self{center}"
-.UC
 ----END OF HEADER----
 
     # Initialize a few per-file variables.
     $$self{INDENT}    = 0;      # Current indentation level.
     $$self{INDENTS}   = [];     # Stack of indentations.
     $$self{INDEX}     = [];     # Index keys waiting to be printed.
+    $$self{IN_NAME}   = 0;      # Whether processing the NAME section.
     $$self{ITEMS}     = 0;      # The number of consecutive =items.
+    $$self{ITEMTYPES} = [];     # Stack of =item types, one per list.
     $$self{SHIFTWAIT} = 0;      # Whether there is a shift waiting.
     $$self{SHIFTS}    = [];     # Stack of .RS shifts.
 }
@@ -517,10 +517,11 @@ sub verbatim {
     my $lines = tr/\n/\n/;
     1 while s/^(.*?)(\t+)/$1 . ' ' x (length ($2) * 8 - length ($1) % 8)/me;
     s/\\/\\e/g;
+    s/-/\\-/g;
     s/^(\s*\S)/'\&' . $1/gme;
     $self->makespace;
     $self->output (".Vb $lines\n$_.Ve\n");
-    $$self{NEEDSPACE} = 0;
+    $$self{NEEDSPACE} = 1;
 }
 
 # Called for a regular text block.  Gets the paragraph, the line number, and a
@@ -538,9 +539,9 @@ sub textblock {
     $text =~ s/\n\s*$/\n/;
 
     # Output the paragraph.  We also have to handle =over without =item.  If
-    # there's an =over without =item, NEWINDENT will be set, and we need to
-    # handle creation of the indent here.  Set WEIRDINDENT so that it will be
-    # cleaned up on =back.
+    # there's an =over without =item, SHIFTWAIT will be set, and we need to
+    # handle creation of the indent here.  Add the shift to SHIFTS so that it
+    # will be cleaned up on =back.
     $self->makespace;
     if ($$self{SHIFTWAIT}) {
         $self->output (".RS $$self{INDENT}\n");
@@ -639,9 +640,12 @@ sub sequence {
 
 # First level heading.  We can't output .IX in the NAME section due to a bug
 # in some versions of catman, so don't output a .IX for that section.  .SH
-# already uses small caps, so remove \s1 and \s-1.
+# already uses small caps, so remove \s1 and \s-1.  Maintain IN_NAME as
+# appropriate, but don't leave it set while calling parse() so as to not
+# override guesswork on section headings after NAME.
 sub cmd_head1 {
     my $self = shift;
+    $$self{IN_NAME} = 0;
     local $_ = $self->parse (@_);
     s/\s+$//;
     s/\\s-?\d//g;
@@ -653,6 +657,7 @@ sub cmd_head1 {
     $self->output ($self->switchquotes ('.SH', $self->mapfonts ($_)));
     $self->outindex (($_ eq 'NAME') ? () : ('Header', $_));
     $$self{NEEDSPACE} = 0;
+    $$self{IN_NAME} = ($_ eq 'NAME');
 }
 
 # Second level heading.
@@ -713,6 +718,7 @@ sub cmd_over {
         push (@{ $$self{SHIFTS} }, $$self{INDENT});
     }
     push (@{ $$self{INDENTS} }, $$self{INDENT});
+    push (@{ $$self{ITEMTYPES} }, 'unknown');
     $$self{INDENT} = ($_ + 0);
     $$self{SHIFTWAIT} = 1;
 }
@@ -723,7 +729,9 @@ sub cmd_over {
 sub cmd_back {
     my $self = shift;
     $$self{INDENT} = pop @{ $$self{INDENTS} };
-    unless (defined $$self{INDENT}) {
+    if (defined $$self{INDENT}) {
+        pop @{ $$self{ITEMTYPES} };
+    } else {
         my ($file, $line, $paragraph) = @_;
         ($file, $line) = $paragraph->file_line;
         warn "$file:$line: Unmatched =back\n";
@@ -756,8 +764,18 @@ sub cmd_item {
         $index = $_;
         $index =~ s/^\s*[-*+o.]?(?:\s+|\Z)//;
     }
-    $_ = '*' unless $_;
-    s/^\*(\s|\Z)/\\\(bu$1/;
+    $_ = '*' unless length ($_) > 0;
+    my $type = $$self{ITEMTYPES}[0];
+    unless (defined $type) {
+        my ($file, $line, $paragraph) = @_;
+        ($file, $line) = $paragraph->file_line;
+        $type = 'unknown';
+    }
+    if ($type eq 'unknown') {
+        $type = /^\*\s*\Z/ ? 'bullet' : 'text';
+        $$self{ITEMTYPES}[0] = $type if $$self{ITEMTYPES}[0];
+    }
+    s/^\*\s*\Z/\\\(bu/ if $type eq 'bullet';
     if (@{ $$self{SHIFTS} } == @{ $$self{INDENTS} }) {
         $self->output (".RE\n");
         pop @{ $$self{SHIFTS} };
@@ -877,13 +895,24 @@ sub parse {
 # (not call guesswork on it), and a flag saying whether or not to clean some
 # things up for *roff, and returns the concatenation of all of the text
 # strings in that parse tree.  If the literal flag isn't true, guesswork()
-# will be called on all plain scalars in the parse tree.  Otherwise, just
-# escape backslashes in the normal case.  If collapse is being called on a C<>
-# code, $cleanup should be set to true and some additional cleanup will be
-# done.  Assumes that everything in the parse tree is either a scalar or a
-# reference to a scalar.
+# will be called on all plain scalars in the parse tree.  Otherwise, if
+# collapse is being called on a C<> code, $cleanup should be set to true and
+# some additional cleanup will be done.  Assumes that everything in the parse
+# tree is either a scalar or a reference to a scalar.
 sub collapse {
     my ($self, $ptree, $literal, $cleanup) = @_;
+
+    # If we're processing the NAME section, don't do normal guesswork.  This
+    # is because NAME lines are often extracted by utilities like catman that
+    # require plain text and don't understand *roff markup.  We still need to
+    # escape backslashes and hyphens for *roff (and catman expects \- instead
+    # of -).
+    if ($$self{IN_NAME}) {
+        $literal = 1;
+        $cleanup = 1;
+    }
+
+    # Do the collapse of the parse tree as described above.
     return join ('', map {
         if (ref $_) {
             join ('', @$_);
@@ -998,7 +1027,7 @@ sub quote_literal {
        | \$+ [\#^]? \S $index                           # special ($^Foo, $")
        | [\$\@%&*]+ \#? [:\'\w]+ $index                 # plain var or func
        | [\$\@%&*]* [:\'\w]+ (?: -> )? \(\s*[^\s,]\s*\) # 0/1-arg func call
-       | [+-]? [\d.]+ (?: [eE] [+-]? \d+ )?             # a number
+       | [+-]? ( \d[\d.]* | \.\d+ ) (?: [eE][+-]?\d+ )? # a number
        | 0x [a-fA-F\d]+                                 # a hex constant
       )
       \s*\z
@@ -1107,11 +1136,12 @@ sub switchquotes {
     }
 }
 
-__END__
+##############################################################################
+# Module return value and documentation
+##############################################################################
 
-##############################################################################
-# Documentation
-##############################################################################
+1;
+__END__
 
 =head1 NAME
 
@@ -1362,6 +1392,10 @@ L<man(7)> on your system.  Also, please see L<pod2man(1)> for extensive
 documentation on writing manual pages if you've not done it before and
 aren't familiar with the conventions.
 
+The current version of this module is always available from its web site at
+L<http://www.eyrie.org/~eagle/software/podlators/>.  It is also part of the
+Perl core distribution as of 5.6.0.
+
 =head1 AUTHOR
 
 Russ Allbery <rra@stanford.edu>, based I<very> heavily on the original
@@ -1369,7 +1403,7 @@ B<pod2man> by Tom Christiansen <tchrist@mox.perl.com>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 1999, 2000, 2001 by Russ Allbery <rra@stanford.edu>.
+Copyright 1999, 2000, 2001, 2002, 2003 by Russ Allbery <rra@stanford.edu>.
 
 This program is free software; you may redistribute it and/or modify it
 under the same terms as Perl itself.

@@ -1,6 +1,7 @@
 /* $RCSfile: util.c,v $$Revision: 4.1 $$Date: 92/08/07 18:29:29 $
  *
- *    Copyright (c) 1991-2001, Larry Wall
+ *    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1999,
+ *    2000, 2001, by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -183,6 +184,7 @@ croak(char *pat,...)
 
     va_start(args, pat);
     vfprintf(stderr,pat,args);
+    va_end(args);
 #else
     fprintf(stderr,pat,a1,a2,a3,a4);
 #endif
@@ -197,13 +199,14 @@ fatal(char *pat,...)
 
     va_start(args, pat);
     vfprintf(stderr,pat,args);
+    va_end(args);
 #else
     fprintf(stderr,pat,a1,a2,a3,a4);
 #endif
     exit(1);
 }
 
-#if defined(__APPLE_CC__)
+#if defined(DARWIN)
 __private_extern__	/* warn() conflicts with libc */
 #endif
 void
@@ -214,6 +217,7 @@ warn(char *pat,...)
 
     va_start(args, pat);
     vfprintf(stderr,pat,args);
+    va_end(args);
 #else
     fprintf(stderr,pat,a1,a2,a3,a4);
 #endif

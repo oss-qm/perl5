@@ -4,13 +4,19 @@
 # doubles (if supported), of machine-specific short and long
 # integers, machine-specific floating point exceptions (infinity,
 # not-a-number ...), of the effects of locale, and of features
-# specific to multi-byte characters (under use utf8 and such).
+# specific to multi-byte characters (under the utf8 pragma and such).
 
 BEGIN {
     chdir 't' if -d 't';
     @INC = '../lib';
 }   
 use warnings;
+# we do not load %Config since this test resides in op and needs
+# to run under the minitest target even without Config.pm working.
+
+# strictness
+my @tests = ();
+my ($i, $template, $data, $result, $comment, $w, $x, $evalData, $n, $p);
 
 while (<DATA>) {
     s/^\s*>//; s/<\s*$//;
@@ -21,14 +27,42 @@ print '1..', scalar @tests, "\n";
 
 $SIG{__WARN__} = sub {
     if ($_[0] =~ /^Invalid conversion/) {
-	$w = ' INVALID'
+	$w = ' INVALID';
+    } elsif ($_[0] =~ /^Use of uninitialized value/) {
+	$w = ' UNINIT';
     } else {
 	warn @_;
     }
 };
 
+my $Is_VMS_VAX = 0;
+# We use HW_MODEL since ARCH_NAME was not in VMS V5.*
+if ($^O eq 'VMS') {
+    my $hw_model;
+    chomp($hw_model = `write sys\$output f\$getsyi("HW_MODEL")`);
+    $Is_VMS_VAX = $hw_model < 1024 ? 1 : 0;
+}
+
+# No %Config.
+my $Is_Ultrix_VAX = $^O eq 'ultrix' && `uname -m` =~ /^VAX$/;
+
 for ($i = 1; @tests; $i++) {
     ($template, $data, $result, $comment) = @{shift @tests};
+    if ($^O eq 'os390' || $^O eq 's390') { # non-IEEE (s390 is UTS)
+        $data   =~ s/([eE])96$/${1}63/;      # smaller exponents
+        $result =~ s/([eE]\+)102$/${1}69/;   #  "       "
+        $data   =~ s/([eE])\-101$/${1}-56/;  # larger exponents
+        $result =~ s/([eE])\-102$/${1}-57/;  #  "       "
+    }
+    if ($Is_VMS_VAX || $Is_Ultrix_VAX) {
+	# VAX DEC C 5.3 at least since there is no 
+	# ccflags =~ /float=ieee/ on VAX.
+	# AXP is unaffected whether or not it's using ieee.
+        $data   =~ s/([eE])96$/${1}26/;      # smaller exponents
+        $result =~ s/([eE]\+)102$/${1}32/;   #  "       "
+        $data   =~ s/([eE])\-101$/${1}-24/;  # larger exponents
+        $result =~ s/([eE])\-102$/${1}-25/;  #  "       "
+    }
     $evalData = eval $data;
     $w = undef;
     $x = sprintf(">$template<",
@@ -74,7 +108,7 @@ for ($i = 1; @tests; $i++) {
     }
 }
 
-# In each of the the following lines, there are three required fields:
+# In each of the following lines, there are three required fields:
 # printf template, data to be formatted (as a Perl expression), and
 # expected result of formatting.  An optional fourth field can contain
 # a comment.  Each field is delimited by a starting '>' and a
@@ -94,6 +128,12 @@ for ($i = 1; @tests; $i++) {
 >%.0f<      >-0.1<        >-0<  >C library bug: no minus on VMS, HP-UX<
 >%.0f<      >1.5<         >2<   >Standard vague: no rounding rules<
 >%.0f<      >2.5<         >2<   >Standard vague: no rounding rules<
+>%G<        >1234567e96<  >1.23457E+102<	>exponent too big for OS/390<
+>%G<        >.1234567e-101< >1.23457E-102<	>exponent too small for OS/390<
+>%e<        >1234567E96<  >1.234567e+102<	>exponent too big for OS/390<
+>%e<        >.1234567E-101< >1.234567e-102<	>exponent too small for OS/390<
+>%g<        >.1234567E-101< >1.23457e-102<	>exponent too small for OS/390<
+>%g<        >1234567E96<  >1.23457e+102<	>exponent too big for OS/390<
 
 =end problematic
 
@@ -121,13 +161,13 @@ __END__
 >%L<        >''<          >%L INVALID<
 >%M<        >''<          >%M INVALID<
 >%N<        >''<          >%N INVALID<
->%O<        >2**32-1<     >37777777777<    >Synonum for %lo<
+>%O<        >2**32-1<     >37777777777<    >Synonym for %lo<
 >%P<        >''<          >%P INVALID<
 >%Q<        >''<          >%Q INVALID<
 >%R<        >''<          >%R INVALID<
 >%S<        >''<          >%S INVALID<
 >%T<        >''<          >%T INVALID<
->%U<        >2**32-1<     >4294967295<     >Synonum for %lu<
+>%U<        >2**32-1<     >4294967295<     >Synonym for %lu<
 >%V<        >''<          >%V INVALID<
 >%W<        >''<          >%W INVALID<
 >%X<        >2**32-1<     >FFFFFFFF<       >Like %x, but with u/c letters<
@@ -175,19 +215,19 @@ __END__
 >%#vd<      >chr(1)<      >1<
 >%vd<       >"\01\02\03"< >1.2.3<
 >%v.3d<     >"\01\02\03"< >001.002.003<
->%v03d<     >"\01\02\03"< >001.002.003<
->%v-3d<     >"\01\02\03"< >1  .2  .3  <
->%v+-3d<    >"\01\02\03"< >+1 .2  .3  <
+>%0v3d<     >"\01\02\03"< >001.002.003<
+>%-v3d<     >"\01\02\03"< >1  .2  .3  <
+>%+-v3d<    >"\01\02\03"< >+1 .2  .3  <
 >%v4.3d<    >"\01\02\03"< > 001. 002. 003<
->%v04.3d<   >"\01\02\03"< >0001.0002.0003<
->%*v02d<    >['-', "\0\7\14"]< >00-07-12<
->%v.*d<     >[3, "\01\02\03"]< >001.002.003<
->%v0*d<     >[3, "\01\02\03"]< >001.002.003<
->%v-*d<     >[3, "\01\02\03"]< >1  .2  .3  <
->%v+-*d<    >[3, "\01\02\03"]< >+1 .2  .3  <
->%v*.*d<    >[4, 3, "\01\02\03"]< > 001. 002. 003<
->%v0*.*d<   >[4, 3, "\01\02\03"]< >0001.0002.0003<
->%*v0*d<    >['-', 2, "\0\7\13"]< >00-07-11<
+>%0v4.3d<   >"\01\02\03"< >0001.0002.0003<
+>%0*v2d<    >['-', "\0\7\14"]< >00-07-12<
+>%v.*d<     >["\01\02\03", 3]< >001.002.003<
+>%0v*d<     >["\01\02\03", 3]< >001.002.003<
+>%-v*d<     >["\01\02\03", 3]< >1  .2  .3  <
+>%+-v*d<    >["\01\02\03", 3]< >+1 .2  .3  <
+>%v*.*d<    >["\01\02\03", 4, 3]< > 001. 002. 003<
+>%0v*.*d<   >["\01\02\03", 4, 3]< >0001.0002.0003<
+>%0*v*d<    >['-', "\0\7\13", 2]< >00-07-11<
 >%e<        >1234.875<    >1.234875e+03<
 >%e<        >0.000012345< >1.234500e-05<
 >%e<        >1234567E96<  >1.234567e+102<
@@ -200,6 +240,8 @@ __END__
 >%#e<       >-1234.875<   >-1.234875e+03<
 >%.0e<      >1234.875<    >1e+03<
 >%#.0e<     >1234.875<    >1.e+03<
+>%.0e<      >1.875<       >2e+00<
+>%.0e<      >0.875<       >9e-01<
 >%.*e<      >[0, 1234.875]< >1e+03<
 >%.1e<      >1234.875<    >1.2e+03<
 >%-12.4e<   >1234.875<    >1.2349e+03  <
@@ -229,10 +271,14 @@ __END__
 >%.0f<      >0<           >0<
 >%.0f<      >2**38<       >274877906944<   >Should have exact int'l rep'n<
 >%.0f<      >0.1<         >0<
->%.0f<      >0.6<         >1<              >Known to fail with sfio and (irix|nonstop-ux|powerux)<
->%.0f<      >-0.6<        >-1<             >Known to fail with sfio and (irix|nonstop-ux|powerux)<
+>%.0f<      >0.6<         >1<              >Known to fail with sfio, (irix|nonstop-ux|powerux); -DHAS_LDBL_SPRINTF_BUG may fix<
+>%.0f<      >-0.6<        >-1<             >Known to fail with sfio, (irix|nonstop-ux|powerux); -DHAS_LDBL_SPRINTF_BUG may fix<
+>%.0f<      >1.6<         >2<
+>%.0f<      >-1.6<        >-2<
 >%.0f<      >1<           >1<
 >%#.0f<     >1<           >1.<
+>%.0lf<     >1<           >1<              >'l' should have no effect<
+>%.0hf<     >1<           >%.0hf INVALID<  >'h' should be rejected<
 >%g<        >12345.6789<  >12345.7<
 >%+g<       >12345.6789<  >+12345.7<
 >%#g<       >12345.6789<  >12345.7<
@@ -273,6 +319,9 @@ __END__
 >%o<        >2**32-1<     >37777777777<
 >%+o<       >2**32-1<     >37777777777<
 >%#o<       >2**32-1<     >037777777777<
+>%o<        >642<         >1202<          >check smaller octals across platforms<
+>%+o<       >642<         >1202<
+>%#o<       >642<         >01202<
 >%d< >$p=sprintf('%p',$p);$p=~/^[0-9a-f]+$/< >1< >Coarse hack: hex from %p?<
 >%#p<       >''<          >%#p INVALID<
 >%q<        >''<          >%q INVALID<
@@ -308,3 +357,31 @@ __END__
 >%0*x<      >[-10, ,2**32-1]< >ffffffff  <
 >%y<        >''<          >%y INVALID<
 >%z<        >''<          >%z INVALID<
+>%2$d %1$d<	>[12, 34]<	>34 12<
+>%*2$d<		>[12, 3]<	> 12<
+>%2$d %d<	>[12, 34]<	>34 12<
+>%2$d %d %d<	>[12, 34]<	>34 12 34<
+>%3$d %d %d<	>[12, 34, 56]<	>56 12 34<
+>%2$*3$d %d<	>[12, 34, 3]<	> 34 12<
+>%*3$2$d %d<	>[12, 34, 3]<	>%*3$2$d 12 INVALID<
+>%2$d<		>12<	>0 UNINIT<
+>%0$d<		>12<	>%0$d INVALID<
+>%1$$d<		>12<	>%1$$d INVALID<
+>%1$1$d<	>12<	>%1$1$d INVALID<
+>%*2$*2$d<	>[12, 3]<	>%*2$*2$d INVALID<
+>%*2*2$d<	>[12, 3]<	>%*2*2$d INVALID<
+>%0v2.2d<	>''<	><
+>%vc,%d<	>[63, 64, 65]<	>?,64<
+>%vd,%d<	>[1, 2, 3]<	>49,2<
+>%vf,%d<	>[1, 2, 3]<	>1.000000,2<
+>%vp<	>''<	>%vp INVALID<
+>%vs,%d<	>[1, 2, 3]<	>1,2<
+>%v_<	>''<	>%v_ INVALID<
+>%v#x<	>''<	>%v#x INVALID<
+>%v02x<	>"foo\012"<	>66.6f.6f.0a<
+>%V-%s<		>["Hello"]<	>%V-Hello INVALID<
+>%K %d %d<	>[13, 29]<	>%K 13 29 INVALID<
+>%*.*K %d<	>[13, 29, 76]<	>%*.*K 13 INVALID<
+>%4$K %d<	>[45, 67]<	>%4$K 45 INVALID<
+>%d %K %d<	>[23, 45]<	>23 %K 45 INVALID<
+>%*v*999\$d %d %d<	>[11, 22, 33]<	>%*v*999\$d 11 22 INVALID<

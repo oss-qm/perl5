@@ -42,8 +42,13 @@ use Config;
 use File::Path qw(mkpath);
 use Getopt::Std;
 
-getopts('Dd:rlhaQ');
-use vars qw($opt_D $opt_d $opt_r $opt_l $opt_h $opt_a $opt_Q);
+# Make sure read permissions for all are set:
+if (defined umask && (umask() & 0444)) {
+    umask (umask() & ~0444);
+}
+
+getopts('Dd:rlhaQe');
+use vars qw($opt_D $opt_d $opt_r $opt_l $opt_h $opt_a $opt_Q $opt_e);
 die "-r and -a options are mutually exclusive\n" if ($opt_r and $opt_a);
 my @inc_dirs = inc_dirs() if $opt_a;
 
@@ -65,13 +70,21 @@ my %isatype;
 @isatype{@isatype} = (1) x @isatype;
 my $inif = 0;
 my %Is_converted;
+my %bad_file = ();
 
 @ARGV = ('-') unless @ARGV;
 
 build_preamble_if_necessary();
 
+sub reindent($) {
+    my($text) = shift;
+    $text =~ s/\n/\n    /g;
+    $text =~ s/        /\t/g;
+    $text;
+}
+
 my ($t, $tab, %curargs, $new, $eval_index, $dir, $name, $args, $outfile);
-my ($incl, $next);
+my ($incl, $incl_type, $next);
 while (defined (my $file = next_file())) {
     if (-l $file and -d $file) {
         link_if_possible($file) if ($opt_l);
@@ -107,30 +120,17 @@ while (defined (my $file = next_file())) {
 	open(OUT,">$Dest_dir/$outfile") || die "Can't create $outfile: $!\n";
     }
 
-    print OUT "require '_h2ph_pre.ph';\n\n";
-    while (<IN>) {
-	chop;
-	while (/\\$/) {
-	    chop;
-	    $_ .= <IN>;
-	    chop;
-	}
-	print OUT "# $_\n" if $opt_D;
+    print OUT
+        "require '_h2ph_pre.ph';\n\n",
+        "no warnings 'redefine';\n\n";
 
-	if (s:/\*:\200:g) {
-	    s:\*/:\201:g;
-	    s/\200[^\201]*\201//g;	# delete single line comments
-	    if (s/\200.*//) {		# begin multi-line comment?
-		$_ .= '/*';
-		$_ .= <IN>;
-		redo;
-	    }
-	}
+    while (defined (local $_ = next_line($file))) {
 	if (s/^\s*\#\s*//) {
 	    if (s/^define\s+(\w+)//) {
 		$name = $1;
 		$new = '';
 		s/\s+$//;
+		s/\(\w+\s*\(\*\)\s*\(\w*\)\)\s*(-?\d+)/$1/; # (int (*)(foo_t))0
 		if (s/^\(([\w,\s]*)\)//) {
 		    $args = $1;
     	    	    my $proto = '() ';
@@ -184,22 +184,31 @@ while (defined (my $file = next_file())) {
                       print OUT $t,"unless(defined(\&$name)) {\n    sub $name () {\t",$new,";}\n}\n";
 		    }
 		}
-	    } elsif (/^(include|import)\s*[<"](.*)[>"]/) {
-		($incl = $2) =~ s/\.h$/.ph/;
-		print OUT $t,"require '$incl';\n";
-	    } elsif(/^include_next\s*[<"](.*)[>"]/) {
-		($incl = $1) =~ s/\.h$/.ph/;
+	    } elsif (/^(include|import|include_next)\s*[<\"](.*)[>\"]/) {
+                $incl_type = $1;
+                $incl = $2;
+                if (($incl_type eq 'include_next') ||
+                    ($opt_e && exists($bad_file{$incl}))) {
+                    $incl =~ s/\.h$/.ph/;
 		print OUT ($t,
 			   "eval {\n");
                 $tab += 4;
                 $t = "\t" x ($tab / 8) . ' ' x ($tab % 8);
+                    print OUT ($t, "my(\@REM);\n");
+                    if ($incl_type eq 'include_next') {
 		print OUT ($t,
 			   "my(\%INCD) = map { \$INC{\$_} => 1 } ",
-			   "(grep { \$_ eq \"$incl\" } keys(\%INC));\n");
+			           "(grep { \$_ eq \"$incl\" } ",
+                                   "keys(\%INC));\n");
 		print OUT ($t,
-			   "my(\@REM) = map { \"\$_/$incl\" } ",
+			           "\@REM = map { \"\$_/$incl\" } ",
 			   "(grep { not exists(\$INCD{\"\$_/$incl\"})",
-			   "and -f \"\$_/$incl\" } \@INC);\n");
+			           " and -f \"\$_/$incl\" } \@INC);\n");
+                    } else {
+                        print OUT ($t,
+                                   "\@REM = map { \"\$_/$incl\" } ",
+                                   "(grep {-r \"\$_/$incl\" } \@INC);\n");
+                    }
 		print OUT ($t,
 			   "require \"\$REM[0]\" if \@REM;\n");
                 $tab -= 4;
@@ -208,6 +217,10 @@ while (defined (my $file = next_file())) {
 			   "};\n");
 		print OUT ($t,
 			   "warn(\$\@) if \$\@;\n");
+                } else {
+                    $incl =~ s/\.h$/.ph/;
+		    print OUT $t,"require '$incl';\n";
+                }
 	    } elsif (/^ifdef\s+(\w+)/) {
 		print OUT $t,"if(defined(&$1)) {\n";
 		$tab += 4;
@@ -257,7 +270,7 @@ while (defined (my $file = next_file())) {
 	    }
 	} elsif(/^\s*(typedef\s*)?enum\s*(\s+[a-zA-Z_]\w*\s*)?/) {
 	    until(/\{[^}]*\}.*;/ || /;/) {
-		last unless defined ($next = <IN>);
+		last unless defined ($next = next_line($file));
 		chomp $next;
 		# drop "#define FOO FOO" in enums
 		$next =~ s/^\s*#\s*define\s+(\w+)\s+\1\s*$//;
@@ -289,22 +302,22 @@ while (defined (my $file = next_file())) {
 	    }
 	}
     }
-    print OUT "1;\n";
-
     $Is_converted{$file} = 1;
+    if ($opt_e && exists($bad_file{$file})) {
+        unlink($Dest_dir . '/' . $outfile);
+        $next = '';
+    } else {
+        print OUT "1;\n";
     queue_includes_from($file) if ($opt_a);
+    }
+}
+
+if ($opt_e && (scalar(keys %bad_file) > 0)) {
+    warn "Was unable to convert the following files:\n";
+    warn "\t" . join("\n\t",sort(keys %bad_file)) . "\n";
 }
 
 exit $Exit;
-
-
-sub reindent($) {
-    my($text) = shift;
-    $text =~ s/\n/\n    /g;
-    $text =~ s/        /\t/g;
-    $text;
-}
-
 
 sub expr {
     my $joined_args;
@@ -315,8 +328,21 @@ sub expr {
 	s/^\&\&// && do { $new .= " &&"; next;}; # handle && operator
 	s/^\&([\(a-z\)]+)/$1/i;	# hack for things that take the address of
 	s/^(\s+)//		&& do {$new .= ' '; next;};
-	s/^(0X[0-9A-F]+)[UL]*//i	&& do {$new .= lc($1); next;};
-	s/^(-?\d+\.\d+E[-+]\d+)F?//i	&& do {$new .= $1; next;};
+	s/^0X([0-9A-F]+)[UL]*//i 
+	    && do {my $hex = $1;
+		   $hex =~ s/^0+//;
+		   if (length $hex > 8 && !$Config{use64bitint}) {
+		       # Croak if nv_preserves_uv_bits < 64 ?
+		       $new .=         hex(substr($hex, -8)) +
+			       2**32 * hex(substr($hex,  0, -8));
+		       # The above will produce "errorneus" code
+		       # if the hex constant was e.g. inside UINT64_C
+		       # macro, but then again, h2ph is an approximation.
+		   } else {
+		       $new .= lc("0x$hex");
+		   }
+		   next;};
+	s/^(-?\d+\.\d+E[-+]?\d+)[FL]?//i	&& do {$new .= $1; next;};
 	s/^(\d+)\s*[LU]*//i	&& do {$new .= $1; next;};
 	s/^("(\\"|[^"])*")//	&& do {$new .= $1; next;};
 	s/^'((\\"|[^"])*)'//	&& do {
@@ -355,7 +381,7 @@ sub expr {
 	# Eliminate typedefs
 	/\(([\w\s]+)[\*\s]*\)\s*[\w\(]/ && do {
 	    foreach (split /\s+/, $1) {  # Make sure all the words are types,
-		last unless ($isatype{$_} or $_ eq 'struct');
+		last unless ($isatype{$_} or $_ eq 'struct' or $_ eq 'union');
 	    }
 	    s/\([\w\s]+[\*\s]*\)// && next;      # then eliminate them.
 	};
@@ -378,7 +404,7 @@ sub expr {
 	};
 	s/^([_a-zA-Z]\w*)//	&& do {
 	    my $id = $1;
-	    if ($id eq 'struct') {
+	    if ($id eq 'struct' || $id eq 'union') {
 		s/^\s+(\w+)//;
 		$id .= ' ' . $1;
 		$isatype{$id} = 1;
@@ -416,6 +442,101 @@ sub expr {
 	};
 	s/^(.)// && do { if ($1 ne '#') { $new .= $1; } next;};
     }
+}
+
+
+sub next_line
+{
+    my $file = shift;
+    my ($in, $out);
+    my $pre_sub_tri_graphs = 1;
+
+    READ: while (not eof IN) {
+        $in  .= <IN>;
+        chomp $in;
+        next unless length $in;
+
+        while (length $in) {
+            if ($pre_sub_tri_graphs) {
+                # Preprocess all tri-graphs 
+                # including things stuck in quoted string constants.
+                $in =~ s/\?\?=/#/g;                         # | ??=|  #|
+                $in =~ s/\?\?\!/|/g;                        # | ??!|  ||
+                $in =~ s/\?\?'/^/g;                         # | ??'|  ^|
+                $in =~ s/\?\?\(/[/g;                        # | ??(|  [|
+                $in =~ s/\?\?\)/]/g;                        # | ??)|  ]|
+                $in =~ s/\?\?\-/~/g;                        # | ??-|  ~|
+                $in =~ s/\?\?\//\\/g;                       # | ??/|  \|
+                $in =~ s/\?\?</{/g;                         # | ??<|  {|
+                $in =~ s/\?\?>/}/g;                         # | ??>|  }|
+            }
+	    if ($in =~ /^\#ifdef __LANGUAGE_PASCAL__/) {
+                # Tru64 disassembler.h evilness: mixed C and Pascal.
+		while (<IN>) {
+		    last if /^\#endif/; 
+		}
+		next READ;
+	    }
+	    if ($in =~ /^extern inline / && # Inlined assembler.
+		$^O eq 'linux' && $file =~ m!(?:^|/)asm/[^/]+\.h$!) {
+ 		while (<IN>) {
+		    last if /^}/; 
+		}
+		next READ;
+	    }
+            if ($in =~ s/\\$//) {                           # \-newline
+                $out    .= ' ';
+                next READ;
+            } elsif ($in =~ s/^([^"'\\\/]+)//) {            # Passthrough
+                $out    .= $1;
+            } elsif ($in =~ s/^(\\.)//) {                   # \...
+                $out    .= $1;
+            } elsif ($in =~ /^'/) {                         # '...
+                if ($in =~ s/^('(\\.|[^'\\])*')//) {
+                    $out    .= $1;
+                } else {
+                    next READ;
+                }
+            } elsif ($in =~ /^"/) {                         # "...
+                if ($in =~ s/^("(\\.|[^"\\])*")//) {
+                    $out    .= $1;
+                } else {
+                    next READ;
+                }
+            } elsif ($in =~ s/^\/\/.*//) {                  # //...
+                # fall through
+            } elsif ($in =~ m/^\/\*/) {                     # /*...
+                # C comment removal adapted from perlfaq6:
+                if ($in =~ s/^\/\*[^*]*\*+([^\/*][^*]*\*+)*\///) {
+                    $out    .= ' ';
+                } else {                                    # Incomplete /* */
+                    next READ;
+                }
+            } elsif ($in =~ s/^(\/)//) {                    # /...
+                $out    .= $1;
+            } elsif ($in =~ s/^([^\'\"\\\/]+)//) {
+                $out    .= $1;
+            } elsif ($^O eq 'linux' &&
+                     $file =~ m!(?:^|/)linux/byteorder/pdp_endian\.h$! &&
+                     $in   =~ s!\'T KNOW!!) {
+                $out    =~ s!I DON$!I_DO_NOT_KNOW!;
+            } else {
+                if ($opt_e) {
+                    warn "Cannot parse $file:\n$in\n";
+                    $bad_file{$file} = 1;
+                    $in = '';
+                    $out = undef;
+                    last READ;
+                } else {
+		die "Cannot parse:\n$in\n";
+                }
+            }
+        }
+
+        last READ if $out =~ /\S/;
+    }
+
+    return $out;
 }
 
 
@@ -567,9 +688,9 @@ sub build_preamble_if_necessary
                 print PREAMBLE "# $_=$define{$_}\n";
             }
 
-            if ($define{$_} =~ /^\d+$/) {
+            if ($define{$_} =~ /^(\d+)U?L{0,2}$/i) {
                 print PREAMBLE
-                    "unless (defined &$_) { sub $_() { $define{$_} } }\n\n";
+                    "unless (defined &$_) { sub $_() { $1 } }\n\n";
             } elsif ($define{$_} =~ /^\w+$/) {
                 print PREAMBLE
                     "unless (defined &$_) { sub $_() { &$define{$_} } }\n\n";
@@ -626,6 +747,10 @@ format.
 It is most easily run while in /usr/include:
 
 	cd /usr/include; h2ph * sys/*
+
+or
+
+	cd /usr/include; h2ph * sys/* arpa/* netinet/*
 
 or
 

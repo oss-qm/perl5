@@ -1,0 +1,14 @@
+Escape - in character class.
+
+diff -Naur --exclude=debian perl-5.8.4.orig/ext/Encode/lib/Encode/Alias.pm perl-5.8.4/ext/Encode/lib/Encode/Alias.pm
+--- perl-5.8.4.orig/ext/Encode/lib/Encode/Alias.pm	2003-08-20 22:14:22.000000000 +1000
++++ perl-5.8.4/ext/Encode/lib/Encode/Alias.pm	2004-11-07 01:09:11.000000000 +1100
+@@ -193,7 +193,7 @@
+   
+     # Standardize on the dashed versions.
+     # define_alias( qr/\butf8$/i  => '"utf-8"' );
+-    define_alias( qr/\bkoi8[\s-_]*([ru])$/i => '"koi8-$1"' );
++    define_alias( qr/\bkoi8[\s\-_]*([ru])$/i => '"koi8-$1"' );
+ 
+     unless ($Encode::ON_EBCDIC){
+         # for Encode::CN

@@ -1,6 +1,12 @@
 #!./perl
 
-print "1..70\n";
+
+BEGIN {
+    chdir 't' if -d 't';
+    @INC = '../lib';
+}
+
+print "1..73\n";
 
 #
 # @foo, @bar, and @ary are also used from tie-stdarray after tie-ing them
@@ -229,3 +235,40 @@ print "ok 69\n";
 
 print "not " unless unshift(@ary,12) == 5;
 print "ok 70\n";
+
+sub foo { "a" }
+@foo=(foo())[0,0];
+$foo[1] eq "a" or print "not ";
+print "ok 71\n";
+
+# $[ should have the same effect regardless of whether the aelem
+#    op is optimized to aelemfast.
+
+sub tary {
+  local $[ = 10;
+  my $five = 5;
+  print "not " unless $tary[5] == $tary[$five];
+  print "ok 72\n";
+}
+
+@tary = (0..50);
+tary();
+
+
+require './test.pl';
+
+# bugid #15439 - clearing an array calls destructors which may try
+# to modify the array - caused 'Attempt to free unreferenced scalar'
+
+my $got = runperl (
+	prog => q{
+		    sub X::DESTROY { @a = () }
+		    @a = (bless {}, 'X');
+		    @a = ();
+		},
+	stderr => 1
+    );
+
+$got =~ s/\n/ /g;
+print "# $got\nnot " unless $got eq '';
+print "ok 73\n";

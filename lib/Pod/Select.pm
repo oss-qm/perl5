@@ -181,7 +181,7 @@ Where I<cmd-expr> is intended to match the name of one or more POD
 commands, and I<text-expr> is intended to match the paragraph text for
 the command. If a range-regex is supposed to match a POD command, then
 the first character of the regex (the one after the initial '/')
-absolutely I<must> be an single '=' character; it may not be anything
+absolutely I<must> be a single '=' character; it may not be anything
 else (not even a regex meta-character) if it is supposed to match
 against the name of a POD command.
 
@@ -739,6 +739,8 @@ that it is to be matched against.
 L<Pod::Parser>
 
 =head1 AUTHOR
+
+Please report bugs using L<http://rt.cpan.org>.
 
 Brad Appleton E<lt>bradapp@enteract.comE<gt>
 

@@ -1,5 +1,5 @@
 # Pod::Text::Overstrike -- Convert POD data to formatted overstrike text
-# $Id: Overstrike.pm,v 1.6 2001/11/28 01:16:54 eagle Exp $
+# $Id: Overstrike.pm,v 1.10 2002/08/04 03:35:01 eagle Exp $
 #
 # Created by Joe Smith <Joe.Smith@inwap.com> 30-Nov-2000
 #   (based on Pod::Text::Color by Russ Allbery <rra@stanford.edu>)
@@ -36,7 +36,7 @@ use vars qw(@ISA $VERSION);
 # Don't use the CVS revision as the version, since this module is also in Perl
 # core and too many things could munge CVS magic revision strings.  This
 # number should ideally be the same as the CVS revision in podlators, however.
-$VERSION = 1.06;
+$VERSION = 1.10;
 
 
 ##############################################################################
@@ -85,7 +85,8 @@ sub heading {
     my ($self, $text, $line, $indent, $marker) = @_;
     $self->item ("\n\n") if defined $$self{ITEM};
     $text .= "\n" if $$self{loose};
-    $self->output (' ' x $indent . $text . "\n");
+    my $margin = ' ' x ($$self{margin} + $indent);
+    $self->output ($margin . $text . "\n");
 }
 
 # Fix the various formatting codes.
@@ -109,8 +110,12 @@ sub wrap {
     my $spaces = ' ' x $$self{MARGIN};
     my $width = $$self{width} - $$self{MARGIN};
     while (length > $width) {
-        if (s/^((?:(?:[^\n]\cH)?[^\n]){0,$width})(\Z|\s+)//
-            || s/^((?:(?:[^\n]\cH)?[^\n]){$width})//) {
+        # This regex represents a single character, that's possibly underlined
+        # or in bold (in which case, it's three characters; the character, a
+        # backspace, and a character).  Use [^\n] rather than . to protect
+        # against odd settings of $*.
+        my $char = '(?:[^\n][\b])?[^\n]';
+        if (s/^((?>$char){0,$width})(?:\Z|\s+)//) {
             $output .= $spaces . $1 . "\n";
         } else {
             last;
@@ -129,8 +134,8 @@ sub wrap {
 # version.
 sub strip_format {
     my ($self, $text) = @_;
-    $text =~ s/(.)\cH\1/$1/g;
-    $text =~ s/_\cH//g;
+    $text =~ s/(.)[\b]\1/$1/g;
+    $text =~ s/_[\b]//g;
     return $text;
 }
 
@@ -182,6 +187,10 @@ There may be some better approach possible.
 =head1 SEE ALSO
 
 L<Pod::Text>, L<Pod::Parser>
+
+The current version of this module is always available from its web site at
+L<http://www.eyrie.org/~eagle/software/podlators/>.  It is also part of the
+Perl core distribution as of 5.6.0.
 
 =head1 AUTHOR
 

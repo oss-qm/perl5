@@ -7,7 +7,7 @@ require Tie::Hash;
 use XSLoader ();
 
 our @ISA = qw(Tie::Hash);
-our $VERSION = "1.03";
+our $VERSION = "1.05";
 
 XSLoader::load 'ODBM_File', $VERSION;
 
@@ -28,11 +28,11 @@ ODBM_File - Tied access to odbm files
   $h{newkey} = newvalue;
   print $h{oldkey}; 
   ...
- 
+
   untie %h;
- 
+
 =head1 DESCRIPTION
- 
+
 C<ODBM_File> establishes a connection between a Perl hash variable and
 a file in ODBM_File format;.  You can manipulate the data in the file
 just as if it were in a Perl hash, but when your program exits, the

@@ -15,20 +15,20 @@ if ($^O eq 'MSWin32') {
 }
 
 WriteMakefile(
-    NAME	=> "B",
-    VERSION	=> "a5",
-    PL_FILES	=> { 'defsubs_h.PL' => 'defsubs.h' },
-    MAN3PODS	=> {},
-    clean	=> {
-	FILES		=> "perl$e *$o B.c defsubs.h *~"
+    NAME	    => "B",
+    VERSION_FROM    => "B.pm",
+    PL_FILES	    => { 'defsubs_h.PL' => 'defsubs.h' },
+    MAN3PODS	    => {},
+    clean	    => {
+	FILES	    => "perl$e *$o B.c defsubs.h *~"
     }
-);   
+);
 
 package MY;
 
 sub post_constants {
     "\nLIBS = $Config::Config{libs}\n"
-}    
+}
 
 sub upupfile {
     File::Spec->catfile(File::Spec->updir,
@@ -40,9 +40,9 @@ sub MY::postamble {
     my $cop_h  = upupfile('cop.h');
     my $noecho = shift->{NOECHO};
 "
-B\$(OBJ_EXT) : defsubs.h              
+B\$(OBJ_EXT) : defsubs.h
 
-defsubs.h :: $op_h $cop_h                     
+defsubs.h :: $op_h $cop_h defsubs_h.PL
 	$noecho \$(NOOP)
-" 
+"
 }

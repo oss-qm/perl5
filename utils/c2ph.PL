@@ -3,6 +3,28 @@
 use Config;
 use File::Basename qw(&basename &dirname);
 use Cwd;
+use subs qw(link);
+
+sub link { # This is a cut-down version of installperl:link().
+    my($from,$to) = @_;
+    my($success) = 0;
+
+    eval {
+	CORE::link($from, $to)
+	    ? $success++
+	    : ($from =~ m#^/afs/# || $to =~ m#^/afs/#)
+	      ? die "AFS"  # okay inside eval {}
+	      : die "Couldn't link $from to $to: $!\n";
+    };
+    if ($@) {
+	warn $@;
+	require File::Copy;
+	File::Copy::copy($from, $to)
+	    ? $success++
+	    : warn "Couldn't copy $from to $to: $!\n";
+    }
+    $success;
+}
 
 # List explicitly here the variables you want Configure to
 # generate.  Metaconfig only looks for shell variables, so you
@@ -162,9 +184,9 @@ declarations at least, but that's quite a bit.
 
 Prior to this point, anyone programming in perl who wanted to interact
 with C programs, like the kernel, was forced to guess the layouts of
-the C strutures, and then hardwire these into his program.  Of course,
+the C structures, and then hardwire these into his program.  Of course,
 when you took your wonderfully crafted program to a system where the
-sgtty structure was laid out differently, you program broke.  Which is
+sgtty structure was laid out differently, your program broke.  Which is
 a shame.
 
 We've had Larry's h2ph translator, which helped, but that only works on
@@ -332,12 +354,24 @@ delete $intrinsics{'null'};
 $indent = 2;
 
 $CC = 'cc';
-$CFLAGS = '-g -S';
+!NO!SUBS!
+
+if (($Config{gccversion} || '') =~ /^(\d+)\.(\d+)/
+  and ($1 > 3 or ($1 == 3 and $2 >= 2))) {
+    print OUT q/$CFLAGS = '-gstabs -S';/;
+} else {
+    print OUT q/$CFLAGS = '-g -S';/;
+}
+
+print OUT <<'!NO!SUBS!';
+
 $DEFINES = '';
 
 $perl++ if $0 =~ m#/?c2ph$#;
 
 require 'getopts.pl';
+
+use File::Temp 'tempdir';
 
 eval '$'.$1.'$2;' while $ARGV[0] =~ /^([A-Za-z_]+=)(.*)/ && shift;
 
