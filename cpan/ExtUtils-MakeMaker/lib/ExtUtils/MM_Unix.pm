@@ -2981,8 +2981,7 @@ sub prefixify {
     print STDERR "  prefixify $var => $path\n" if $Verbose >= 2;
     print STDERR "    from $sprefix to $rprefix\n" if $Verbose >= 2;
 
-    if( $self->{ARGS}{PREFIX} &&
-        $path !~ s{^\Q$sprefix\E\b}{$rprefix}s ) 
+    if( $path !~ s{^\Q$sprefix\E\b}{$rprefix}s && $self->{ARGS}{PREFIX} )
     {
 
         print STDERR "    cannot prefix, using default.\n" if $Verbose >= 2;
