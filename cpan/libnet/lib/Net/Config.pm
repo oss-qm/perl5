@@ -68,9 +68,8 @@ my %nc = (
 TRY_INTERNET_CONFIG
 }
 
-my $file = __FILE__;
+my $file = '/etc/perl/Net/libnet.cfg';
 my $ref;
-$file =~ s/Config.pm/libnet.cfg/;
 if (-f $file) {
   $ref = eval { local $SIG{__DIE__}; do $file };
   if (ref($ref) eq 'HASH') {
@@ -142,8 +141,8 @@ Net::Config - Local configuration data for libnet
 C<Net::Config> holds configuration data for the modules in the libnet
 distribution. During installation you will be asked for these values.
 
-The configuration data is held globally in a file in the perl installation
-tree, but a user may override any of these values by providing their own. This
+The configuration data is held globally in C</etc/perl/Net/libnet.cfg>,
+but a user may override any of these values by providing their own. This
 can be done by having a C<.libnetrc> file in their home directory. This file
 should return a reference to a HASH containing the keys described below.
 For example
