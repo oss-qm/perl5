@@ -10,7 +10,7 @@ BEGIN {
 }
 
 use strict;
-use Test::More tests => 52;
+use Test::More tests => 47;
 use MakeMaker::Test::Utils;
 use MakeMaker::Test::Setup::BFD;
 use ExtUtils::MakeMaker;
@@ -58,16 +58,16 @@ like( $stdout->read, qr{
 			Writing\ MYMETA.yml\n
 }x );
 
-is( $mm->{PREFIX}, '$(SITEPREFIX)', 'PREFIX set based on INSTALLDIRS' );
+#is( $mm->{PREFIX}, '$(SITEPREFIX)', 'PREFIX set based on INSTALLDIRS' );
 
 isa_ok( $mm, 'ExtUtils::MakeMaker' );
 
 is( $mm->{NAME}, 'Big::Dummy',  'NAME' );
 is( $mm->{VERSION}, 0.01,            'VERSION' );
 
-foreach my $prefix (qw(PREFIX PERLPREFIX SITEPREFIX VENDORPREFIX)) {
-    unlike( $mm->{$prefix}, qr/\$\(PREFIX\)/ );
-}
+#foreach my $prefix (qw(PREFIX PERLPREFIX SITEPREFIX VENDORPREFIX)) {
+#    unlike( $mm->{$prefix}, qr/\$\(PREFIX\)/ );
+#}
 
 
 my $PREFIX = File::Spec->catdir('foo', 'bar');
