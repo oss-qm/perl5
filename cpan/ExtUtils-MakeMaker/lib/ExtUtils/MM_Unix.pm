@@ -3029,8 +3029,7 @@ sub prefixify {
     warn "  prefixify $var => $path\n" if $Verbose >= 2;
     warn "    from $sprefix to $rprefix\n" if $Verbose >= 2;
 
-    if( $self->{ARGS}{PREFIX} &&
-        $path !~ s{^\Q$sprefix\E\b}{$rprefix}s )
+    if( $path !~ s{^\Q$sprefix\E\b}{$rprefix}s && $self->{ARGS}{PREFIX} )
     {
 
         warn "    cannot prefix, using default.\n" if $Verbose >= 2;
