@@ -2046,7 +2046,7 @@ doc__install : doc_site_install
 	$(NOECHO) $(ECHO) INSTALLDIRS not defined, defaulting to INSTALLDIRS=site
 
 pure_perl_install :: all
-	$(NOECHO) $(MOD_INSTALL) \
+	$(NOECHO) umask 022; $(MOD_INSTALL) \
 		read }.$self->catfile('$(PERL_ARCHLIB)','auto','$(FULLEXT)','.packlist').q{ \
 		write }.$self->catfile('$(DESTINSTALLARCHLIB)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(DESTINSTALLPRIVLIB) \
@@ -2060,7 +2060,7 @@ pure_perl_install :: all
 
 
 pure_site_install :: all
-	$(NOECHO) $(MOD_INSTALL) \
+	$(NOECHO) umask 022; $(MOD_INSTALL) \
 		read }.$self->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').q{ \
 		write }.$self->catfile('$(DESTINSTALLSITEARCH)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(DESTINSTALLSITELIB) \
@@ -2073,7 +2073,7 @@ pure_site_install :: all
 		}.$self->catdir('$(PERL_ARCHLIB)','auto','$(FULLEXT)').q{
 
 pure_vendor_install :: all
-	$(NOECHO) $(MOD_INSTALL) \
+	$(NOECHO) umask 022; $(MOD_INSTALL) \
 		read }.$self->catfile('$(VENDORARCHEXP)','auto','$(FULLEXT)','.packlist').q{ \
 		write }.$self->catfile('$(DESTINSTALLVENDORARCH)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(DESTINSTALLVENDORLIB) \
@@ -2085,8 +2085,8 @@ pure_vendor_install :: all
 
 doc_perl_install :: all
 	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
-	-$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
-	-$(NOECHO) $(DOC_INSTALL) \
+	-$(NOECHO) umask 022; $(MKPATH) $(DESTINSTALLARCHLIB)
+	-$(NOECHO) umask 022; $(DOC_INSTALL) \
 		"Module" "$(NAME)" \
 		"installed into" "$(INSTALLPRIVLIB)" \
 		LINKTYPE "$(LINKTYPE)" \
@@ -2096,8 +2096,8 @@ doc_perl_install :: all
 
 doc_site_install :: all
 	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
-	-$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
-	-$(NOECHO) $(DOC_INSTALL) \
+	-$(NOECHO) umask 022; $(MKPATH) $(DESTINSTALLARCHLIB)
+	-$(NOECHO) umask 022; $(DOC_INSTALL) \
 		"Module" "$(NAME)" \
 		"installed into" "$(INSTALLSITELIB)" \
 		LINKTYPE "$(LINKTYPE)" \
@@ -2107,8 +2107,8 @@ doc_site_install :: all
 
 doc_vendor_install :: all
 	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
-	-$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
-	-$(NOECHO) $(DOC_INSTALL) \
+	-$(NOECHO) umask 022; $(MKPATH) $(DESTINSTALLARCHLIB)
+	-$(NOECHO) umask 022; $(DOC_INSTALL) \
 		"Module" "$(NAME)" \
 		"installed into" "$(INSTALLVENDORLIB)" \
 		LINKTYPE "$(LINKTYPE)" \
