@@ -101,8 +101,11 @@ foreach my $module ( sort keys %Modules ) {
       print $data_fh join(' ', $module, $file, $id), "\n";
       next;
     }
+SKIP: {
+    skip("$file modified for Debian", 1) if $file eq 'cpan/Encode/bin/enc2xs';
     my $should_be = $customised{ $module }->{ $file };
     is( $id, $should_be, "SHA for $file matches stashed SHA" );
+}
   }
 }
 
