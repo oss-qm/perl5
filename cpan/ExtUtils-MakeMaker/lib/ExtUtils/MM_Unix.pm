@@ -2060,7 +2060,7 @@ pure_perl_install :: all
 
 
 pure_site_install :: all
-	$(NOECHO) umask 022; $(MOD_INSTALL) \
+	$(NOECHO) umask 02; $(MOD_INSTALL) \
 		read }.$self->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').q{ \
 		write }.$self->catfile('$(DESTINSTALLSITEARCH)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(DESTINSTALLSITELIB) \
@@ -2096,8 +2096,8 @@ doc_perl_install :: all
 
 doc_site_install :: all
 	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
-	-$(NOECHO) umask 022; $(MKPATH) $(DESTINSTALLARCHLIB)
-	-$(NOECHO) umask 022; $(DOC_INSTALL) \
+	-$(NOECHO) umask 02; $(MKPATH) $(DESTINSTALLARCHLIB)
+	-$(NOECHO) umask 02; $(DOC_INSTALL) \
 		"Module" "$(NAME)" \
 		"installed into" "$(INSTALLSITELIB)" \
 		LINKTYPE "$(LINKTYPE)" \
