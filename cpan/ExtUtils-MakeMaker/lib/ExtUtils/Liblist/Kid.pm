@@ -53,6 +53,9 @@ sub _unix_os2_ext {
     my($pwd) = cwd(); # from Cwd.pm
     my($found) = 0;
 
+    # Debian-specific: don't use LD_RUN_PATH for standard dirs
+    $ld_run_path_seen{$_}++ for @libpath;
+
     foreach my $thislib (split ' ', $potential_libs) {
 
 	# Handle possible linker path arguments.
