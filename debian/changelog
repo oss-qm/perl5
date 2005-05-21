@@ -1,3 +1,19 @@
+perl (5.8.6-1) experimental; urgency=low
+
+  * New upstream version.  Uploading to experimental due to the sarge
+    freeze.
+
+  * Update perl conflict versions for:
+      libmime-base64-perl (3.05) and
+      libtime-hires-perl (1.65).
+
+  * Update perl-module conflict versions for:
+      libcgi-pm-perl (3.05),
+      libi18n-langtags-perl (1.35) and
+      libmath-bigint-perl (1.73).
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 21 May 2005 18:01:17 +1000
+
 perl (5.8.4-8) unstable; urgency=low
 
   * Remove $!{ENOENT} test from rmtree; File::Path is used during the

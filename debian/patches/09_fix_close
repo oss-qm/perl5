@@ -1,0 +1,27 @@
+2004-11-30  Jim Meyering  <jim@meyering.net>
+
+	* doio.c (Perl_io_close): Make the return value depend not only on the
+	success of the close itself, but also on whether the output stream had
+	a previous error.
+
+diff -Naur --exclude=debian perl-5.8.6.orig/doio.c perl-5.8.6/doio.c
+--- perl-5.8.6.orig/doio.c	2004-09-10 17:06:36.000000000 +1000
++++ perl-5.8.6/doio.c	2005-05-21 14:34:46.000000000 +1000
+@@ -1019,11 +1019,14 @@
+ 	    retval = TRUE;
+ 	else {
+ 	    if (IoOFP(io) && IoOFP(io) != IoIFP(io)) {		/* a socket */
+-		retval = (PerlIO_close(IoOFP(io)) != EOF);
++		bool prev_err = PerlIO_error(IoOFP(io));
++		retval = (PerlIO_close(IoOFP(io)) != EOF && !prev_err);
+ 		PerlIO_close(IoIFP(io));	/* clear stdio, fd already closed */
+ 	    }
+-	    else
+-		retval = (PerlIO_close(IoIFP(io)) != EOF);
++	    else {
++		bool prev_err = PerlIO_error(IoIFP(io));
++		retval = (PerlIO_close(IoIFP(io)) != EOF && !prev_err);
++	    }
+ 	}
+ 	IoOFP(io) = IoIFP(io) = Nullfp;
+     }

@@ -1,0 +1,14 @@
+8 is not an octal digit.
+
+diff -Naur --exclude=debian perl-5.8.6.orig/pod/perlreref.pod perl-5.8.6/pod/perlreref.pod
+--- perl-5.8.6.orig/pod/perlreref.pod	2003-08-13 06:55:22.000000000 +1000
++++ perl-5.8.6/pod/perlreref.pod	2005-05-21 14:51:23.000000000 +1000
+@@ -78,7 +78,7 @@
+    \n       Newline
+    \r       Carriage return
+    \t       Tab
+-   \038     Any octal ASCII value
++   \037     Any octal ASCII value
+    \x7f     Any hexadecimal ASCII value
+    \x{263a} A wide hexadecimal value
+    \cx      Control-x

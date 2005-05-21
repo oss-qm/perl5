@@ -1,0 +1,24 @@
+Normalise case of OPTIONS section.
+Place optional filename in brackets.
+
+diff -Naur --exclude=debian perl-5.8.6.orig/x2p/a2p.pod perl-5.8.6/x2p/a2p.pod
+--- perl-5.8.6.orig/x2p/a2p.pod	2001-03-01 01:36:45.000000000 +1100
++++ perl-5.8.6/x2p/a2p.pod	2005-05-21 14:50:18.000000000 +1000
+@@ -4,7 +4,7 @@
+ 
+ =head1 SYNOPSIS
+ 
+-B<a2p [options] filename>
++B<a2p> [I<options>] [I<filename>]
+ 
+ =head1 DESCRIPTION
+ 
+@@ -12,7 +12,7 @@
+ standard input) and produces a comparable I<perl> script on the
+ standard output.
+ 
+-=head2 Options
++=head2 OPTIONS
+ 
+ Options include:
+ 

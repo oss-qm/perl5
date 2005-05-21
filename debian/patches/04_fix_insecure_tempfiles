@@ -1,0 +1,218 @@
+CAN-2004-0976:
+
+  Multiple scripts in the perl package in Trustix Secure Linux 1.5 through
+  2.1, and possibly other operating systems, allows local users to
+  overwrite files via a symlink attack on temporary files.
+
+ * An example in MakeMaker.pm that suggets setting PREFIX=/tmp/myperl5
+   and another that suggets setting DESTDIR=/tmp/
+ * Insecure use of /tmp file in instmodsh.
+ * Insecure use of /tmp file in lib/Memoize/t/tie.t, tie_gdbm.t, tie_ndbm.t,
+   tie_sdbm.t, tie_storable.t, probably exploitable at build time if these
+   tests are run.
+ * Use of insecure temp file in POD docs in lib/perl5db.pl
+   and also an insecure temp file in the setterm() function in that
+   program.
+
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/MakeMaker.pm perl-5.8.6/lib/ExtUtils/MakeMaker.pm
+--- perl-5.8.6.orig/lib/ExtUtils/MakeMaker.pm	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.6/lib/ExtUtils/MakeMaker.pm	2005-05-21 14:15:12.000000000 +1000
+@@ -1013,7 +1013,7 @@
+ The Makefile to be produced may be altered by adding arguments of the
+ form C<KEY=VALUE>. E.g.
+ 
+-  perl Makefile.PL PREFIX=/tmp/myperl5
++  perl Makefile.PL PREFIX=~/myperl5
+ 
+ Other interesting targets in the generated Makefile are
+ 
+@@ -1355,13 +1355,13 @@
+ 
+ This is the root directory into which the code will be installed.  It
+ I<prepends itself to the normal prefix>.  For example, if your code
+-would normally go into /usr/local/lib/perl you could set DESTDIR=/tmp/
+-and installation would go into /tmp/usr/local/lib/perl.
++would normally go into /usr/local/lib/perl you could set DESTDIR=/other/
++and installation would go into /other/usr/local/lib/perl.
+ 
+ This is primarily of use for people who repackage Perl modules.
+ 
+ NOTE: Due to the nature of make, it is important that you put the trailing
+-slash on your DESTDIR.  "/tmp/" not "/tmp".
++slash on your DESTDIR.  "/other/" not "/other".
+ 
+ =item DIR
+ 
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/instmodsh perl-5.8.6/lib/ExtUtils/instmodsh
+--- perl-5.8.6.orig/lib/ExtUtils/instmodsh	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.6/lib/ExtUtils/instmodsh	2005-05-21 14:16:44.000000000 +1000
+@@ -2,6 +2,7 @@
+ 
+ use strict;
+ use IO::File;
++use File::Temp;
+ use ExtUtils::Packlist;
+ use ExtUtils::Installed;
+ 
+@@ -58,16 +59,12 @@
+       $reply =~ /^t\s*/ and do
+          {
+          my $file = (split(' ', $reply))[1];
+-         my $tmp = "/tmp/inst.$$";
+-         if (my $fh = IO::File->new($tmp, "w"))
+-            {
+-            $fh->print(join("\n", $Inst->files($module)));
+-            $fh->close();
+-            system("tar cvf $file -I $tmp");
+-            unlink($tmp);
+-            last CASE;
+-            }
+-         else { print("Can't open $file: $!\n"); }
++	 my ($fh, $tmp) = File::Temp::tempfile(UNLINK => 1);
++	 $fh->print(join("\n", $Inst->files($module)));
++	 $fh->close();
++	 # This used to use -I which is wrong for GNU tar.
++	 system("tar cvf $file -T $tmp");
++	 unlink($tmp);
+          last CASE;
+          };
+       $reply eq 'v' and do
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/Memoize/t/tie.t perl-5.8.6/lib/Memoize/t/tie.t
+--- perl-5.8.6.orig/lib/Memoize/t/tie.t	2002-07-13 05:56:19.000000000 +1000
++++ perl-5.8.6/lib/Memoize/t/tie.t	2005-05-21 14:18:29.000000000 +1000
+@@ -29,14 +29,7 @@
+   $_[0]+1;
+ }
+ 
+-if (eval {require File::Spec::Functions}) {
+-  File::Spec::Functions->import('tmpdir', 'catfile');
+-  $tmpdir = tmpdir();
+-} else {
+-  *catfile = sub { join '/', @_ };
+-  $tmpdir = $ENV{TMP} || $ENV{TMPDIR} || '/tmp';
+-}
+-$file = catfile($tmpdir, "md$$");
++$file = "md$$";
+ @files = ($file, "$file.db", "$file.dir", "$file.pag");
+ 1 while unlink @files;
+ 
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/Memoize/t/tie_gdbm.t perl-5.8.6/lib/Memoize/t/tie_gdbm.t
+--- perl-5.8.6.orig/lib/Memoize/t/tie_gdbm.t	2002-07-13 05:56:19.000000000 +1000
++++ perl-5.8.6/lib/Memoize/t/tie_gdbm.t	2005-05-21 14:19:18.000000000 +1000
+@@ -26,13 +26,7 @@
+ 
+ print "1..4\n";
+ 
+-if (eval {require File::Spec::Functions}) {
+- File::Spec::Functions->import();
+-} else {
+-  *catfile = sub { join '/', @_ };
+-}
+-$tmpdir = $ENV{TMP} || $ENV{TMPDIR} ||  '/tmp';  
+-$file = catfile($tmpdir, "md$$");
++$file = "md$$";
+ 1 while unlink $file, "$file.dir", "$file.pag";
+ tryout('GDBM_File', $file, 1);  # Test 1..4
+ 1 while unlink $file, "$file.dir", "$file.pag";
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/Memoize/t/tie_ndbm.t perl-5.8.6/lib/Memoize/t/tie_ndbm.t
+--- perl-5.8.6.orig/lib/Memoize/t/tie_ndbm.t	2002-07-13 05:56:19.000000000 +1000
++++ perl-5.8.6/lib/Memoize/t/tie_ndbm.t	2005-05-21 14:19:53.000000000 +1000
+@@ -29,13 +29,7 @@
+ print "1..4\n";
+ 
+ 
+-if (eval {require File::Spec::Functions}) {
+- File::Spec::Functions->import();
+-} else {
+-  *catfile = sub { join '/', @_ };
+-}
+-$tmpdir = $ENV{TMP} || $ENV{TMPDIR} ||  '/tmp';  
+-$file = catfile($tmpdir, "md$$");
++$file = "md$$";
+ 1 while unlink $file, "$file.dir", "$file.pag";
+ tryout('Memoize::NDBM_File', $file, 1);  # Test 1..4
+ 1 while unlink $file, "$file.dir", "$file.pag";
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/Memoize/t/tie_sdbm.t perl-5.8.6/lib/Memoize/t/tie_sdbm.t
+--- perl-5.8.6.orig/lib/Memoize/t/tie_sdbm.t	2002-07-13 05:56:19.000000000 +1000
++++ perl-5.8.6/lib/Memoize/t/tie_sdbm.t	2005-05-21 14:20:28.000000000 +1000
+@@ -28,14 +28,7 @@
+ 
+ print "1..4\n";
+ 
+-if (eval {require File::Spec::Functions}) {
+- File::Spec::Functions->import('tmpdir', 'catfile');
+- $tmpdir = tmpdir();
+-} else {
+- *catfile = sub { join '/', @_ };
+-  $tmpdir = $ENV{TMP} || $ENV{TMPDIR} || '/tmp';
+-}
+-$file = catfile($tmpdir, "md$$");
++$file = "md$$";
+ 1 while unlink $file, "$file.dir", "$file.pag";
+ tryout('Memoize::SDBM_File', $file, 1);  # Test 1..4
+ 1 while unlink $file, "$file.dir", "$file.pag";
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/Memoize/t/tie_storable.t perl-5.8.6/lib/Memoize/t/tie_storable.t
+--- perl-5.8.6.orig/lib/Memoize/t/tie_storable.t	2002-07-13 05:56:19.000000000 +1000
++++ perl-5.8.6/lib/Memoize/t/tie_storable.t	2005-05-21 14:21:19.000000000 +1000
+@@ -34,13 +34,7 @@
+ print "1..4\n";
+ 
+ 
+-if (eval {require File::Spec::Functions}) {
+- File::Spec::Functions->import();
+-} else {
+-  *catfile = sub { join '/', @_ };
+-}
+-$tmpdir = $ENV{TMP} || $ENV{TMPDIR} ||  '/tmp';  
+-$file = catfile($tmpdir, "storable$$");
++$file = "storable$$";
+ 1 while unlink $file;
+ tryout('Memoize::Storable', $file, 1);  # Test 1..4
+ 1 while unlink $file;
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/perl5db.pl perl-5.8.6/lib/perl5db.pl
+--- perl-5.8.6.orig/lib/perl5db.pl	2004-11-17 23:51:18.000000000 +1100
++++ perl-5.8.6/lib/perl5db.pl	2005-05-21 14:23:24.000000000 +1000
+@@ -215,7 +215,7 @@
+ =item * noTTY 
+ 
+ if set, goes in NonStop mode.  On interrupt, if TTY is not set,
+-uses the value of noTTY or F</tmp/perldbtty$$> to find TTY using
++uses the value of noTTY or F<$HOME/.perldbtty$$> to find TTY using
+ Term::Rendezvous.  Current variant is to have the name of TTY in this
+ file.
+ 
+@@ -6004,8 +6004,8 @@
+             eval "require Term::Rendezvous;" or die;
+ 
+             # See if we have anything to pass to Term::Rendezvous.
+-            # Use /tmp/perldbtty$$ if not.
+-            my $rv = $ENV{PERLDB_NOTTY} || "/tmp/perldbtty$$";
++            # Use $HOME/.perldbtty$$ if not.
++            my $rv = $ENV{PERLDB_NOTTY} || "$ENV{HOME}/.perldbtty$$";
+ 
+             # Rendezvous and get the filehandles.
+             my $term_rv = new Term::Rendezvous $rv;
+diff -Naur --exclude=debian perl-5.8.6.orig/pod/perldebug.pod perl-5.8.6/pod/perldebug.pod
+--- perl-5.8.6.orig/pod/perldebug.pod	2004-09-10 07:37:11.000000000 +1000
++++ perl-5.8.6/pod/perldebug.pod	2005-05-21 14:24:10.000000000 +1000
+@@ -700,7 +700,7 @@
+ with two methods: C<IN> and C<OUT>.  These should return filehandles to use
+ for debugging input and output correspondingly.  The C<new> method should
+ inspect an argument containing the value of C<$ENV{PERLDB_NOTTY}> at
+-startup, or C<".perldbtty$$"> otherwise.  This file is not 
++startup, or C<"~/.perldbtty$$"> otherwise.  This file is not 
+ inspected for proper ownership, so security hazards are theoretically
+ possible.
+ 
+diff -Naur --exclude=debian perl-5.8.6.orig/utils/c2ph.PL perl-5.8.6/utils/c2ph.PL
+--- perl-5.8.6.orig/utils/c2ph.PL	2004-10-20 05:45:42.000000000 +1000
++++ perl-5.8.6/utils/c2ph.PL	2005-05-21 14:24:48.000000000 +1000
+@@ -1320,7 +1320,7 @@
+ 	$intrinsics{$_[1]} = $template{$_[0]};
+     }
+     close(PIPE) || die "couldn't read intrinsics!";
+-    unlink($TMP, '$SAFEDIR/a.out');
++    unlink($TMP, "$SAFEDIR/a.out");
+     print STDERR "done\n" if $trace;
+ }
+ 

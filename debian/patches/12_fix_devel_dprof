@@ -1,0 +1,23 @@
+Refer to executable as `perl' rather than `perl5'.
+
+diff -Naur --exclude=debian perl-5.8.6.orig/ext/Devel/DProf/DProf.pm perl-5.8.6/ext/Devel/DProf/DProf.pm
+--- perl-5.8.6.orig/ext/Devel/DProf/DProf.pm	2003-08-14 06:04:45.000000000 +1000
++++ perl-5.8.6/ext/Devel/DProf/DProf.pm	2005-05-21 14:47:02.000000000 +1000
+@@ -6,7 +6,7 @@
+ 
+ =head1 SYNOPSIS
+ 
+-	perl5 -d:DProf test.pl
++	perl -d:DProf test.pl
+ 
+ =head1 DESCRIPTION
+ 
+@@ -21,7 +21,7 @@
+ switch.  The profiler uses the debugging hooks.  So to profile script
+ F<test.pl> the following command should be used:
+ 
+-	perl5 -d:DProf test.pl
++	perl -d:DProf test.pl
+ 
+ When the script terminates (or when the output buffer is filled) the
+ profiler will dump the profile information to a file called
