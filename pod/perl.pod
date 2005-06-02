@@ -164,6 +164,7 @@ For ease of access, the Perl manual has been split up into several sections.
 
     perlhist		Perl history records
     perldelta		Perl changes since previous version
+    perl586delta	Perl changes in version 5.8.6
     perl585delta	Perl changes in version 5.8.5
     perl584delta	Perl changes in version 5.8.4
     perl583delta	Perl changes in version 5.8.3
@@ -211,6 +212,7 @@ For ease of access, the Perl manual has been split up into several sections.
     perlmint		Perl notes for MiNT
     perlmpeix		Perl notes for MPE/iX
     perlnetware 	Perl notes for NetWare
+    perlopenbsd 	Perl notes for OpenBSD
     perlos2		Perl notes for OS/2
     perlos390		Perl notes for OS/390
     perlos400		Perl notes for OS/400

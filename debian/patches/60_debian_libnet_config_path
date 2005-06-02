@@ -1,8 +1,8 @@
 Set location of libnet.cfg to /etc/perl/Net as /usr may not be writable.
 
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/Net/Config.pm perl-5.8.6/lib/Net/Config.pm
---- perl-5.8.6.orig/lib/Net/Config.pm	2002-03-01 01:04:31.000000000 +1100
-+++ perl-5.8.6/lib/Net/Config.pm	2005-05-21 15:22:25.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/Net/Config.pm perl-5.8.7/lib/Net/Config.pm
+--- perl-5.8.7.orig/lib/Net/Config.pm	2002-03-01 01:04:31.000000000 +1100
++++ perl-5.8.7/lib/Net/Config.pm	2005-06-03 00:15:08.000000000 +1000
 @@ -57,9 +57,8 @@
  }
  TRY_INTERNET_CONFIG

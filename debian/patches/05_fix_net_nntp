@@ -1,0 +1,14 @@
+Fix precedence.
+
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/Net/NNTP.pm perl-5.8.7/lib/Net/NNTP.pm
+--- perl-5.8.7.orig/lib/Net/NNTP.pm	2004-05-06 23:36:05.000000000 +1000
++++ perl-5.8.7/lib/Net/NNTP.pm	2005-06-02 23:56:20.000000000 +1000
+@@ -120,7 +120,7 @@
+  my $nntp = shift;
+  my @fh;
+ 
+- @fh = (pop) if @_ == 2 || (@_ && ref($_[0]) || ref(\$_[0]) eq 'GLOB');
++ @fh = (pop) if @_ == 2 || (@_ && (ref($_[0]) || ref(\$_[0]) eq 'GLOB'));
+ 
+  $nntp->_ARTICLE(@_)
+     ? $nntp->read_until_dot(@fh)

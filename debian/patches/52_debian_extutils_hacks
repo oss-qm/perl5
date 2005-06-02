@@ -12,9 +12,9 @@ Various debian-specific ExtUtils changes:
  * Set location of libperl.a to /usr/lib.
  * Note that libperl-dev package is required for embedded linking.
 
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/Embed.pm perl-5.8.6/lib/ExtUtils/Embed.pm
---- perl-5.8.6.orig/lib/ExtUtils/Embed.pm	2002-02-10 06:09:16.000000000 +1100
-+++ perl-5.8.6/lib/ExtUtils/Embed.pm	2005-05-21 14:59:33.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/ExtUtils/Embed.pm perl-5.8.7/lib/ExtUtils/Embed.pm
+--- perl-5.8.7.orig/lib/ExtUtils/Embed.pm	2002-02-10 06:09:16.000000000 +1100
++++ perl-5.8.7/lib/ExtUtils/Embed.pm	2005-06-03 00:05:27.000000000 +1000
 @@ -297,6 +297,9 @@
  Typically, an application B<Makefile> will invoke ExtUtils::Embed
  functions while building your application.  
@@ -25,9 +25,9 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/Embed.pm perl-5.8.6/lib
  =head1 @EXPORT
  
  ExtUtils::Embed exports the following functions:
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/Install.pm perl-5.8.6/lib/ExtUtils/Install.pm
---- perl-5.8.6.orig/lib/ExtUtils/Install.pm	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.6/lib/ExtUtils/Install.pm	2005-05-21 15:00:42.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/ExtUtils/Install.pm perl-5.8.7/lib/ExtUtils/Install.pm
+--- perl-5.8.7.orig/lib/ExtUtils/Install.pm	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.7/lib/ExtUtils/Install.pm	2005-06-03 00:05:27.000000000 +1000
 @@ -173,8 +173,8 @@
  		if (-f $targetfile){
  		    forceunlink($targetfile) unless $nonono;
@@ -39,9 +39,9 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/Install.pm perl-5.8.6/l
  		}
  		copy($sourcefile, $targetfile) unless $nonono;
  		print "Installing $targetfile\n";
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/MM_Any.pm perl-5.8.6/lib/ExtUtils/MM_Any.pm
---- perl-5.8.6.orig/lib/ExtUtils/MM_Any.pm	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.6/lib/ExtUtils/MM_Any.pm	2005-05-21 15:02:02.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/ExtUtils/MM_Any.pm perl-5.8.7/lib/ExtUtils/MM_Any.pm
+--- perl-5.8.7.orig/lib/ExtUtils/MM_Any.pm	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.7/lib/ExtUtils/MM_Any.pm	2005-06-03 00:05:27.000000000 +1000
 @@ -352,8 +352,6 @@
  sub manifypods_target {
      my($self) = shift;
@@ -60,9 +60,9 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/MM_Any.pm perl-5.8.6/li
  CMD
      }
  
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/MM_Unix.pm perl-5.8.6/lib/ExtUtils/MM_Unix.pm
---- perl-5.8.6.orig/lib/ExtUtils/MM_Unix.pm	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.6/lib/ExtUtils/MM_Unix.pm	2005-05-21 15:08:26.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/ExtUtils/MM_Unix.pm perl-5.8.7/lib/ExtUtils/MM_Unix.pm
+--- perl-5.8.7.orig/lib/ExtUtils/MM_Unix.pm	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.7/lib/ExtUtils/MM_Unix.pm	2005-06-03 00:05:27.000000000 +1000
 @@ -2092,6 +2092,11 @@
          $self->{PERLPREFIX}   ||= $iprefix;
          $self->{SITEPREFIX}   ||= $sprefix;
@@ -157,9 +157,9 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/MM_Unix.pm perl-5.8.6/l
  	$dir = "$self->{PERL_ARCHLIB}/.." if $self->{UNINSTALLED_PERL};
  	$libperl ||= "libperl$self->{LIB_EXT}";
  	$libperl   = "$dir/$libperl";
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/t/INST.t perl-5.8.6/lib/ExtUtils/t/INST.t
---- perl-5.8.6.orig/lib/ExtUtils/t/INST.t	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.6/lib/ExtUtils/t/INST.t	2005-05-21 15:10:16.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/ExtUtils/t/INST.t perl-5.8.7/lib/ExtUtils/t/INST.t
+--- perl-5.8.7.orig/lib/ExtUtils/t/INST.t	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.7/lib/ExtUtils/t/INST.t	2005-06-03 00:05:27.000000000 +1000
 @@ -60,7 +60,7 @@
  
  my $config_prefix = $Config{installprefixexp} || $Config{installprefix} ||
@@ -169,9 +169,9 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/t/INST.t perl-5.8.6/lib
  
  is( !!$mm->{PERL_CORE}, !!$ENV{PERL_CORE}, 'PERL_CORE' );
  
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/t/INST_PREFIX.t perl-5.8.6/lib/ExtUtils/t/INST_PREFIX.t
---- perl-5.8.6.orig/lib/ExtUtils/t/INST_PREFIX.t	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.6/lib/ExtUtils/t/INST_PREFIX.t	2005-05-21 15:11:23.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/ExtUtils/t/INST_PREFIX.t perl-5.8.7/lib/ExtUtils/t/INST_PREFIX.t
+--- perl-5.8.7.orig/lib/ExtUtils/t/INST_PREFIX.t	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.7/lib/ExtUtils/t/INST_PREFIX.t	2005-06-03 00:05:27.000000000 +1000
 @@ -16,7 +16,7 @@
  }
  

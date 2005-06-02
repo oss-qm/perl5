@@ -51,7 +51,7 @@ Package: perl-modules
 Priority: standard
 Architecture: all
 Depends: perl (>= ${Upstream-Version}-1)
-Conflicts: libpod-parser-perl (<< 1.14-1), libansicolor-perl (<< 1.08-1), libfile-temp-perl (<< 0.14-1), libnet-perl (<< 1:1.17-1), libattribute-handlers-perl (<< 0.78-1), libcgi-pm-perl (<< 3.05-1), libi18n-langtags-perl (<< 0.35-1), liblocale-maketext-perl (<< 1.08-1), libmath-bigint-perl (<< 1.73-1), libnet-ping-perl (<< 2.31-1), libtest-harness-perl (<< 2.40-1), libtest-simple-perl (<< 0.47-1), liblocale-codes-perl (<< 2.06.1-1)
+Conflicts: libpod-parser-perl (<< 1.30-1), libansicolor-perl (<< 1.09-1), libfile-temp-perl (<< 0.16-1), libnet-perl (<< 1:1.17-1), libattribute-handlers-perl (<< 0.78-1), libcgi-pm-perl (<< 3.10-1), libi18n-langtags-perl (<< 0.35-1), liblocale-maketext-perl (<< 1.08-1), libmath-bigint-perl (<< 1.77-1), libnet-ping-perl (<< 2.31-1), libtest-harness-perl (<< 2.48-1), libtest-simple-perl (<< 0.54-1), liblocale-codes-perl (<< 2.06.1-1)
 Replaces: libpod-parser-perl, libansicolor-perl, libfile-temp-perl, libnet-perl, libattribute-handlers-perl, libcgi-pm-perl, libi18n-langtags-perl, liblocale-maketext-perl, libmath-bigint-perl, libnet-ping-perl, libtest-harness-perl, libtest-simple-perl, liblocale-codes-perl
 Provides: libpod-parser-perl, libansicolor-perl, libfile-temp-perl, libnet-perl, libattribute-handlers-perl, libcgi-pm-perl, libi18n-langtags-perl, liblocale-maketext-perl, libmath-bigint-perl, libnet-ping-perl, libtest-harness-perl, libtest-simple-perl, liblocale-codes-perl
 Description: Core Perl modules
@@ -113,7 +113,7 @@ Package: perl
 Priority: standard
 Architecture: any
 Depends: perl-base (= ${Source-Version}), perl-modules (>= ${Source-Version}), ${shlibs:Depends}
-Conflicts: perl-5.004 (<< 6), perl-5.005 (<< 6), perl-5.6 (<< 6), perl-doc (<< ${Upstream-Version}-1), libdigest-md5-perl (<< 2.33-1), libmime-base64-perl (<< 3.05-1), libtime-hires-perl (<< 1.65-1), libstorable-perl (<< 2.12-1)
+Conflicts: perl-5.004 (<< 6), perl-5.005 (<< 6), perl-5.6 (<< 6), perl-doc (<< ${Upstream-Version}-1), libdigest-md5-perl (<< 2.33-1), libmime-base64-perl (<< 3.05-1), libtime-hires-perl (<< 1.66-1), libstorable-perl (<< 2.12-1)
 Replaces: perl-5.005 (<< 6), perl-5.6 (<< 6), perl-doc (<< 5.8.0-1), perl-modules (<< 5.8.1-1), libdigest-md5-perl, libmime-base64-perl, libtime-hires-perl, libstorable-perl 
 Provides: perl5, libdigest-md5-perl, libmime-base64-perl, libtime-hires-perl, libstorable-perl 
 Recommends: perl-doc
