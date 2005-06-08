@@ -99,12 +99,13 @@ install-stamp: build-stamp
 	# extensions to 1p and 3pm for vendor module installs
 	./perl.static -i -pe 's!$(srcdir)/$(tmp)/!/! if /install/;' \
 	    -e 's/^(man1ext=).*/$$1'\''1p'\''/;' \
-	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' $(lib)/Config.pm
+	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
+		$(lib)/Config.pm $(lib)/Config_heavy.pl
 
 	# convert required header files
 	-cd /usr/include; $(srcdir)/perl.static -I $(srcdir)/lib \
 	    $(srcdir)/utils/h2ph -a -d $(srcdir)/$(lib) \
-	    `cat $(srcdir)/debian/headers`
+		`cat $(srcdir)/debian/headers`
 
 	# fix up generated headers
 	./perl.static -Ilib debian/fixheaders $(lib)
@@ -197,16 +198,15 @@ endif
 	cp debian/perl.perldoc $(build)/perl/usr/bin/perldoc
 	chmod 755 $(build)/perl/usr/bin/perldoc
 
-	# install rename script to bin
+	# install rename script to bin (as prename, alternative configured)
 	mkdir -p $(build)/perl-modules/usr/bin \
 	    $(build)/perl-modules/usr/share/man/man1
 
-	cp debian/rename $(build)/perl/usr/bin
-	chmod 755 $(build)/perl/usr/bin/rename
+	cp debian/rename $(build)/perl/usr/bin/prename
+	chmod 755 $(build)/perl/usr/bin/prename
 
 	./perl.static -Ilib $(build)/perl/usr/bin/pod2man --official \
-	    $(build)/perl/usr/bin/rename \
-	    >$(build)/perl/usr/share/man/man1/rename.1
+	    debian/rename >$(build)/perl/usr/share/man/man1/prename.1
 
 	# install docs
 	for p in $(packages); \

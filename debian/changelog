@@ -1,3 +1,11 @@
+perl (5.8.7-3) unstable; urgency=low
+
+  * Add alternative for /usr/bin/rename (closes: #304705).
+  * install* variables have been moved from Config.pm to
+    Config_heavy.pl; strip (closes: #312419).
+
+ -- Brendan O'Dea <bod@debian.org>  Wed,  8 Jun 2005 23:00:25 +1000
+
 perl (5.8.7-2) unstable; urgency=low
 
   * Sarge has released.  Rebuild for unstable.
