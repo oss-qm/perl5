@@ -4,6 +4,7 @@ debian/patches/02_fix_insecure_tempfiles
 debian/patches/03_fix_file_path
 debian/patches/04_fix_verbatim_pod_dash
 debian/patches/05_fix_net_nntp
+debian/patches/06_fix_reentr_erange
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
@@ -17,6 +18,6 @@ debian/patches/59_debian_cpan_version_check
 debian/patches/60_debian_libnet_config_path
 debian/patches/61_debian_instmodsh_doc
 debian/patches/62_debian_cpan_definstalldirs
-debian/patches/63_debian_optim_workaround
+debian/patches/63_debian_ppc_optim
 debian/patches/64_debian_enc2xs_inc
 debian/patches/65_debian_perl_synopsis
