@@ -1,3 +1,21 @@
+perl (5.8.7-5) unstable; urgency=low
+
+  * Handle changed dpkg-architecture output so that perl is statically
+    linked on i386 again (closes: #324418).
+
+  * Add build-dep on cpio 2.6-5 to ensure libperl.so link is included in
+    libperl-dev package (#326090).
+
+  * Various a2p fixes:
+    + Make {$1++;print} work correctly.  The re-join was occuring for
+      assignment, but not increment (close: #198945).
+
+    + Make {$NF++} work.  Was generating $Fld[$#Fld++].
+    + Use -1 as the last argument to split (closes: #18395).
+    + Omit last argument to substr (cosmetic).
+
+ -- Brendan O'Dea <bod@debian.org>  Mon, 12 Sep 2005 01:14:31 +1000
+
 perl (5.8.7-4) unstable; urgency=low
 
   * Don't generate broken md5sums for libperl5.8 (closes: #304640).

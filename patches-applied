@@ -5,6 +5,7 @@ debian/patches/03_fix_file_path
 debian/patches/04_fix_verbatim_pod_dash
 debian/patches/05_fix_net_nntp
 debian/patches/06_fix_reentr_erange
+debian/patches/07_fix_a2p
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

@@ -3,7 +3,7 @@ Section: perl
 Priority: standard
 Maintainer: Brendan O'Dea <bod@debian.org>
 Standards-Version: 3.6.1
-Build-Depends: file, cpio, libdb4.2-dev, libgdbm-dev, netbase [!hurd-i386], gcc (>= 4:4.0)
+Build-Depends: file, cpio (>= 2.6-5), libdb4.2-dev, libgdbm-dev, netbase [!hurd-i386], gcc (>= 4:4.0)
 
 Package: perl-base
 Essential: yes
@@ -93,6 +93,7 @@ Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, perl-base (= ${Source-Version})
 Conflicts: libapache-mod-perl (<< 1.29.0.1-3)
+Replaces: perl-base (<= 5.8.7-4)
 Description: Shared Perl library
  This package is required by programs which embed a Perl interpreter to
  ensure that the correct version of `perl-base' is installed.  It

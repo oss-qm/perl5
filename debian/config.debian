@@ -5,7 +5,8 @@ SETver=PERL_REVISION.PERL_VERSION;
 SETfullver=$ver.PERL_SUBVERSION' | gcc -E - | sed -n '/^SET/{s///;s/ //gp;}')
 
 ccflags=-DDEBIAN
-archname=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
+arch_cpu=${DEB_BUILD_ARCH_CPU:-$(dpkg-architecture -qDEB_BUILD_ARCH_CPU)}
+gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
 optimize=
 
 case "$1" in
@@ -44,8 +45,8 @@ case "$1" in
 	    *[,\ ]x-perl-static[,\ ]*)	exec echo static;;
 	    *[,\ ]x-perl-shared[,\ ]*)	exec echo shared;;
 	esac
-	case "$archname" in
-	    i386-*)			exec echo static;;
+	case "$arch_cpu" in
+	    i386)			exec echo static;;
 	    *)				exec echo shared;;
 	esac;;
 
@@ -59,14 +60,14 @@ case "$1" in
     	exit 2;;
 esac
 
-case "$archname:$build_type" in
-    alpha-*) # required to correctly handle floating point on alpha
+case "$arch_cpu:$build_type" in
+    alpha) # required to correctly handle floating point on alpha
     	ccflags="$ccflags -mieee";;
 
-    m68k-*:shared) # work around an optimiser bug
+    m68k:shared) # work around an optimiser bug
 	ccflags="$ccflags -fno-regmove";;
 
-    arm-*) # gcc defaults are currently incorrect
+    arm) # gcc defaults are currently incorrect
     	ccflags="$ccflags -march=armv3";;
 esac
 
@@ -83,7 +84,7 @@ eval /bin/bash Configure			\
     -Duselargefiles				\
     -Dccflags=\'$ccflags\'			\
     -Dcccdlflags=-fPIC				\
-    -Darchname=$archname			\
+    -Darchname=$gnu_type			\
     -Dprefix=/usr				\
     -Dprivlib=/usr/share/perl/$ver		\
     -Darchlib=/usr/lib/perl/$ver		\
