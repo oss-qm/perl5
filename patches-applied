@@ -22,3 +22,4 @@ debian/patches/62_debian_cpan_definstalldirs
 debian/patches/63_debian_ppc_optim
 debian/patches/64_debian_enc2xs_inc
 debian/patches/65_debian_perl_synopsis
+debian/patches/66_debian_arm_optim
