@@ -7,7 +7,6 @@ Build-Depends: file, cpio (>= 2.6-5), libdb4.2-dev, libgdbm-dev, netbase [!hurd-
 
 Package: perl-base
 Essential: yes
-Section: base
 Priority: required
 Architecture: any
 Pre-Depends: ${shlibs:Depends}
