@@ -111,7 +111,7 @@ for file do
     pp_hot) ;;
     pp_pack)
 	case $archname in
-	    arm-*)
+	    arm-*|armeb-*)
 		optimize=-Os;;
 	esac;;
     pp_sys) ;;
