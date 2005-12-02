@@ -8480,7 +8480,10 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	if (EXPECT_NUMBER(q, width)) {
 	    if (*q == '$') {
 		++q;
-		efix = width;
+		if (width > INT_MAX)
+		    efix=INT_MAX;
+		else
+		    efix = width;
 	    } else {
 		goto gotwidth;
 	    }

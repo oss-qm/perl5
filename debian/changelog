@@ -1,3 +1,11 @@
+perl (5.8.4-8sarge1) stable-security; urgency=high
+
+  * Non-maintainer upload by the Security Team
+  * Applied patch by Jack Louis to fix integer overflow [sv.c,
+    CVE-2005-3962]
+
+ -- Martin Schulze <joey@infodrom.org>  Fri,  2 Dec 2005 22:46:31 +0100
+
 perl (5.8.4-8) unstable; urgency=low
 
   * Remove $!{ENOENT} test from rmtree; File::Path is used during the
