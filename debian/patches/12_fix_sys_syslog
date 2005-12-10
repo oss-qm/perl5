@@ -1,0 +1,1947 @@
+Update Sys::Syslog to 0.09, which only uses the message as a format
+string to sprintf when additional arguments are given.
+
+This corrects a common error where a programmer writes
+
+    syslog warn => $msg;
+
+where $msg could contain user supplied data, and they meant:
+
+    syslog warn => '%s', $msg;
+
+See also CVE-2005-3962.
+
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/Changes perl-5.8.7/ext/Sys/Syslog/Changes
+--- perl-5.8.7.orig/ext/Sys/Syslog/Changes	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/Changes	2005-12-07 09:16:33.000000000 +1100
+@@ -0,0 +1,8 @@
++Revision history for Sys-Syslog
++
++0.09    2005.12.06
++        [CODE] Now setlogsock() really croak(), as documented.
++        [DIST] CPANized from blead@26281.
++        [DIST] Bumped version to 0.09
++        [TESTS] Rewrote and ported t/syslog.t to Test::More
++
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/MANIFEST perl-5.8.7/ext/Sys/Syslog/MANIFEST
+--- perl-5.8.7.orig/ext/Sys/Syslog/MANIFEST	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/MANIFEST	2005-12-07 09:16:37.000000000 +1100
+@@ -0,0 +1,14 @@
++Changes
++const-c.inc
++const-xs.inc
++Makefile.PL
++MANIFEST
++README
++Syslog.pm
++Syslog.xs
++fallback/const-c.inc
++fallback/const-xs.inc
++t/00-load.t
++t/pod.t
++t/syslog.t
++META.yml                                 Module meta-data (added by MakeMaker)
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/META.yml perl-5.8.7/ext/Sys/Syslog/META.yml
+--- perl-5.8.7.orig/ext/Sys/Syslog/META.yml	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/META.yml	2005-12-07 09:16:36.000000000 +1100
+@@ -0,0 +1,11 @@
++# http://module-build.sourceforge.net/META-spec.html
++#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
++name:         Sys-Syslog
++version:      0.09
++version_from: Syslog.pm
++installdirs:  perl
++requires:
++    Test::More:                    0
++
++distribution_type: module
++generated_by: ExtUtils::MakeMaker version 6.30
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/Makefile.PL perl-5.8.7/ext/Sys/Syslog/Makefile.PL
+--- perl-5.8.7.orig/ext/Sys/Syslog/Makefile.PL	2003-04-07 04:56:01.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/Makefile.PL	2005-12-07 08:44:37.000000000 +1100
+@@ -1,38 +1,55 @@
+ use ExtUtils::MakeMaker;
+-use ExtUtils::Constant 0.11 'WriteConstants';
++eval 'use ExtUtils::MakeMaker::Coverage';
+ 
+ WriteMakefile(
+-    NAME		=> 'Sys::Syslog',
+-    VERSION_FROM	=> 'Syslog.pm', 
+-    MAN3PODS		=> {}, 	# Pods will be built by installman.
+-    XSPROTOARG          => '-noprototypes',
+-    realclean => {FILES=> 'const-c.inc const-xs.inc'},
++    NAME            => 'Sys::Syslog',
++    VERSION_FROM    => 'Syslog.pm', 
++    ABSTRACT_FROM   => 'Syslog.pm', 
++    INSTALLDIRS     => 'perl',
++    MAN3PODS        => {}, 	# Pods will be built by installman.
++    XSPROTOARG      => '-noprototypes',
++    PREREQ_PM       => {
++        'Test::More' => 0,
++    },
++    dist            => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
++    clean           => { FILES => 'Sys-Syslog-*' }, 
++    realclean       => { FILES => 'const-c.inc const-xs.inc' },
+ );
+ 
+ my $_PATH_LOG;
+ 
+ if (-S "/dev/log" && -w "/dev/log") {
+-        # Most unixes have a unix domain socket /dev/log.
+-       $_PATH_LOG = "/dev/log";
++    # Most unixes have a unix domain socket /dev/log.
++    $_PATH_LOG = "/dev/log";
+ } elsif (-c "/dev/conslog" && -w "/dev/conslog") {
+-        # SunOS 5.8 has a worldwritable /dev/conslog STREAMS log driver.
+-        # The /dev/log STREAMS log driver on this platform has permissions
+-        # and ownership `crw-r----- root sys'.  /dev/conslog has more liberal
+-        # permissions.
+-       $_PATH_LOG = "/dev/conslog";
++    # SunOS 5.8 has a worldwritable /dev/conslog STREAMS log driver.
++    # The /dev/log STREAMS log driver on this platform has permissions
++    # and ownership `crw-r----- root sys'.  /dev/conslog has more liberal
++    # permissions.
++    $_PATH_LOG = "/dev/conslog";
+ } else {
+-       $_PATH_LOG = "";
++    $_PATH_LOG = "";
+ }
+ 
+-WriteConstants(
+-    NAME => 'Sys::Syslog',
+-    NAMES => [qw(LOG_ALERT LOG_AUTH LOG_AUTHPRIV LOG_CONS LOG_CRIT LOG_CRON
+-                 LOG_DAEMON LOG_DEBUG LOG_EMERG LOG_ERR LOG_FACMASK LOG_FTP
+-                 LOG_INFO LOG_KERN LOG_LFMT LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2
+-                 LOG_LOCAL3 LOG_LOCAL4 LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_LPR
+-                 LOG_MAIL LOG_NDELAY LOG_NEWS LOG_NFACILITIES LOG_NOTICE
+-                 LOG_NOWAIT LOG_ODELAY LOG_PERROR LOG_PID LOG_PRIMASK LOG_SYSLOG
+-                 LOG_USER LOG_UUCP LOG_WARNING),
+-              {name=>"_PATH_LOG", type=>"PV", default=>["PV",qq("$_PATH_LOG")]},
+-             ],
+-);
++if(eval {require ExtUtils::Constant; 1}) {
++    ExtUtils::Constant::WriteConstants(
++        NAME => 'Sys::Syslog',
++        NAMES => [qw(LOG_ALERT LOG_AUTH LOG_AUTHPRIV LOG_CONS LOG_CRIT LOG_CRON
++                     LOG_DAEMON LOG_DEBUG LOG_EMERG LOG_ERR LOG_FACMASK LOG_FTP
++                     LOG_INFO LOG_KERN LOG_LFMT LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2
++                     LOG_LOCAL3 LOG_LOCAL4 LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_LPR
++                     LOG_MAIL LOG_NDELAY LOG_NEWS LOG_NFACILITIES LOG_NOTICE
++                     LOG_NOWAIT LOG_ODELAY LOG_PERROR LOG_PID LOG_PRIMASK LOG_SYSLOG
++                     LOG_USER LOG_UUCP LOG_WARNING),
++                   { name => "_PATH_LOG", type => "PV", default => [ "PV", qq("$_PATH_LOG") ] },
++                 ],
++    );
++
++} else {
++    use File::Copy;
++    use File::Spec;
++    foreach my $file ('const-c.inc', 'const-xs.inc') {
++        my $fallback = File::Spec->catfile('fallback', $file);
++        copy ($fallback, $file) or die "Can't copy $fallback to $ $!";
++    }
++}
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/README perl-5.8.7/ext/Sys/Syslog/README
+--- perl-5.8.7.orig/ext/Sys/Syslog/README	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/README	2005-12-07 08:55:18.000000000 +1100
+@@ -0,0 +1,69 @@
++NAME
++
++    Sys::Syslog - Perl interface to the UNIX syslog(3) calls
++
++
++DESCRIPTION
++
++    Sys::Syslog is an interface to the UNIX syslog(3) program.
++    Call syslog() with a string priority and a list of printf() args
++    just like syslog(3).
++
++
++INSTALLATION
++
++    To install this module, run the following commands:
++
++        $ perl Makefile.PL
++        $ make
++        $ make test
++        $ make install
++
++    A ANSI-compliant compiler is required to compile the extension.
++
++    Sys::Syslog has been tested by the author on the following systems,
++    but is likely to run on many more:
++
++      - Linux 2.6, gcc 3.4.1
++      - FreeBSD 4.7, gcc 2.95.4
++      - Mac OS X 10.2.6, gcc 3.1
++
++    Sys::Syslog should on any Perl since 5.6.0. This module has been 
++    tested by the author to check that it works with the following
++    versions ot Perl:
++
++      - Perl 5.6.2 i686-linux (custom build)
++      - Perl 5.8.5 i386-linux-thread-multi (vendor build)
++      - Perl 5.6.1 i386-freebsd (custom build)
++      - Perl 5.8.7 i386-freebsd (custom build)
++      - Perl 5.6.0 darwin (vendor build)
++
++    See also the corresponding CPAN Testers page:
++        http://testers.cpan.org/show/Net-Pcap.html
++
++
++SUPPORT AND DOCUMENTATION
++
++    After installing, you can find documentation for this module 
++    with the perldoc command.
++
++        perldoc Sys::Syslog
++
++    You can also look for information at:
++
++        Search CPAN
++            http://search.cpan.org/dist/Sys-Syslog
++
++        CPAN Request Tracker:
++            http://rt.cpan.org/NoAuth/Bugs.html?Dist=Sys-Syslog
++
++        AnnoCPAN, annotated CPAN documentation:
++            http://annocpan.org/dist/Sys-Syslog
++
++        CPAN Ratings:
++            http://cpanratings.perl.org/d/Sys-Syslog
++
++COPYRIGHT AND LICENCE
++
++    This program is free software; you can redistribute it and/or modify it
++    under the same terms as Perl itself.
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/Syslog.pm perl-5.8.7/ext/Sys/Syslog/Syslog.pm
+--- perl-5.8.7.orig/ext/Sys/Syslog/Syslog.pm	2005-04-22 21:53:56.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/Syslog.pm	2005-12-07 09:15:43.000000000 +1100
+@@ -1,14 +1,13 @@
+ package Sys::Syslog;
+ require 5.006;
+ require Exporter;
+-require DynaLoader;
+ use Carp;
+ use strict;
+ 
+-our @ISA = qw(Exporter DynaLoader);
++our @ISA = qw(Exporter);
+ our @EXPORT = qw(openlog closelog setlogmask syslog);
+ our @EXPORT_OK = qw(setlogsock);
+-our $VERSION = '0.06';
++our $VERSION = '0.09';
+ 
+ # it would be nice to try stream/unix first, since that will be
+ # most efficient. However streams are dodgy - see _syslog_send_stream
+@@ -29,7 +28,7 @@
+ 
+ =head1 NAME
+ 
+-Sys::Syslog, openlog, closelog, setlogmask, syslog - Perl interface to the UNIX syslog(3) calls
++Sys::Syslog - Perl interface to the UNIX syslog(3) calls
+ 
+ =head1 SYNOPSIS
+ 
+@@ -54,26 +53,38 @@
+ 
+ =item openlog $ident, $logopt, $facility
+ 
++Opens the syslog.
+ I<$ident> is prepended to every message.  I<$logopt> contains zero or
+ more of the words I<pid>, I<ndelay>, I<nowait>.  The cons option is
+ ignored, since the failover mechanism will drop down to the console
+ automatically if all other media fail.  I<$facility> specifies the
+ part of the system to report about, for example LOG_USER or LOG_LOCAL0:
+ see your C<syslog(3)> documentation for the facilities available in
+-your system.
++your system. This function will croak if it can't connect to the syslog
++daemon.
+ 
+ B<You should use openlog() before calling syslog().>
+ 
++=item syslog $priority, $message
++
+ =item syslog $priority, $format, @args
+ 
+-If I<$priority> permits, logs I<($format, @args)>
+-printed as by C<printf(3V)>, with the addition that I<%m>
+-is replaced with C<"$!"> (the latest error message).
++If I<$priority> permits, logs I<$message> or I<sprintf($format, @args)>
++with the addition that I<%m> in $message or $format is replaced with
++C<"$!"> (the latest error message).
+ 
+ If you didn't use openlog() before using syslog(), syslog will try to
+ guess the I<$ident> by extracting the shortest prefix of I<$format>
+ that ends in a ":".
+ 
++Note that Sys::Syslog version v0.07 and older passed the $message as
++the formatting string to sprintf() even when no formatting arguments
++were provided.  If the code calling syslog() might execute with older
++versions of this module, make sure to call the function as
++syslog($priority, "%s", $message) instead of syslog($priority,
++$message).  This protects against hostile formatting sequences that
++might show up if $message contains tainted data.
++
+ =item setlogmask $mask_priority
+ 
+ Sets log mask I<$mask_priority> and returns the old mask.
+@@ -135,10 +146,12 @@
+     openlog($program, 'ndelay', 'user');
+     syslog('info', 'something happened over here');
+ 
++
+ =head1 SEE ALSO
+ 
+ L<syslog(3)>
+ 
++
+ =head1 AUTHOR
+ 
+ Tom Christiansen E<lt>F<tchrist@perl.com>E<gt> and Larry Wall
+@@ -156,6 +169,50 @@
+ Failover to different communication modes by Nick Williams
+ E<lt>F<Nick.Williams@morganstanley.com>E<gt>.
+ 
++
++=head1 BUGS
++
++Please report any bugs or feature requests to
++C<bug-sys-syslog at rt.cpan.org>, or through the web interface at
++L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Sys-Syslog>.
++I will be notified, and then you'll automatically be notified of progress on
++your bug as I make changes.
++
++
++=head1 SUPPORT
++
++You can find documentation for this module with the perldoc command.
++
++    perldoc Sys::Syslog
++
++You can also look for information at:
++
++=over 4
++
++=item * AnnoCPAN: Annotated CPAN documentation
++
++L<http://annocpan.org/dist/Sys-Syslog>
++
++=item * CPAN Ratings
++
++L<http://cpanratings.perl.org/d/Sys-Syslog>
++
++=item * RT: CPAN's request tracker
++
++L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Sys-Syslog>
++
++=item * Search CPAN
++
++L<http://search.cpan.org/dist/Sys-Syslog>
++
++=back
++
++
++=head1 LICENSE
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
+ =cut
+ 
+ sub AUTOLOAD {
+@@ -175,7 +232,8 @@
+     goto &$AUTOLOAD;
+ }
+ 
+-bootstrap Sys::Syslog $VERSION;
++require XSLoader;
++XSLoader::load('Sys::Syslog', $VERSION);
+ 
+ our $maskpri = &LOG_UPTO(&LOG_DEBUG);
+ 
+@@ -220,11 +278,11 @@
+ 		    last;
+ 		}
+ 	    }
+-	    carp "stream passed to setlogsock, but could not find any device"
++	    croak "stream passed to setlogsock, but could not find any device"
+ 		unless defined $syslog_path;
+         }
+ 	unless (-w $syslog_path) {
+-	    carp "stream passed to setlogsock, but $syslog_path is not writable";
++	    croak "stream passed to setlogsock, but $syslog_path is not writable";
+ 	    return undef;
+ 	} else {
+ 	    @connectMethods = ( 'stream' );
+@@ -234,21 +292,21 @@
+ 	    $syslog_path = _PATH_LOG();
+ 	    @connectMethods = ( 'unix' );
+         } else {
+-	    carp 'unix passed to setlogsock, but path not available';
++	    croak 'unix passed to setlogsock, but path not available';
+ 	    return undef;
+         }
+     } elsif (lc($setsock) eq 'tcp') {
+ 	if (getservbyname('syslog', 'tcp') || getservbyname('syslogng', 'tcp')) {
+ 	    @connectMethods = ( 'tcp' );
+ 	} else {
+-	    carp "tcp passed to setlogsock, but tcp service unavailable";
++	    croak "tcp passed to setlogsock, but tcp service unavailable";
+ 	    return undef;
+ 	}
+     } elsif (lc($setsock) eq 'udp') {
+ 	if (getservbyname('syslog', 'udp')) {
+ 	    @connectMethods = ( 'udp' );
+ 	} else {
+-	    carp "udp passed to setlogsock, but udp service unavailable";
++	    croak "udp passed to setlogsock, but udp service unavailable";
+ 	    return undef;
+ 	}
+     } elsif (lc($setsock) eq 'inet') {
+@@ -256,7 +314,7 @@
+     } elsif (lc($setsock) eq 'console') {
+ 	@connectMethods = ( 'console' );
+     } else {
+-        carp "Invalid argument passed to setlogsock; must be 'stream', 'unix', 'tcp', 'udp' or 'inet'";
++        croak "Invalid argument passed to setlogsock; must be 'stream', 'unix', 'tcp', 'udp' or 'inet'";
+     }
+     return 1;
+ }
+@@ -316,9 +374,16 @@
+ 
+     $whoami .= "[$$]" if our $lo_pid;
+ 
+-    $mask =~ s/(?<!%)%m/$!/g;
++    if ($mask =~ /%m/) {
++	my $err = $!;
++	# escape percent signs if sprintf will be called
++	$err =~ s/%/%%/g if @_;
++	# replace %m with $err, if preceded by an even number of percent signs
++	$mask =~ s/(?<!%)((?:%%)*)%m/$1$err/g;
++    }
++
+     $mask .= "\n" unless $mask =~ /\n$/;
+-    $message = sprintf ($mask, @_);
++    $message = @_ ? sprintf($mask, @_) : $mask;
+ 
+     $sum = $numpri + $numfac;
+     my $buf = "<$sum>$whoami: $message\0";
+@@ -396,6 +461,7 @@
+     # To be correct, it should use a STREAMS API, but perl doesn't have one.
+     return syswrite(SYSLOG, $buf, length($buf));
+ }
++
+ sub _syslog_send_socket {
+     my ($buf) = @_;
+     return syswrite(SYSLOG, $buf, length($buf));
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/const-c.inc perl-5.8.7/ext/Sys/Syslog/const-c.inc
+--- perl-5.8.7.orig/ext/Sys/Syslog/const-c.inc	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/const-c.inc	2005-12-07 09:15:50.000000000 +1100
+@@ -0,0 +1,559 @@
++#define PERL_constant_NOTFOUND	1
++#define PERL_constant_NOTDEF	2
++#define PERL_constant_ISIV	3
++#define PERL_constant_ISNO	4
++#define PERL_constant_ISNV	5
++#define PERL_constant_ISPV	6
++#define PERL_constant_ISPVN	7
++#define PERL_constant_ISSV	8
++#define PERL_constant_ISUNDEF	9
++#define PERL_constant_ISUV	10
++#define PERL_constant_ISYES	11
++
++#ifndef NVTYPE
++typedef double NV; /* 5.6 and later define NVTYPE, and typedef NV to it.  */
++#endif
++#ifndef aTHX_
++#define aTHX_ /* 5.6 or later define this for threading support.  */
++#endif
++#ifndef pTHX_
++#define pTHX_ /* 5.6 or later define this for threading support.  */
++#endif
++
++static int
++constant_7 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_ERR LOG_FTP LOG_LPR LOG_PID */
++  /* Offset 4 gives the best switch position.  */
++  switch (name[4]) {
++  case 'E':
++    if (memEQ(name, "LOG_ERR", 7)) {
++    /*                   ^        */
++#ifdef LOG_ERR
++      *iv_return = LOG_ERR;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'F':
++    if (memEQ(name, "LOG_FTP", 7)) {
++    /*                   ^        */
++#ifdef LOG_FTP
++      *iv_return = LOG_FTP;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'L':
++    if (memEQ(name, "LOG_LPR", 7)) {
++    /*                   ^        */
++#ifdef LOG_LPR
++      *iv_return = LOG_LPR;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'P':
++    if (memEQ(name, "LOG_PID", 7)) {
++    /*                   ^        */
++#ifdef LOG_PID
++      *iv_return = LOG_PID;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_8 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_AUTH LOG_CONS LOG_CRIT LOG_CRON LOG_INFO LOG_KERN LOG_LFMT LOG_MAIL
++     LOG_NEWS LOG_USER LOG_UUCP */
++  /* Offset 6 gives the best switch position.  */
++  switch (name[6]) {
++  case 'C':
++    if (memEQ(name, "LOG_UUCP", 8)) {
++    /*                     ^       */
++#ifdef LOG_UUCP
++      *iv_return = LOG_UUCP;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'E':
++    if (memEQ(name, "LOG_USER", 8)) {
++    /*                     ^       */
++#ifdef LOG_USER
++      *iv_return = LOG_USER;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'F':
++    if (memEQ(name, "LOG_INFO", 8)) {
++    /*                     ^       */
++#ifdef LOG_INFO
++      *iv_return = LOG_INFO;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'I':
++    if (memEQ(name, "LOG_CRIT", 8)) {
++    /*                     ^       */
++#ifdef LOG_CRIT
++      *iv_return = LOG_CRIT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    if (memEQ(name, "LOG_MAIL", 8)) {
++    /*                     ^       */
++#ifdef LOG_MAIL
++      *iv_return = LOG_MAIL;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'M':
++    if (memEQ(name, "LOG_LFMT", 8)) {
++    /*                     ^       */
++#ifdef LOG_LFMT
++      *iv_return = LOG_LFMT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'N':
++    if (memEQ(name, "LOG_CONS", 8)) {
++    /*                     ^       */
++#ifdef LOG_CONS
++      *iv_return = LOG_CONS;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'O':
++    if (memEQ(name, "LOG_CRON", 8)) {
++    /*                     ^       */
++#ifdef LOG_CRON
++      *iv_return = LOG_CRON;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'R':
++    if (memEQ(name, "LOG_KERN", 8)) {
++    /*                     ^       */
++#ifdef LOG_KERN
++      *iv_return = LOG_KERN;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'T':
++    if (memEQ(name, "LOG_AUTH", 8)) {
++    /*                     ^       */
++#ifdef LOG_AUTH
++      *iv_return = LOG_AUTH;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'W':
++    if (memEQ(name, "LOG_NEWS", 8)) {
++    /*                     ^       */
++#ifdef LOG_NEWS
++      *iv_return = LOG_NEWS;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_9 (pTHX_ const char *name, IV *iv_return, const char **pv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_ALERT LOG_DEBUG LOG_EMERG _PATH_LOG */
++  /* Offset 4 gives the best switch position.  */
++  switch (name[4]) {
++  case 'A':
++    if (memEQ(name, "LOG_ALERT", 9)) {
++    /*                   ^          */
++#ifdef LOG_ALERT
++      *iv_return = LOG_ALERT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'D':
++    if (memEQ(name, "LOG_DEBUG", 9)) {
++    /*                   ^          */
++#ifdef LOG_DEBUG
++      *iv_return = LOG_DEBUG;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'E':
++    if (memEQ(name, "LOG_EMERG", 9)) {
++    /*                   ^          */
++#ifdef LOG_EMERG
++      *iv_return = LOG_EMERG;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'H':
++    if (memEQ(name, "_PATH_LOG", 9)) {
++    /*                   ^          */
++#ifdef _PATH_LOG
++      *pv_return = _PATH_LOG;
++      return PERL_constant_ISPV;
++#else
++      *pv_return = "/dev/log";
++      return PERL_constant_ISPV;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_10 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_DAEMON LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2 LOG_LOCAL3 LOG_LOCAL4
++     LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_NDELAY LOG_NOTICE LOG_NOWAIT
++     LOG_ODELAY LOG_PERROR LOG_SYSLOG */
++  /* Offset 9 gives the best switch position.  */
++  switch (name[9]) {
++  case '0':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        0     */
++#ifdef LOG_LOCAL0
++      *iv_return = LOG_LOCAL0;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '1':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        1     */
++#ifdef LOG_LOCAL1
++      *iv_return = LOG_LOCAL1;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '2':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        2     */
++#ifdef LOG_LOCAL2
++      *iv_return = LOG_LOCAL2;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '3':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        3     */
++#ifdef LOG_LOCAL3
++      *iv_return = LOG_LOCAL3;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '4':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        4     */
++#ifdef LOG_LOCAL4
++      *iv_return = LOG_LOCAL4;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '5':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        5     */
++#ifdef LOG_LOCAL5
++      *iv_return = LOG_LOCAL5;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '6':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        6     */
++#ifdef LOG_LOCAL6
++      *iv_return = LOG_LOCAL6;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '7':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        7     */
++#ifdef LOG_LOCAL7
++      *iv_return = LOG_LOCAL7;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'E':
++    if (memEQ(name, "LOG_NOTIC", 9)) {
++    /*                        E     */
++#ifdef LOG_NOTICE
++      *iv_return = LOG_NOTICE;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'G':
++    if (memEQ(name, "LOG_SYSLO", 9)) {
++    /*                        G     */
++#ifdef LOG_SYSLOG
++      *iv_return = LOG_SYSLOG;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'N':
++    if (memEQ(name, "LOG_DAEMO", 9)) {
++    /*                        N     */
++#ifdef LOG_DAEMON
++      *iv_return = LOG_DAEMON;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'R':
++    if (memEQ(name, "LOG_PERRO", 9)) {
++    /*                        R     */
++#ifdef LOG_PERROR
++      *iv_return = LOG_PERROR;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'T':
++    if (memEQ(name, "LOG_NOWAI", 9)) {
++    /*                        T     */
++#ifdef LOG_NOWAIT
++      *iv_return = LOG_NOWAIT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'Y':
++    if (memEQ(name, "LOG_NDELA", 9)) {
++    /*                        Y     */
++#ifdef LOG_NDELAY
++      *iv_return = LOG_NDELAY;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    if (memEQ(name, "LOG_ODELA", 9)) {
++    /*                        Y     */
++#ifdef LOG_ODELAY
++      *iv_return = LOG_ODELAY;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_11 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_FACMASK LOG_PRIMASK LOG_WARNING */
++  /* Offset 6 gives the best switch position.  */
++  switch (name[6]) {
++  case 'C':
++    if (memEQ(name, "LOG_FACMASK", 11)) {
++    /*                     ^           */
++#ifdef LOG_FACMASK
++      *iv_return = LOG_FACMASK;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'I':
++    if (memEQ(name, "LOG_PRIMASK", 11)) {
++    /*                     ^           */
++#ifdef LOG_PRIMASK
++      *iv_return = LOG_PRIMASK;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'R':
++    if (memEQ(name, "LOG_WARNING", 11)) {
++    /*                     ^           */
++#ifdef LOG_WARNING
++      *iv_return = LOG_WARNING;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant (pTHX_ const char *name, STRLEN len, IV *iv_return, const char **pv_return) {
++  /* Initially switch on the length of the name.  */
++  /* When generated this function returned values for the list of names given
++     in this section of perl code.  Rather than manually editing these functions
++     to add or remove constants, which would result in this comment and section
++     of code becoming inaccurate, we recommend that you edit this section of
++     code, and use it to regenerate a new set of constant functions which you
++     then use to replace the originals.
++
++     Regenerate these constant functions by feeding this entire source file to
++     perl -x
++
++#!/usr/bin/perl5.8.5 -w
++use ExtUtils::Constant qw (constant_types C_constant XS_constant);
++
++my $types = {map {($_, 1)} qw(IV PV)};
++my @names = (qw(LOG_ALERT LOG_AUTH LOG_AUTHPRIV LOG_CONS LOG_CRIT LOG_CRON
++	       LOG_DAEMON LOG_DEBUG LOG_EMERG LOG_ERR LOG_FACMASK LOG_FTP
++	       LOG_INFO LOG_KERN LOG_LFMT LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2
++	       LOG_LOCAL3 LOG_LOCAL4 LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_LPR
++	       LOG_MAIL LOG_NDELAY LOG_NEWS LOG_NFACILITIES LOG_NOTICE
++	       LOG_NOWAIT LOG_ODELAY LOG_PERROR LOG_PID LOG_PRIMASK LOG_SYSLOG
++	       LOG_USER LOG_UUCP LOG_WARNING),
++            {name=>"_PATH_LOG", type=>"PV", default=>["PV", "\"/dev/log\""]});
++
++print constant_types(); # macro defs
++foreach (C_constant ("Sys::Syslog", 'constant', 'IV', $types, undef, 3, @names) ) {
++    print $_, "\n"; # C constant subs
++}
++print "#### XS Section:\n";
++print XS_constant ("Sys::Syslog", $types);
++__END__
++   */
++
++  switch (len) {
++  case 7:
++    return constant_7 (aTHX_ name, iv_return);
++    break;
++  case 8:
++    return constant_8 (aTHX_ name, iv_return);
++    break;
++  case 9:
++    return constant_9 (aTHX_ name, iv_return, pv_return);
++    break;
++  case 10:
++    return constant_10 (aTHX_ name, iv_return);
++    break;
++  case 11:
++    return constant_11 (aTHX_ name, iv_return);
++    break;
++  case 12:
++    if (memEQ(name, "LOG_AUTHPRIV", 12)) {
++#ifdef LOG_AUTHPRIV
++      *iv_return = LOG_AUTHPRIV;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 15:
++    if (memEQ(name, "LOG_NFACILITIES", 15)) {
++#ifdef LOG_NFACILITIES
++      *iv_return = LOG_NFACILITIES;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/const-xs.inc perl-5.8.7/ext/Sys/Syslog/const-xs.inc
+--- perl-5.8.7.orig/ext/Sys/Syslog/const-xs.inc	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/const-xs.inc	2005-12-07 09:15:50.000000000 +1100
+@@ -0,0 +1,87 @@
++void
++constant(sv)
++    PREINIT:
++#ifdef dXSTARG
++	dXSTARG; /* Faster if we have it.  */
++#else
++	dTARGET;
++#endif
++	STRLEN		len;
++        int		type;
++	IV		iv;
++	/* NV		nv;	Uncomment this if you need to return NVs */
++	const char	*pv;
++    INPUT:
++	SV *		sv;
++        const char *	s = SvPV(sv, len);
++    PPCODE:
++        /* Change this to constant(aTHX_ s, len, &iv, &nv);
++           if you need to return both NVs and IVs */
++	type = constant(aTHX_ s, len, &iv, &pv);
++      /* Return 1 or 2 items. First is error message, or undef if no error.
++           Second, if present, is found value */
++        switch (type) {
++        case PERL_constant_NOTFOUND:
++          sv = sv_2mortal(newSVpvf("%s is not a valid Sys::Syslog macro", s));
++          PUSHs(sv);
++          break;
++        case PERL_constant_NOTDEF:
++          sv = sv_2mortal(newSVpvf(
++	    "Your vendor has not defined Sys::Syslog macro %s, used", s));
++          PUSHs(sv);
++          break;
++        case PERL_constant_ISIV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHi(iv);
++          break;
++	/* Uncomment this if you need to return NOs
++        case PERL_constant_ISNO:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHs(&PL_sv_no);
++          break; */
++	/* Uncomment this if you need to return NVs
++        case PERL_constant_ISNV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHn(nv);
++          break; */
++        case PERL_constant_ISPV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHp(pv, strlen(pv));
++          break;
++	/* Uncomment this if you need to return PVNs
++        case PERL_constant_ISPVN:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHp(pv, iv);
++          break; */
++	/* Uncomment this if you need to return SVs
++        case PERL_constant_ISSV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHs(sv);
++          break; */
++	/* Uncomment this if you need to return UNDEFs
++        case PERL_constant_ISUNDEF:
++          break; */
++	/* Uncomment this if you need to return UVs
++        case PERL_constant_ISUV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHu((UV)iv);
++          break; */
++	/* Uncomment this if you need to return YESs
++        case PERL_constant_ISYES:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHs(&PL_sv_yes);
++          break; */
++        default:
++          sv = sv_2mortal(newSVpvf(
++	    "Unexpected return type %d while processing Sys::Syslog macro %s, used",
++               type, s));
++          PUSHs(sv);
++        }
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/fallback/const-c.inc perl-5.8.7/ext/Sys/Syslog/fallback/const-c.inc
+--- perl-5.8.7.orig/ext/Sys/Syslog/fallback/const-c.inc	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/fallback/const-c.inc	2005-12-07 08:47:22.000000000 +1100
+@@ -0,0 +1,559 @@
++#define PERL_constant_NOTFOUND	1
++#define PERL_constant_NOTDEF	2
++#define PERL_constant_ISIV	3
++#define PERL_constant_ISNO	4
++#define PERL_constant_ISNV	5
++#define PERL_constant_ISPV	6
++#define PERL_constant_ISPVN	7
++#define PERL_constant_ISSV	8
++#define PERL_constant_ISUNDEF	9
++#define PERL_constant_ISUV	10
++#define PERL_constant_ISYES	11
++
++#ifndef NVTYPE
++typedef double NV; /* 5.6 and later define NVTYPE, and typedef NV to it.  */
++#endif
++#ifndef aTHX_
++#define aTHX_ /* 5.6 or later define this for threading support.  */
++#endif
++#ifndef pTHX_
++#define pTHX_ /* 5.6 or later define this for threading support.  */
++#endif
++
++static int
++constant_7 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_ERR LOG_FTP LOG_LPR LOG_PID */
++  /* Offset 4 gives the best switch position.  */
++  switch (name[4]) {
++  case 'E':
++    if (memEQ(name, "LOG_ERR", 7)) {
++    /*                   ^        */
++#ifdef LOG_ERR
++      *iv_return = LOG_ERR;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'F':
++    if (memEQ(name, "LOG_FTP", 7)) {
++    /*                   ^        */
++#ifdef LOG_FTP
++      *iv_return = LOG_FTP;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'L':
++    if (memEQ(name, "LOG_LPR", 7)) {
++    /*                   ^        */
++#ifdef LOG_LPR
++      *iv_return = LOG_LPR;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'P':
++    if (memEQ(name, "LOG_PID", 7)) {
++    /*                   ^        */
++#ifdef LOG_PID
++      *iv_return = LOG_PID;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_8 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_AUTH LOG_CONS LOG_CRIT LOG_CRON LOG_INFO LOG_KERN LOG_LFMT LOG_MAIL
++     LOG_NEWS LOG_USER LOG_UUCP */
++  /* Offset 6 gives the best switch position.  */
++  switch (name[6]) {
++  case 'C':
++    if (memEQ(name, "LOG_UUCP", 8)) {
++    /*                     ^       */
++#ifdef LOG_UUCP
++      *iv_return = LOG_UUCP;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'E':
++    if (memEQ(name, "LOG_USER", 8)) {
++    /*                     ^       */
++#ifdef LOG_USER
++      *iv_return = LOG_USER;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'F':
++    if (memEQ(name, "LOG_INFO", 8)) {
++    /*                     ^       */
++#ifdef LOG_INFO
++      *iv_return = LOG_INFO;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'I':
++    if (memEQ(name, "LOG_CRIT", 8)) {
++    /*                     ^       */
++#ifdef LOG_CRIT
++      *iv_return = LOG_CRIT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    if (memEQ(name, "LOG_MAIL", 8)) {
++    /*                     ^       */
++#ifdef LOG_MAIL
++      *iv_return = LOG_MAIL;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'M':
++    if (memEQ(name, "LOG_LFMT", 8)) {
++    /*                     ^       */
++#ifdef LOG_LFMT
++      *iv_return = LOG_LFMT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'N':
++    if (memEQ(name, "LOG_CONS", 8)) {
++    /*                     ^       */
++#ifdef LOG_CONS
++      *iv_return = LOG_CONS;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'O':
++    if (memEQ(name, "LOG_CRON", 8)) {
++    /*                     ^       */
++#ifdef LOG_CRON
++      *iv_return = LOG_CRON;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'R':
++    if (memEQ(name, "LOG_KERN", 8)) {
++    /*                     ^       */
++#ifdef LOG_KERN
++      *iv_return = LOG_KERN;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'T':
++    if (memEQ(name, "LOG_AUTH", 8)) {
++    /*                     ^       */
++#ifdef LOG_AUTH
++      *iv_return = LOG_AUTH;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'W':
++    if (memEQ(name, "LOG_NEWS", 8)) {
++    /*                     ^       */
++#ifdef LOG_NEWS
++      *iv_return = LOG_NEWS;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_9 (pTHX_ const char *name, IV *iv_return, const char **pv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_ALERT LOG_DEBUG LOG_EMERG _PATH_LOG */
++  /* Offset 4 gives the best switch position.  */
++  switch (name[4]) {
++  case 'A':
++    if (memEQ(name, "LOG_ALERT", 9)) {
++    /*                   ^          */
++#ifdef LOG_ALERT
++      *iv_return = LOG_ALERT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'D':
++    if (memEQ(name, "LOG_DEBUG", 9)) {
++    /*                   ^          */
++#ifdef LOG_DEBUG
++      *iv_return = LOG_DEBUG;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'E':
++    if (memEQ(name, "LOG_EMERG", 9)) {
++    /*                   ^          */
++#ifdef LOG_EMERG
++      *iv_return = LOG_EMERG;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'H':
++    if (memEQ(name, "_PATH_LOG", 9)) {
++    /*                   ^          */
++#ifdef _PATH_LOG
++      *pv_return = _PATH_LOG;
++      return PERL_constant_ISPV;
++#else
++      *pv_return = "/dev/log";
++      return PERL_constant_ISPV;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_10 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_DAEMON LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2 LOG_LOCAL3 LOG_LOCAL4
++     LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_NDELAY LOG_NOTICE LOG_NOWAIT
++     LOG_ODELAY LOG_PERROR LOG_SYSLOG */
++  /* Offset 9 gives the best switch position.  */
++  switch (name[9]) {
++  case '0':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        0     */
++#ifdef LOG_LOCAL0
++      *iv_return = LOG_LOCAL0;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '1':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        1     */
++#ifdef LOG_LOCAL1
++      *iv_return = LOG_LOCAL1;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '2':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        2     */
++#ifdef LOG_LOCAL2
++      *iv_return = LOG_LOCAL2;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '3':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        3     */
++#ifdef LOG_LOCAL3
++      *iv_return = LOG_LOCAL3;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '4':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        4     */
++#ifdef LOG_LOCAL4
++      *iv_return = LOG_LOCAL4;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '5':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        5     */
++#ifdef LOG_LOCAL5
++      *iv_return = LOG_LOCAL5;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '6':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        6     */
++#ifdef LOG_LOCAL6
++      *iv_return = LOG_LOCAL6;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case '7':
++    if (memEQ(name, "LOG_LOCAL", 9)) {
++    /*                        7     */
++#ifdef LOG_LOCAL7
++      *iv_return = LOG_LOCAL7;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'E':
++    if (memEQ(name, "LOG_NOTIC", 9)) {
++    /*                        E     */
++#ifdef LOG_NOTICE
++      *iv_return = LOG_NOTICE;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'G':
++    if (memEQ(name, "LOG_SYSLO", 9)) {
++    /*                        G     */
++#ifdef LOG_SYSLOG
++      *iv_return = LOG_SYSLOG;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'N':
++    if (memEQ(name, "LOG_DAEMO", 9)) {
++    /*                        N     */
++#ifdef LOG_DAEMON
++      *iv_return = LOG_DAEMON;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'R':
++    if (memEQ(name, "LOG_PERRO", 9)) {
++    /*                        R     */
++#ifdef LOG_PERROR
++      *iv_return = LOG_PERROR;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'T':
++    if (memEQ(name, "LOG_NOWAI", 9)) {
++    /*                        T     */
++#ifdef LOG_NOWAIT
++      *iv_return = LOG_NOWAIT;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'Y':
++    if (memEQ(name, "LOG_NDELA", 9)) {
++    /*                        Y     */
++#ifdef LOG_NDELAY
++      *iv_return = LOG_NDELAY;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    if (memEQ(name, "LOG_ODELA", 9)) {
++    /*                        Y     */
++#ifdef LOG_ODELAY
++      *iv_return = LOG_ODELAY;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant_11 (pTHX_ const char *name, IV *iv_return) {
++  /* When generated this function returned values for the list of names given
++     here.  However, subsequent manual editing may have added or removed some.
++     LOG_FACMASK LOG_PRIMASK LOG_WARNING */
++  /* Offset 6 gives the best switch position.  */
++  switch (name[6]) {
++  case 'C':
++    if (memEQ(name, "LOG_FACMASK", 11)) {
++    /*                     ^           */
++#ifdef LOG_FACMASK
++      *iv_return = LOG_FACMASK;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'I':
++    if (memEQ(name, "LOG_PRIMASK", 11)) {
++    /*                     ^           */
++#ifdef LOG_PRIMASK
++      *iv_return = LOG_PRIMASK;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 'R':
++    if (memEQ(name, "LOG_WARNING", 11)) {
++    /*                     ^           */
++#ifdef LOG_WARNING
++      *iv_return = LOG_WARNING;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
++static int
++constant (pTHX_ const char *name, STRLEN len, IV *iv_return, const char **pv_return) {
++  /* Initially switch on the length of the name.  */
++  /* When generated this function returned values for the list of names given
++     in this section of perl code.  Rather than manually editing these functions
++     to add or remove constants, which would result in this comment and section
++     of code becoming inaccurate, we recommend that you edit this section of
++     code, and use it to regenerate a new set of constant functions which you
++     then use to replace the originals.
++
++     Regenerate these constant functions by feeding this entire source file to
++     perl -x
++
++#!/usr/bin/perl5.8.5 -w
++use ExtUtils::Constant qw (constant_types C_constant XS_constant);
++
++my $types = {map {($_, 1)} qw(IV PV)};
++my @names = (qw(LOG_ALERT LOG_AUTH LOG_AUTHPRIV LOG_CONS LOG_CRIT LOG_CRON
++	       LOG_DAEMON LOG_DEBUG LOG_EMERG LOG_ERR LOG_FACMASK LOG_FTP
++	       LOG_INFO LOG_KERN LOG_LFMT LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2
++	       LOG_LOCAL3 LOG_LOCAL4 LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_LPR
++	       LOG_MAIL LOG_NDELAY LOG_NEWS LOG_NFACILITIES LOG_NOTICE
++	       LOG_NOWAIT LOG_ODELAY LOG_PERROR LOG_PID LOG_PRIMASK LOG_SYSLOG
++	       LOG_USER LOG_UUCP LOG_WARNING),
++            {name=>"_PATH_LOG", type=>"PV", default=>["PV", "\"/dev/log\""]});
++
++print constant_types(); # macro defs
++foreach (C_constant ("Sys::Syslog", 'constant', 'IV', $types, undef, 3, @names) ) {
++    print $_, "\n"; # C constant subs
++}
++print "#### XS Section:\n";
++print XS_constant ("Sys::Syslog", $types);
++__END__
++   */
++
++  switch (len) {
++  case 7:
++    return constant_7 (aTHX_ name, iv_return);
++    break;
++  case 8:
++    return constant_8 (aTHX_ name, iv_return);
++    break;
++  case 9:
++    return constant_9 (aTHX_ name, iv_return, pv_return);
++    break;
++  case 10:
++    return constant_10 (aTHX_ name, iv_return);
++    break;
++  case 11:
++    return constant_11 (aTHX_ name, iv_return);
++    break;
++  case 12:
++    if (memEQ(name, "LOG_AUTHPRIV", 12)) {
++#ifdef LOG_AUTHPRIV
++      *iv_return = LOG_AUTHPRIV;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  case 15:
++    if (memEQ(name, "LOG_NFACILITIES", 15)) {
++#ifdef LOG_NFACILITIES
++      *iv_return = LOG_NFACILITIES;
++      return PERL_constant_ISIV;
++#else
++      return PERL_constant_NOTDEF;
++#endif
++    }
++    break;
++  }
++  return PERL_constant_NOTFOUND;
++}
++
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/fallback/const-xs.inc perl-5.8.7/ext/Sys/Syslog/fallback/const-xs.inc
+--- perl-5.8.7.orig/ext/Sys/Syslog/fallback/const-xs.inc	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/fallback/const-xs.inc	2005-12-07 08:47:22.000000000 +1100
+@@ -0,0 +1,87 @@
++void
++constant(sv)
++    PREINIT:
++#ifdef dXSTARG
++	dXSTARG; /* Faster if we have it.  */
++#else
++	dTARGET;
++#endif
++	STRLEN		len;
++        int		type;
++	IV		iv;
++	/* NV		nv;	Uncomment this if you need to return NVs */
++	const char	*pv;
++    INPUT:
++	SV *		sv;
++        const char *	s = SvPV(sv, len);
++    PPCODE:
++        /* Change this to constant(aTHX_ s, len, &iv, &nv);
++           if you need to return both NVs and IVs */
++	type = constant(aTHX_ s, len, &iv, &pv);
++      /* Return 1 or 2 items. First is error message, or undef if no error.
++           Second, if present, is found value */
++        switch (type) {
++        case PERL_constant_NOTFOUND:
++          sv = sv_2mortal(newSVpvf("%s is not a valid Sys::Syslog macro", s));
++          PUSHs(sv);
++          break;
++        case PERL_constant_NOTDEF:
++          sv = sv_2mortal(newSVpvf(
++	    "Your vendor has not defined Sys::Syslog macro %s, used", s));
++          PUSHs(sv);
++          break;
++        case PERL_constant_ISIV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHi(iv);
++          break;
++	/* Uncomment this if you need to return NOs
++        case PERL_constant_ISNO:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHs(&PL_sv_no);
++          break; */
++	/* Uncomment this if you need to return NVs
++        case PERL_constant_ISNV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHn(nv);
++          break; */
++        case PERL_constant_ISPV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHp(pv, strlen(pv));
++          break;
++	/* Uncomment this if you need to return PVNs
++        case PERL_constant_ISPVN:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHp(pv, iv);
++          break; */
++	/* Uncomment this if you need to return SVs
++        case PERL_constant_ISSV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHs(sv);
++          break; */
++	/* Uncomment this if you need to return UNDEFs
++        case PERL_constant_ISUNDEF:
++          break; */
++	/* Uncomment this if you need to return UVs
++        case PERL_constant_ISUV:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHu((UV)iv);
++          break; */
++	/* Uncomment this if you need to return YESs
++        case PERL_constant_ISYES:
++          EXTEND(SP, 1);
++          PUSHs(&PL_sv_undef);
++          PUSHs(&PL_sv_yes);
++          break; */
++        default:
++          sv = sv_2mortal(newSVpvf(
++	    "Unexpected return type %d while processing Sys::Syslog macro %s, used",
++               type, s));
++          PUSHs(sv);
++        }
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/t/00-load.t perl-5.8.7/ext/Sys/Syslog/t/00-load.t
+--- perl-5.8.7.orig/ext/Sys/Syslog/t/00-load.t	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/t/00-load.t	2005-12-07 07:00:44.000000000 +1100
+@@ -0,0 +1,9 @@
++#!perl -T
++
++use Test::More tests => 1;
++
++BEGIN {
++	use_ok( 'Sys::Syslog' );
++}
++
++diag( "Testing Sys::Syslog $Sys::Syslog::VERSION, Perl $], $^X" );
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/t/pod.t perl-5.8.7/ext/Sys/Syslog/t/pod.t
+--- perl-5.8.7.orig/ext/Sys/Syslog/t/pod.t	1970-01-01 10:00:00.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/t/pod.t	2005-12-07 07:00:44.000000000 +1100
+@@ -0,0 +1,6 @@
++#!perl -T
++
++use Test::More;
++eval "use Test::Pod 1.14";
++plan skip_all => "Test::Pod 1.14 required for testing POD" if $@;
++all_pod_files_ok();
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Sys/Syslog/t/syslog.t perl-5.8.7/ext/Sys/Syslog/t/syslog.t
+--- perl-5.8.7.orig/ext/Sys/Syslog/t/syslog.t	2003-09-29 23:54:35.000000000 +1000
++++ perl-5.8.7/ext/Sys/Syslog/t/syslog.t	2005-12-07 08:22:06.000000000 +1100
+@@ -1,94 +1,94 @@
+-#!./perl
++#!/usr/bin/perl
+ 
+ BEGIN {
+-    chdir 't' if -d 't';
+-    @INC = '../lib';
+-    require Config; import Config;
+-    if ($Config{'extensions'} !~ /\bSyslog\b/) {
+-	print "1..0 # Skip: Sys::Syslog was not built\n";
+-	exit 0;
+-    }
+-    if ($Config{'extensions'} !~ /\bSocket\b/) {
+-	print "1..0 # Skip: Socket was not built\n";
+-	exit 0;
+-    }
+-
+-    require Socket;
+-
+-    # This code inspired by Sys::Syslog::connect():
+-    require Sys::Hostname;
+-    my ($host_uniq) = Sys::Hostname::hostname();
+-    my ($host)      = $host_uniq =~ /([A-Za-z0-9_.-]+)/;
+-
+-    if (! defined Socket::inet_aton($host)) {
+-        print "1..0 # Skip: Can't lookup $host\n";
+-        exit 0;
++    if( $ENV{PERL_CORE} ) {
++        chdir 't';
++        @INC = '../lib';
+     }
+ }
+ 
++use strict;
++use Test::More;
++use Config;
++
++# check that the module is at least available
++plan skip_all => "Sys::Syslog was not build" 
++  unless $Config{'extensions'} =~ /\bSyslog\b/;
++
++# we also need Socket
++plan skip_all => "Socket was not build" 
++  unless $Config{'extensions'} =~ /\bSocket\b/;
++
+ BEGIN {
+-  eval {require Sys::Syslog} or do {
+-    if ($@ =~ /Your vendor has not/) {
+-      print "1..0 # Skip: missing macros\n";
+-      exit 0;
+-    }
+-  }
++    plan tests => 16;
++
++    # ok, now loads them
++    eval 'use Socket';
++    use_ok('Sys::Syslog', ':DEFAULT', 'setlogsock');
+ }
+ 
+-use Sys::Syslog qw(:DEFAULT setlogsock);
++# check that the documented functions are correctly provided
++can_ok( 'Sys::Syslog' => qw(openlog syslog syslog setlogmask setlogsock closelog) );
++
++
++# check the diagnostics
++# setlogsock()
++eval { setlogsock() };
++like( $@, qr/^Invalid argument passed to setlogsock; must be 'stream', 'unix', 'tcp', 'udp' or 'inet'/, 
++    "calling setlogsock() with no argument" );
+ 
+-# Test this to 1 if your syslog accepts udp connections.
+-# Most don't (or at least shouldn't)
+-my $Test_Syslog_INET = 0;
+-
+-my $test_string = "uid $< is testing perl $] syslog capabilities";
+-
+-print "1..6\n";
+-
+-if (Sys::Syslog::_PATH_LOG()) {
+-    if (-e Sys::Syslog::_PATH_LOG()) {
+-	# The only known $^O eq 'svr4' that needs this is NCR MP-RAS,
+-	# but assuming 'stream' in SVR4 is probably not that bad.
+-        if ($^O =~ /^(solaris|irix|svr4|powerux)$/) {
+-            # we should check for stream support here, not for solaris/irix
+-            print defined(eval { setlogsock('stream') }) ? "ok 1\n" : "not ok 1 # $!\n";
+-        } else { 
+-            print defined(eval { setlogsock('unix') }) ? "ok 1\n" : "not ok 1 # $!\n";
+-        }
+-        if (defined(eval { openlog('perl', 'ndelay', 'local0') })) {
+-	    print "ok 2\n";
+-	    print defined(eval { syslog('info', $test_string ) })
+-		    ? "ok 3\n" : "not ok 3 # $!\n";
+-	} else {
+-	    if ($@ =~ /no connection to syslog available/) {
+-		print "ok 2 # Skip: syslogd not running\n";
+-	    } else {
+-		print "not ok 2 # $@\n";
+-	    }
+-	    print "ok 3 # Skip: openlog failed\n";
+-	}
+-    } else {
+-        for (1..3) {
+-            print
+-                "ok $_ # Skip: file ",
+-                Sys::Syslog::_PATH_LOG(),
+-                " does not exist\n";
+-        }
++# syslog()
++eval { syslog() };
++like( $@, qr/^syslog: expecting argument \$priority/, 
++    "calling syslog() with no argument" );
++
++my $test_string = "uid $< is testing Perl $] syslog(3) capabilities";
++my $r = 0;
++
++# try to test using a Unix socket
++SKIP: {
++    skip "can't connect to Unix socket: _PATH_LOG unavailable", 6
++      unless -e Sys::Syslog::_PATH_LOG();
++
++    # The only known $^O eq 'svr4' that needs this is NCR MP-RAS,
++    # but assuming 'stream' in SVR4 is probably not that bad.
++    my $sock_type = $^O =~ /^(solaris|irix|svr4|powerux)$/ ? 'stream' : 'unix';
++
++    eval { setlogsock($sock_type) };
++    is( $@, '', "setlogsock() called with '$sock_type'" );
++    TODO: {
++        local $TODO = "minor bug";
++        ok( $r, "setlogsock() should return true but returned '$r'" );
+     }
+-}
+-else {
+-    for (1..3) { print "ok $_ # Skip: _PATH_LOG unavailable\n" }
+-}
+ 
+-if( $Test_Syslog_INET ) {
+-    print defined(eval { setlogsock('inet') }) ? "ok 4\n" 
+-                                               : "not ok 4\n";
+-    print defined(eval { openlog('perl', 'ndelay', 'local0') }) ? "ok 5\n" 
+-                                                                : "not ok 5 # $!\n";
+-    print defined(eval { syslog('info', $test_string ) }) ? "ok 6\n" 
+-                                                   : "not ok 6 # $!\n";
++    SKIP: {
++        $r = eval { openlog('perl', 'ndelay', 'local0') };
++        skip "can't connect to syslog", 4 if $@ =~ /^no connection to syslog available/;
++        is( $@, '', "openlog()" );
++        ok( $r, "openlog() should return true but returned '$r'" );
++
++        $r = eval { syslog('info', "$test_string by connecting to a Unix socket") };
++        is( $@, '', "syslog()" );
++        ok( $r, "syslog() should return true but returned '$r'" );
++    }
+ }
+-else {
+-    print "ok $_ # Skip: assuming syslog doesn't accept inet connections\n" 
+-      foreach (4..6);
++
++# try to test using a INET socket
++SKIP: {
++    skip "assuming syslog doesn't accept inet connections", 6 if 1;
++
++    my $sock_type = 'inet';
++
++    $r = eval { setlogsock('inet') };
++    is( $@, '', "setlogsock() called with '$sock_type'" );
++    ok( $r, "setlogsock() should return true but returned '$r'" );
++
++    $r = eval { openlog('perl', 'ndelay', 'local0') };
++    is( $@, '', "openlog()" );
++    ok( $r, " -> should return true but returned '$r'" );
++
++    $r = eval { syslog('info', "$test_string by connecting to a INET socket") };
++    is( $@, '', "syslog()" );
++    ok( $r, " -> should return true but returned '$r'" );
+ }
++

@@ -1,3 +1,20 @@
+perl (5.8.7-9) unstable; urgency=high
+
+  * SECURITY [CVE-2005-3962] (closes: #341542):
+    + Apply upstream fixes to prevent buffer overflows in
+      printf/sprintf caused by malicious format strings.
+    + Update Sys::Syslog to 0.09, which only uses the message as a
+      format string to sprintf when additional arguments are given.
+
+  * Remove -Dusemymalloc from perl-debug (added for #178243: to
+    enable PERL_DEBUGGING_MSTATS), as this causes debugperl to break with
+    compiled modules.  Closes: #337050, #342526).
+
+  * Skip Math::Complex tests 267 and 487, failing due to non-IEEE fp
+    rounding rules in the kernel fp emulation.
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 10 Dec 2005 16:43:02 +1100
+
 perl (5.8.7-8) unstable; urgency=low
 
   * ARM fix is also required for armeb.
