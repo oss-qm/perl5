@@ -1,3 +1,12 @@
+perl (5.8.4-8sarge2) stable-security; urgency=high
+
+  * Non-maintainer upload by the Security Team
+  * Added a patch from Brendan O'Dea to skip some tests on ARM due to
+    non-IEEE fp rounding rules in the kernel floating point emulation
+    [debian/patches/66_arm_failing_tests]
+
+ -- Martin Schulze <joey@infodrom.org>  Sat, 10 Dec 2005 18:10:29 +0100
+
 perl (5.8.4-8sarge1) stable-security; urgency=high
 
   * Non-maintainer upload by the Security Team

@@ -1,0 +1,29 @@
+Some tests fail on ARM due to non-IEEE fp rounding rules in the kernel
+fp emulation.
+
+diff --exclude=debian -Naur perl-5.8.7.orig/lib/Math/Complex.t perl-5.8.7/lib/Math/Complex.t
+--- perl-5.8.7.orig/lib/Math/Complex.t	2002-02-01 04:50:30.000000000 +1100
++++ perl-5.8.7/lib/Math/Complex.t	2005-12-10 16:39:51.000000000 +1100
+@@ -33,6 +33,11 @@
+ }			# cos(), sin(), cosh(), sinh().  The division
+ 			# of doubles is the current suspect.
+ 
++my %skip;
++if (`uname -m` =~ /^arm/) {
++    $skip{$_} = 'non-IEEE fp rounding' for 267, 487;
++}
++
+ while (<DATA>) {
+ 	s/^\s+//;
+ 	next if $_ eq '' || /^\#/;
+@@ -446,7 +451,9 @@
+ 
+ 	print "# @_\n";
+ 
+-	if ("$got" eq "$expected"
++	if ($skip{$test}) {
++		print "ok $test # skipped: $skip{$test}\n";
++	} elsif ("$got" eq "$expected"
+ 	    ||
+ 	    ($expected =~ /^-?\d/ && $got == $expected)
+ 	    ||
