@@ -1,0 +1,127 @@
+Change 26321 by gisle@gisle-ask on 2005/12/11 18:14:24
+
+	Disallow sprintf's vector handling for non-integer formats.
+	Avoids core dump for printf("%vs") and similar.
+
+diff --exclude=debian -Naur perl-5.8.7.orig/sv.c perl-5.8.7/sv.c
+--- perl-5.8.7.orig/sv.c	2005-12-15 00:43:18.000000000 +1100
++++ perl-5.8.7/sv.c	2005-12-15 00:42:22.000000000 +1100
+@@ -8702,12 +8702,14 @@
+ 	if (*q == '%') {
+ 	    eptr = q++;
+ 	    elen = 1;
++	    if (vectorize) {
++		c = '%';
++		goto unknown;
++	    }
+ 	    goto string;
+ 	}
+ 
+-	if (vectorize)
+-	    argsv = vecsv;
+-	else if (!args) {
++	if (!vectorize && !args) {
+ 	    if (efix) {
+ 		const I32 i = efix-1;
+ 		argsv = (i >= 0 && i < svmax) ? svargs[i] : &PL_sv_undef;
+@@ -8722,7 +8724,9 @@
+ 	    /* STRINGS */
+ 
+ 	case 'c':
+-	    uv = (args && !vectorize) ? va_arg(*args, int) : SvIVx(argsv);
++	    if (vectorize)
++		goto unknown;
++	    uv = (args) ? va_arg(*args, int) : SvIVx(argsv);
+ 	    if ((uv > 255 ||
+ 		 (!UNI_IS_INVARIANT(uv) && SvUTF8(sv)))
+ 		&& !IN_BYTES) {
+@@ -8738,7 +8742,9 @@
+ 	    goto string;
+ 
+ 	case 's':
+-	    if (args && !vectorize) {
++	    if (vectorize)
++		goto unknown;
++	    if (args) {
+ 		eptr = va_arg(*args, char*);
+ 		if (eptr)
+ #ifdef MACOS_TRADITIONAL
+@@ -8786,7 +8792,6 @@
+ 		is_utf8 = TRUE;
+ 
+ 	string:
+-	    vectorize = FALSE;
+ 	    if (has_precis && elen > precis)
+ 		elen = precis;
+ 	    break;
+@@ -9026,6 +9031,8 @@
+ 	case 'e': case 'E':
+ 	case 'f':
+ 	case 'g': case 'G':
++	    if (vectorize)
++		goto unknown;
+ 
+ 	    /* This is evil, but floating point is even more evil */
+ 
+@@ -9058,7 +9065,7 @@
+ 	    }
+ 
+ 	    /* now we need (long double) if intsize == 'q', else (double) */
+-	    nv = (args && !vectorize) ?
++	    nv = (args) ?
+ #if LONG_DOUBLESIZE > DOUBLESIZE
+ 		intsize == 'q' ?
+ 		    va_arg(*args, long double) :
+@@ -9069,7 +9076,6 @@
+ 		: SvNVx(argsv);
+ 
+ 	    need = 0;
+-	    vectorize = FALSE;
+ 	    if (c != 'e' && c != 'E') {
+ 		i = PERL_INT_MIN;
+ 		/* FIXME: if HAS_LONG_DOUBLE but not USE_LONG_DOUBLE this
+@@ -9224,8 +9230,10 @@
+ 	    /* SPECIAL */
+ 
+ 	case 'n':
++	    if (vectorize)
++		goto unknown;
+ 	    i = SvCUR(sv) - origlen;
+-	    if (args && !vectorize) {
++	    if (args) {
+ 		switch (intsize) {
+ 		case 'h':	*(va_arg(*args, short*)) = i; break;
+ 		default:	*(va_arg(*args, int*)) = i; break;
+@@ -9238,7 +9246,6 @@
+ 	    }
+ 	    else
+ 		sv_setuv_mg(argsv, (UV)i);
+-	    vectorize = FALSE;
+ 	    continue;	/* not "break" */
+ 
+ 	    /* UNKNOWN */
+diff --exclude=debian -Naur perl-5.8.7.orig/t/op/sprintf.t perl-5.8.7/t/op/sprintf.t
+--- perl-5.8.7.orig/t/op/sprintf.t	2005-12-15 00:43:18.000000000 +1100
++++ perl-5.8.7/t/op/sprintf.t	2005-12-15 00:42:38.000000000 +1100
+@@ -371,11 +371,18 @@
+ >%*2$*2$d<	>[12, 3]<	>%*2$*2$d INVALID<
+ >%*2*2$d<	>[12, 3]<	>%*2*2$d INVALID<
+ >%0v2.2d<	>''<	><
+->%vc,%d<	>[63, 64, 65]<	>?,64<
++>%vc,%d<	>[63, 64, 65]<	>%vc,63 INVALID<
++>%v%,%d<	>[63, 64, 65]<	>%v%,63 INVALID<
+ >%vd,%d<	>[1, 2, 3]<	>49,2<
+->%vf,%d<	>[1, 2, 3]<	>1.000000,2<
++>%vf,%d<	>[1, 2, 3]<	>%vf,1 INVALID<
++>%vF,%d<	>[1, 2, 3]<	>%vF,1 INVALID<
++>%ve,%d<	>[1, 2, 3]<	>%ve,1 INVALID<
++>%vE,%d<	>[1, 2, 3]<	>%vE,1 INVALID<
++>%vg,%d<	>[1, 2, 3]<	>%vg,1 INVALID<
++>%vG,%d<	>[1, 2, 3]<	>%vG,1 INVALID<
+ >%vp<	>''<	>%vp INVALID<
+->%vs,%d<	>[1, 2, 3]<	>1,2<
++>%vn<	>''<	>%vn INVALID<
++>%vs,%d<	>[1, 2, 3]<	>%vs,1 INVALID<
+ >%v_<	>''<	>%v_ INVALID<
+ >%v#x<	>''<	>%v#x INVALID<
+ >%v02x<	>"foo\012"<	>66.6f.6f.0a<
