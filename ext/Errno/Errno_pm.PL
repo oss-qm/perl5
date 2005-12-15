@@ -341,12 +341,7 @@ EOF
 package Errno;
 our (\@EXPORT_OK,\%EXPORT_TAGS,\@ISA,\$VERSION,\%errno,\$AUTOLOAD);
 use Exporter ();
-use Config;
 use strict;
-
-"\$Config{'archname'}-\$Config{'osvers'}" eq
-"$Config{'archname'}-$Config{'osvers'}" or
-	die "Errno architecture ($Config{'archname'}-$Config{'osvers'}) does not match executable architecture (\$Config{'archname'}-\$Config{'osvers'})";
 
 \$VERSION = "$VERSION";
 \$VERSION = eval \$VERSION;
