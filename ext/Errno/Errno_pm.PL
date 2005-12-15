@@ -288,22 +288,6 @@ package Errno;
 require Exporter;
 use strict;
 
-EDQ
-
-    # Errno only needs Config to make sure it hasn't changed platforms.
-    # If someone set $ENV{PERL_BUILD_EXPAND_CONFIG_VARS} at build time,
-    # they've already declared perl doesn't need to worry about this risk.
-    if(!$ENV{'PERL_BUILD_EXPAND_CONFIG_VARS'}) {
-        print <<"CONFIG_CHECK_END";
-use Config;
-"\$Config{'archname'}-\$Config{'osvers'}" eq
-"$archname-$Config{'osvers'}" or
-	die "Errno architecture ($archname-$Config{'osvers'}) does not match executable architecture (\$Config{'archname'}-\$Config{'osvers'})";
-
-CONFIG_CHECK_END
-}
-
-    print <<"EDQ";
 our \$VERSION = "$VERSION";
 \$VERSION = eval \$VERSION;
 our \@ISA = 'Exporter';
