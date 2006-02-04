@@ -1,21 +1,18 @@
 Debian policy doesn't install .packlist files for core or vendor.
 
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/instmodsh perl-5.8.6/lib/ExtUtils/instmodsh
---- perl-5.8.7.orig/lib/ExtUtils/instmodsh	2005-06-03 00:22:15.000000000 +1000
-+++ perl-5.8.7/lib/ExtUtils/instmodsh	2005-06-03 00:22:22.000000000 +1000
-@@ -148,12 +148,14 @@
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/ExtUtils/instmodsh perl-5.8.8/lib/ExtUtils/instmodsh
+--- perl-5.8.8.orig/lib/ExtUtils/instmodsh	2005-10-21 21:44:53.000000000 +1000
++++ perl-5.8.8/lib/ExtUtils/instmodsh	2006-02-03 00:03:50.000000000 +1100
+@@ -18,9 +18,11 @@
+ 
  =head1 DESCRIPTION
  
- C<instmodsh> provides an interactive shell to query details of
--installed Perl modules.
-+locally* installed Perl modules.
- 
- The shell provides a list of installed modules, each of which
- may be queried to to list files and directories, checked for missing
- files or packaged up as a tar archive.
+-A little interface to ExtUtils::Installed to examine installed modules,
++A little interface to ExtUtils::Installed to examine locally* installed modules,
+ validate your packlists and even create a tarball from an installed module.
  
 +*On Debian system, B<core> and B<vendor> modules are managed by C<dpkg>.
 +
  =head1 SEE ALSO
  
- ExtUtils::Installed(3perl)
+ ExtUtils::Installed

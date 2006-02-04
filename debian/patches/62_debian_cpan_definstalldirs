@@ -2,9 +2,9 @@ Some modules which are included in core set INSTALLDIRS => 'perl'
 explicitly in Makefile.PL.  This makes sense for the normal @INC
 ordering, but not ours.  Provide a sensible default.
 
-diff -Naur --exclude=debian perl-5.8.7.orig/lib/CPAN/FirstTime.pm perl-5.8.7/lib/CPAN/FirstTime.pm
---- perl-5.8.7.orig/lib/CPAN/FirstTime.pm	2003-07-30 02:05:27.000000000 +1000
-+++ perl-5.8.7/lib/CPAN/FirstTime.pm	2005-06-03 00:27:38.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/CPAN/FirstTime.pm perl-5.8.8/lib/CPAN/FirstTime.pm
+--- perl-5.8.8.orig/lib/CPAN/FirstTime.pm	2006-01-31 08:08:57.000000000 +1100
++++ perl-5.8.8/lib/CPAN/FirstTime.pm	2006-02-03 00:05:24.000000000 +1100
 @@ -358,7 +358,7 @@
  
  };

@@ -3,12 +3,12 @@ should probably not be in the synopsis.
 
 Note NN_debian_ rather than NN_fix_ since it's upstream doesn't agree.
 
-diff -Naur --exclude=debian perl-5.8.7.orig/pod/perl.pod perl-5.8.7/pod/perl.pod
---- perl-5.8.7.orig/pod/perl.pod	2005-05-30 01:02:44.000000000 +1000
-+++ perl-5.8.7/pod/perl.pod	2005-06-03 00:31:00.000000000 +1000
-@@ -12,6 +12,38 @@
-     S<[ B<-i>[I<extension>] ]> S<[ B<-e> I<'command'> ] 
-     [ B<--> ] [ I<programfile> ] [ I<argument> ]...>
+diff -Naur --exclude=debian perl-5.8.8.orig/pod/perl.pod perl-5.8.8/pod/perl.pod
+--- perl-5.8.8.orig/pod/perl.pod	2006-02-03 01:01:30.000000000 +1100
++++ perl-5.8.8/pod/perl.pod	2006-02-03 01:03:47.000000000 +1100
+@@ -16,6 +16,38 @@
+ 	S<[ B<-i>[I<extension>] ]>
+ 	S<[ B<-e> I<'command'> ] [ B<--> ] [ I<programfile> ] [ I<argument> ]...>
  
 +=head1 DESCRIPTION
 +
@@ -45,7 +45,7 @@ diff -Naur --exclude=debian perl-5.8.7.orig/pod/perl.pod perl-5.8.7/pod/perl.pod
  If you're new to Perl, you should start with L<perlintro>, which is a 
  general intro for beginners and provides some background to help you
  navigate the rest of Perl's extensive documentation.
-@@ -210,38 +242,6 @@
+@@ -218,38 +250,6 @@
  sure where you should look for help, try the B<-w> switch first.  It
  will often point out exactly where the trouble is.
  

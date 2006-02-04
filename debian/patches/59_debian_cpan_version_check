@@ -1,9 +1,9 @@
 Provide a method for supressing CPAN's version check.
 Patch from Robert Bihlmeyer <robbe@orcus.priv.at> (Bug#98235)
 
-diff -Naur --exclude=debian perl-5.8.7.orig/lib/CPAN/FirstTime.pm perl-5.8.7/lib/CPAN/FirstTime.pm
---- perl-5.8.7.orig/lib/CPAN/FirstTime.pm	2003-07-30 02:05:27.000000000 +1000
-+++ perl-5.8.7/lib/CPAN/FirstTime.pm	2005-06-03 00:13:59.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/CPAN/FirstTime.pm perl-5.8.8/lib/CPAN/FirstTime.pm
+--- perl-5.8.8.orig/lib/CPAN/FirstTime.pm	2006-01-31 08:08:57.000000000 +1100
++++ perl-5.8.8/lib/CPAN/FirstTime.pm	2006-02-02 23:59:11.000000000 +1100
 @@ -464,6 +464,7 @@
  
      # We don't ask that now, it will be noticed in time, won't it?
@@ -12,10 +12,10 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/CPAN/FirstTime.pm perl-5.8.7/lib
      $CPAN::Config->{'getcwd'} = 'cwd';
  
      print "\n\n";
-diff -Naur --exclude=debian perl-5.8.7.orig/lib/CPAN.pm perl-5.8.7/lib/CPAN.pm
---- perl-5.8.7.orig/lib/CPAN.pm	2003-09-22 15:42:59.000000000 +1000
-+++ perl-5.8.7/lib/CPAN.pm	2005-06-03 00:13:59.000000000 +1000
-@@ -3291,7 +3291,8 @@
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/CPAN.pm perl-5.8.8/lib/CPAN.pm
+--- perl-5.8.8.orig/lib/CPAN.pm	2006-02-01 01:11:22.000000000 +1100
++++ perl-5.8.8/lib/CPAN.pm	2006-02-02 23:59:11.000000000 +1100
+@@ -3290,7 +3290,8 @@
  	      )
  	   ) {
              local($^W)= 0;
@@ -25,7 +25,7 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/CPAN.pm perl-5.8.7/lib/CPAN.pm
                  $CPAN::Frontend->myprint(qq{
    There's a new CPAN.pm version (v$version) available!
    [Current version is v$CPAN::VERSION]
-@@ -6765,6 +6766,7 @@
+@@ -6764,6 +6765,7 @@
    index_expire       after this many days refetch index files
    cache_metadata     use serializer to cache metadata
    cpan_home          local directory reserved for this package

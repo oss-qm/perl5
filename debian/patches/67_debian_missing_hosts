@@ -1,8 +1,8 @@
 Suppress test failure on buildds which don't have /etc/hosts installed.
 
-diff -Naur --exclude=debian perl-5.8.7.orig/lib/Net/hostent.t perl-5.8.7/lib/Net/hostent.t
---- perl-5.8.7.orig/lib/Net/hostent.t	2003-03-30 20:18:26.000000000 +1000
-+++ perl-5.8.7/lib/Net/hostent.t	2005-11-13 10:21:49.000000000 +1100
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/Net/hostent.t perl-5.8.8/lib/Net/hostent.t
+--- perl-5.8.8.orig/lib/Net/hostent.t	2003-03-30 20:18:26.000000000 +1000
++++ perl-5.8.8/lib/Net/hostent.t	2006-02-03 00:26:48.000000000 +1100
 @@ -16,6 +16,9 @@
      }
      if ($^O eq 'MacOS' || ($^O eq 'irix' && $Config{osvers} == 5)) {
