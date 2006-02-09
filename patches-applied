@@ -25,3 +25,4 @@ debian/patches/67_debian_missing_hosts
 debian/patches/68_debian_arm_fp
 debian/patches/69_debian_db_file_ver
 debian/patches/70_debian_errno_ver
+debian/patches/71_debian_m68k_time_hires

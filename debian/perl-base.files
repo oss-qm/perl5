@@ -58,6 +58,7 @@ usr/share/perl/*/constant.pm
 usr/share/perl/*/fields.pm
 usr/share/perl/*/integer.pm
 usr/share/perl/*/locale.pm
+usr/share/perl/*/overload.pm
 usr/share/perl/*/strict.pm
 usr/share/perl/*/utf8.pm
 usr/share/perl/*/utf8_heavy.pl
