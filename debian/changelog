@@ -1,3 +1,17 @@
+perl (5.8.8-3) unstable; urgency=low
+
+  * Add build-dep on procps (required by t/op/magic).
+  * Remove trailing \0 from Sys::Syslog messages (closes: #345157).
+  * Getopt::Long:  allow "ignorecase_always" as a synonym for
+    "ignore_case_always" to match the documention (closes #354197).
+
+  * Don't add -Wdeclaration-after-statement to ccflags: this causes
+    problems when building extensions with gcc-3.3 .
+
+  * Pod::Man: don't translate "|" (closes: #291391).
+
+ -- Brendan O'Dea <bod@debian.org>  Fri, 10 Mar 2006 03:07:28 +1100
+
 perl (5.8.8-2) unstable; urgency=low
 
   * Move overload.pm back to perl-base (closes: #352060).
