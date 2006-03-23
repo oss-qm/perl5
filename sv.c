@@ -3438,18 +3438,15 @@ Perl_sv_utf8_upgrade_flags(pTHX_ register SV *sv, I32 flags)
     U8 *s, *t, *e;
     int  hibit = 0;
 
-    if (!sv)
-	return 0;
-
     if (!SvPOK(sv)) {
 	STRLEN len = 0;
-	(void) sv_2pv_flags(sv,&len, flags);
-	if (!SvPOK(sv))
-	     return len;
+	(void) SvPV_force(sv,len);
     }
 
-    if (SvUTF8(sv))
+    if (SvUTF8(sv)) {
+        SvSETMAGIC(sv);
 	return SvCUR(sv);
+    }
 
     if (SvREADONLY(sv) && SvFAKE(sv)) {
 	sv_force_normal(sv);
@@ -3484,6 +3481,7 @@ Perl_sv_utf8_upgrade_flags(pTHX_ register SV *sv, I32 flags)
 	 /* Mark as UTF-8 even if no hibit - saves scanning loop */
 	 SvUTF8_on(sv);
     }
+    SvSETMAGIC(sv);
     return SvCUR(sv);
 }
 
@@ -3504,7 +3502,7 @@ use the Encode extension for that.
 bool
 Perl_sv_utf8_downgrade(pTHX_ register SV* sv, bool fail_ok)
 {
-    if (SvPOK(sv) && SvUTF8(sv)) {
+    if (SvPOKp(sv) && SvUTF8(sv)) {
         if (SvCUR(sv)) {
 	    U8 *s;
 	    STRLEN len;
@@ -3566,7 +3564,7 @@ for decode_utf8 in Encode.xs
 bool
 Perl_sv_utf8_decode(pTHX_ register SV *sv)
 {
-    if (SvPOK(sv)) {
+    if (SvPOKp(sv)) {
         U8 *c;
         U8 *e;
 

@@ -1,3 +1,16 @@
+perl (5.8.4-8sarge4) stable; urgency=low
+
+  * Don't generate broken md5sums for libperl5.8 (closes: #354466).
+  * Preserve timestamps in /usr/share/doc.
+  * Fix problem with utf8/taint interaction (thanks to Steinar
+    Gunderson for analysis/patch).
+
+  * Fix test of reenterant function return values which was causing
+    perl to malloc itself to death if ERANGE was encountered before
+    ENOENT (such as a long line in /etc/group; see: #227621).
+
+ -- Brendan O'Dea <bod@debian.org>  Fri, 24 Mar 2006 00:44:14 +1100
+
 perl (5.8.4-8sarge3) stable-security; urgency=high
 
   * Non-maintainer upload by the Security Team

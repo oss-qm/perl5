@@ -104,7 +104,7 @@ install-stamp: build-stamp
 	# convert required header files
 	-cd /usr/include; $(srcdir)/perl.static -I $(srcdir)/lib \
 	    $(srcdir)/utils/h2ph -a -d $(srcdir)/$(lib) \
-	    `cat $(srcdir)/debian/headers`
+		`cat $(srcdir)/debian/headers`
 
 	# fix up generated headers
 	./perl.static -Ilib debian/fixheaders $(lib)
@@ -219,7 +219,7 @@ endif
 		do \
 		    d=`expr $$target : '\([^/][^/]*\)'`; \
 		    test -d $$doc/$$d || mkdir $$doc/$$d; \
-		    cp $$src $$doc/$$target; \
+		    cp -p $$src $$doc/$$target; \
 		done <debian/$$p.docs; \
 	    fi; \
 	    test -d $$doc/$$p || ln -s perl $$doc/$$p; \
@@ -235,17 +235,17 @@ endif
 
 	# remove empty directories left after moving module docs
 	find $(build)/perl-modules/usr/share/perl/$(fullversion) \
-	    -depth -type d -empty | xargs rmdir
+	    -depth -type d -empty | xargs -r rmdir
 
 	# want these in /etc since /usr may not be writable
 	mkdir -p $(build)/perl-modules/etc/perl/CPAN \
 	    $(build)/perl-modules/etc/perl/Net
 
 	# compress
-	find $(build)/*/usr/share/man -type f -print | xargs gzip -9
+	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -9
 	find $(build)/*/usr/share/doc -type f \
 	    \( -name changelog\* -o \( -size +4k ! -name copyright \) \) \
-	    -print | xargs gzip -9
+	    -print | xargs -r gzip -9
 
 ifeq ($(strip),yes)
 	# strip
@@ -262,13 +262,13 @@ ifeq ($(strip),yes)
 endif
 
 	# fixperms
-	find $(build) -print | xargs chown -h root:root
-	find $(build) -type d -print | xargs chmod 755
-	find $(build) -type f -print | xargs chmod go=rX,u+rw,a-s
-	find $(build)/*/usr/bin -type f -print | xargs chmod a+x
-	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs chmod a-x
+	find $(build) -print | xargs -r chown -h root:root
+	find $(build) -type d -print | xargs -r chmod 755
+	find $(build) -type f -print | xargs -r chmod go=rX,u+rw,a-s
+	find $(build)/*/usr/bin -type f -print | xargs -r chmod a+x
+	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs -r chmod a-x
 	find $(build)/*/usr/share/doc $(build)/*/usr/share/man -type f \
-	    -print | xargs chmod 644
+	    -print | xargs -r chmod 644
 
 	# suidperl needs to be...
 	chmod u+s $(build)/perl-suid/usr/bin/sperl$(fullversion)
@@ -307,7 +307,7 @@ binary-indep: build-stamp install-stamp
 	    done; \
 	    test -d $(build)/$$p/etc && find $(build)/$$p/etc -type f \
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
-	    (cd $(build)/$$p; find usr -type f -print | xargs md5sum) \
+	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_upstream); \
 	    dpkg --build $(build)/$$p ..; \
@@ -342,7 +342,7 @@ endif
 	    done; \
 	    test -f debian/$$p.shlibs && cp debian/$$p.shlibs \
 		$(build)/$$p/DEBIAN/shlibs; \
-	    (cd $(build)/$$p; find usr -type f -print | xargs md5sum) \
+	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    LD_LIBRARY_PATH=$$LD_LIBRARY_PATH$${LD_LIBRARY_PATH:+:}/usr/lib:$(srcdir)/$(build)/libperl$(version)/usr/lib; \
 		find $(build)/$$p/usr -type f \

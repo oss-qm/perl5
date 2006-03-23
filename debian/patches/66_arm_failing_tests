@@ -1,9 +1,9 @@
 Some tests fail on ARM due to non-IEEE fp rounding rules in the kernel
 fp emulation.
 
-diff --exclude=debian -Naur perl-5.8.7.orig/lib/Math/Complex.t perl-5.8.7/lib/Math/Complex.t
---- perl-5.8.7.orig/lib/Math/Complex.t	2002-02-01 04:50:30.000000000 +1100
-+++ perl-5.8.7/lib/Math/Complex.t	2005-12-10 16:39:51.000000000 +1100
+diff --exclude=debian -Naur perl-5.8.4.orig/lib/Math/Complex.t perl-5.8.4/lib/Math/Complex.t
+--- perl-5.8.4.orig/lib/Math/Complex.t	2002-02-01 04:50:30.000000000 +1100
++++ perl-5.8.4/lib/Math/Complex.t	2006-03-24 00:06:58.000000000 +1100
 @@ -33,6 +33,11 @@
  }			# cos(), sin(), cosh(), sinh().  The division
  			# of doubles is the current suspect.

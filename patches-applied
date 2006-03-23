@@ -20,6 +20,9 @@ debian/patches/18_fix_devel_dprof
 debian/patches/19_fix_getopts.pl
 debian/patches/20_fix_a2p_manpage
 debian/patches/21_fix_perlreref_octal
+debian/patches/22_fix_CVE-2005-3962_integer_overflow
+debian/patches/23_fix_utf8_taint
+debian/patches/24_fix_reentr_erange
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
@@ -36,3 +39,4 @@ debian/patches/62_debian_cpan_definstalldirs
 debian/patches/63_debian_optim_workaround
 debian/patches/64_debian_update_mime_base64
 debian/patches/65_debian_enc2xs_inc
+debian/patches/66_arm_failing_tests

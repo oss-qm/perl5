@@ -152,7 +152,8 @@ sub encode($$;$)
 	    $ret .= pack 'a*', $tmp; # remove UTF8 flag.
 	}
 	elsif ($str =~ s/(.)//) {
-	    my $tmp = $GB->encode($1, $chk);
+	    my $s = $1;
+	    my $tmp = $GB->encode($s, $chk);
 	    last if !defined $tmp;
 	    if (length $tmp == 2) { # maybe a valid GB char (XXX)
 		if ($in_ascii) {
