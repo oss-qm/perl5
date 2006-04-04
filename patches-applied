@@ -4,9 +4,9 @@ debian/patches/02_fix_verbatim_pod_dash
 debian/patches/03_fix_net_nntp
 debian/patches/04_fix_reentr_erange
 debian/patches/05_fix_sparc_fpic
-debian/patches/06_fix_syslog_null
-debian/patches/07_fix_getopt_long_doc
-debian/patches/08_fix_pod_man_pipe
+debian/patches/06_fix_getopt_long_doc
+debian/patches/07_fix_pod_man_pipe
+debian/patches/08_fix_perlsec_pod
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

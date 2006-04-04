@@ -676,16 +676,15 @@ sub syslog {
 	$mask =~ s/(?<!%)((?:%%)*)%m/$1$err/g;
     }
 
+    $mask .= "\n" unless $mask =~ /\n$/;
     $message = @_ ? sprintf($mask, @_) : $mask;
-    $message =~ s/[\r\n]+/ /g;
-    $message =~ s/ +$//;
 
     $sum = $numpri + $numfac;
     my $oldlocale = setlocale(LC_TIME);
     setlocale(LC_TIME, 'C');
     my $timestamp = strftime "%b %e %T", localtime;
     setlocale(LC_TIME, $oldlocale);
-    my $buf = "<$sum>$timestamp $whoami: $message";
+    my $buf = "<$sum>$timestamp $whoami: $message\0";
 
     # it's possible that we'll get an error from sending
     # (e.g. if method is UDP and there is no UDP listener,
@@ -725,6 +724,7 @@ sub syslog {
 
 sub _syslog_send_console {
     my ($buf) = @_;
+    chop($buf); # delete the NUL from the end
     # The console print is a method which could block
     # so we do it in a child process and always return success
     # to the caller.
@@ -743,7 +743,7 @@ sub _syslog_send_console {
 	}
     } else {
         if (open(CONS, ">/dev/console")) {
-	    my $ret = print CONS $buf . "\r\n";
+	    my $ret = print CONS $buf . "\r";
 	    exit ($ret) if defined $pid;
 	    close CONS;
 	}

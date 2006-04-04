@@ -204,7 +204,7 @@ endif
 		do \
 		    d=`expr $$target : '\([^/][^/]*\)'`; \
 		    test -d $$doc/$$d || mkdir $$doc/$$d; \
-		    cp $$src $$doc/$$target; \
+		    cp -p $$src $$doc/$$target; \
 		done <debian/$$p.docs; \
 	    fi; \
 	    test -d $$doc/$$p || ln -s perl $$doc/$$p; \
