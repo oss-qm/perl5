@@ -3,9 +3,12 @@ Fix problem with utf8/taint interaction (upstream changes #22842,
 
 Thanks to Steinar Gunderson for analysis/patch.
 
-diff --exclude=debian -Naur perl-5.8.4.orig/ext/Encode/lib/Encode/CN/HZ.pm perl-5.8.4/ext/Encode/lib/Encode/CN/HZ.pm
---- perl-5.8.4.orig/ext/Encode/lib/Encode/CN/HZ.pm	2004-02-24 06:29:12.000000000 +1100
-+++ perl-5.8.4/ext/Encode/lib/Encode/CN/HZ.pm	2006-03-24 00:35:15.000000000 +1100
+Additionally apply upstream changes #23084 and #23085 to correct problems
+with Tk 804.27 .
+
+diff -Naur --exclude=debian perl-5.8.4.orig/ext/Encode/lib/Encode/CN/HZ.pm perl-5.8.4/ext/Encode/lib/Encode/CN/HZ.pm
+--- perl-5.8.4.orig/ext/Encode/lib/Encode/CN/HZ.pm	2004-02-23 19:29:12.000000000 +0000
++++ perl-5.8.4/ext/Encode/lib/Encode/CN/HZ.pm	2006-05-10 03:08:42.303791195 +0000
 @@ -152,7 +152,8 @@
  	    $ret .= pack 'a*', $tmp; # remove UTF8 flag.
  	}
@@ -16,9 +19,9 @@ diff --exclude=debian -Naur perl-5.8.4.orig/ext/Encode/lib/Encode/CN/HZ.pm perl-
  	    last if !defined $tmp;
  	    if (length $tmp == 2) { # maybe a valid GB char (XXX)
  		if ($in_ascii) {
-diff --exclude=debian -Naur perl-5.8.4.orig/ext/Encode/lib/Encode/Unicode/UTF7.pm perl-5.8.4/ext/Encode/lib/Encode/Unicode/UTF7.pm
---- perl-5.8.4.orig/ext/Encode/lib/Encode/Unicode/UTF7.pm	2003-05-22 00:15:16.000000000 +1000
-+++ perl-5.8.4/ext/Encode/lib/Encode/Unicode/UTF7.pm	2006-03-24 00:35:15.000000000 +1100
+diff -Naur --exclude=debian perl-5.8.4.orig/ext/Encode/lib/Encode/Unicode/UTF7.pm perl-5.8.4/ext/Encode/lib/Encode/Unicode/UTF7.pm
+--- perl-5.8.4.orig/ext/Encode/lib/Encode/Unicode/UTF7.pm	2003-05-21 14:15:16.000000000 +0000
++++ perl-5.8.4/ext/Encode/lib/Encode/Unicode/UTF7.pm	2006-05-10 03:08:42.313791120 +0000
 @@ -6,7 +6,7 @@
  no warnings 'redefine';
  use base qw(Encode::Encoding);
@@ -38,10 +41,10 @@ diff --exclude=debian -Naur perl-5.8.4.orig/ext/Encode/lib/Encode/Unicode/UTF7.p
  		$base64 =~ s/=+$//;
  		$bytes .= "+$base64-";
  	    }
-diff --exclude=debian -Naur perl-5.8.4.orig/sv.c perl-5.8.4/sv.c
---- perl-5.8.4.orig/sv.c	2004-04-01 01:03:57.000000000 +1000
-+++ perl-5.8.4/sv.c	2006-03-24 00:35:15.000000000 +1100
-@@ -3438,18 +3438,15 @@
+diff -Naur --exclude=debian perl-5.8.4.orig/sv.c perl-5.8.4/sv.c
+--- perl-5.8.4.orig/sv.c	2004-03-31 15:03:57.000000000 +0000
++++ perl-5.8.4/sv.c	2006-05-10 03:11:23.912581291 +0000
+@@ -3438,18 +3438,20 @@
      U8 *s, *t, *e;
      int  hibit = 0;
  
@@ -53,26 +56,23 @@ diff --exclude=debian -Naur perl-5.8.4.orig/sv.c perl-5.8.4/sv.c
 -	(void) sv_2pv_flags(sv,&len, flags);
 -	if (!SvPOK(sv))
 -	     return len;
-+	(void) SvPV_force(sv,len);
++	if (SvREADONLY(sv) && (SvPOKp(sv) || SvIOKp(sv) || SvNOKp(sv))) {
++	    (void) sv_2pv_flags(sv,&len, flags);
++	    if (SvUTF8(sv))
++		return len;
++	} else {
++	    (void) SvPV_force(sv,len);
++	}
      }
  
 -    if (SvUTF8(sv))
 +    if (SvUTF8(sv)) {
-+        SvSETMAGIC(sv);
  	return SvCUR(sv);
 +    }
  
      if (SvREADONLY(sv) && SvFAKE(sv)) {
  	sv_force_normal(sv);
-@@ -3484,6 +3481,7 @@
- 	 /* Mark as UTF-8 even if no hibit - saves scanning loop */
- 	 SvUTF8_on(sv);
-     }
-+    SvSETMAGIC(sv);
-     return SvCUR(sv);
- }
- 
-@@ -3504,7 +3502,7 @@
+@@ -3504,7 +3506,7 @@
  bool
  Perl_sv_utf8_downgrade(pTHX_ register SV* sv, bool fail_ok)
  {
@@ -81,7 +81,7 @@ diff --exclude=debian -Naur perl-5.8.4.orig/sv.c perl-5.8.4/sv.c
          if (SvCUR(sv)) {
  	    U8 *s;
  	    STRLEN len;
-@@ -3566,7 +3564,7 @@
+@@ -3566,7 +3568,7 @@
  bool
  Perl_sv_utf8_decode(pTHX_ register SV *sv)
  {

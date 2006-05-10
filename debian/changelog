@@ -1,3 +1,10 @@
+perl (5.8.4-8sarge5) stable; urgency=low
+
+  * Apply upstream changes #23084 and #23085 to correct problems
+    with the utf8/taint fix and Tk 804.27 .
+
+ -- Brendan O'Dea <bod@debian.org>  Wed, 10 May 2006 13:16:33 +1000
+
 perl (5.8.4-8sarge4) stable; urgency=low
 
   * Don't generate broken md5sums for libperl5.8 (closes: #354466).

@@ -3440,11 +3440,16 @@ Perl_sv_utf8_upgrade_flags(pTHX_ register SV *sv, I32 flags)
 
     if (!SvPOK(sv)) {
 	STRLEN len = 0;
-	(void) SvPV_force(sv,len);
+	if (SvREADONLY(sv) && (SvPOKp(sv) || SvIOKp(sv) || SvNOKp(sv))) {
+	    (void) sv_2pv_flags(sv,&len, flags);
+	    if (SvUTF8(sv))
+		return len;
+	} else {
+	    (void) SvPV_force(sv,len);
+	}
     }
 
     if (SvUTF8(sv)) {
-        SvSETMAGIC(sv);
 	return SvCUR(sv);
     }
 
@@ -3481,7 +3486,6 @@ Perl_sv_utf8_upgrade_flags(pTHX_ register SV *sv, I32 flags)
 	 /* Mark as UTF-8 even if no hibit - saves scanning loop */
 	 SvUTF8_on(sv);
     }
-    SvSETMAGIC(sv);
     return SvCUR(sv);
 }
 
