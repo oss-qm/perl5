@@ -20,7 +20,7 @@ use vars qw($VERSION @ISA
 
 use ExtUtils::MakeMaker qw($Verbose neatvalue);
 
-$VERSION = '1.50';
+$VERSION = '1.50_01';
 
 require ExtUtils::MM_Any;
 @ISA = qw(ExtUtils::MM_Any);
@@ -2072,7 +2072,7 @@ pure_site_install ::
 		$(INST_LIB) $(DESTINSTALLSITELIB) \
 		$(INST_ARCHLIB) $(DESTINSTALLSITEARCH) \
 		$(INST_BIN) $(DESTINSTALLSITEBIN) \
-		$(INST_SCRIPT) $(DESTINSTALLSCRIPT) \
+		$(INST_SCRIPT) $(DESTINSTALLSITESCRIPT) \
 		$(INST_MAN1DIR) $(DESTINSTALLSITEMAN1DIR) \
 		$(INST_MAN3DIR) $(DESTINSTALLSITEMAN3DIR)
 	$(NOECHO) $(WARN_IF_OLD_PACKLIST) \
@@ -2083,7 +2083,7 @@ pure_vendor_install ::
 		$(INST_LIB) $(DESTINSTALLVENDORLIB) \
 		$(INST_ARCHLIB) $(DESTINSTALLVENDORARCH) \
 		$(INST_BIN) $(DESTINSTALLVENDORBIN) \
-		$(INST_SCRIPT) $(DESTINSTALLSCRIPT) \
+		$(INST_SCRIPT) $(DESTINSTALLVENDORSCRIPT) \
 		$(INST_MAN1DIR) $(DESTINSTALLVENDORMAN1DIR) \
 		$(INST_MAN3DIR) $(DESTINSTALLVENDORMAN3DIR)
 
@@ -3028,14 +3028,11 @@ sub processPL {
 	    # pm_to_blib depends on then it can't depend on pm_to_blib
 	    # else we have a dependency loop.
 	    my $pm_dep;
-	    my $perlrun;
 	    if( defined $self->{PM}{$target} ) {
 		$pm_dep  = '';
-		$perlrun = 'PERLRUN';
 	    }
 	    else {
 		$pm_dep  = 'pm_to_blib';
-		$perlrun = 'PERLRUNINST';
 	    }
 
             $m .= <<MAKE_FRAG;
@@ -3044,7 +3041,7 @@ all :: $target
 	\$(NOECHO) \$(NOOP)
 
 $target :: $plfile $pm_dep
-	\$($perlrun) $plfile $target
+	\$(PERLRUNINST) $plfile $target
 MAKE_FRAG
 
 	}

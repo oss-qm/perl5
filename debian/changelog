@@ -1,3 +1,19 @@
+perl (5.8.8-5) unstable; urgency=low
+
+  * Correctly identify arch-specific modules in ext/ where the .pm
+    files are under lib.  Adjust perl-base.files (closes: #369481).
+
+  * Ensure that POSIX/SigAction is kept with the rest of the POSIX
+    module under archlib.
+
+  * Apply upstream change 26536: add INSTALL{VENDOR,SITE}SCRIPT
+    macros (closes: #362949).
+
+  * [Don Armstrong] Revert part of upstream change 24524 to always use
+    PERLRUNINST when building perl modules (closes: #357264).
+
+ -- Brendan O'Dea <bod@debian.org>  Sat,  3 Jun 2006 17:06:45 +1000
+
 perl (5.8.8-4) unstable; urgency=low
 
   * Preserve timestamps in /usr/share/doc.

@@ -60,7 +60,7 @@ diff -Naur --exclude=debian perl-5.8.8.orig/lib/ExtUtils/MM_Any.pm perl-5.8.8/li
  CMD
      }
  
-@@ -1073,9 +1071,11 @@
+@@ -1080,9 +1078,11 @@
          $self->{SITEPREFIX}   ||= $sprefix;
          $self->{VENDORPREFIX} ||= $vprefix;
  

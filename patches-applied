@@ -7,6 +7,9 @@ debian/patches/05_fix_sparc_fpic
 debian/patches/06_fix_getopt_long_doc
 debian/patches/07_fix_pod_man_pipe
 debian/patches/08_fix_perlsec_pod
+debian/patches/09_fix_installperl
+debian/patches/10_fix_installsitescript
+debian/patches/11_fix_processPL
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

@@ -13,8 +13,11 @@ usr/lib/perl/*/IO/Handle.pm
 usr/lib/perl/*/IO/Pipe.pm
 usr/lib/perl/*/IO/Seekable.pm
 usr/lib/perl/*/IO/Select.pm
+usr/lib/perl/*/IO/Socket
 usr/lib/perl/*/IO/Socket.pm
+usr/lib/perl/*/List/Util.pm
 usr/lib/perl/*/POSIX.pm
+usr/lib/perl/*/Scalar/Util.pm
 usr/lib/perl/*/Socket.pm
 usr/lib/perl/*/XSLoader.pm
 usr/lib/perl/*/auto/Cwd
@@ -22,6 +25,7 @@ usr/lib/perl/*/auto/DynaLoader
 usr/lib/perl/*/auto/Fcntl
 usr/lib/perl/*/auto/File/Glob
 usr/lib/perl/*/auto/IO
+usr/lib/perl/*/auto/List/Util
 usr/lib/perl/*/auto/POSIX/POSIX.bs
 usr/lib/perl/*/auto/POSIX/POSIX.so
 usr/lib/perl/*/auto/POSIX/autosplit.ix
@@ -39,12 +43,8 @@ usr/share/perl/*/File/Spec.pm
 usr/share/perl/*/File/Spec/Unix.pm
 usr/share/perl/*/FileHandle.pm
 usr/share/perl/*/Getopt/Long.pm
-usr/share/perl/*/IO/Socket/INET.pm
-usr/share/perl/*/IO/Socket/UNIX.pm
 usr/share/perl/*/IPC/Open2.pm
 usr/share/perl/*/IPC/Open3.pm
-usr/share/perl/*/List/Util.pm
-usr/share/perl/*/Scalar/Util.pm
 usr/share/perl/*/SelectSaver.pm
 usr/share/perl/*/Symbol.pm
 usr/share/perl/*/Text/ParseWords.pm
