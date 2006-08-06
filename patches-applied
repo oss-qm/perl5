@@ -33,3 +33,5 @@ debian/patches/69_debian_db_file_ver
 debian/patches/70_debian_errno_ver
 debian/patches/71_debian_m68k_time_hires
 debian/patches/72_debian_drop_c9x_warning
+debian/patches/73_debian_workaround_register
+debian/patches/74_debian_hppa_mips_optim

@@ -1,3 +1,20 @@
+perl (5.8.8-6.1) unstable; urgency=high
+
+  * Non-maintainer upload to fix Failure To Build From Source in hppa, mips
+    and mipsel architectures.
+  * Added debian/patches/74_debian_hppa_mips_optim, that forces pp_pack.c to
+    be compiled without the delayed-branch optimization option.
+    (Closes: #374396)
+
+ -- Margarita Manterola <marga@debian.org>  Sun,  6 Aug 2006 11:50:18 -0300
+
+perl (5.8.8-6) unstable; urgency=low
+
+  * Work around g++-4.1 issue with register parameter declarations.
+  * Add errno.ph (simple wrapper around Errno module).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 11 Jun 2006 22:38:12 +1000
+
 perl (5.8.8-5) unstable; urgency=low
 
   * Correctly identify arch-specific modules in ext/ where the .pm

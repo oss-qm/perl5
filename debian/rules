@@ -98,6 +98,9 @@ install-stamp: build-stamp
 	# fix up generated headers
 	./perl.static -Ilib debian/fixheaders $(lib)
 
+	# simple wrapper around Errno module
+	cp debian/errno.ph $(lib)
+
 	# remove some cruft
 	rm -f $(bin)/suidperl
 	rm -f $(lib)/.packlist
