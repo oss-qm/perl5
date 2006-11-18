@@ -10,6 +10,12 @@ debian/patches/08_fix_perlsec_pod
 debian/patches/09_fix_installperl
 debian/patches/10_fix_installsitescript
 debian/patches/11_fix_processPL
+debian/patches/12_fix_file_spec
+debian/patches/12_fix_net_cmd
+debian/patches/13_fix_perl5db
+debian/patches/14_fix_net_pop3
+debian/patches/15_fix_net_groff_minus-hyphen
+debian/patches/16_fix_net_smtp_docs
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

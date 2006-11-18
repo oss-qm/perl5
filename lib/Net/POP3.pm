@@ -54,7 +54,8 @@ sub new
  $obj->autoflush(1);
  $obj->debug(exists $arg{Debug} ? $arg{Debug} : undef);
 
- unless ($obj->response() == CMD_OK)
+ my $response = $obj->response();
+ unless ($response && $response == CMD_OK)
   {
    $obj->close();
    return undef;

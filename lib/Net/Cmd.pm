@@ -204,7 +204,7 @@ sub command
   {
    local $SIG{PIPE} = 'IGNORE' unless $^O eq 'MacOS';
 
-   my $str =  join(" ", map { /\n/ ? do { my $n = $_; $n =~ tr/\n/ /; $n } : $_; } @_);
+   my $str =  join(" ", map { defined($_) ? /\n/ ? do { my $n = $_; $n =~ tr/\n/ /; $n } : $_ : " "; } @_);
    $str = $cmd->toascii($str) if $tr;
    $str .= "\015\012";
 

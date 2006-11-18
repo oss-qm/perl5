@@ -558,7 +558,7 @@ The Net::SMTP class is a subclass of Net::Cmd and IO::Socket::INET.
 
 This example prints the mail domain name of the SMTP server known as mailhost:
 
-    #!/usr/local/bin/perl -w
+    #!/usr/local/bin/perl \-w
 
     use Net::SMTP;
 
@@ -569,7 +569,7 @@ This example prints the mail domain name of the SMTP server known as mailhost:
 This example sends a small message to the postmaster at the SMTP server
 known as mailhost:
 
-    #!/usr/local/bin/perl -w
+    #!/usr/local/bin/perl \-w
 
     use Net::SMTP;
 
@@ -623,6 +623,7 @@ Net::SMTP will attempt to extract the address from the value passed.
 
 B<Debug> - Enable debugging information
 
+B<Port> - Select a port on the remote host to connect to (default is 25)
 
 Example:
 
