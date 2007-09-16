@@ -16,6 +16,12 @@ debian/patches/13_fix_perl5db
 debian/patches/14_fix_net_pop3
 debian/patches/15_fix_net_groff_minus-hyphen
 debian/patches/16_fix_net_smtp_docs
+debian/patches/17_fix_makedepend
+debian/patches/18_fix_CGI_upload
+debian/patches/19_fix_CPAN_abort_no_tty_config
+debian/patches/20_fix_taint_study_hang
+debian/patches/21_fix_pod2man_escape_ix
+debian/patches/22_fix_pod2html_dl
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
@@ -39,5 +45,4 @@ debian/patches/69_debian_db_file_ver
 debian/patches/70_debian_errno_ver
 debian/patches/71_debian_m68k_time_hires
 debian/patches/72_debian_drop_c9x_warning
-debian/patches/73_debian_workaround_register
-debian/patches/74_debian_hppa_mips_optim
+debian/patches/73_debian_hppa_mips_optim

@@ -230,7 +230,7 @@ endif
 	    $(build)/perl-modules/etc/perl/Net
 
 	# default configuration for libnet
-	cp debian/libnet.cfg $(build)/perl-modules/etc/Net
+	cp debian/libnet.cfg $(build)/perl-modules/etc/perl/Net
 
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -9
@@ -274,8 +274,6 @@ endif
 	ln -s s2p.1.gz $(build)/perl/usr/share/man/man1/psed.1.gz
 
 	ln -s changelog.gz $(build)/perl/usr/share/doc/perl/Changes.gz
-	ln -s ../perl/changelog.gz \
-	    $(build)/libcgi-fast-perl/usr/share/doc/libcgi-fast-perl/changelog.gz
 
 	touch $@
 

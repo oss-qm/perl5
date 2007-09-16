@@ -1071,6 +1071,7 @@ sub outindex {
     for (@output) {
         my ($type, $entry) = @$_;
         $entry =~ s/\"/\"\"/g;
+        $entry =~ s/\\/\\e/g;
         $self->output (".IX $type " . '"' . $entry . '"' . "\n");
     }
 }

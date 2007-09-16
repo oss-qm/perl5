@@ -1,0 +1,25 @@
+Perl 5.6.1+ hangs when:
+(1) Taint mode (-T) is used
+(2) 'study' is used
+(3) Regular expression match with an expression starting
+    with "^", containing ".*" (or ".*?") matched by a
+    newline, using the /m flag, but not the /s flag.
+
+See http://rt.perl.org/rt3/Ticket/Display.html?id=41831 for details.
+
+diff -Naur --exclude=debian perl-5.8.8.orig/regexec.c perl-5.8.8/regexec.c
+--- perl-5.8.8.orig/regexec.c	2006-01-09 07:59:30.000000000 +1100
++++ perl-5.8.8/regexec.c	2007-09-16 18:51:04.000000000 +1000
+@@ -454,7 +454,11 @@
+ 			      "String too short... [re_intuit_start]\n"));
+ 	goto fail;
+     }
+-    strbeg = (sv && SvPOK(sv)) ? strend - SvCUR(sv) : strpos;
++    /* quarl 2007-03-14
++     *     Need to check SvPOKp rather than SvPOK in case of taint mode +
++     *     studied regexp.  Reference: 615e0643-ac86-4c31-9cd3-3526b2fc883c */
++    strbeg = (sv && (SvPOK(sv) || SvPOKp(sv))) ? strend - SvCUR(sv) : strpos;
++    /* DEBUG_r( PerlIO_printf(Perl_debug_log, "## sv_flags=%p, SvPOK=%d, SvPOKp=%d, strbeg = %p\n", sv ? sv->sv_flags : 0, (sv && SvPOK(sv) ? 1:0), (sv && SvPOKp(sv) ? 1:0), strbeg) ); */
+     PL_regeol = strend;
+     if (do_utf8) {
+ 	if (!prog->check_utf8 && prog->check_substr)

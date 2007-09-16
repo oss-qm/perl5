@@ -554,6 +554,9 @@ sub picklist {
         $pos = 0 if $pos >= @$items;
 
         my $num = prompt($prompt,$default);
+        unless ($num or -t) {
+            die "No default for '$prompt',\naborting non-interactive setup.\n";
+        }
 
         @nums = split (' ', $num);
         my $i = scalar @$items;
