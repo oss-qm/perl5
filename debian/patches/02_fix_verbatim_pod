@@ -1,0 +1,51 @@
+Escape dashes in verbatim text to have groff render them as-is rather
+than as \x{2010}.  Similarly prevent munging of single quote chars.
+
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/Pod/Man.pm perl-5.8.8/lib/Pod/Man.pm
+--- perl-5.8.8.orig/lib/Pod/Man.pm	2003-03-31 21:16:36.000000000 +1000
++++ perl-5.8.8/lib/Pod/Man.pm	2007-09-18 19:00:23.000000000 +1000
+@@ -517,6 +517,8 @@
+     my $lines = tr/\n/\n/;
+     1 while s/^(.*?)(\t+)/$1 . ' ' x (length ($2) * 8 - length ($1) % 8)/me;
+     s/\\/\\e/g;
++    s/-/\\-/g;
++    s/'/\\(aq/g;
+     s/^(\s*\S)/'\&' . $1/gme;
+     $self->makespace;
+     $self->output (".Vb $lines\n$_.Ve\n");
+diff -Naur --exclude=debian perl-5.8.8.orig/lib/Pod/t/basic.man perl-5.8.8/lib/Pod/t/basic.man
+--- perl-5.8.8.orig/lib/Pod/t/basic.man	2002-01-03 01:33:15.000000000 +1100
++++ perl-5.8.8/lib/Pod/t/basic.man	2007-09-18 19:04:18.000000000 +1000
+@@ -290,18 +290,18 @@
+ .PP
+ .Vb 8
+ \&    use Term::ANSIColor;
+-\&    print color 'bold blue';
++\&    print color \(aqbold blue\(aq;
+ \&    print "This text is bold blue.\en";
+-\&    print color 'reset';
++\&    print color \(aqreset\(aq;
+ \&    print "This text is normal.\en";
+-\&    print colored ("Yellow on magenta.\en", 'yellow on_magenta');
++\&    print colored ("Yellow on magenta.\en", \(aqyellow on_magenta\(aq);
+ \&    print "This text is normal.\en";
+-\&    print colored ['yellow on_magenta'], "Yellow on magenta.\en";
++\&    print colored [\(aqyellow on_magenta\(aq], "Yellow on magenta.\en";
+ .Ve
+ .PP
+ .Vb 2
+ \&    use Term::ANSIColor qw(uncolor);
+-\&    print uncolor '01;31', "\en";
++\&    print uncolor \(aq01;31\(aq, "\en";
+ .Ve
+ .PP
+ But this isn't verbatim (make sure it wraps properly), and the next
+@@ -332,7 +332,7 @@
+ .PP
+ .Vb 2
+ \& This is.  And this:    is an internal tab.  It should be:
+-\&                    |--| <= lined up with that.
++\&                    |\-\-| <= lined up with that.
+ .Ve
+ .PP
+ (Tricky, but tabs should be expanded before the translator starts in on

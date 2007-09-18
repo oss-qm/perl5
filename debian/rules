@@ -77,9 +77,9 @@ clean:
 	    debian/files debian/list.tmp $(tmp) $(build)
 
 install-stamp: build-stamp
-	$(checkperl)
-	$(checkroot)
 	$(checkdir)
+	$(checkroot)
+	$(checkperl)
 	rm -rf $(tmp) $(build)
 
 	$(MAKE) install

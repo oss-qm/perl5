@@ -10,8 +10,8 @@ Essential: yes
 Priority: required
 Architecture: any
 Pre-Depends: ${shlibs:Depends}
-Conflicts: perl-5.004-base (<< 6), perl-5.005-base (<< 6), perl-5.6-base (<< 6), autoconf2.13 (<< 2.13-45), libscalar-list-utils-perl (<< 1:1.18-1)
-Replaces: perl-5.005-base (<< 6), perl-5.6-base (<< 6), perl (<< 5.8.8-5), perl-modules (<< 5.8.8-2), libperl5.8 (<< 5.8.0-20), libscalar-list-utils-perl, libclass-multimethods-perl (<< 1.70-4)
+Conflicts: autoconf2.13 (<< 2.13-45), libscalar-list-utils-perl (<< 1:1.18-1)
+Replaces: perl (<< 5.8.8-5), perl-modules (<< 5.8.8-8), libperl5.8 (<< 5.8.0-20), libscalar-list-utils-perl, libclass-multimethods-perl (<< 1.70-4)
 Provides: perl5-base, ${perlapi:Provides}, libscalar-list-utils-perl
 Suggests: perl
 Description: The Pathologically Eclectic Rubbish Lister
@@ -27,8 +27,6 @@ Section: doc
 Priority: optional
 Architecture: all
 Depends: perl (>= ${Upstream-Version}-1)
-Conflicts: perl-5.004-doc (<< 6), perl-5.005-doc (<< 6), perl-5.6-doc (<< 6)
-Replaces: perl-5.005-doc (<< 6), perl-5.6-doc (<< 6)
 Suggests: man-browser, groff
 Description: Perl documentation
  Perl manual pages, POD documentation and the `perldoc' program.  If you are
@@ -37,7 +35,7 @@ Description: Perl documentation
 Package: perl-modules
 Priority: standard
 Architecture: all
-Depends: perl (>= ${Upstream-Version}-1)
+Depends: perl (>= 5.8.8-8)
 Conflicts: libpod-parser-perl (<< 1.32-1), libansicolor-perl (<< 1.10-1), libfile-temp-perl (<< 0.16-1), libnet-perl (<= 1:1.19-3), libattribute-handlers-perl (<< 0.78.02-1), libcgi-pm-perl (<< 3.15-1), libi18n-langtags-perl (<< 0.35-1), liblocale-maketext-perl (<< 1.08-1), libmath-bigint-perl (<< 1.77-1), libnet-ping-perl (<< 2.31-1), libtest-harness-perl (<< 2.56-1), libtest-simple-perl (<< 0.62-1), liblocale-codes-perl (<< 2.06.1-1), libcgi-fast-perl
 Replaces: libpod-parser-perl, libansicolor-perl, libfile-temp-perl, libnet-perl, libattribute-handlers-perl, libcgi-pm-perl, libi18n-langtags-perl, liblocale-maketext-perl, libmath-bigint-perl, libnet-ping-perl, libtest-harness-perl, libtest-simple-perl, liblocale-codes-perl, libcgi-fast-perl
 Provides: libpod-parser-perl, libansicolor-perl, libfile-temp-perl, libnet-perl, libattribute-handlers-perl, libcgi-pm-perl, libi18n-langtags-perl, liblocale-maketext-perl, libmath-bigint-perl, libnet-ping-perl, libtest-harness-perl, libtest-simple-perl, liblocale-codes-perl, libcgi-fast-perl
@@ -49,8 +47,6 @@ Package: perl-debug
 Priority: optional
 Architecture: any
 Depends: perl (= ${Source-Version}), ${shlibs:Depends}
-Conflicts: perl-5.004-debug (<< 6), perl-5.005-debug (<< 6), perl-5.6-debug (<< 6)
-Replaces: perl-5.005-debug (<< 6), perl-5.6-debug (<< 6)
 Description: Debug-enabled Perl interpreter
  debugperl provides a debug-enabled version of Perl which can produce
  extensive information about the interpreter as it compiles and executes
@@ -64,8 +60,6 @@ Package: perl-suid
 Priority: optional
 Architecture: any
 Depends: perl (= ${Source-Version}), ${shlibs:Depends}
-Conflicts: perl-5.004-suid (<< 6), perl-5.005-suid (<< 6), perl-5.6-suid (<< 6)
-Replaces: perl-5.005-suid (<< 6), perl-5.6-suid (<< 6)
 Description: Runs setuid Perl scripts
  suidperl is a setuid root helper program which is invoked by perl when
  executing scripts with setuid/gid bits set on systems (like linux) which
@@ -101,8 +95,8 @@ Package: perl
 Priority: standard
 Architecture: any
 Depends: perl-base (= ${Source-Version}), perl-modules (>= ${Source-Version}), ${shlibs:Depends}
-Conflicts: data-dumper, perl-5.004 (<< 6), perl-5.005 (<< 6), perl-5.6 (<< 6), perl-doc (<< ${Upstream-Version}-1), libdigest-md5-perl (<< 3.07-1), libmime-base64-perl (<< 3.07-1), libtime-hires-perl (<< 1.86-1), libstorable-perl (<< 2.15-1)
-Replaces: perl-base (<< 5.8.8-1), perl-5.005 (<< 6), perl-5.6 (<< 6), perl-doc (<< 5.8.0-1), perl-modules (<< 5.8.1-1), libdigest-md5-perl, libmime-base64-perl, libtime-hires-perl, libstorable-perl 
+Conflicts: perl-doc (<< ${Upstream-Version}-1), libdigest-md5-perl (<< 3.07-1), libmime-base64-perl (<< 3.07-1), libtime-hires-perl (<< 1.86-1), libstorable-perl (<< 2.15-1)
+Replaces: perl-base (<< 5.8.8-1), perl-doc (<< 5.8.0-1), perl-modules (<< 5.8.1-1), libdigest-md5-perl, libmime-base64-perl, libtime-hires-perl, libstorable-perl 
 Provides: data-dumper, perl5, libdigest-md5-perl, libmime-base64-perl, libtime-hires-perl, libstorable-perl 
 Recommends: perl-doc
 Suggests: libterm-readline-gnu-perl | libterm-readline-perl-perl
