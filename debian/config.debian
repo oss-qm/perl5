@@ -60,14 +60,11 @@ case "$1" in
 esac
 
 case "$arch_cpu:$build_type" in
-    alpha:*|sh4:*) # required to correctly handle floating point on alpha/sh4
+    sh4:*) # required to correctly handle floating point on sh4
     	ccflags="$ccflags -mieee";;
 
     m68k:shared) # work around an optimiser bug
 	ccflags="$ccflags -fno-regmove";;
-
-    arm:*) # gcc defaults are currently incorrect
-    	ccflags="$ccflags -march=armv3";;
 esac
 
 case ",$DEB_BUILD_OPTIONS," in
