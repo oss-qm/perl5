@@ -1,3 +1,16 @@
+perl (5.8.8-10) unstable; urgency=low
+
+  * Add support for SH4 arch (closes: #424867).
+  * Add --strip-unneeded when stripping shared objects.
+  * Include stripped debugging symbols for perl and libperl.so in
+    /usr/lib/debug in perl-debug package (closes: #433631).
+
+  * Switch to libdb4.6 (closes: #427517).
+  * Re-instate libcgi-fast-perl, relocating module to vendor directory
+    (closes: #443236).
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 20 Sep 2007 19:47:14 +1000
+
 perl (5.8.8-9) unstable; urgency=low
 
   * Fix perl-base replaces after move of PVA.pl etc.

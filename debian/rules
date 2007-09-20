@@ -19,6 +19,7 @@ man         = $(tmp)/usr/share/man
 lib         = $(tmp)/usr/lib/perl/$(version)
 share       = $(tmp)/usr/share/perl/$(version)
 build	    = debian/build
+debug       = $(build)/perl-debug/usr/lib/debug
 patches     = patches-applied
 
 checkdir    = test -d debian
@@ -232,13 +233,25 @@ endif
 	# default configuration for libnet
 	cp debian/libnet.cfg $(build)/perl-modules/etc/perl/Net
 
+	# relocate CGI::Fast to vendor dir
+	cd $(build)/libcgi-fast-perl/usr/share && \
+	    mv perl/$(fullversion) perl5 && \
+	    rmdir perl 
+
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -9
 	find $(build)/*/usr/share/doc -type f \
 	    \( -name changelog\* -o \( -size +4k ! -name copyright \) \) \
 	    -print | xargs -r gzip -9
 
+	mkdir -p $(debug)/usr/bin $(debug)/usr/lib
+
 ifeq ($(strip),yes)
+	# stash debugging symbols
+	objcopy --only-keep-debug $(build)/*/usr/bin/perl $(debug)/usr/bin/perl
+	objcopy --only-keep-debug $(build)/*/usr/lib/libperl.so.$(fullversion) \
+	    $(debug)/usr/lib/libperl.so.$(fullversion)
+
 	# strip
 	find $(build)/*/usr/bin $(build)/*/usr/lib -type f \
 	    \( -name \*.so\* -o -name \*.a -o -perm +111 \) -print | \
@@ -246,10 +259,17 @@ ifeq ($(strip),yes)
 	    while read f; \
 	    do \
 		case `file $$f` in \
+		*ELF*shared\ object*) strip --remove-section=.comment \
+		    --remove-section=.note --strip-unneeded $$f;; \
 		*ELF*) strip --remove-section=.comment \
 		    --remove-section=.note $$f;; \
 		esac; \
 	    done
+
+	# add debuglink
+	objcopy --add-gnu-debuglink=$(debug)/usr/bin/perl $(build)/*/usr/bin/perl
+	objcopy --add-gnu-debuglink=$(debug)/usr/lib/libperl.so.$(fullversion) \
+	    $(build)/*/usr/lib/libperl.so.$(fullversion)
 endif
 
 	# fixperms
@@ -274,6 +294,8 @@ endif
 	ln -s s2p.1.gz $(build)/perl/usr/share/man/man1/psed.1.gz
 
 	ln -s changelog.gz $(build)/perl/usr/share/doc/perl/Changes.gz
+	ln -s ../perl/changelog.gz \
+	    $(build)/libcgi-fast-perl/usr/share/doc/libcgi-fast-perl/changelog.gz
 
 	touch $@
 
