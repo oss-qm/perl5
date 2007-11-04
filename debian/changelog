@@ -1,3 +1,10 @@
+perl (5.8.4-8sarge6) oldstable-security; urgency=high
+
+  * Non-maintainer upload by the security team.
+  * Apply patch by Yves Orton to fix CVE-2007-5116.
+
+ -- Florian Weimer <fw@deneb.enyo.de>  Sun, 04 Nov 2007 16:32:06 +0100
+  
 perl (5.8.4-8sarge5) stable; urgency=low
 
   * Apply upstream changes #23084 and #23085 to correct problems
