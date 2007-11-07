@@ -25,6 +25,7 @@ debian/patches/22_fix_pod2html_dl
 debian/patches/23_fix_tpj13_typo
 debian/patches/24_fix_perlcc_nv_save
 debian/patches/25_fix_defined_x86_64
+debian/patches/26_fix_regcomp_overflow
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

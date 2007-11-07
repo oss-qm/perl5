@@ -34,7 +34,7 @@ following perl-specific options:
     architectures other than i386 (where the relocations incur a
     measurable performance penalty).
 
-  x-perl-notest
+  x-perl-notest (or nocheck)
     The regression test suite is normally run after each of the static
     and shared build phases.  It is occaisionally useful to supress
     these tests (when debugging the build process for example, or to
