@@ -26,8 +26,12 @@ if ($@) {
   exit 0;
 }
 
-print "1..4\n";
+if (! -w $ENV{TMP}) {
+  print "1..0\n";
+  exit 0;
+}
 
+print "1..4\n";
 
 $file = "md$$";
 1 while unlink $file, "$file.dir", "$file.pag", "$file.db";

@@ -11,49 +11,49 @@ The rationale being that an admin (via site), or module packager
 (vendor) can chose to shadow core modules when there is a newer
 version than is included in core.
 
-diff -Naur --exclude=debian perl-5.8.8.orig/perl.c perl-5.8.8/perl.c
---- perl-5.8.8.orig/perl.c	2006-01-31 23:34:47.000000000 +1100
-+++ perl-5.8.8/perl.c	2006-02-02 23:36:38.000000000 +1100
-@@ -4776,9 +4776,14 @@
-     incpush(APPLLIB_EXP, TRUE, TRUE, TRUE);
+diff -Naur --exclude=debian perl-5.10.0.orig/perl.c perl-5.10.0/perl.c
+--- perl-5.10.0.orig/perl.c	2007-11-18 02:26:24.000000000 +1100
++++ perl-5.10.0/perl.c	2007-11-25 23:17:35.000000000 +1100
+@@ -4753,9 +4753,14 @@
+     incpush(APPLLIB_EXP, TRUE, TRUE, TRUE, TRUE);
  #endif
  
 +#ifdef DEBIAN
 +    /* for configuration where /usr is mounted ro (CPAN::Config, Net::Config) */
-+    incpush("/etc/perl", FALSE, FALSE, FALSE);
++    incpush("/etc/perl", FALSE, FALSE, FALSE, FALSE);
 +#else
  #ifdef ARCHLIB_EXP
-     incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE);
+     incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE, TRUE);
  #endif
 +#endif
  #ifdef MACOS_TRADITIONAL
      {
  	Stat_t tmpstatbuf;
-@@ -4803,11 +4808,13 @@
+@@ -4780,11 +4785,13 @@
  #ifndef PRIVLIB_EXP
  #  define PRIVLIB_EXP "/usr/local/lib/perl5:/usr/local/lib/perl"
  #endif
 +#ifndef DEBIAN
  #if defined(WIN32)
-     incpush(PRIVLIB_EXP, TRUE, FALSE, TRUE);
+     incpush(PRIVLIB_EXP, TRUE, FALSE, TRUE, TRUE);
  #else
-     incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE);
+     incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE, TRUE);
  #endif
 +#endif
  
  #ifdef SITEARCH_EXP
      /* sitearch is always relative to sitelib on Windows for
-@@ -4850,6 +4857,61 @@
-     incpush(PERL_VENDORLIB_STEM, FALSE, TRUE, TRUE);
+@@ -4828,6 +4835,61 @@
+     incpush(PERL_VENDORLIB_STEM, FALSE, TRUE, TRUE, TRUE);
  #endif
  
 +#ifdef DEBIAN
-+    incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE);
-+    incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE);
++    incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE, FALSE);
++    incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE, FALSE);
 +
 +    /* Non-versioned site directory for local modules and for
 +       compatability with the previous packages' site dirs */
-+    incpush("/usr/local/lib/site_perl", TRUE, FALSE, FALSE);
++    incpush("/usr/local/lib/site_perl", TRUE, FALSE, FALSE, FALSE);
 +
 +#ifdef PERL_INC_VERSION_LIST
 +    {
@@ -88,14 +88,14 @@ diff -Naur --exclude=debian perl-5.8.8.orig/perl.c perl-5.8.8/perl.c
 +	    {
 +		strcpy(arch_vers, *p);
 +		if (PerlLIO_stat(sitearch, &s) >= 0 && S_ISDIR(s.st_mode))
-+		    incpush(sitearch, FALSE, FALSE, FALSE);
++		    incpush(sitearch, FALSE, FALSE, FALSE, FALSE);
 +	    }
 +
 +	    if (lib_vers)
 +	    {
 +		strcpy(lib_vers, *p);
 +		if (PerlLIO_stat(sitelib, &s) >= 0 && S_ISDIR(s.st_mode))
-+		    incpush(sitelib, FALSE, FALSE, FALSE);
++		    incpush(sitelib, FALSE, FALSE, FALSE, FALSE);
 +	    }
 +	}
 +    }
@@ -103,5 +103,5 @@ diff -Naur --exclude=debian perl-5.8.8.orig/perl.c perl-5.8.8/perl.c
 +#endif
 +
  #ifdef PERL_OTHERLIBDIRS
-     incpush(PERL_OTHERLIBDIRS, TRUE, TRUE, TRUE);
+     incpush(PERL_OTHERLIBDIRS, TRUE, TRUE, TRUE, TRUE);
  #endif

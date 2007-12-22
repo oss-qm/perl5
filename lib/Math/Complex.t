@@ -502,14 +502,14 @@ sub test {
 			# check the op= works
 			push @script, <<EOB;
 {
-	my \$za = cplx(ref \$z0 ? \@{\$z0->cartesian} : (\$z0, 0));
+	my \$za = cplx(ref \$z0 ? \@{\$z0->_cartesian} : (\$z0, 0));
 
-	my (\$z1r, \$z1i) = ref \$z1 ? \@{\$z1->cartesian} : (\$z1, 0);
+	my (\$z1r, \$z1i) = ref \$z1 ? \@{\$z1->_cartesian} : (\$z1, 0);
 
 	my \$zb = cplx(\$z1r, \$z1i);
 
 	\$za $op= \$zb;
-	my (\$zbr, \$zbi) = \@{\$zb->cartesian};
+	my (\$zbr, \$zbi) = \@{\$zb->_cartesian};
 
 	check($test, '\$z0 $op= \$z1', \$za, \$z$#args, $args);
 EOB
@@ -691,7 +691,7 @@ __END__
 (-100,0):(0,10)
 (16,-30):(5,-3)
 
-&stringify_cartesian
+&_stringify_cartesian
 (-100,0):"-100"
 (0,1):"i"
 (4,-3):"4-3i"
@@ -700,7 +700,7 @@ __END__
 (-2,4):"-2+4i"
 (-2,-1):"-2-i"
 
-&stringify_polar
+&_stringify_polar
 [-1, 0]:"[1,pi]"
 [1, pi/3]:"[1,pi/3]"
 [6, -2*pi/3]:"[6,-2pi/3]"

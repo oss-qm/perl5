@@ -24,8 +24,10 @@ __DATA__
 
 <body style="background-color: white">
 
-<p><a name="__index__"></a></p>
+
 <!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
 
 <ul>
 
@@ -43,9 +45,11 @@ __DATA__
 	<li><a href="#testing_urls_hyperlinking">TESTING URLs hyperlinking</a></li>
 	<li><a href="#see_also">SEE ALSO</a></li>
 </ul>
+
+<hr name="index" />
+</div>
 <!-- INDEX END -->
 
-<hr />
 <p>
 </p>
 <h1><a name="name">NAME</a></h1>
@@ -82,12 +86,12 @@ other <strong>cool </strong></em>&gt; stuff &gt;&gt;</p>
 <h2><a name="new__"><code>new()</code></a></h2>
 <p>Constructor method.  Accepts the following config options:</p>
 <dl>
-<dt><strong><a name="item_foo">foo</a></strong></dt>
+<dt><strong><a name="foo" class="item">foo</a></strong></dt>
 
 <dd>
 <p>The foo item.</p>
 </dd>
-<dt><strong><a name="item_bar">bar</a></strong></dt>
+<dt><strong><a name="bar" class="item">bar</a></strong></dt>
 
 <dd>
 <p>The bar item.</p>
@@ -101,7 +105,7 @@ other <strong>cool </strong></em>&gt; stuff &gt;&gt;</p>
 </li>
 </ul>
 </dd>
-<dt><strong><a name="item_baz">baz</a></strong></dt>
+<dt><strong><a name="baz" class="item">baz</a></strong></dt>
 
 <dd>
 <p>The baz item.</p>
@@ -109,42 +113,39 @@ other <strong>cool </strong></em>&gt; stuff &gt;&gt;</p>
 </dl>
 <p>Title on the same line as the =item + * bullets</p>
 <ul>
-<li><strong><a name="item_black_cat"><code>Black</code> Cat</a></strong>
+<li><strong><a name="black_cat" class="item"><code>Black</code> Cat</a></strong>
 
 </li>
-<li><strong><a name="item_sat_on_the">Sat <em>on</em>&nbsp;the</a></strong>
+<li><strong><a name="sat_on_the" class="item">Sat <em>on</em>&nbsp;the</a></strong>
 
 </li>
-<li><strong><a name="item_mat_3c_21_3e">Mat&lt;!&gt;</a></strong>
+<li><strong><a name="mat" class="item">Mat&lt;!&gt;</a></strong>
 
 </li>
 </ul>
 <p>Title on the same line as the =item + numerical bullets</p>
 <ol>
-<li><strong><a name="item_cat">Cat</a></strong>
+<li><strong><a name="cat" class="item">Cat</a></strong>
 
 </li>
-<li><strong><a name="item_sat">Sat</a></strong>
+<li><strong><a name="sat" class="item">Sat</a></strong>
 
 </li>
-<li><strong><a name="item_mat">Mat</a></strong>
+<li><strong><a name="mat2" class="item">Mat</a></strong>
 
 </li>
 </ol>
 <p>No bullets, no title</p>
 <dl>
-<dt></dt>
-
+<dt>
 <dd>
 <p>Cat</p>
 </dd>
-<dt></dt>
-
+<dt>
 <dd>
 <p>Sat</p>
 </dd>
-<dt></dt>
-
+<dt>
 <dd>
 <p>Mat</p>
 </dd>
@@ -177,7 +178,7 @@ HTML
 <hr />
 <h1><a name="see_also">SEE ALSO</a></h1>
 <p>See also <a href="/t/htmlescp.html">Test Page 2</a>, the <a href="/Your/Module.html">the Your::Module manpage</a> and <a href="/Their/Module.html">the Their::Module manpage</a>
-manpages and the other interesting file <em>/usr/local/my/module/rocks</em>
+manpages and the other interesting file <em class="file">/usr/local/my/module/rocks</em>
 as well.</p>
 
 </body>

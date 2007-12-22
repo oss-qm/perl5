@@ -1,3 +1,34 @@
+perl (5.10.0-1) experimental; urgency=low
+
+  * New upstream version.
+  * perlcc has been removed (closes: #162950, #88463).
+  * warn with non-ascii and I18N::Langinfo appears fixed (closes: #343831).
+  * Replace use of Source-Version with source:Version.
+  * Remove /etc/Net (incorrectly installed by perl 5.8, see #425850) on
+    upgrade and removal (closes: #453915, #450694).
+
+  * Add build-conflict for libterm-readline-gnu-perl to avoid a spurious
+    test failure of perl5db.pl
+
+  * Update perl conflict versions for:
+     libdigest-sha-perl (5.45) and
+     libtime-piece-perl (1.12).
+
+  * Update perl-modules conflict versions for:
+     libmodule-corelist-perl (2.12),
+     libio-zlib-perl (1.07),
+     libarchive-tar-perl (1.37.1),
+     libextutils-cbuilder-perl (0.21),
+     libmodule-build-perl (0.2808.1),
+     libmodule-load-perl (0.12),
+     liblocale-maketext-simple-perl (0.18),
+     libparams-check-perl (0.26),
+     libmodule-plugable-perl (3.6),
+     libmodule-load-conditional-perl (0.22) and
+     libcpan-plus-perl (0.83.09).
+
+ -- Brendan O'Dea <bod@debian.org>  Sat, 22 Dec 2007 22:27:01 +1100
+
 perl (5.8.8-12) unstable; urgency=high
 
   * SECURITY [CVE-2007-5116] (closes: #450456): Apply patch from

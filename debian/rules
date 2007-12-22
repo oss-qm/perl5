@@ -36,10 +36,7 @@ install: install-stamp
 build-stamp: perl.static perl.debug libperl.so.$(fullversion)
 	touch $@
 
-config.over: debian/config.over
-	cp $? $@
-
-perl.static: config.over 
+perl.static:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
 	-$(MAKE) distclean
@@ -48,7 +45,7 @@ perl.static: config.over
 	mv libperl.a libperl-static
 	mv perl perl.static
 
-perl.debug: config.over 
+perl.debug:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
 	-$(MAKE) distclean
@@ -57,7 +54,7 @@ perl.debug: config.over
 	mv libperl.a libperl-debug
 	mv perl perl.debug
 
-libperl.so.$(fullversion): config.over
+libperl.so.$(fullversion):
 	$(checkdir)
 	-$(MAKE) distclean
 	$(SHELL) debian/config.debian --shared
@@ -135,11 +132,14 @@ endif
 	# split packages
 	for p in $(packages); \
 	do \
-	    test -f debian/$$p.files || exit 1; \
 	    mkdir -p $(build)/$$p; \
 	    (cd $(tmp); \
-		find `cat ../$$p.files ../$$p.files.$(installtype) 2>/dev/null` \
-		    ! -type d) >debian/list.tmp; \
+	    	for sfx in '' .$(installtype); \
+		do \
+		    list=../$$p.files$$sfx; \
+		    test -s $$list || continue; \
+		    find `cat $$list` ! -type d; \
+		done) >debian/list.tmp; \
 	    (cd $(tmp); cpio -vdumpl ../build/$$p) <debian/list.tmp 2>&1 | \
 		grep -v ' linked to '; \
 	    (cd $(tmp); ../../perl.static -nle unlink) <debian/list.tmp; \
@@ -329,7 +329,7 @@ binary-arch: build-stamp install-stamp
 	$(checkdir)
 	$(checkroot)
 ifeq ($(installtype),static)
-	echo 'libperl $(version) libperl$(version) (= $${Source-Version})' \
+	echo 'libperl $(version) libperl$(version) (= $${source:Version})' \
 	    >debian/shlibs.local
 
 	echo 'libperl $(version) libperl$(version) (>= $(fullversion))' \
@@ -340,25 +340,28 @@ else
 	    >debian/perl-base.shlibs
 endif
 
+	# for dpkg-shlibdeps
+	LD_LIBRARY_PATH=`echo $(srcdir)/$(build)/libperl$(version)/usr/lib \
+		 $(srcdir)/$(build)/perl-base/usr/lib $$LD_LIBRARY_PATH | \
+		 sed 's/ /:/g'`; export LD_LIBRARY_PATH; \
 	for p in `./perl.static -l -00ne 'print $$1 if /^Architecture:\s+any/m \
 	    and /^Package:\s+(.*)/m' debian/control`; \
 	do \
 	    rm -rf $(build)/$$p/DEBIAN debian/substvars; \
 	    mkdir $(build)/$$p/DEBIAN; \
-	    for c in preinst postinst prerm postrm; \
+	    for c in preinst postinst prerm postrm shlibs; \
 	    do \
 		test -f debian/$$p.$$c || continue; \
 		cp debian/$$p.$$c $(build)/$$p/DEBIAN/$$c; \
 		chmod 755 $(build)/$$p/DEBIAN/$$c; \
 	    done; \
-	    test -f debian/$$p.shlibs && cp debian/$$p.shlibs \
-		$(build)/$$p/DEBIAN/shlibs; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
-	    LD_LIBRARY_PATH=$$LD_LIBRARY_PATH$${LD_LIBRARY_PATH:+:}/usr/lib:$(srcdir)/$(build)/libperl$(version)/usr/lib; \
-		find $(build)/$$p/usr -type f \
-		    \( -perm +111 -o -name \*.so\* \) -print | \
-		    xargs -r dpkg-shlibdeps; \
+	    find $(build)/$$p/usr -type f \
+		\( -perm +111 -o -name \*.so\* \) -print | \
+		fgrep -v /usr/lib/debug/ | \
+		xargs -r dpkg-shlibdeps 2>&1 | \
+		fgrep -v 'File format not recognized'; # scripts \
 	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_perlapi) $(subst_upstream); \
 	    dpkg --build $(build)/$$p ..; \
 	done
