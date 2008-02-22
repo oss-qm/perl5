@@ -1,6 +1,17 @@
+perl (5.10.0-4) experimental; urgency=low
+
+  * New version fixes RT segfault in Text::Tabs (closes: #400733).
+  * New version fixes segfaulting oneliner (closes: #336920).
+  * Apply upstream change 33127: File::Find bydepth doc (closes: #460922).
+  * Convert upstream Changes file to UTF-8.
+  * Bump libarchive-tar-perl conflict version (closes: #466874).
+  * Fix spelling of libmodule-pluggable-perl in control file  (closes: #467007).
+
+ -- Brendan O'Dea <bod@debian.org>  Fri, 22 Feb 2008 23:47:52 +1100
+
 perl (5.10.0-3) experimental; urgency=low
 
-  * New version fixes retains pos after localizing target (closes: #49669).
+  * New version retains pos after localizing target (closes: #49669).
   * Add conflicts/replaces/provides for libperl-version (closes: #460915).
   * Correct typo in CGI.pm documentaion (closes: #459841).
   * Modify MakeMaker install target dependencies to facilitate parallel makes.
