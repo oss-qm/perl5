@@ -11,9 +11,9 @@ Essential: yes
 Priority: required
 Architecture: any
 Pre-Depends: ${shlibs:Depends}
-Conflicts: autoconf2.13 (<< 2.13-45), libscalar-list-utils-perl (<< 1:1.18-1)
-Replaces: perl (<< 5.8.8-5), perl-modules (<< 5.8.8-8), libperl5.8 (<< 5.8.0-20), libscalar-list-utils-perl, libclass-multimethods-perl (<< 1.70-4)
-Provides: perl5-base, ${perlapi:Provides}, libscalar-list-utils-perl
+Conflicts: autoconf2.13 (<< 2.13-45), libscalar-list-utils-perl (<< 1:1.18-1), libxsloader-perl (<< 0.08-1)
+Replaces: perl (<< 5.8.8-5), perl-modules (<< 5.8.8-8), libperl5.8 (<< 5.8.0-20), libscalar-list-utils-perl, libclass-multimethods-perl (<< 1.70-4), libxsloader-perl 
+Provides: perl5-base, ${perlapi:Provides}, libscalar-list-utils-perl, libxsloader-perl
 Suggests: perl
 Description: The Pathologically Eclectic Rubbish Lister
  A scripting language with delusions of full language-hood, Perl is used
@@ -49,7 +49,7 @@ Package: perl-modules
 Priority: standard
 Architecture: all
 Depends: perl (>= ${Upstream-Version}-1)
-Conflicts: libpod-parser-perl (<< 1.32-1), libansicolor-perl (<< 1.10-1), libfile-temp-perl (<< 0.16-1), libnet-perl (<= 1:1.19-3), libattribute-handlers-perl (<< 0.78.02-1), libcgi-pm-perl (<< 3.15-1), libi18n-langtags-perl (<< 0.35-1), liblocale-maketext-perl (<< 1.08-1), libmath-bigint-perl (<< 1.77-1), libnet-ping-perl (<< 2.31-1), libtest-harness-perl (<< 2.56-1), libtest-simple-perl (<< 0.62-1), liblocale-codes-perl (<< 2.06.1-1), libmodule-corelist-perl (<<_2.12-1), libio-zlib-perl (<< 1.07-1), libarchive-tar-perl (<< 1.38-1), libextutils-cbuilder-perl (<< 0.21-1), libmodule-build-perl (<< 0.2808.1-1), libmodule-load-perl (<< 0.12-1), liblocale-maketext-simple-perl (<< 0.18-1), libparams-check-perl (<< 0.26-1), libmodule-pluggable-perl (<< 3.6-1), libmodule-load-conditional-perl (<< 0.22-1), libcpan-plus-perl (<< 0.83.09-1), libversion-perl (<< 1:0.7400-2)
+Conflicts: libpod-parser-perl (<< 1.32-1), libansicolor-perl (<< 1.10-1), libfile-temp-perl (<< 0.16-1), libnet-perl (<= 1:1.19-3), libattribute-handlers-perl (<< 0.78.02-1), libcgi-pm-perl (<< 3.15-1), libi18n-langtags-perl (<< 0.35-1), liblocale-maketext-perl (<< 1.08-1), libmath-bigint-perl (<< 1.77-1), libnet-ping-perl (<< 2.31-1), libtest-harness-perl (<< 2.56-1), libtest-simple-perl (<< 0.62-1), liblocale-codes-perl (<< 2.06.1-1), libmodule-corelist-perl (<< 2.12-1), libio-zlib-perl (<< 1.07-1), libarchive-tar-perl (<= 1.38-1), libextutils-cbuilder-perl (<< 0.21-1), libmodule-build-perl (<< 0.2808.1-1), libmodule-load-perl (<< 0.12-1), liblocale-maketext-simple-perl (<< 0.18-1), libparams-check-perl (<< 0.26-1), libmodule-pluggable-perl (<< 3.6-1), libmodule-load-conditional-perl (<< 0.22-1), libcpan-plus-perl (<< 0.83.09-1), libversion-perl (<< 1:0.7400-2)
 Replaces: libpod-parser-perl, libansicolor-perl, libfile-temp-perl, libnet-perl, libattribute-handlers-perl, libcgi-pm-perl, libi18n-langtags-perl, liblocale-maketext-perl, libmath-bigint-perl, libnet-ping-perl, libtest-harness-perl, libtest-simple-perl, liblocale-codes-perl, libmodule-corelist-perl, libio-zlib-perl, libarchive-tar-perl, libextutils-cbuilder-perl, libmodule-build-perl, libmodule-load-perl, liblocale-maketext-simple-perl, libparams-check-perl, libmodule-pluggable-perl, libmodule-load-conditional-perl, libcpan-plus-perl, libversion-perl
 Provides: libpod-parser-perl, libansicolor-perl, libfile-temp-perl, libnet-perl, libattribute-handlers-perl, libcgi-pm-perl, libi18n-langtags-perl, liblocale-maketext-perl, libmath-bigint-perl, libnet-ping-perl, libtest-harness-perl, libtest-simple-perl, liblocale-codes-perl, libmodule-corelist-perl, libio-zlib-perl, libarchive-tar-perl, libextutils-cbuilder-perl, libmodule-build-perl, libmodule-load-perl, liblocale-maketext-simple-perl, libparams-check-perl, libmodule-pluggable-perl, libmodule-load-conditional-perl, libcpan-plus-perl, libversion-perl
 Description: Core Perl modules
