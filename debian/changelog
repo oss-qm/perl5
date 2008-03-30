@@ -1,3 +1,18 @@
+perl (5.10.0-7) experimental; urgency=low
+
+  * New comaintainer.
+  * Make perl replace libmodule-corelist-perl (<< 2.14-2) because of
+    /usr/bin/corelist. (Closes: #470385)
+  * Update the perl-modules libmodule-corelist-perl conflict version to 
+    (<< 2.14-2) accordingly.  (Closes: #471515)
+  * Apply upstream change 33554 to make IO::Socket::INET able to 
+    resolve "udp" without /etc/protocols.
+  * Make perl recommend netbase. Along with the new fallback defaults for the
+    most common protocols, this should be a good compromise for the
+    "IO::Socket::INET needs netbase" problem. (Closes: #185244)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 30 Mar 2008 21:09:46 +0300
+
 perl (5.10.0-6) experimental; urgency=low
 
   * More fiddling with libarchive-tar-perl conflict version on perl-modules
