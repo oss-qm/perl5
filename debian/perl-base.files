@@ -49,6 +49,7 @@ usr/share/perl/*/Symbol.pm
 usr/share/perl/*/Text/ParseWords.pm
 usr/share/perl/*/Text/Tabs.pm
 usr/share/perl/*/Text/Wrap.pm
+usr/share/perl/*/Tie/Hash.pm
 usr/share/perl/*/attributes.pm
 usr/share/perl/*/base.pm
 usr/share/perl/*/bytes.pm

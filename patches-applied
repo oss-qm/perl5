@@ -7,6 +7,7 @@ debian/patches/05_fix_find_bydepth_doc
 debian/patches/06_fix_utf8_changelog
 debian/patches/07_fix_nullok
 debian/patches/08_fix_udp_typo
+debian/patches/09_fix_memory_debugging
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

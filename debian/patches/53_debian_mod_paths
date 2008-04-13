@@ -14,7 +14,7 @@ version than is included in core.
 diff -Naur --exclude=debian perl-5.10.0.orig/perl.c perl-5.10.0/perl.c
 --- perl-5.10.0.orig/perl.c	2007-11-18 02:26:24.000000000 +1100
 +++ perl-5.10.0/perl.c	2007-11-25 23:17:35.000000000 +1100
-@@ -4753,9 +4753,14 @@
+@@ -4760,9 +4760,14 @@
      incpush(APPLLIB_EXP, TRUE, TRUE, TRUE, TRUE);
  #endif
  
@@ -29,7 +29,7 @@ diff -Naur --exclude=debian perl-5.10.0.orig/perl.c perl-5.10.0/perl.c
  #ifdef MACOS_TRADITIONAL
      {
  	Stat_t tmpstatbuf;
-@@ -4780,11 +4785,13 @@
+@@ -4787,11 +4792,13 @@
  #ifndef PRIVLIB_EXP
  #  define PRIVLIB_EXP "/usr/local/lib/perl5:/usr/local/lib/perl"
  #endif
@@ -43,7 +43,7 @@ diff -Naur --exclude=debian perl-5.10.0.orig/perl.c perl-5.10.0/perl.c
  
  #ifdef SITEARCH_EXP
      /* sitearch is always relative to sitelib on Windows for
-@@ -4828,6 +4835,61 @@
+@@ -4835,6 +4842,61 @@
      incpush(PERL_VENDORLIB_STEM, FALSE, TRUE, TRUE, TRUE);
  #endif
  
