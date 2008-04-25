@@ -198,6 +198,8 @@ encoded character.
 					 UTF8_ALLOW_SURROGATE|UTF8_ALLOW_FFFF)
 #define UTF8_ALLOW_ANY			0x00FF
 #define UTF8_CHECK_ONLY			0x0200
+#define UTF8_ALLOW_DEFAULT             (ckWARN(WARN_UTF8) ? 0 : \
+                                        UTF8_ALLOW_ANYUV)
 
 #define UNICODE_SURROGATE_FIRST		0xD800
 #define UNICODE_SURROGATE_LAST		0xDFFF

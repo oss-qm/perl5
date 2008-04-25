@@ -1,7 +1,14 @@
+perl (5.8.8-7etch3) stable-security; urgency=high
+
+  * Actually apply the patch to fix CVE-2008-1927, a heap overflow in the
+    UTF-8 regexp compiler.  Closes: #454792.
+
+ -- Florian Weimer <fw@deneb.enyo.de>  Fri, 25 Apr 2008 21:12:00 +0200
+
 perl (5.8.8-7etch2) stable-security; urgency=high
 
   * Apply patch to fix a heap overflow in the UTF-8 regexp compiler.
-    Closes: 454792.
+    Closes: 454792. [NOTE: This change was not effective.]
 
  -- Florian Weimer <fw@deneb.enyo.de>  Tue, 22 Apr 2008 21:59:42 +0200
 

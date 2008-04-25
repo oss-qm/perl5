@@ -1168,6 +1168,7 @@ Es	|void	|reguni		|NN const struct RExC_state_t *state|UV uv|NN char *s|NN STRLE
 Es	|regnode*|regclass	|NN struct RExC_state_t *state
 ERs	|I32	|regcurly	|NN const char *
 Es	|regnode*|reg_node	|NN struct RExC_state_t *state|U8 op
+Es	|UV	|reg_recode	|const char value|NULLOK SV **encp
 Es	|regnode*|regpiece	|NN struct RExC_state_t *state|NN I32 *flagp
 Es	|void	|reginsert	|NN struct RExC_state_t *state|U8 op|NN regnode *opnd
 Es	|void	|regoptail	|NN struct RExC_state_t *state|NN regnode *p|NN regnode *val
