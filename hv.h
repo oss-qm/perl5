@@ -1,7 +1,7 @@
 /*    hv.h
  *
  *    Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999,
- *    2000, 2001, 2002, by Larry Wall and others
+ *    2000, 2001, 2002, 2005, by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -64,7 +64,7 @@ struct xpvhv {
  * If USE_HASH_SEED_EXPLICIT is defined, hash randomisation is done
  * only if the environment variable PERL_HASH_SEED is set.
  * For maximal control, one can define PERL_HASH_SEED.
- * (see also erl.c:perl_parse()).
+ * (see also perl.c:perl_parse()).
  */
 #ifndef PERL_HASH_SEED
 #   if defined(USE_HASH_SEED) || defined(USE_HASH_SEED_EXPLICIT)
