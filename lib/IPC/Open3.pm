@@ -9,7 +9,7 @@ require Exporter;
 use Carp;
 use Symbol qw(gensym qualify);
 
-$VERSION	= 1.0103;
+$VERSION	= 1.0106;
 @ISA		= qw(Exporter);
 @EXPORT		= qw(open3);
 
@@ -52,6 +52,11 @@ failure: it just raises an exception matching C</^open3:/>.  However,
 C<exec> failures in the child are not detected.  You'll have to 
 trap SIGPIPE yourself.
 
+Note if you specify C<-> as the command, in an analogous fashion to
+C<open(FOO, "-|")> the child process will just be the forked Perl
+process rather than an external command.  This feature isn't yet
+supported on Win32 platforms.
+
 open3() does not wait for and reap the child process after it exits.  
 Except for short programs where it's acceptable to let the operating system
 take care of this, you need to do this yourself.  This is normally as 
@@ -88,6 +93,7 @@ The order of arguments differs from that of open2().
 # ported to Win32 by Ron Schmidt, Merrill Lynch almost ended my career
 # fixed for autovivving FHs, tchrist again
 # allow fd numbers to be used, by Frank Tobin
+# allow '-' as command (c.f. open "-|"), by Adam Spiers <perl@adamspiers.org>
 #
 # $Id: open3.pl,v 1.1 1993/11/23 06:26:15 marc Exp $
 #
@@ -191,6 +197,9 @@ sub _open3 {
 
     $kidpid = $do_spawn ? -1 : xfork;
     if ($kidpid == 0) {		# Kid
+	# A tie in the parent should not be allowed to cause problems.
+	untie *STDIN;
+	untie *STDOUT;
 	# If she wants to dup the kid's stderr onto her stdout I need to
 	# save a copy of her stdout before I put something else there.
 	if ($dad_rdr ne $dad_err && $dup_err
@@ -225,6 +234,11 @@ sub _open3 {
 	    }
 	} else {
 	    xopen \*STDERR, ">&STDOUT" if fileno(STDERR) != fileno(STDOUT);
+	}
+	if ($cmd[0] eq '-') {
+	    croak "Arguments don't make sense when the command is '-'"
+	      if @cmd > 1;
+	    return 0;
 	}
 	local($")=(" ");
 	exec @cmd # XXX: wrong process to croak from
