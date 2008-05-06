@@ -1,3 +1,10 @@
+perl (5.10.0-9.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Move Hash::Util into perl-base. (closes: #479202)
+
+ -- Bastian Blank <waldi@debian.org>  Tue, 06 May 2008 11:26:01 +0000
+
 perl (5.10.0-9) unstable; urgency=low
 
   * Upload to unstable.
