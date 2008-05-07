@@ -724,8 +724,13 @@ sub queue_includes_from
                 $line .= <HEADER>;
             }
 
-            if ($line =~ /^#\s*include\s+<(.*?)>/) {
-                push(@ARGV, $1) unless $Is_converted{$1};
+            if ($line =~ /^#\s*include\s+([<"])(.*?)[>"]/) {
+                my ($delimiter, $new_file) = ($1, $2);
+                # copy the prefix in the quote syntax (#include "x.h") case
+                if ($delimiter eq q{"} && $file =~ m|^(.*)/|) {
+                    $new_file = "$1/$new_file";
+                }
+                push(@ARGV, $new_file) unless $Is_converted{$new_file};
             }
         }
     close HEADER;
