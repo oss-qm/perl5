@@ -3,6 +3,8 @@ perl (5.10.0-10) UNRELEASED; urgency=low
   * Move Hash::Util to perl-base, it's needed by fields.pm. (Closes: #479202)
   * Make h2ph allow the quote mark delimiter also for those #include directives
     chased with "h2ph -a". (Closes: #479762)
+  * Adjust manual page sections in Module::Build::Base for the Debian Perl
+    policy. (Closes: #479460)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 07 May 2008 09:04:50 +0300
 
