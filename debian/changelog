@@ -1,5 +1,7 @@
 perl (5.10.0-10) UNRELEASED; urgency=low
 
+  TODO: the fix for #479762 isn't quite right, see the bug log.
+
   * Integrate NMU, thanks Bastian.
   * Make h2ph allow the quote mark delimiter also for those #include directives
     chased with "h2ph -a". (Closes: #479762)
