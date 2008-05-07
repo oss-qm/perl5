@@ -1,6 +1,6 @@
 perl (5.10.0-10) UNRELEASED; urgency=low
 
-  * 
+  * Move Hash::Util to perl-base, it's needed by fields.pm. (Closes: #479202)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 07 May 2008 09:04:50 +0300
 
