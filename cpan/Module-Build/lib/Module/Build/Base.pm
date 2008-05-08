@@ -3253,7 +3253,7 @@ sub manify_bin_pods {
   foreach my $file (keys %$files) {
     # Pod::Simple based parsers only support one document per instance.
     # This is expected to change in a future version (Pod::Simple > 3.03).
-    my $parser  = Pod::Man->new( section => 1 ); # binaries go in section 1
+    my $parser  = Pod::Man->new( section => '1p' ); # binaries go in section 1p
     my $manpage = $self->man1page_name( $file ) . '.' .
                   $self->config( 'man1ext' );
     my $outfile = File::Spec->catfile($mandir, $manpage);
@@ -3278,7 +3278,7 @@ sub manify_lib_pods {
   while (my ($file, $relfile) = each %$files) {
     # Pod::Simple based parsers only support one document per instance.
     # This is expected to change in a future version (Pod::Simple > 3.03).
-    my $parser  = Pod::Man->new( section => 3 ); # libraries go in section 3
+    my $parser  = Pod::Man->new( section => '3pm' ); # libraries go in section 3pm
     my $manpage = $self->man3page_name( $relfile ) . '.' .
                   $self->config( 'man3ext' );
     my $outfile = File::Spec->catfile( $mandir, $manpage);
