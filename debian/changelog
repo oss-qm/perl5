@@ -1,4 +1,4 @@
-perl (5.10.0-10) UNRELEASED; urgency=low
+perl (5.10.0-10) unstable; urgency=low
 
   * Integrate NMU, thanks Bastian.
   * Make h2ph allow the quote mark delimiter also for those #include directives
@@ -8,7 +8,7 @@ perl (5.10.0-10) UNRELEASED; urgency=low
   * Disable the "v-string in use/require is non-portable" warning again.
     (Closes: #479863)
 
- -- Niko Tyni <ntyni@debian.org>  Wed, 07 May 2008 09:04:50 +0300
+ -- Niko Tyni <ntyni@debian.org>  Thu, 08 May 2008 14:32:30 +0300
 
 perl (5.10.0-9.1) unstable; urgency=low
 
