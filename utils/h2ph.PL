@@ -85,7 +85,7 @@ sub reindent($) {
 }
 
 my ($t, $tab, %curargs, $new, $eval_index, $dir, $name, $args, $outfile);
-my ($incl, $incl_type, $next);
+my ($incl, $incl_type, $incl_quote, $next);
 while (defined (my $file = next_file())) {
     if (-l $file and -d $file) {
         link_if_possible($file) if ($opt_l);
@@ -186,9 +186,10 @@ while (defined (my $file = next_file())) {
                       print OUT $t,"unless(defined(\&$name)) {\n    sub $name () {\t",$new,";}\n}\n";
 		    }
 		}
-	    } elsif (/^(include|import|include_next)\s*[<\"](.*)[>\"]/) {
+	    } elsif (/^(include|import|include_next)\s*([<\"])(.*)[>\"]/) {
                 $incl_type = $1;
-                $incl = $2;
+                $incl_quote = $2;
+                $incl = $3;
                 if (($incl_type eq 'include_next') ||
                     ($opt_e && exists($bad_file{$incl}))) {
                     $incl =~ s/\.h$/.ph/;
@@ -221,6 +222,10 @@ while (defined (my $file = next_file())) {
 			   "warn(\$\@) if \$\@;\n");
                 } else {
                     $incl =~ s/\.h$/.ph/;
+                    # copy the prefix in the quote syntax (#include "x.h") case
+                    if ($incl !~ m|/| && $incl_quote eq q{"} && $file =~ m|^(.*)/|) {
+                        $incl = "$1/$incl";
+                    }
 		    print OUT $t,"require '$incl';\n";
                 }
 	    } elsif (/^ifdef\s+(\w+)/) {
