@@ -1,6 +1,8 @@
 perl (5.10.0-11) UNRELEASED; urgency=low
 
   * Upgrade libfile-temp-perl conflict to (<= 0.18). (Closes: #480719)
+  * Rename debian/patches/11_disable_vstring_warning to conform with the
+    patch naming conventions of the package.
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
