@@ -1,5 +1,6 @@
 Correct typo in CGI.pm documentation.
 
+Part of upstream change 33129, included in CGI.pm-3.35.
 diff -Naur --exclude=debian perl-5.10.0.orig/lib/CGI.pm perl-5.10.0/lib/CGI.pm
 --- perl-5.10.0.orig/lib/CGI.pm	2007-12-18 21:47:07.000000000 +1100
 +++ perl-5.10.0/lib/CGI.pm	2008-01-27 13:15:41.000000000 +1100

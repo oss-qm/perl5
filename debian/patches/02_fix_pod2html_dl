@@ -7,6 +7,7 @@ Fix issue with (nested) definition lists in lib/Pod/Html.pm
 
 http://rt.perl.org/rt3/Public/Bug/Display.html?id=45211
 
+Upstream change 32727.
 diff -Naur --exclude=debian perl-5.10.0.orig/lib/Pod/Html.pm perl-5.10.0/lib/Pod/Html.pm
 --- perl-5.10.0.orig/lib/Pod/Html.pm	2007-11-18 02:26:23.000000000 +1100
 +++ perl-5.10.0/lib/Pod/Html.pm	2007-11-25 22:17:02.000000000 +1100

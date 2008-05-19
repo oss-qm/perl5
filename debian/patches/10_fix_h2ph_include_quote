@@ -4,6 +4,7 @@ Allow the quote mark delimiter also for those #include directives chased with
 Also add the directory prefix of the current file when the quote syntax is
 used; 'require' will only look in @INC, not the current directory.
 
+Upstream change 33835.
 diff --git a/utils/h2ph.PL b/utils/h2ph.PL
 index 0bfea18..a3ff285 100644
 --- a/utils/h2ph.PL
