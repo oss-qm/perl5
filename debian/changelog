@@ -19,6 +19,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     ExtUtils::CBuilder. (Closes: #480385, #480375)
   * Fix a segmentation fault occurring in the mod_perl2 test suite.
     (Closes: #475498)
+  * Fix the PerlIO_teardown prototype to suppress a compiler warning.
+    (Closes: #479540)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
