@@ -1,5 +1,10 @@
 perl (5.10.0-11) UNRELEASED; urgency=low
 
+  TODO: this builds, but verify that the new fixes actually work. 
+  TODO: is all this acceptable wrt. the freeze?
+  TODO: some fixes from the CPAN side (particularly pod2man)
+        aren't even in blead yet, is this too soon?
+
   * Upgrade libfile-temp-perl conflict to (<= 0.18). (Closes: #480719)
   * Rename debian/patches/11_disable_vstring_warning to conform with the
     patch naming conventions of the package.
