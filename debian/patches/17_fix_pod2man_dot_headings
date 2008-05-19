@@ -1,0 +1,18 @@
+Make pod2man handle headings starting with groff special characters. (Closes: #448204)
+
+Dual-lived module, patch acked by upstream but not currently released.
+
+[rt.cpan.org #35876]
+diff --git a/lib/Pod/Man.pm b/lib/Pod/Man.pm
+index 451ecc8..b4aeb7d 100644
+--- a/lib/Pod/Man.pm
++++ b/lib/Pod/Man.pm
+@@ -1312,7 +1312,7 @@ sub preamble_template {
+ .if t .Sp
+ .ne 5
+ .PP
+-\fB\\$1\fR
++\&\fB\\$1\fR
+ .PP
+ ..
+ .de Sp \" Vertical space (when we can't use .PP)

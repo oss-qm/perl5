@@ -21,6 +21,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     (Closes: #475498)
   * Fix the PerlIO_teardown prototype to suppress a compiler warning.
     (Closes: #479540)
+  * Make pod2man handle headings starting with groff special characters.
+    (Closes: #448204)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
