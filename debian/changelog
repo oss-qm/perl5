@@ -31,6 +31,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     PERL_DL_NONLAZY in the 'perldoc -f eval' documentation . (See
     #479711).
   * Fix a typo in perlpodspec.pod. (Closes: #447830)
+  * Fix 'constant subroutine SEEK_* redefined' warnings when using the
+    Fcntl and POSIX modules together. (Closes: #479957)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
