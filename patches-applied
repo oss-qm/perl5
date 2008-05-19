@@ -16,6 +16,7 @@ debian/patches/14_fix_kfreebsd_and_hurd_support
 debian/patches/15_fix_local_symtab
 debian/patches/16_fix_perlio_teardown_prototype
 debian/patches/17_fix_pod2man_dot_headings
+debian/patches/18_fix_pod2man_escaped_dashes
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

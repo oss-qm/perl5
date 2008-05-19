@@ -23,6 +23,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     (Closes: #479540)
   * Make pod2man handle headings starting with groff special characters.
     (Closes: #448204)
+  * Fix pod2man overescaping dashes with non-ascii characters. (Closes:
+    #480565)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
