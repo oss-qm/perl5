@@ -11,6 +11,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
   * Add upstream integration status information into debian/patches
     where applicable.
   * Add Vcs-Git and Vcs-Browser information in debian/control.
+  * Fix Math::BigFloat::sqrt() breaking with too many digits. (Closes:
+    #417528)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
