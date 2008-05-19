@@ -27,6 +27,9 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     #480565)
   * Integrate some documentation fixes from upstream. (Closes: #357663,
     #443733, #412542)
+  * Mention the relation between 'eval "require Foo"' and
+    PERL_DL_NONLAZY in the 'perldoc -f eval' documentation . (See
+    #479711).
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
