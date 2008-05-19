@@ -30,6 +30,7 @@ perl (5.10.0-11) UNRELEASED; urgency=low
   * Mention the relation between 'eval "require Foo"' and
     PERL_DL_NONLAZY in the 'perldoc -f eval' documentation . (See
     #479711).
+  * Fix a typo in perlpodspec.pod. (Closes: #447830)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 

@@ -19,6 +19,7 @@ debian/patches/17_fix_pod2man_dot_headings
 debian/patches/18_fix_pod2man_escaped_dashes
 debian/patches/19_fix_assorted_docs
 debian/patches/20_fix_eval_doc_nonlazy
+debian/patches/21_fix_perlpodspec_typo
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
