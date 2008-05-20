@@ -33,6 +33,7 @@ perl (5.10.0-11) UNRELEASED; urgency=low
   * Fix 'constant subroutine SEEK_* redefined' warnings when using the
     Fcntl and POSIX modules together. (Closes: #479957)
   * Add conflicts/replaces/provides for libpod-simple-perl. (Closes: #481956)
+  * Fix crashes on @ISA fiddling. (Closes: #480480)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
