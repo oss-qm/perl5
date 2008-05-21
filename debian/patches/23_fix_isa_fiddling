@@ -1,14 +1,19 @@
 Fix crashes on @ISA fiddling. (Closes: #480480)
 
-Applicable parts of blead change 33684.
+Applicable parts of blead changes 33684 and 33898.
 
 [perl #52074]
+[perl #54566]
 diff --git a/mg.c b/mg.c
-index c4d7aeb..59db46d 100644
+index c4d7aeb..91a36f2 100644
 --- a/mg.c
 +++ b/mg.c
-@@ -1546,7 +1546,8 @@ Perl_magic_setisa(pTHX_ SV *sv, MAGIC *mg)
-             : (GV*)SvMAGIC(mg->mg_obj)->mg_obj
+@@ -1543,10 +1543,11 @@ Perl_magic_setisa(pTHX_ SV *sv, MAGIC *mg)
+     stash = GvSTASH(
+         SvTYPE(mg->mg_obj) == SVt_PVGV
+             ? (GV*)mg->mg_obj
+-            : (GV*)SvMAGIC(mg->mg_obj)->mg_obj
++            : (GV*)mg_find(mg->mg_obj, PERL_MAGIC_isa)->mg_obj
      );
  
 -    mro_isa_changed_in(stash);
