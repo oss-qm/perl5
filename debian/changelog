@@ -35,6 +35,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
   * Add conflicts/replaces/provides for libpod-simple-perl. (Closes: #481956)
   * Fix crashes on @ISA fiddling. (Closes: #480480)
   * Fix building with DEB_BUILD_OPTIONS=noopt. (Closes: #482110)
+  * Remove the __LONG_MAX__ kludge introduced in 5.8.1-1, it shouldn't be
+    needed anymore and emits warnings. (Closes: #480428)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
