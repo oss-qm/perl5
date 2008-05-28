@@ -37,6 +37,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
   * Fix building with DEB_BUILD_OPTIONS=noopt. (Closes: #482110)
   * Remove the __LONG_MAX__ kludge introduced in 5.8.1-1, it shouldn't be
     needed anymore and emits warnings. (Closes: #480428)
+  * Fix broken file uploads with CGI.pm caused by an accidental
+    stringifying of a file handle. (Closes: #483144)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
