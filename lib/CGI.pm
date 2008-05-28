@@ -449,8 +449,8 @@ sub param {
     my $utf8    = $charset eq 'utf-8';
     if ($utf8) {
       eval "require Encode; 1;" if $utf8 && !Encode->can('decode'); # bring in these functions
-      return wantarray ? map {Encode::decode(utf8=>$_) } @{$self->{$name}} 
-                       : Encode::decode(utf8=>$self->{$name}->[0]);
+      my @result = map {ref($_) ? $_ : Encode::decode(utf8=>$_) } @{$self->{$name}};
+      return wantarray ? @result: $result[0];
     } else {
       return wantarray ? @{$self->{$name}} : $self->{$name}->[0];
     }
