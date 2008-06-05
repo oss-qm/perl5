@@ -2,6 +2,9 @@ Update to Pod::Man 2.17 from podlators-2.1.0 to get the new "pod2man --utf8" fun
 
 Inclusion in Debian 5.10.0 recommended by the upstream author,
 Russ Allbery, in #480997.
+
+Together with 17_fix_pod2man_dot_headings and 18_fix_pod2man_escaped_dashes
+these make the meat of blead change 33987 that integrates podlators-2.1.0.
 diff --git a/lib/Pod/Man.pm b/lib/Pod/Man.pm
 index 46d7875..00b1f1b 100644
 --- a/lib/Pod/Man.pm
