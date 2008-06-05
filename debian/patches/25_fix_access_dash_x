@@ -1,0 +1,16 @@
+Make the '-x' test work with 'use filetest q/access/'. (Closes: #483734)
+
+[perl #49003], blead change 32874.
+diff --git a/pp_sys.c b/pp_sys.c
+index 6aa8645..6a36493 100644
+--- a/pp_sys.c
++++ b/pp_sys.c
+@@ -3002,7 +3002,7 @@ PP(pp_ftrread)
+ 
+     case OP_FTEEXEC:
+ #ifdef PERL_EFF_ACCESS
+-	access_mode = W_OK;
++	access_mode = X_OK;
+ #else
+ 	use_access = 0;
+ #endif
