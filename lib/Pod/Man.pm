@@ -1,7 +1,6 @@
 # Pod::Man -- Convert POD data to formatted *roff input.
-# $Id: Man.pm,v 2.16 2007-11-29 01:35:53 eagle Exp $
 #
-# Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
+# Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 #     Russ Allbery <rra@stanford.edu>
 # Substantial contributions by Sean Burke <sburke@cpan.org>
 #
@@ -40,7 +39,7 @@ use POSIX qw(strftime);
 # Don't use the CVS revision as the version, since this module is also in Perl
 # core and too many things could munge CVS magic revision strings.  This
 # number should ideally be the same as the CVS revision in podlators, however.
-$VERSION = '2.16';
+$VERSION = '2.17';
 
 # Set the debugging level.  If someone has inserted a debug function into this
 # class already, use that.  Otherwise, use any Pod::Simple debug function
@@ -359,8 +358,8 @@ sub format_text {
     }
 
     # Normally we do character translation, but we won't even do that in
-    # <Data> blocks.
-    if ($convert && ASCII) {
+    # <Data> blocks or if UTF-8 output is desired.
+    if ($convert && !$$self{utf8} && ASCII) {
         $text =~ s/([^\x00-\x7F])/$ESCAPES{ord ($1)} || "X"/eg;
     }
 
@@ -640,10 +639,10 @@ sub switchquotes {
         # to Roman rather than the actual previous font when used in headings.
         # troff output may still be broken, but at least we can fix nroff by
         # just switching the font changes to the non-fixed versions.
-        $nroff =~ s/\Q$$self{FONTS}{100}\E(.*)\\f[PR]/$1/g;
-        $nroff =~ s/\Q$$self{FONTS}{101}\E(.*)\\f([PR])/\\fI$1\\f$2/g;
-        $nroff =~ s/\Q$$self{FONTS}{110}\E(.*)\\f([PR])/\\fB$1\\f$2/g;
-        $nroff =~ s/\Q$$self{FONTS}{111}\E(.*)\\f([PR])/\\f\(BI$1\\f$2/g;
+        $nroff =~ s/\Q$$self{FONTS}{100}\E(.*?)\\f[PR]/$1/g;
+        $nroff =~ s/\Q$$self{FONTS}{101}\E(.*?)\\f([PR])/\\fI$1\\f$2/g;
+        $nroff =~ s/\Q$$self{FONTS}{110}\E(.*?)\\f([PR])/\\fB$1\\f$2/g;
+        $nroff =~ s/\Q$$self{FONTS}{111}\E(.*?)\\f([PR])/\\f\(BI$1\\f$2/g;
 
         # Now finally output the command.  Bother with .ie only if the nroff
         # and troff output aren't the same.
@@ -1578,6 +1577,22 @@ that are reliably consistent are 1, 2, and 3.
 By default, section 1 will be used unless the file ends in .pm in which case
 section 3 will be selected.
 
+=item utf8
+
+By default, Pod::Man produces the most conservative possible *roff output
+to try to ensure that it will work with as many different *roff
+implementations as possible.  Many *roff implementations cannot handle
+non-ASCII characters, so this means all non-ASCII characters are converted
+either to a *roff escape sequence that tries to create a properly accented
+character (at least for troff output) or to C<X>.
+
+If this option is set, Pod::Man will instead output UTF-8.  If your *roff
+implementation can handle it, this is the best output format to use and
+avoids corruption of documents containing non-ASCII characters.  However,
+be warned that *roff source with literal UTF-8 characters is not supported
+by many implementations and may even result in segfaults and other bad
+behavior.
+
 =back
 
 The standard Pod::Simple method parse_file() takes one argument naming the
@@ -1612,15 +1627,6 @@ invalid.  A quote specification must be one, two, or four characters long.
 =back
 
 =head1 BUGS
-
-Eight-bit input data isn't handled at all well at present.  The correct
-approach would be to map EE<lt>E<gt> escapes to the appropriate UTF-8
-characters and then do a translation pass on the output according to the
-user-specified output character set.  Unfortunately, we can't send eight-bit
-data directly to the output unless the user says this is okay, since some
-vendor *roff implementations can't handle eight-bit data.  If the *roff
-implementation can, however, that's far superior to the current hacked
-characters that only work under troff.
 
 There is currently no way to turn off the guesswork that tries to format
 unmarked text appropriately, and sometimes it isn't wanted (particularly
