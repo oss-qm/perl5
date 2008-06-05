@@ -41,6 +41,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     stringifying of a file handle. (Closes: #483144)
   * Make the '-x' test work with 'use filetest q/access/'. (Closes:
     #483734)
+  * Update to Pod::Man 2.17 from podlators-2.1.0 to get the new "pod2man
+    --utf8" functionality. (Closes: #480997)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
