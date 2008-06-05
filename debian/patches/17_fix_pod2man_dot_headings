@@ -13,7 +13,7 @@ index 451ecc8..b4aeb7d 100644
  .ne 5
  .PP
 -\fB\\$1\fR
-+\&\fB\\$1\fR
++\fB\&\\$1\fR
  .PP
  ..
  .de Sp \" Vertical space (when we can't use .PP)
