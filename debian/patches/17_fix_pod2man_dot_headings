@@ -1,6 +1,7 @@
 Make pod2man handle headings starting with groff special characters. (Closes: #448204)
 
-Dual-lived module, patch acked by upstream but not currently released.
+Dual-lived module, fixed in podlators-2.1.0.
+Integrated in blead as change 33987.
 
 [rt.cpan.org #35876]
 diff --git a/lib/Pod/Man.pm b/lib/Pod/Man.pm
