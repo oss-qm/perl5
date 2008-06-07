@@ -25,6 +25,7 @@ debian/patches/23_fix_isa_fiddling
 debian/patches/24_fix_cgi_uploads
 debian/patches/25_fix_access_dash_x
 debian/patches/26_fix_pod2man_utf8
+debian/patches/27_fix_perlio_refcount
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

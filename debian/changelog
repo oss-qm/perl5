@@ -43,6 +43,8 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     --utf8" functionality. (Closes: #480997)
   * Update the description of the perl-base package. Thanks to Justin B Rye.
     (Closes: #484681, #144193)
+  * Fix a reference counting bug in PerlIO::via that broke the svk
+    package. (Closes: #479698)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
 
