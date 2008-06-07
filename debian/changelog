@@ -1,7 +1,6 @@
-perl (5.10.0-11) UNRELEASED; urgency=low
+perl (5.10.0-11) unstable; urgency=low
 
-  TODO: is all this acceptable wrt. the freeze?
-
+  * Bugfix release targeted for lenny.
   * Upgrade libfile-temp-perl conflict to (<= 0.18). (Closes: #480719)
   * Rename debian/patches/11_disable_vstring_warning to conform with the
     patch naming conventions of the package.
@@ -47,7 +46,7 @@ perl (5.10.0-11) UNRELEASED; urgency=low
     package. (Closes: #479698)
   * Move /usr/share/perl/5.10/unicore/lib into perl-base. (Closes: #480533)
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 18 May 2008 22:41:54 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 07 Jun 2008 15:54:33 +0300
 
 perl (5.10.0-10) unstable; urgency=low
 
