@@ -3,7 +3,7 @@ Fix a reference counting bug in PerlIO::via that broke the svk package. (Closes:
 This is triggered by PerlIO::via::dynamic-0.12, leading to memory
 corruption in svk.
 
-[perl #54934]
+[perl #54934], blead change 34025
 diff --git a/ext/PerlIO/via/via.xs b/ext/PerlIO/via/via.xs
 index 5670887..c53e43c 100644
 --- a/ext/PerlIO/via/via.xs
