@@ -10,6 +10,7 @@ debian/patches/08_fix_udp_typo
 debian/patches/09_fix_memory_debugging
 debian/patches/10_fix_h2ph_include_quote
 debian/patches/11_fix_disable_vstring_warning
+debian/patches/12_fix_file_path_rmtree_chmod
 debian/patches/12_fix_bigint_floats
 debian/patches/13_fix_getopt_long_callback
 debian/patches/14_fix_kfreebsd_and_hurd_support

@@ -1,4 +1,4 @@
-perl (5.10.0-11) unstable; urgency=low
+perl (5.10.0-12) UNRELEASED; urgency=low
 
   * Bugfix release targeted for lenny.
   * Upgrade libfile-temp-perl conflict to (<= 0.18). (Closes: #480719)
@@ -49,6 +49,13 @@ perl (5.10.0-11) unstable; urgency=low
     (Closes: #485416)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 09 Jun 2008 14:48:12 +0300
+
+perl (5.10.0-11) unstable; urgency=high
+
+  * [SECURITY] File::Path::rmtree() no longer makes symlink targets
+    world-writable. Patch by Ben Hutchings. (Closes: #487319)
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 21 Jun 2008 15:18:50 +0300
 
 perl (5.10.0-10) unstable; urgency=low
 
