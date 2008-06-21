@@ -1,4 +1,4 @@
-perl (5.10.0-12) UNRELEASED; urgency=low
+perl (5.10.0-12) unstable; urgency=low
 
   * Bugfix release targeted for lenny.
   * Upgrade libfile-temp-perl conflict to (<= 0.18). (Closes: #480719)
@@ -48,7 +48,7 @@ perl (5.10.0-12) UNRELEASED; urgency=low
   * Add conflicts/replaces/provides for libextutils-parsexs-perl.
     (Closes: #485416)
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 09 Jun 2008 14:48:12 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 21 Jun 2008 23:34:58 +0300
 
 perl (5.10.0-11) unstable; urgency=high
 
