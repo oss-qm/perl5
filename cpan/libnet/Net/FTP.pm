@@ -1011,7 +1011,9 @@ sub _data_cmd {
 
     if ($ok) {
       $ftp->command($cmd, @_);
-      $data = $ftp->_dataconn();
+      eval {
+	$data = $ftp->_dataconn();
+      };
       $ok   = CMD_INFO == $ftp->response();
       if ($ok) {
         $data->reading
