@@ -1,7 +1,6 @@
-perl (5.10.0-12) UNRELEASED; urgency=low
+perl (5.10.0-12) unstable; urgency=low
 
-  TODO: ask the release team which changes can get in
-
+  * Acknowledge NMU, thanks Bastian.
   * Bugfix release targeted for lenny.
   * Upgrade libfile-temp-perl conflict to (<= 0.18). (Closes: #480719)
   * Rename debian/patches/11_disable_vstring_warning to conform with the
@@ -42,7 +41,7 @@ perl (5.10.0-12) UNRELEASED; urgency=low
   * Add conflicts/replaces/provides for libextutils-parsexs-perl.
     (Closes: #485416)
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 03 Aug 2008 22:16:00 +0300
+ -- Niko Tyni <ntyni@debian.org>  Tue, 05 Aug 2008 09:17:10 +0300
 
 perl (5.10.0-11.1) unstable; urgency=low
 
