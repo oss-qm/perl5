@@ -35,8 +35,6 @@ perl (5.10.0-12) unstable; urgency=low
     #483734)
   * Update the description of the perl-base package. Thanks to Justin B Rye.
     (Closes: #484681, #144193)
-  * Fix a reference counting bug in PerlIO::via that broke the svk
-    package. (Closes: #479698)
   * Move /usr/share/perl/5.10/unicore/lib into perl-base. (Closes: #480533)
   * Add conflicts/replaces/provides for libextutils-parsexs-perl.
     (Closes: #485416)
