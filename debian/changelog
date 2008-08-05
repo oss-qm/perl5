@@ -1,6 +1,5 @@
 perl (5.10.0-12) UNRELEASED; urgency=low
 
-  TODO: integrate Bastian's NMU
   TODO: ask the release team which changes can get in
 
   * Bugfix release targeted for lenny.
@@ -44,6 +43,13 @@ perl (5.10.0-12) UNRELEASED; urgency=low
     (Closes: #485416)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 03 Aug 2008 22:16:00 +0300
+
+perl (5.10.0-11.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix lost reference in PerlIO::via::via. (closes: #479698)
+
+ -- Bastian Blank <waldi@debian.org>  Tue, 15 Jul 2008 14:48:44 +0000
 
 perl (5.10.0-11) unstable; urgency=high
 
