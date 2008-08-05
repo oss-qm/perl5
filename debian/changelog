@@ -37,8 +37,6 @@ perl (5.10.0-12) UNRELEASED; urgency=low
   * Fix building with DEB_BUILD_OPTIONS=noopt. (Closes: #482110)
   * Remove the __LONG_MAX__ kludge introduced in 5.8.1-1, it shouldn't be
     needed anymore and emits warnings. (Closes: #480428)
-  * Fix broken file uploads with CGI.pm caused by an accidental
-    stringifying of a file handle. (Closes: #483144)
   * Make the '-x' test work with 'use filetest q/access/'. (Closes:
     #483734)
   * Update to Pod::Man 2.17 from podlators-2.1.0 to get the new "pod2man

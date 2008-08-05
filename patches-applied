@@ -22,7 +22,6 @@ debian/patches/20_fix_eval_doc_nonlazy
 debian/patches/21_fix_perlpodspec_typo
 debian/patches/22_fix_constant_subroutine_warnings
 debian/patches/23_fix_isa_fiddling
-debian/patches/24_fix_cgi_uploads
 debian/patches/25_fix_access_dash_x
 debian/patches/26_fix_pod2man_utf8
 debian/patches/27_fix_perlio_refcount
