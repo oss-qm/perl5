@@ -37,7 +37,7 @@ perl (5.10.0-12) unstable; urgency=low
   * Add conflicts/replaces/provides for libextutils-parsexs-perl.
     (Closes: #485416)
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 05 Aug 2008 10:25:22 +0300
+ -- Niko Tyni <ntyni@debian.org>  Tue, 05 Aug 2008 14:17:05 +0300
 
 perl (5.10.0-11.1) unstable; urgency=low
 
