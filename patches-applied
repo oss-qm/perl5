@@ -15,15 +15,12 @@ debian/patches/13_fix_getopt_long_callback
 debian/patches/14_fix_kfreebsd_and_hurd_support
 debian/patches/15_fix_local_symtab
 debian/patches/16_fix_perlio_teardown_prototype
-debian/patches/17_fix_pod2man_dot_headings
-debian/patches/18_fix_pod2man_escaped_dashes
 debian/patches/19_fix_assorted_docs
 debian/patches/20_fix_eval_doc_nonlazy
 debian/patches/21_fix_perlpodspec_typo
 debian/patches/22_fix_constant_subroutine_warnings
 debian/patches/23_fix_isa_fiddling
 debian/patches/25_fix_access_dash_x
-debian/patches/26_fix_pod2man_utf8
 debian/patches/27_fix_perlio_refcount
 debian/patches/28_fix_bigint_floats
 debian/patches/50_debian_use_gdbm

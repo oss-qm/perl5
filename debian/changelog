@@ -20,10 +20,6 @@ perl (5.10.0-12) UNRELEASED; urgency=low
     (Closes: #475498)
   * Fix the PerlIO_teardown prototype to suppress a compiler warning.
     (Closes: #479540)
-  * Make pod2man handle headings starting with groff special characters.
-    (Closes: #448204)
-  * Fix pod2man overescaping dashes with non-ascii characters. (Closes:
-    #480565)
   * Integrate some documentation fixes from upstream. (Closes: #357663,
     #443733, #412542)
   * Mention the relation between 'eval "require Foo"' and
@@ -39,8 +35,6 @@ perl (5.10.0-12) UNRELEASED; urgency=low
     needed anymore and emits warnings. (Closes: #480428)
   * Make the '-x' test work with 'use filetest q/access/'. (Closes:
     #483734)
-  * Update to Pod::Man 2.17 from podlators-2.1.0 to get the new "pod2man
-    --utf8" functionality. (Closes: #480997)
   * Update the description of the perl-base package. Thanks to Justin B Rye.
     (Closes: #484681, #144193)
   * Fix a reference counting bug in PerlIO::via that broke the svk
