@@ -1,8 +1,8 @@
-perl (5.10.0-13) UNRELEASED; urgency=low
+perl (5.10.0-13) unstable; urgency=low
 
   * Fix the libpod-simple-perl conflict version number. (Closes: #494272)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 08 Aug 2008 10:39:07 +0300
+ -- Niko Tyni <ntyni@debian.org>  Fri, 08 Aug 2008 10:47:39 +0300
 
 perl (5.10.0-12) unstable; urgency=low
 
