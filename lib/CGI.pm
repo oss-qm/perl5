@@ -4032,7 +4032,7 @@ sub new {
     my $filename;
     find_tempdir() unless -w $TMPDIRECTORY;
     for (my $i = 0; $i < $MAXTRIES; $i++) {
-	last if ! -f ($filename = sprintf("${TMPDIRECTORY}${SL}CGItemp%d",$sequence++));
+	last if ! -f ($filename = sprintf("\%s${SL}CGItemp%d",$TMPDIRECTORY,$sequence++));
     }
     # check that it is a more-or-less valid filename
     return unless $filename =~ m!^([a-zA-Z0-9_ \'\":/.\$\\-]+)$!;
