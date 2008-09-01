@@ -5,6 +5,8 @@ perl (5.10.0-14) UNRELEASED; urgency=low
     compatible. (Closes: #488300)
   * Fix tainted usage of $ENV{TMPDIR} as an sprintf format in CGI.pm.
     (Closes: #494679)
+  * Disable ext/threads/shared/t/stress.t on m68k for now. (Closes:
+    #495826)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Aug 2008 09:30:30 +0300
 
