@@ -3,6 +3,8 @@ perl (5.10.0-14) UNRELEASED; urgency=low
   * Make perl-base Pre-Depend on dpkg (>= 1.14.20), whose Essential scripts
     don't break when liblocale-gettext-perl and perl-base aren't binary
     compatible. (Closes: #488300)
+  * Fix tainted usage of $ENV{TMPDIR} as an sprintf format in CGI.pm.
+    (Closes: #494679)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Aug 2008 09:30:30 +0300
 
