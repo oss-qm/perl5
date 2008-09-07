@@ -6,6 +6,9 @@ perl (5.10.0-14) UNRELEASED; urgency=low
   * Fix tainted usage of $ENV{TMPDIR} as an sprintf format in CGI.pm.
     (Closes: #494679)
   * Disable ext/threads/shared/t/stress.t on m68k for now. (Closes: #495826)
+  * Improve Etch->Lenny upgrades by making perl-base conflict with those
+    XS module packages in Etch that lacked the required perlapi-* dependency.
+    (Closes: #494779)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Aug 2008 09:30:30 +0300
 
