@@ -11,6 +11,9 @@ perl (5.10.0-14) UNRELEASED; urgency=low
     (Closes: #494779)
   * Upgrade to Pod::Man 2.18 to get the 'pod2man --utf8' functionality
     in lenny. (Closes: #480997)
+    + also fixes dash overescaping with non-ascii characters. (Closes: #480565)
+    + headings starting with groff special characters are now handled
+      correctly. (Closes: #448204)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Aug 2008 09:30:30 +0300
 
