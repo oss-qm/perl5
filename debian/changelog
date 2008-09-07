@@ -9,6 +9,8 @@ perl (5.10.0-14) UNRELEASED; urgency=low
   * Improve Etch->Lenny upgrades by making perl-base conflict with those
     XS module packages in Etch that lacked the required perlapi-* dependency.
     (Closes: #494779)
+  * Upgrade to Pod::Man 2.18 to get the 'pod2man --utf8' functionality
+    in lenny. (Closes: #480997)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Aug 2008 09:30:30 +0300
 
