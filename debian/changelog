@@ -14,6 +14,8 @@ perl (5.10.0-14) UNRELEASED; urgency=low
     + also fixes dash overescaping with non-ascii characters. (Closes: #480565)
     + headings starting with groff special characters are now handled
       correctly. (Closes: #448204)
+  * Make /usr/bin/perldoc invoke pod2man with the "--utf8" option if it
+    detects a new enough Pod::Man version. (Closes: #492037)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Aug 2008 09:30:30 +0300
 

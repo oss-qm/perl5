@@ -48,3 +48,4 @@ debian/patches/69_debian_m68k_time_hires
 debian/patches/70_debian_hppa_mips_optim
 debian/patches/71_debian_module_build_man_extensions
 debian/patches/72_debian_m68k_thread_stress
+debian/patches/73_debian_perldoc_utf8
