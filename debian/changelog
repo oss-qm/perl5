@@ -1,4 +1,4 @@
-perl (5.10.0-14) UNRELEASED; urgency=low
+perl (5.10.0-14) unstable; urgency=low
 
   * Make perl-base Pre-Depend on dpkg (>= 1.14.20), whose Essential scripts
     don't break when liblocale-gettext-perl and perl-base aren't binary
@@ -17,7 +17,7 @@ perl (5.10.0-14) UNRELEASED; urgency=low
   * Make /usr/bin/perldoc invoke pod2man with the "--utf8" option if it
     detects a new enough Pod::Man version. (Closes: #492037)
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 21 Aug 2008 09:30:30 +0300
+ -- Niko Tyni <ntyni@debian.org>  Mon, 08 Sep 2008 20:48:07 +0300
 
 perl (5.10.0-13) unstable; urgency=low
 
