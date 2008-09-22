@@ -1,6 +1,8 @@
 perl (5.10.0-15) UNRELEASED; urgency=low
 
   * 
+  * Fix Sys::Syslog slowness when logging with non-native mechanisms.
+    (Closes: #498776)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 22 Sep 2008 12:38:34 +0300
 
