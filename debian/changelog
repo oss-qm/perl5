@@ -1,6 +1,5 @@
 perl (5.10.0-15) UNRELEASED; urgency=low
 
-  * 
   * Fix Sys::Syslog slowness when logging with non-native mechanisms.
     (Closes: #498776)
   * Fix memory corruption with in-place sorting. (Closes: #498769)
