@@ -3,6 +3,8 @@ perl (5.10.0-15) UNRELEASED; urgency=low
   * Fix Sys::Syslog slowness when logging with non-native mechanisms.
     (Closes: #498776)
   * Fix memory corruption with in-place sorting. (Closes: #498769)
+  * Pod::Man no longer remaps the code point for non-breaking space.
+    (Closes: #500210)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 22 Sep 2008 12:38:34 +0300
 

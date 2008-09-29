@@ -36,7 +36,7 @@ index 451ecc8..11959a6 100644
      $self->nbsp_for_S (1);
  
      # Tell Pod::Simple to keep whitespace whenever possible.
-@@ -348,23 +346,29 @@ sub format_text {
+@@ -348,23 +346,22 @@ sub format_text {
      my $convert = $$options{convert};
      my $literal = $$options{literal};
  
@@ -65,13 +65,6 @@ index 451ecc8..11959a6 100644
 +    # <Data> blocks or if UTF-8 output is desired.
 +    if ($convert && !$$self{utf8} && ASCII) {
 +        $text =~ s/([^\x00-\x7F])/$ESCAPES{ord ($1)} || "X"/eg;
-+    }
-+
-+    # For Unicode output, unconditionally remap ISO 8859-1 non-breaking spaces
-+    # to the correct code point.  This is really a bug in Pod::Simple to be
-+    # embedding ISO 8859-1 characters in the output stream that we see.
-+    if ($$self{utf8} && ASCII) {
-+        $text =~ s/\xA0/\xC2\xA0/g;
 +    }
 +
      # Ensure that *roff doesn't convert literal quotes to UTF-8 single quotes,
