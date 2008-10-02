@@ -1595,7 +1595,7 @@ behavior.
 Be aware that using this option currently only works properly on UTF-8
 encoded POD files that use the C<=encoding> POD command.  If the option
 is enabled on an input POD file that doesn't declare an =encoding of
-UTF-8, any use of S<> in that POD file will result in invalid UTF-8,
+UTF-8, any use of SE<lt>E<gt> in that POD file will result in invalid UTF-8,
 even if there's no use of high-bit characters in the input POD at all.
 This is a bug that will be fixed in later versions.
 
