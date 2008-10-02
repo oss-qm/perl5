@@ -1592,6 +1592,13 @@ be warned that *roff source with literal UTF-8 characters is not supported
 by many implementations and may even result in segfaults and other bad
 behavior.
 
+Be aware that using this option currently only works properly on UTF-8
+encoded POD files that use the C<=encoding> POD command.  If the option
+is enabled on an input POD file that doesn't declare an =encoding of
+UTF-8, any use of S<> in that POD file will result in invalid UTF-8,
+even if there's no use of high-bit characters in the input POD at all.
+This is a bug that will be fixed in later versions.
+
 =back
 
 The standard Pod::Simple method parse_file() takes one argument naming the
@@ -1626,6 +1633,9 @@ invalid.  A quote specification must be one, two, or four characters long.
 =back
 
 =head1 BUGS
+
+As mentioned earlier in this document, the C<utf8> option is currently
+broken on non-UTF-8 input.
 
 There is currently no way to turn off the guesswork that tries to format
 unmarked text appropriately, and sometimes it isn't wanted (particularly
