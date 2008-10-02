@@ -1,3 +1,11 @@
+perl (5.10.0-16) UNRELEASED; urgency=low
+
+  * revert the perldoc "pod2man --utf8" change from 5.10.0-14. The
+    --utf8 option may output incorrect UTF-8 for POD documents that
+    don't specify an explicit =encoding. (Reopens: #492037)
+
+ -- Niko Tyni <ntyni@debian.org>  Thu, 02 Oct 2008 09:41:03 +0300
+
 perl (5.10.0-15) unstable; urgency=low
 
   * Fix Sys::Syslog slowness when logging with non-native mechanisms.
