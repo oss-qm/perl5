@@ -1,11 +1,11 @@
-perl (5.10.0-16) UNRELEASED; urgency=low
+perl (5.10.0-16) unstable; urgency=low
 
   * revert the perldoc "pod2man --utf8" change from 5.10.0-14. The
     --utf8 option may output incorrect UTF-8 for POD documents that
     don't specify an explicit =encoding. (Reopens: #492037)
   * Discuss the above issue in the Pod::Man and pod2man documentation.
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 02 Oct 2008 09:41:03 +0300
+ -- Niko Tyni <ntyni@debian.org>  Thu, 02 Oct 2008 13:26:06 +0300
 
 perl (5.10.0-15) unstable; urgency=low
 
