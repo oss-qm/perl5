@@ -306,8 +306,6 @@ index 9a8414a..99a3c23 100644
  
  This program is free software; you may redistribute it and/or modify it
  under the same terms as Perl itself.
-diff --git a/lib/Pod/t/man.t b/lib/Pod/t/man.t
-index 5d4d231..bd8b4ee 100644
 --- a/lib/Pod/t/man.t
 +++ b/lib/Pod/t/man.t
 @@ -344,7 +344,7 @@ Oboy, is this C++ "fun" yet! (guesswork)
@@ -319,8 +317,6 @@ index 5d4d231..bd8b4ee 100644
  .IX Subsection "THINGS"
  Oboy, is this \*(C+ \*(L"fun\*(R" yet! (guesswork)
  ###
-diff --git a/lib/Pod/t/basic.man b/lib/Pod/t/basic.man
-index 9c2248e..43874b6 100644
 --- a/lib/Pod/t/basic.man
 +++ b/lib/Pod/t/basic.man
 @@ -7,7 +7,7 @@ other interesting bits.
