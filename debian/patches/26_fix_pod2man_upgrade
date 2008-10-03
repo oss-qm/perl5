@@ -1,7 +1,7 @@
 Upgrade to Pod::Man 2.18 to get the 'pod2man --utf8' functionality in lenny. (Closes: #480997)
 
 diff --git a/lib/Pod/Man.pm b/lib/Pod/Man.pm
-index 451ecc8..a3eac5a 100644
+index 451ecc8..11959a6 100644
 --- a/lib/Pod/Man.pm
 +++ b/lib/Pod/Man.pm
 @@ -1,7 +1,6 @@
@@ -175,7 +175,7 @@ index 451ecc8..a3eac5a 100644
  }
  
  ##############################################################################
-@@ -1582,6 +1576,29 @@ that are reliably consistent are 1, 2, and 3.
+@@ -1582,6 +1576,22 @@ that are reliably consistent are 1, 2, and 3.
  By default, section 1 will be used unless the file ends in .pm in which case
  section 3 will be selected.
  
@@ -195,17 +195,10 @@ index 451ecc8..a3eac5a 100644
 +by many implementations and may even result in segfaults and other bad
 +behavior.
 +
-+Be aware that using this option currently only works properly on UTF-8
-+encoded POD files that use the C<=encoding> POD command.  If the option
-+is enabled on an input POD file that doesn't declare an =encoding of
-+UTF-8, any use of SE<lt>E<gt> in that POD file will result in invalid UTF-8,
-+even if there's no use of high-bit characters in the input POD at all.
-+This is a bug that will be fixed in later versions.
-+
  =back
  
  The standard Pod::Simple method parse_file() takes one argument naming the
-@@ -1617,14 +1634,8 @@ invalid.  A quote specification must be one, two, or four characters long.
+@@ -1617,15 +1627,6 @@ invalid.  A quote specification must be one, two, or four characters long.
  
  =head1 BUGS
  
@@ -217,13 +210,12 @@ index 451ecc8..a3eac5a 100644
 -vendor *roff implementations can't handle eight-bit data.  If the *roff
 -implementation can, however, that's far superior to the current hacked
 -characters that only work under troff.
-+As mentioned earlier in this document, the C<utf8> option is currently
-+broken on non-UTF-8 input.
- 
+-
  There is currently no way to turn off the guesswork that tries to format
  unmarked text appropriately, and sometimes it isn't wanted (particularly
+ when using POD to document something other than Perl).  Most of the work
 diff --git a/pod/pod2man.PL b/pod/pod2man.PL
-index 9a8414a..99a3c23 100644
+index 9a8414a..10ddbbd 100644
 --- a/pod/pod2man.PL
 +++ b/pod/pod2man.PL
 @@ -36,9 +36,9 @@ $Config{startperl}
@@ -256,7 +248,7 @@ index 9a8414a..99a3c23 100644
  [I<input> [I<output>] ...]
  
  pod2man B<--help>
-@@ -243,6 +243,29 @@ that are reliably consistent are 1, 2, and 3.
+@@ -243,6 +243,22 @@ that are reliably consistent are 1, 2, and 3.
  By default, section 1 will be used unless the file ends in .pm in which case
  section 3 will be selected.
  
@@ -276,27 +268,10 @@ index 9a8414a..99a3c23 100644
 +supported by many implementations and may even result in segfaults and
 +other bad behavior.
 +
-+Be aware that using this option currently only works properly on UTF-8
-+encoded POD files that use the C<=encoding> POD command.  If the option
-+is enabled on an input POD file that doesn't declare an =encoding of
-+UTF-8, any use of SE<lt>E<gt> in that POD file will result in invalid UTF-8,
-+even if there's no use of high-bit characters in the input POD at all.
-+This is a bug that will be fixed in later versions.
-+
  =item B<-v>, B<--verbose>
  
  Print out the name of each output file as it is being generated.
-@@ -278,6 +301,9 @@ L<Pod::Man> for more details.
- 
- Lots of this documentation is duplicated from L<Pod::Man>.
- 
-+As mentioned earlier in this document, the C<--utf8> option is currently
-+broken on non-UTF-8 input.
-+
- =head1 NOTES
- 
- For those not sure of the proper layout of a man page, here are some notes
-@@ -537,7 +563,8 @@ page, are taken from the B<pod2man> documentation by Tom.
+@@ -537,7 +553,8 @@ page, are taken from the B<pod2man> documentation by Tom.
  
  =head1 COPYRIGHT AND LICENSE
  

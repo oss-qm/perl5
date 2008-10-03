@@ -259,13 +259,6 @@ However, be warned that *roff source with literal UTF-8 characters is not
 supported by many implementations and may even result in segfaults and
 other bad behavior.
 
-Be aware that using this option currently only works properly on UTF-8
-encoded POD files that use the C<=encoding> POD command.  If the option
-is enabled on an input POD file that doesn't declare an =encoding of
-UTF-8, any use of SE<lt>E<gt> in that POD file will result in invalid UTF-8,
-even if there's no use of high-bit characters in the input POD at all.
-This is a bug that will be fixed in later versions.
-
 =item B<-v>, B<--verbose>
 
 Print out the name of each output file as it is being generated.
@@ -300,9 +293,6 @@ L<Pod::Man> for more details.
 =head1 BUGS
 
 Lots of this documentation is duplicated from L<Pod::Man>.
-
-As mentioned earlier in this document, the C<--utf8> option is currently
-broken on non-UTF-8 input.
 
 =head1 NOTES
 
