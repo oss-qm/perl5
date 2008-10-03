@@ -70,7 +70,7 @@ index 451ecc8..11959a6 100644
      # Ensure that *roff doesn't convert literal quotes to UTF-8 single quotes,
      # but don't mess up our accept escapes.
      if ($literal) {
-@@ -641,10 +638,10 @@ sub switchquotes {
+@@ -641,10 +645,10 @@ sub switchquotes {
          # to Roman rather than the actual previous font when used in headings.
          # troff output may still be broken, but at least we can fix nroff by
          # just switching the font changes to the non-fixed versions.
@@ -85,7 +85,7 @@ index 451ecc8..11959a6 100644
  
          # Now finally output the command.  Bother with .ie only if the nroff
          # and troff output aren't the same.
-@@ -851,7 +848,7 @@ sub devise_date {
+@@ -851,7 +855,7 @@ sub devise_date {
  # module, but this order is correct for both Solaris and Linux.
  sub preamble {
      my ($self, $name, $section, $date) = @_;
@@ -94,7 +94,7 @@ index 451ecc8..11959a6 100644
  
      # Build the index line and make sure that it will be syntactically valid.
      my $index = "$name $section";
-@@ -1025,7 +1022,7 @@ sub cmd_head1 {
+@@ -1025,7 +1029,7 @@ sub cmd_head1 {
  sub cmd_head2 {
      my ($self, $attrs, $text) = @_;
      $text = $self->heading_common ($text, $$attrs{start_line});
@@ -103,7 +103,7 @@ index 451ecc8..11959a6 100644
      $self->outindex ('Subsection', $text);
      $$self{NEEDSPACE} = 0;
      return '';
-@@ -1273,7 +1270,7 @@ sub parse_from_filehandle {
+@@ -1273,7 +1277,7 @@ sub parse_from_filehandle {
  # results are pretty poor.
  #
  # This only works in an ASCII world.  What to do in a non-ASCII world is very
@@ -112,7 +112,7 @@ index 451ecc8..11959a6 100644
  @ESCAPES{0xA0 .. 0xFF} = (
      "\\ ", undef, undef, undef,            undef, undef, undef, undef,
      undef, undef, undef, undef,            undef, "\\%", undef, undef,
-@@ -1294,27 +1291,18 @@ sub parse_from_filehandle {
+@@ -1294,27 +1298,18 @@ sub parse_from_filehandle {
      "o\\*/" , "u\\*`", "u\\*'", "u\\*^",   "u\\*:", "y\\*'", "\\*(th", "y\\*:",
  ) if ASCII;
  
@@ -146,7 +146,7 @@ index 451ecc8..11959a6 100644
  .de Sp \" Vertical space (when we can't use .PP)
  .if t .sp .5v
  .if n .sp
-@@ -1358,7 +1346,7 @@ sub preamble_template {
+@@ -1358,7 +1353,7 @@ sub preamble_template {
  .el       .ds Aq '
  .\"
  .\" If the F register is turned on, we'll generate index entries on stderr for
@@ -155,7 +155,7 @@ index 451ecc8..11959a6 100644
  .\" entries marked with X<> in POD.  Of course, you'll have to process the
  .\" output yourself in some meaningful fashion.
  .ie \nF \{\
-@@ -1372,6 +1360,10 @@ sub preamble_template {
+@@ -1372,6 +1367,10 @@ sub preamble_template {
  .    de IX
  ..
  .\}
@@ -166,7 +166,7 @@ index 451ecc8..11959a6 100644
  .\"
  .\" Accent mark definitions (@(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2).
  .\" Fear.  Run.  Save yourself.  No user-serviceable parts.
-@@ -1436,6 +1428,8 @@ sub preamble_template {
+@@ -1436,6 +1435,8 @@ sub preamble_template {
  .rm #[ #] #H #V #F C
  ----END OF PREAMBLE----
  #`# for cperl-mode
@@ -175,7 +175,7 @@ index 451ecc8..11959a6 100644
  }
  
  ##############################################################################
-@@ -1582,6 +1576,22 @@ that are reliably consistent are 1, 2, and 3.
+@@ -1582,6 +1583,22 @@ that are reliably consistent are 1, 2, and 3.
  By default, section 1 will be used unless the file ends in .pm in which case
  section 3 will be selected.
  
@@ -198,7 +198,7 @@ index 451ecc8..11959a6 100644
  =back
  
  The standard Pod::Simple method parse_file() takes one argument naming the
-@@ -1617,15 +1627,6 @@ invalid.  A quote specification must be one, two, or four characters long.
+@@ -1617,15 +1634,6 @@ invalid.  A quote specification must be one, two, or four characters long.
  
  =head1 BUGS
  
