@@ -3,6 +3,8 @@ perl (5.10.0-16) UNRELEASED; urgency=low
   * revert the perldoc "pod2man --utf8" change from 5.10.0-14. The
     --utf8 option may output incorrect UTF-8 for POD documents that
     don't specify an explicit =encoding. (Reopens: #492037)
+  * Make Pod::Man use the PerlIO UTF-8 output layer when --utf8 is
+    enabled. (See #500210)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 02 Oct 2008 09:41:03 +0300
 

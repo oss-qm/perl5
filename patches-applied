@@ -27,6 +27,7 @@ debian/patches/25_fix_cgi_tempdir
 debian/patches/26_fix_pod2man_upgrade
 debian/patches/27_fix_sys_syslog_timeout
 debian/patches/28_fix_inplace_sort
+debian/patches/29_fix_pod2man_perlio
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
