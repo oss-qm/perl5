@@ -5,6 +5,8 @@ perl (5.10.0-16) unstable; urgency=low
     =encoding. (Reopens: #492037)
   * Make Pod::Man use the PerlIO UTF-8 output layer when --utf8 is
     enabled. (See #500210)
+  * Revert an incorrect substitution optimization introduced in 5.10.0.
+    (Closes: #501178)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 04 Oct 2008 14:17:09 +0300
 
