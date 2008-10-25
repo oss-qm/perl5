@@ -1,3 +1,9 @@
+perl (5.10.0-17) UNRELEASED; urgency=low
+
+  * Fix 'Unknown error' messages with attribute.pm. (Closes: #488088)
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 25 Oct 2008 22:19:03 +0300
+
 perl (5.10.0-16) unstable; urgency=low
 
   * Revert the perldoc "pod2man --utf8" change from 5.10.0-14.
