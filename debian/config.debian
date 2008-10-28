@@ -102,6 +102,7 @@ eval /bin/bash Configure			\
     -Dpager=/usr/bin/sensible-pager		\
     -Uafs					\
     -Ud_csh					\
+    -Ud_ualarm					\
     -Uusesfio					\
     -Uusenm					\
     $opts -des

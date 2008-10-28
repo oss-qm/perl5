@@ -1,3 +1,11 @@
+perl (5.8.8-7etch4) stable; urgency=low
+
+  * Suppress Configure test for ualarm() so that setitimer() emulation
+    is used. This fixes Time::HiRes breakage with kernels >= 2.6.22,
+    including the Etch-And-A-Half one. (Closes: #502435)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 19 Oct 2008 13:53:49 +0300
+
 perl (5.8.8-7etch3) stable-security; urgency=high
 
   * Actually apply the patch to fix CVE-2008-1927, a heap overflow in the
