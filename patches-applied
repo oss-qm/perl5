@@ -31,6 +31,7 @@ debian/patches/29_fix_pod2man_perlio
 debian/patches/30_fix_freetmps
 debian/patches/31_fix_attributes_unknown_error
 debian/patches/32_fix_fork_rand
+debian/patches/33_fix_qr-memory-leak-1
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
