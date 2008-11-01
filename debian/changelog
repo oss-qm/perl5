@@ -5,9 +5,7 @@ perl (5.10.0-17) unstable; urgency=low
   * Raise the timeout of ext/threads/shared/t/stress.t to accommodate
     slower build hosts. (Closes: #501970)
   * Stop t/op/fork.t relying on rand(). (Closes: #317843)
-  * Fix memory leak in // caused by single-char character class optimization.
-    (See #503975)
-  * Fix memory leak with qr//. (Closes: #503975)
+  * Fix two regexp memory leaks. (Closes: #503975)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 01 Nov 2008 14:48:22 +0200
 
