@@ -1,5 +1,8 @@
-Fix memory leak in // caused by single-char character class
+Fix memory leak in // caused by single-char character class optimization. (See #503975)
 
+Blead change 34507:
+
+Fix memory leak in // caused by single-char character class
 optimization. This was most probably introduced with #28262.
 This change fixes perl #59516.
 
