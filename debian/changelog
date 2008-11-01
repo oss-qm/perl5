@@ -1,4 +1,4 @@
-perl (5.10.0-17) UNRELEASED; urgency=low
+perl (5.10.0-17) unstable; urgency=low
 
   * Fix 'Unknown error' messages with attribute.pm. (Closes: #488088)
   * Add conflicts/replaces/provides for podlators-perl. (Closes: #503123)
@@ -9,7 +9,7 @@ perl (5.10.0-17) UNRELEASED; urgency=low
     (See #503975)
   * Fix memory leak with qr//. (Closes: #503975)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 25 Oct 2008 22:19:03 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 01 Nov 2008 14:48:22 +0200
 
 perl (5.10.0-16) unstable; urgency=low
 
