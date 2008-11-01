@@ -6,6 +6,7 @@ perl (5.10.0-17) UNRELEASED; urgency=low
     slower build hosts. (Closes: #501970)
   * Stop t/op/fork.t relying on rand(). (Closes: #317843)
   * Fix memory leak in // caused by single-char character class
+  * Fix memory leak with qr//. (Closes: #503975)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 25 Oct 2008 22:19:03 +0300
 
