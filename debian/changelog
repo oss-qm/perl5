@@ -1,6 +1,5 @@
-perl (5.10.0-18) UNRELEASED; urgency=low
+perl (5.10.0-18) unstable; urgency=high
 
-  * 
   * [SECURITY] CVE-2005-0448 revisited: File::Path::rmtree no longer
     allows creating of setuid files. (Closes: #286905)
 
