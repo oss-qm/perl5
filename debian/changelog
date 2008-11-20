@@ -1,3 +1,11 @@
+perl (5.10.0-18) UNRELEASED; urgency=low
+
+  * 
+  * [SECURITY] CVE-2005-0448 revisited: File::Path::rmtree no longer
+    allows creating of setuid files. (Closes: #286905)
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 21 Nov 2008 00:49:57 +0200
+
 perl (5.10.0-17) unstable; urgency=low
 
   * Fix 'Unknown error' messages with attribute.pm. (Closes: #488088)
