@@ -1,3 +1,14 @@
+perl (5.8.8-7etch5) stable-security; urgency=high
+
+  * SECURITY [CAN-2005-0448]: re-rewrite File::Path::rmtree to avoid race
+    condition which allows an attacker with write permission on
+    directories in the tree being removed to make files setuid or to
+    remove arbitrary files (Closes: #286905, #286922).
+    .
+    The race condition was fixed in 5.8.4-7 but re-introduced in 5.8.8-1.
+
+ -- Niko Tyni <ntyni@debian.org>  Thu, 20 Nov 2008 22:45:54 +0200
+
 perl (5.8.8-7etch4) stable; urgency=low
 
   * Suppress Configure test for ualarm() so that setitimer() emulation
