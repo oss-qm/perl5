@@ -29,8 +29,6 @@ checkperl   = $(SHELL) debian/checkperl
 subst_upstream = -VUpstream-Version=$(fullversion)
 subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`"
 
-export PATH := $(shell pwd)/bincc:$(PATH)
-
 build: build-stamp
 install: install-stamp
 
@@ -38,16 +36,6 @@ build-stamp: perl.static perl.debug libperl.so.$(fullversion)
 	touch $@
 
 config.over: debian/config.over
-	@case `dpkg-architecture -qDEB_BUILD_GNU_TYPE` in \
-		m68k-*) \
-			if ! [ -e bincc ] ; then \
-			echo "Generating cc/cpp symlinks"; \
-			mkdir bincc ; \
-			ln -s `which gcc-2.95` bincc/cc ;\
-			ln -s `which cpp-2.95` bincc/cpp ;\
-			fi \
-		;;\
-	esac
 	cp $? $@
 
 perl.static: config.over 
@@ -86,7 +74,7 @@ clean:
 	    libperl-debug libperl.so* build-stamp install-stamp \
 	    t/auto debian/shlibs.local debian/perl-base.shlibs \
 	    debian/libperl$(version).shlibs debian/substvars \
-	    debian/files debian/list.tmp $(tmp) $(build) bincc
+	    debian/files debian/list.tmp $(tmp) $(build)
 
 install-stamp: build-stamp
 	$(checkperl)
@@ -307,7 +295,7 @@ binary-indep: build-stamp install-stamp
 	    done; \
 	    test -d $(build)/$$p/etc && find $(build)/$$p/etc -type f \
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
-	    (cd $(build)/$$p; find usr -type f -print | xargs md5sum) \
+	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_upstream); \
 	    dpkg --build $(build)/$$p ..; \
@@ -342,7 +330,7 @@ endif
 	    done; \
 	    test -f debian/$$p.shlibs && cp debian/$$p.shlibs \
 		$(build)/$$p/DEBIAN/shlibs; \
-	    (cd $(build)/$$p; find usr -type f -print | xargs md5sum) \
+	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    LD_LIBRARY_PATH=$$LD_LIBRARY_PATH$${LD_LIBRARY_PATH:+:}/usr/lib:$(srcdir)/$(build)/libperl$(version)/usr/lib; \
 		find $(build)/$$p/usr -type f \

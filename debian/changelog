@@ -1,3 +1,14 @@
+perl (5.8.7-4) unstable; urgency=low
+
+  * Don't generate broken md5sums for libperl5.8 (closes: #304640).
+  * Build with gcc 4.0; restore standard (-O2) optimisation on arm, ia64
+    and powerpc.  Remove gcc-2.95 build work-around for m68k.
+  * Fix test of reenterant function return values which was causing
+    perl to malloc itself to death if ERANGE was encountered before
+    ENOENT (such as a long line in /etc/group; closes: #227621).
+
+ -- Brendan O'Dea <bod@debian.org>  Sat,  9 Jul 2005 11:14:13 +1000
+
 perl (5.8.7-3) unstable; urgency=low
 
   * Add alternative for /usr/bin/rename (closes: #304705).
