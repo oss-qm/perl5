@@ -4251,8 +4251,13 @@ S_init_perllib(pTHX)
     incpush(APPLLIB_EXP, TRUE, TRUE, TRUE);
 #endif
 
+#ifdef DEBIAN
+    /* for configuration where /usr is mounted ro (CPAN::Config, Net::Config) */
+    incpush("/etc/perl", FALSE, FALSE, FALSE);
+#else
 #ifdef ARCHLIB_EXP
     incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE);
+#endif
 #endif
 #ifdef MACOS_TRADITIONAL
     {
@@ -4278,10 +4283,12 @@ S_init_perllib(pTHX)
 #ifndef PRIVLIB_EXP
 #  define PRIVLIB_EXP "/usr/local/lib/perl5:/usr/local/lib/perl"
 #endif
+#ifndef DEBIAN
 #if defined(WIN32)
     incpush(PRIVLIB_EXP, TRUE, FALSE, TRUE);
 #else
     incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE);
+#endif
 #endif
 
 #ifdef SITEARCH_EXP
@@ -4323,6 +4330,61 @@ S_init_perllib(pTHX)
 
 #ifdef PERL_VENDORLIB_STEM /* Search for version-specific dirs below here */
     incpush(PERL_VENDORLIB_STEM, FALSE, TRUE, TRUE);
+#endif
+
+#ifdef DEBIAN
+    incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE);
+    incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE);
+
+    /* Non-versioned site directory for local modules and for
+       compatability with the previous packages' site dirs */
+    incpush("/usr/local/lib/site_perl", TRUE, FALSE, FALSE);
+
+#ifdef PERL_INC_VERSION_LIST
+    {
+	struct stat s;
+
+	/* add small buffer in case old versions are longer than the
+	   current version */
+	char sitearch[sizeof(SITEARCH_EXP)+16] = SITEARCH_EXP;
+	char sitelib[sizeof(SITELIB_EXP)+16] = SITELIB_EXP;
+	char const *vers[] = { PERL_INC_VERSION_LIST };
+	char const **p;
+
+	char *arch_vers = strrchr(sitearch, '/');
+	char *lib_vers = strrchr(sitelib, '/');
+
+	if (arch_vers && isdigit(*++arch_vers))
+	    *arch_vers = 0;
+	else
+	    arch_vers = 0;
+
+	if (lib_vers && isdigit(*++lib_vers))
+	    *lib_vers = 0;
+	else
+	    lib_vers = 0;
+
+	/* there is some duplication here as incpush does something
+	   similar internally, but required as sitearch is not a
+	   subdirectory of sitelib */
+	for (p = vers; *p; p++)
+	{
+	    if (arch_vers)
+	    {
+		strcpy(arch_vers, *p);
+		if (PerlLIO_stat(sitearch, &s) >= 0 && S_ISDIR(s.st_mode))
+		    incpush(sitearch, FALSE, FALSE, FALSE);
+	    }
+
+	    if (lib_vers)
+	    {
+		strcpy(lib_vers, *p);
+		if (PerlLIO_stat(sitelib, &s) >= 0 && S_ISDIR(s.st_mode))
+		    incpush(sitelib, FALSE, FALSE, FALSE);
+	    }
+	}
+    }
+#endif
 #endif
 
 #ifdef PERL_OTHERLIBDIRS

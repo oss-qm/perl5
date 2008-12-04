@@ -5,14 +5,12 @@ then
     # The 5.6.0 packages had /usr/share/doc/perl as a symlink to
     # perl-base, now the reverse.
     docs=/usr/share/doc
-    if [ -L $docs/perl -a ! -L $docs/perl-base -a -d $docs/perl-base ]
+    if [ -L $docs/perl ] && [ ! -L $docs/perl-base ] && [ -d $docs/perl-base ]
     then
 	rm -f $docs/perl
 	mv $docs/perl-base $docs/perl
 	ln -s perl $docs/perl-base
     fi
 fi
-
-#DEBHELPER#
 
 exit 0

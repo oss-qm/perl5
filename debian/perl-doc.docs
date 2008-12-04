@@ -1,13 +1,6 @@
-Changes5.000
-Changes5.001
-Changes5.002
-Changes5.003
-Changes5.004
-Changes5.005
-Porting/Contract
-Porting/patching.pod
-Porting/pumpkin.pod
-README
-README.Y2K
-Todo
-Todo-5.6
+Changes5.*		perl
+Porting/Contract	perl
+Porting/patching.pod	perl
+Porting/pumpkin.pod	perl
+README			perl
+README.Y2K		perl

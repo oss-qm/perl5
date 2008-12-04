@@ -1,0 +1,14 @@
+Handle URLs containing escaped newlines (from CGI 3.05).
+
+diff -Naur --exclude=debian perl-5.8.4.orig/lib/CGI.pm perl-5.8.4/lib/CGI.pm
+--- perl-5.8.4.orig/lib/CGI.pm	2004-03-12 07:55:39.000000000 +1100
++++ perl-5.8.4/lib/CGI.pm	2005-03-06 18:15:07.000000000 +1100
+@@ -2545,7 +2545,7 @@
+     if (exists($ENV{REQUEST_URI})) {
+         my $index;
+ 	$script_name = unescape($ENV{REQUEST_URI});
+-        $script_name =~ s/\?.+$//;   # strip query string
++        $script_name =~ s/\?.+$//s;   # strip query string
+         # and path
+         if (exists($ENV{PATH_INFO})) {
+            my $encoded_path = unescape($ENV{PATH_INFO});

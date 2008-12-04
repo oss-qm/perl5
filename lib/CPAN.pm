@@ -1247,7 +1247,7 @@ sub load {
 	$configpm = $INC{"CPAN/MyConfig.pm"};
 	$redo++;
     } else {
-	my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
+	my($path_to_cpan) = '/etc/perl';
 	my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
 	my($configpmtest) = File::Spec->catfile($configpmdir,"Config.pm");
 	if (-d $configpmdir or File::Path::mkpath($configpmdir)) {
@@ -3291,7 +3291,8 @@ happen.\a
 	      )
 	   ) {
             local($^W)= 0;
-            if ($version > $CPAN::VERSION){
+            if ($CPAN::Config->{cpan_version_check} &&
+	      $version > $CPAN::VERSION){
                 $CPAN::Frontend->myprint(qq{
   There's a new CPAN.pm version (v$version) available!
   [Current version is v$CPAN::VERSION]
@@ -6765,6 +6766,7 @@ defined:
   index_expire       after this many days refetch index files
   cache_metadata     use serializer to cache metadata
   cpan_home          local directory reserved for this package
+  cpan_version_check if true, warns you when the CPAN module is out of date.
   dontload_hash      anonymous hash: modules in the keys will not be
                      loaded by the CPAN::has_inst() routine
   gzip		     location of external program gzip

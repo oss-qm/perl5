@@ -1,0 +1,14 @@
+Set location of CPAN::Config to /etc/perl as /usr may not be writable.
+
+diff -Naur --exclude=debian perl-5.8.4.orig/lib/CPAN.pm perl-5.8.4/lib/CPAN.pm
+--- perl-5.8.4.orig/lib/CPAN.pm	2003-09-22 15:42:59.000000000 +1000
++++ perl-5.8.4/lib/CPAN.pm	2004-05-02 10:40:34.000000000 +1000
+@@ -1247,7 +1247,7 @@
+ 	$configpm = $INC{"CPAN/MyConfig.pm"};
+ 	$redo++;
+     } else {
+-	my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
++	my($path_to_cpan) = '/etc/perl';
+ 	my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
+ 	my($configpmtest) = File::Spec->catfile($configpmdir,"Config.pm");
+ 	if (-d $configpmdir or File::Path::mkpath($configpmdir)) {

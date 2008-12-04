@@ -517,6 +517,7 @@ sub verbatim {
     my $lines = tr/\n/\n/;
     1 while s/^(.*?)(\t+)/$1 . ' ' x (length ($2) * 8 - length ($1) % 8)/me;
     s/\\/\\e/g;
+    s/-/\\-/g;
     s/^(\s*\S)/'\&' . $1/gme;
     $self->makespace;
     $self->output (".Vb $lines\n$_.Ve\n");
