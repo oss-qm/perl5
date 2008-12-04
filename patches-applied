@@ -11,6 +11,7 @@ debian/patches/09_fix_memory_debugging
 debian/patches/10_fix_h2ph_include_quote
 debian/patches/11_disable_vstring_warning
 debian/patches/12_fix_file_path_rmtree_chmod
+debian/patches/13_fix_perlio_via_via
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

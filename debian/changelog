@@ -1,3 +1,10 @@
+perl (5.10.0-11.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix lost reference in PerlIO::via::via. (closes: #479698)
+
+ -- Bastian Blank <waldi@debian.org>  Tue, 15 Jul 2008 14:48:44 +0000
+
 perl (5.10.0-11) unstable; urgency=high
 
   * [SECURITY] File::Path::rmtree() no longer makes symlink targets
