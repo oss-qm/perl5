@@ -120,7 +120,8 @@ h Miscellaneous
 
   perlhist		Perl history records
 d perldelta		Perl changes since previous version
-D perl586delta		Perl changes in version 5.8.6
+D perl587delta		Perl changes in version 5.8.7
+  perl586delta		Perl changes in version 5.8.6
   perl585delta		Perl changes in version 5.8.5
   perl584delta		Perl changes in version 5.8.4
   perl583delta		Perl changes in version 5.8.3
@@ -168,6 +169,7 @@ r perlmacosx		Perl notes for Mac OS X
 r perlmint		Perl notes for MiNT
 r perlmpeix		Perl notes for MPE/iX
 r perlnetware		Perl notes for NetWare
+r perlopenbsd		Perl notes for OpenBSD
 r perlos2		Perl notes for OS/2
 r perlos390		Perl notes for OS/390
 r perlos400		Perl notes for OS/400

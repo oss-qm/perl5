@@ -406,7 +406,7 @@ until the end of the enclosing block or until the next successful
 match, whichever comes first.  (See L<perlsyn/"Compound Statements">.)
 
 B<NOTE>: failed matches in Perl do not reset the match variables,
-which makes easier to write code that tests for a series of more
+which makes it easier to write code that tests for a series of more
 specific cases and remembers the best match.
 
 B<WARNING>: Once Perl sees that you need one of C<$&>, C<$`>, or
@@ -1271,7 +1271,7 @@ Overloaded constants (see L<overload>) provide a simple way to extend
 the functionality of the RE engine.
 
 Suppose that we want to enable a new RE escape-sequence C<\Y|> which
-matches at boundary between white-space characters and non-whitespace
+matches at boundary between whitespace characters and non-whitespace
 characters.  Note that C<(?=\S)(?<!\S)|(?!\S)(?<=\S)> matches exactly
 at these positions, so we want to have each C<\Y|> in the place of the
 more complicated version.  We can create a module C<customre> to do
@@ -1288,7 +1288,9 @@ this:
 
     sub invalid { die "/$_[0]/: invalid escape '\\$_[1]'"}
 
-    my %rules = ( '\\' => '\\', 
+    # We must also take care of not escaping the legitimate \\Y|
+    # sequence, hence the presence of '\\' in the conversion rules.
+    my %rules = ( '\\' => '\\\\', 
 		  'Y|' => qr/(?=\S)(?<!\S)|(?!\S)(?<=\S)/ );
     sub convert {
       my $re = shift;
