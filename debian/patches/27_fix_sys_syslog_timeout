@@ -1,0 +1,20 @@
+Fix Sys::Syslog slowness when logging with non-native mechanisms. (Closes: #498776)
+
+Revert the 0.25 second timeout change that was added in 0.19 to address
+an OSX problem with UDP sockets and ICMP responses.
+
+Fixed upstream in Sys::Syslog 0.25, which changes the timeout default
+to 0 again on non-OSX hosts and makes it configurable with setlogsock().
+diff --git a/ext/Sys/Syslog/Syslog.pm b/ext/Sys/Syslog/Syslog.pm
+index 899f25b..7037e18 100644
+--- a/ext/Sys/Syslog/Syslog.pm
++++ b/ext/Sys/Syslog/Syslog.pm
+@@ -741,7 +741,7 @@ sub connection_ok {
+ 
+     my $rin = '';
+     vec($rin, fileno(SYSLOG), 1) = 1;
+-    my $ret = select $rin, undef, $rin, 0.25;
++    my $ret = select $rin, undef, $rin, 0;
+     return ($ret ? 0 : 1);
+ }
+ 
