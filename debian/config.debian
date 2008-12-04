@@ -17,8 +17,7 @@ case "$1" in
     --debug) # debugperl
     	build_type=debug
 	optimize=-g
-	ccflags="$ccflags -DPERL_DEBUGGING_MSTATS"
-	opts="-Dusemymalloc -Uuseshrplib";;
+	opts="-Uuseshrplib";;
 
     --shared) # shared library
     	build_type=shared

@@ -120,6 +120,7 @@ hunk.
 #if !defined(PERL_PATCHLEVEL_H_IMPLICIT) && !defined(LOCAL_PATCH_COUNT)
 static	char	*local_patches[] = {
 	NULL
+	,"SPRINTF0 - fixes for sprintf formatting issues - CVE-2005-3962"
 	,NULL
 };
 
