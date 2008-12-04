@@ -647,7 +647,7 @@ sub B::NV::save {
     return $sym if defined $sym;
     my $val= $sv->NVX;
     $val .= '.00' if $val =~ /^-?\d+$/;
-    $xpvnvsect->add(sprintf("0, 0, 0, %d, %s", $sv->IVX, $val));
+    $xpvnvsect->add(sprintf("0, 0, 0, %d, %s", $sv->NVX, $val));
     $svsect->add(sprintf("&xpvnv_list[%d], %lu, 0x%x",
 			 $xpvnvsect->index, $sv->REFCNT , $sv->FLAGS));
     return savesym($sv, sprintf("&sv_list[%d]", $svsect->index));

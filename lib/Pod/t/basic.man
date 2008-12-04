@@ -290,18 +290,18 @@ Throw in a few verbatim paragraphs.
 .PP
 .Vb 8
 \&    use Term::ANSIColor;
-\&    print color 'bold blue';
+\&    print color \(aqbold blue\(aq;
 \&    print "This text is bold blue.\en";
-\&    print color 'reset';
+\&    print color \(aqreset\(aq;
 \&    print "This text is normal.\en";
-\&    print colored ("Yellow on magenta.\en", 'yellow on_magenta');
+\&    print colored ("Yellow on magenta.\en", \(aqyellow on_magenta\(aq);
 \&    print "This text is normal.\en";
-\&    print colored ['yellow on_magenta'], "Yellow on magenta.\en";
+\&    print colored [\(aqyellow on_magenta\(aq], "Yellow on magenta.\en";
 .Ve
 .PP
 .Vb 2
 \&    use Term::ANSIColor qw(uncolor);
-\&    print uncolor '01;31', "\en";
+\&    print uncolor \(aq01;31\(aq, "\en";
 .Ve
 .PP
 But this isn't verbatim (make sure it wraps properly), and the next

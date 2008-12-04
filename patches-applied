@@ -1,6 +1,6 @@
 debian/patches/00_fix_dynaloader
 debian/patches/01_fix_insecure_tempfiles
-debian/patches/02_fix_verbatim_pod_dash
+debian/patches/02_fix_verbatim_pod
 debian/patches/03_fix_net_nntp
 debian/patches/04_fix_reentr_erange
 debian/patches/05_fix_sparc_fpic
@@ -22,6 +22,8 @@ debian/patches/19_fix_CPAN_abort_no_tty_config
 debian/patches/20_fix_taint_study_hang
 debian/patches/21_fix_pod2man_escape_ix
 debian/patches/22_fix_pod2html_dl
+debian/patches/23_fix_tpj13_typo
+debian/patches/24_fix_perlcc_nv_save
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

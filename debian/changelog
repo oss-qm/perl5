@@ -1,3 +1,15 @@
+perl (5.8.8-9) unstable; urgency=low
+
+  * Fix perl-base replaces after move of PVA.pl etc.
+  * Remove ancient conflicts on perl-transition packages (perl-5.004, etc).
+  * Bump dependency of perl-modules on perl to version after move of
+    modules to perl-base (closes: #377385).
+
+  * Pod/Man.pm: preserve quote chars in verbatim paragraphs (closes: #393810).
+  * Fix typo in Locale::Maketext::TPJ13 docs (closes: #320060).
+
+ -- Brendan O'Dea <bod@debian.org>  Tue, 18 Sep 2007 17:32:21 +1000
+
 perl (5.8.8-8) unstable; urgency=low
 
   * Include unicore/{PVA,Exact,Canonical}.pl in perl-base (closes: #437142).
