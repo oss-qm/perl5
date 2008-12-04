@@ -1,3 +1,9 @@
+perl (5.10.0-9) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 01 May 2008 01:11:40 +1000
+
 perl (5.10.0-8) experimental; urgency=low
 
   * Apply upstream change 33388 to fix a segmentation fault with
