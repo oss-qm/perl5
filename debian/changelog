@@ -1,3 +1,11 @@
+perl (5.10.0-6) experimental; urgency=low
+
+  * More fiddling with libarchive-tar-perl conflict version on perl-modules
+    plus addition of replaces to perl due to ptar, ptardiff.  Thanks to Niko
+    Tyni for picking this up (closes: #466874).
+
+ -- Brendan O'Dea <bod@debian.org>  Mon, 10 Mar 2008 00:40:00 +1100
+
 perl (5.10.0-5) experimental; urgency=low
 
   * Really bump libarchive-tar-perl conflict version (closes: #466874).
