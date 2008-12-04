@@ -3,7 +3,7 @@ Section: perl
 Priority: standard
 Maintainer: Brendan O'Dea <bod@debian.org>
 Standards-Version: 3.6.2
-Build-Depends: file, cpio (>= 2.6-5), libdb4.4-dev, libgdbm-dev, netbase [!hurd-i386], gcc (>= 4:4.0), procps
+Build-Depends: file, cpio (>= 2.6-5), libdb4.4-dev, libgdbm-dev, netbase [!hurd-i386], gcc (>= 4:4.0), procps | hurd
 
 Package: perl-base
 Essential: yes

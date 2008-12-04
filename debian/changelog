@@ -1,3 +1,12 @@
+perl (5.8.8-4) unstable; urgency=low
+
+  * Preserve timestamps in /usr/share/doc.
+  * Revert Sys::Syslog change (see: #345157).
+  * Fix typo in perlsec(1) (closes: #358455).
+  * Change build-dep on procps to "procps|hurd" (closes: #357699).
+
+ -- Brendan O'Dea <bod@debian.org>  Wed,  5 Apr 2006 01:30:11 +1000
+
 perl (5.8.8-3) unstable; urgency=low
 
   * Add build-dep on procps (required by t/op/magic).
