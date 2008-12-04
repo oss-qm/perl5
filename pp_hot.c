@@ -1198,6 +1198,9 @@ PP(pp_qr)
     if (rx->extflags & RXf_TAINTED)
         SvTAINTED_on(rv);
     sv_magic(sv,(SV*)ReREFCNT_inc(rx), PERL_MAGIC_qr,0,0);
+    if (pkg) {
+	SvREFCNT_dec(pkg);
+    }
     XPUSHs(rv);
     RETURN;
 }
