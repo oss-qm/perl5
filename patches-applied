@@ -2,6 +2,7 @@ debian/patches/00_fix_processPL
 debian/patches/01_fix_net_smtp_docs
 debian/patches/02_fix_pod2html_dl
 debian/patches/03_fix_syslog_test
+debian/patches/04_fix_cgi_rewrite_typo
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
