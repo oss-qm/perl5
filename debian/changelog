@@ -1,3 +1,10 @@
+perl (5.8.8-2) unstable; urgency=low
+
+  * Move overload.pm back to perl-base (closes: #352060).
+  * Extend timer in Time::HiRes test to 5 mins (for m68k).
+
+ -- Brendan O'Dea <bod@debian.org>  Fri, 10 Feb 2006 06:23:17 +1100
+
 perl (5.8.8-1) unstable; urgency=low
 
   * New upstream version.
