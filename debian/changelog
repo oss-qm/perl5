@@ -1,3 +1,10 @@
+perl (5.8.7-6) unstable; urgency=low
+
+  * Downgrade optimisation on arm to -O1 for certain files due to
+    problems with gcc 4.0 (closes: #333510).
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 13 Oct 2005 13:35:38 +1000
+
 perl (5.8.7-5) unstable; urgency=low
 
   * Handle changed dpkg-architecture output so that perl is statically
