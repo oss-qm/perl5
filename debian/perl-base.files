@@ -3,7 +3,6 @@ usr/lib/perl/*/B.pm
 usr/lib/perl/*/B/Deparse.pm
 usr/lib/perl/*/Config.pm
 usr/lib/perl/*/Cwd.pm
-usr/lib/perl/*/Data/Dumper.pm
 usr/lib/perl/*/DynaLoader.pm
 usr/lib/perl/*/Errno.pm
 usr/lib/perl/*/Fcntl.pm
@@ -19,7 +18,6 @@ usr/lib/perl/*/POSIX.pm
 usr/lib/perl/*/Socket.pm
 usr/lib/perl/*/XSLoader.pm
 usr/lib/perl/*/auto/Cwd
-usr/lib/perl/*/auto/Data/Dumper
 usr/lib/perl/*/auto/DynaLoader
 usr/lib/perl/*/auto/Fcntl
 usr/lib/perl/*/auto/File/Glob
@@ -60,7 +58,6 @@ usr/share/perl/*/constant.pm
 usr/share/perl/*/fields.pm
 usr/share/perl/*/integer.pm
 usr/share/perl/*/locale.pm
-usr/share/perl/*/overload.pm
 usr/share/perl/*/strict.pm
 usr/share/perl/*/utf8.pm
 usr/share/perl/*/utf8_heavy.pl

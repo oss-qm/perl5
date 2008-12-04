@@ -94,13 +94,6 @@ case "$optimize" in
 # use -O2 by default ; -O3 doesn't seem to bring significant benefits with gcc
 '')
     optimize='-O2'
-    case "`uname -m`" in
-        ppc*)
-            # on ppc, it seems that gcc (at least gcc 3.3.2) isn't happy
-	    # with -O2 ; so downgrade to -O1.
-            optimize='-O1'
-        ;;
-    esac
     ;;
 esac
 
@@ -260,6 +253,7 @@ case "`uname -m`" in
 sparc*)
 	case "$cccdlflags" in
 	*-fpic*) cccdlflags="`echo $cccdlflags|sed 's/-fpic/-fPIC/'`" ;;
+	*-fPIC*) ;;
 	*)	 cccdlflags="$cccdlflags -fPIC" ;;
 	esac
 	;;

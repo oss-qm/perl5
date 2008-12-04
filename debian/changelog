@@ -1,3 +1,30 @@
+perl (5.8.8-1) unstable; urgency=low
+
+  * New upstream version.
+  * Update perl-base conflict versions for:
+      libscalar-list-utils-perl (1.18).
+
+  * Update perl conflict versions for:
+      libdigest-md5-perl (2.36),
+      libmime-base64-perl (3.07),
+      libstorable-perl (2.15) and
+      libtime-hires-perl (1.86).
+
+  * Update perl-modules conflict versions for:
+      libattribute-handlers-perl (0.78_02),
+      libcgi-pm-perl (3.15),
+      libpod-parser-perl (1.32),
+      libansicolor-perl (1.10),
+      libtest-harness-perl (2.56) and
+      libtest-simple-perl (0.62).
+
+  * Revert debian/patches/02_fix_file_path to upstream fix.
+  * Update to DB_File to db4.4.
+  * Move Data::Dumper and overload from perl-base to perl now that
+    debconf no longer requires Data::Dumper.
+
+ -- Brendan O'Dea <bod@debian.org>  Sat,  4 Feb 2006 19:33:24 +1100
+
 perl (5.8.7-10) unstable; urgency=low
 
   * Remove DB_File version checks (closes: #340047, #343335).
@@ -370,7 +397,7 @@ perl (5.8.2-1) unstable; urgency=low
 perl (5.8.1-4) unstable; urgency=low
 
   * ODBM_File/NDBM_File: dbm/ndbm compatability libraries are now in
-    libgdbm_compat.so. 
+    libgdbm_compat.so.
 
  -- Brendan O'Dea <bod@debian.org>  Thu, 23 Oct 2003 22:10:22 +1000
 
@@ -917,7 +944,7 @@ perl (5.6.0-15) unstable; urgency=low
 perl (5.6.0-14) unstable; urgency=low
 
   * The 5.005 packages are now gone.  Provide perl-5.005*
-    pseudo-packages for transition. 
+    pseudo-packages for transition.
 
  -- Brendan O'Dea <bod@debian.org>  Wed,  7 Feb 2001 23:17:19 +1100
 
@@ -1026,7 +1053,7 @@ perl-5.6 (5.6.0-6) unstable; urgency=low
 
   * Don't do the /usr/bin/perl.dist -> /usr/bin/perl bit anymore.  dpkg
     probably doesn't need it...
-    
+
  -- Darren Stalder <torin@daft.com>  Sun,  3 Dec 2000 20:24:34 -0800
 
 perl-5.6 (5.6.0-5) unstable; urgency=low
@@ -1043,8 +1070,8 @@ perl-5.6 (5.6.0-5) unstable; urgency=low
   * Fix 5.005 arch compatibility path now uses the correct architecture
     rather than just i386.  (closes: #78174)
   * Verified that patch in #78048 fixes @_ segfault in ops.
-    (10_op_at_underscore_segfault) (closes #78048) 
-    
+    (10_op_at_underscore_segfault) (closes #78048)
+
  -- Darren Stalder <torin@daft.com>  Sat,  2 Dec 2000 15:40:04 -0800
 
 perl-5.6 (5.6.0-4) unstable; urgency=low
@@ -1118,7 +1145,7 @@ perl-5.6 (5.6.0-2) unstable; urgency=low
     vendorlibexp or sitelibexp don't end in the version number of Perl.
     Patch Configure to leave _stem fields empty if they'd be the same as
     the field they are created from - 05_no_define_stem
-  
+
  -- Darren Stalder <torin@daft.com>  Sun, 22 Oct 2000 13:43:53 -0700
 
 perl-5.6 (5.6.0-1) unstable; urgency=low
@@ -1176,14 +1203,14 @@ perl-5.005 (5.005.03-7) frozen unstable; urgency=low
     script to make sure it takes in all the syscalls as necessary.
     Note that this is a somewhat long job since h2ph only does a 90% job,
     so the generated .ph files take a bit of hand-editing.  This closes:
-    bug#55794. 
+    bug#55794.
   * Install the Perl Social Contract (Porting/Contract) into the doc
     directory of the perl-5\d+-doc package.  This closes #51963.
   * Modified lib/ExtUtils/MM_Unix.pm so that if the environment variable
     NO_LD_RUN_PATH is set true, then MakeMaker won't use LD_RUN_PATH in
     the dynamic_lib method and therefore the .so won't have an rpath built
     into them.  This closes: bug#47116.
-  
+
  -- Darren Stalder <torin@daft.com>  Sun, 26 Mar 2000 22:25:37 -0800
 
 perl-5.005 (5.005.03-6) unstable frozen; urgency=low
@@ -1199,7 +1226,7 @@ perl-5.005 (5.005.03-5.3) unstable frozen; urgency=low
 
   * NMU
   * adds frozen to distribution list...
-  * Compile with -mieee to compile options for alpha; closes: #55269  
+  * Compile with -mieee to compile options for alpha; closes: #55269
 
  -- Randolph Chung <tausq@debian.org>  Sat, 22 Jan 2000 09:46:14 -0700
 
@@ -1253,10 +1280,10 @@ perl-5.005 (5.005.03-4.1) unstable; urgency=low
   * Corrected postinst from perl-5.005-doc.
     Closes: #45863, #45870, #45887, #47870
   * Added Errno.pm to perl-5.005-base. Closes: #47204
-  * Use relative symlinks for compatibility /usr/doc/* link. Closes: #48286 
+  * Use relative symlinks for compatibility /usr/doc/* link. Closes: #48286
   * Applied the patch for mipsel support. Closes: #48915
-  * perl-5.005-doc replaces: libcgi-perl until a better solution can be found 
-    for the overlapping manpages. 
+  * perl-5.005-doc replaces: libcgi-perl until a better solution can be found
+    for the overlapping manpages.
     Closes: #47245, #47844, #47996, #52632, #49371
 
  -- Raphael Hertzog <hertzog@debian.org>  Sun, 19 Dec 1999 15:31:04 +0100
@@ -1287,12 +1314,12 @@ perl-5.005 (5.005.03-4) unstable; urgency=low
   * Make the postinsts/prerms install/remove the compatibility symlink for
     the move from FSSTD to FHS.
   * Fix debian/make.versions to be FHS compliant as well.
-  * Use -fPIC in the cccdlflags so that Perl compiles with -fPIC everwhere 
+  * Use -fPIC in the cccdlflags so that Perl compiles with -fPIC everwhere
     instead of -fpic in some places.  This now complies with policy and
     closes: Bug#41587, #43930.
   * Have make test actually use make test-notty so as to not die on
     automated compiles.  Closes: Bug#33225.
-  * Use unlink instead of system("rm -f ...") in debian/make.base.  I seem 
+  * Use unlink instead of system("rm -f ...") in debian/make.base.  I seem
     to've gotten carried away using cp -a a while back and used system
     instead of unlink. Brain needs to be on...
   * Change the mention of the location of the GPL and Artistic copyright
@@ -1304,7 +1331,7 @@ perl-5.005 (5.005.03-4) unstable; urgency=low
     <tom-pine-1@onegeek.org> said; Perl just needed to be recompiled with
     glibc2.1.  Closes: Bug#38615.
   * In gv.c, Fix for 'use Safe;' with -w segfaults from Sarathy installed.
-    Closes: Bug#38533.  
+    Closes: Bug#38533.
   * In handy.h, only #define HAS_BOOL due to _G_HAVE_BOOL if we're using
     g++.  _G_HAVE_BOOL is defined in _G_config.h.  This will probably be
     included in a gcc program since stdio.h includes libio.h which
@@ -1336,7 +1363,7 @@ perl-5.005 (5.005.03-4) unstable; urgency=low
     locale stuff that's part of POSIX don't need these.
   * I've already moved to /usr/share/man in this package and so, this
     closes: bug#45678.
-  
+
  -- Darren Stalder <torin@daft.com>  Wed, 22 Sep 1999 00:15:40 -0700
 
 perl-5.005 (5.005.03-3) unstable; urgency=low
@@ -1349,7 +1376,7 @@ perl-5.005 (5.005.03-3) unstable; urgency=low
     says it should be).  Closes Bug#42803.
   * Add DirHandle.pm to base.  (I thought I had done this.)  Closes
     Bug#33229.
-  * Implemented patch from Julian Gilbey <J.D.Gilbey@qmw.ac.uk> that fixes 
+  * Implemented patch from Julian Gilbey <J.D.Gilbey@qmw.ac.uk> that fixes
     up INSTALLPRIVLIB so as to make it easier for packagers.  Closes
     Bug#42421.
   * Provide perl5-suid. Closes Bug#42884.
@@ -1373,10 +1400,10 @@ perl-5.005 (5.005.03-2) unstable; urgency=low
   * New version of perl-policy from Raphael.
   * Fix Config.pm's startperl to be /usr/bin/perl (or
     /usr/bin/perl-thread) when the build is done.
-  * Fix the installman[13]dir's in Config.pm so a simple perl Makefile.PL; 
+  * Fix the installman[13]dir's in Config.pm so a simple perl Makefile.PL;
     make test; make install will work from the user's point of view.
     Closes bugs #34106, #15797, #28955.
-  
+
  -- Darren Stalder <torin@daft.com>  Wed,  7 Jul 1999 12:23:15 -0700
 
 perl-5.005 (5.005.03-1) unstable; urgency=low
@@ -1394,12 +1421,12 @@ perl-5.005 (5.005.03-0.10) unstable; urgency=low
 
 perl-5.005 (5.005.03-0.9) unstable; urgency=low
 
-  * perl.1p.gz didn't have an update-alternatives --remove in the prerm. 
+  * perl.1p.gz didn't have an update-alternatives --remove in the prerm.
   * Make perl-$(version)-thread provide perl5-thread so packages using
     perl-thread don't have to depend on a versioned perl-thread.
   * No longer conflict with data-dumper so that it can remain installed
     while perl-5.004 and the older packages need it.
-  * No longer ask if we should abort during the preinst.  Perl 5.004 isn't 
+  * No longer ask if we should abort during the preinst.  Perl 5.004 isn't
     diabled with the installation of Perl 5.005, so there is no reason.
   * Convince commands with no manpages that they should have an
     unversioned symlink installed by update-alternatives.
@@ -1420,7 +1447,7 @@ perl-5.005 (5.005.03-0.8) unstable; urgency=low
     We'll need to remove *.al files that aren't necessary and put them in
     perl.
   * Automate the update-alternatives lines for the man pages for
-    perl-thread.  This way when another Thread::*.3pm comes along, I don't 
+    perl-thread.  This way when another Thread::*.3pm comes along, I don't
     have to notice, it will.
   * Add/Remove /usr/local/lib/site_perl/$arch-linux-thread in
     thread.postinst/prerm if /usr/local/lib is writable.
@@ -1438,7 +1465,7 @@ perl-5.005 (5.005.03-0.8) unstable; urgency=low
     still conflict until all the non-versioned Perl is gone.
   * rename threadperl-5.005 to perl-5.005-thread.  Raphael is right;
     tab-completion is handy.
-  
+
  -- Darren Stalder <torin@daft.com>  Tue, 22 Jun 1999 08:17:23 -0700
 
 perl-5.005 (5.005.03-0.7) unstable; urgency=low
@@ -1453,9 +1480,9 @@ perl-5.005 (5.005.03-0.7) unstable; urgency=low
   * Made perl-version-thread Priority: extra instead of optional.
     Considering the experimental nature of threaded Perl right now, I'd
     say it qualifies having specialized requirements.
-  * Applied the same changes to the i386-linux-thread tree as I did to the 
+  * Applied the same changes to the i386-linux-thread tree as I did to the
     i386-linux tree.  Don't want my paths leaking into Config.pm.
-  
+
  -- Darren Stalder <torin@daft.com>  Sat, 19 Jun 1999 05:10:13 -0700
 
 perl-5.005 (5.005.03-0.6) unstable; urgency=low
@@ -1494,12 +1521,12 @@ perl (5.005.02-1) unstable; urgency=low
   * Conflict, replace, and provide data-dumper since it's now provided by
     Perl.  (Fixes Bug #27543)
   * Specifically turn off sfio for the standard release of Perl.
-  
+
  -- Darren Stalder <torin@daft.com>  Sat,  9 Jan 1999 16:43:23 -0800
 
 perl (5.004.04-6) frozen unstable; urgency=low
 
-  * Fix symlinks for perl-suid and perl-debug doc directories.  (Fixes Bug 
+  * Fix symlinks for perl-suid and perl-debug doc directories.  (Fixes Bug
     #19867)
   * Make sure that *all* files are readable.  (Fixes Bug #20791)
   * Make changes to c2ph.PL (includes pstruct), perldoc, and s2p so that
@@ -1510,9 +1537,9 @@ perl (5.004.04-6) frozen unstable; urgency=low
     in memory rather than written to a temporary file.
   * Fix typo in perlop(1p).  Thanks to Richard Braakman <dark@xs4all.nl>
     for pointing this out.  (Fixes Bug #22488)
-  * Add /usr/doc/perl/perlfaq-is-free to explain Tom Christiansen's intent 
+  * Add /usr/doc/perl/perlfaq-is-free to explain Tom Christiansen's intent
     with his perlfaq copyright.  (Closes Bugs #10286, #22705)
-  * Fix typos in postrm scripts.  Thanks to Mark Eichin <eichin@arepa.com> 
+  * Fix typos in postrm scripts.  Thanks to Mark Eichin <eichin@arepa.com>
     for this.  (Fixes Bug #23107)
 
  -- Darren Stalder <torin@daft.com>  Tue,  2 Jun 1998 04:42:47 -0700
@@ -1521,7 +1548,7 @@ perl (5.004.04-5) unstable; urgency=low
 
   * Add copyright file to perl-base since it makes it comply with the
     standards and doesn't take up much space.  (Fixes Bug #19384)
-  * Added files to base so that dpkg-ftp is fully supported.  (Actually in 
+  * Added files to base so that dpkg-ftp is fully supported.  (Actually in
     -4, but I forgot to mention it.)  (Fixes Bug #16134)
   * Added even more files to base so that libnet is fully supported.
     (Fixes Bug #18338, #18593)
@@ -1536,7 +1563,7 @@ perl (5.004.04-5) unstable; urgency=low
   * Changed description of perldebug to say that it shows internals of
     Perl and helps debug Perl.  (Fixes Bug #17547).
   * Changed the permissions on suidperl to give group and world read
-    access.  It makes no sense to restrict read access when anyone can get 
+    access.  It makes no sense to restrict read access when anyone can get
     a copy of off CPAN.
   * Also registered suidperl with suidmanager.  (Fixes Bug #15702)
   * Remove the execute permission and use strip --strip-unneeded on all
@@ -1547,12 +1574,12 @@ perl (5.004.04-5) unstable; urgency=low
   * Sym-link /usr/doc/perl/changelog to /usr/doc/perl/Changes so that the
     latest upstream changes file has the proper name.
   * Tell perl_archive in ExtUtils::MM_Unix to return -lc so that the
-    shared libraries built with MakeMaker have libc dependency information 
+    shared libraries built with MakeMaker have libc dependency information
     embedded in them.  Note that if the module specifies it's own
     libraries, those will come after the -lc.  If this is a problem, the
     module should specify -lc in its library list.
   * Use mkstemp to avoid security/dos race conditions in /tmp.
-	  
+
  -- Darren Stalder <torin@daft.com>  Tue, 10 Mar 1998 23:00:09 -0800
 
 perl (5.004.04-4) unstable; urgency=low
@@ -1563,7 +1590,7 @@ perl (5.004.04-4) unstable; urgency=low
   * Adapted patch from Stephen Zander <srz@mckesson.com> so that Perl
     knows to use getspnam if shadowing is enabled.  (Needed extra
     Configure bits added.) (Fixes Bug #15993)
-  * Added Conflicts: perl (<<5.004.04-2) to perl-base so you can't install 
+  * Added Conflicts: perl (<<5.004.04-2) to perl-base so you can't install
     it with an older version of the perl package.  (Fixes Bug #16810)
   * Make sure that none of the gzipped examples are executable in
     /usr/doc/perl/examples.  (Fixes Bug #11978)
@@ -1586,7 +1613,7 @@ perl (5.004.04-3) unstable; urgency=medium (High for those upgrading from bo)
     of the time takes the other 90%.  Building a libperl ran into some
     interesting snags and will not debut with this version.
   * Adapted patch by Herbert Xu <herbert@gondor.apana.org.au> that uses
-    if's in the postinst so that we don't get false negatives on 
+    if's in the postinst so that we don't get false negatives on
     install.  Took the chance to change the find/xargs to use -print0/-0
     jic.
 
@@ -1733,7 +1760,7 @@ perl (5.003.07-2) unstable; urgency=low
  -- Darren Stalder <torin@daft.com>  Thu, 21 Nov 1996 04:13:51 -0800
 
 perl (5.003.07-1) unstable; urgency=medium
-  
+
   * added code to postinst/prerm that only creates the empty
     /usr/local/lib/site_perl directory if /usr/local/lib is writable by
     root (fixes Bug #5003)
@@ -1752,7 +1779,7 @@ perl (5.003.07-1) unstable; urgency=medium
   * Added Pre-depends: ldso to control file in case the user upgrades ldso
     at the same time they upgrade Perl. (fixes Bug #2589)
   * Made sure that all files in the examples directory
-    (/usr/doc/perl/examples) were readable (fixes Bug #3995, 4615, 4734, 
+    (/usr/doc/perl/examples) were readable (fixes Bug #3995, 4615, 4734,
     4870)
   * Added symbolic link /usr/doc/perl/examples to point to the examples
     directory. (fixes Bug #3997)  (this is obsoleted by new standards)
@@ -2004,8 +2031,8 @@ Perl 5.001 Debian 7 (5.001n) - ??-??-95 Ray Dassen <jdassen@wi.LeidenUniv.nl>
 * a.out version now does dynamic loading via libdld.
 
 Perl 5.001 Debian 6 (5.001n) - 04-11-95 Ray Dassen <jdassen@wi.LeidenUniv.nl>
-* Updated to 5.001n: big patch, small problems remain. 
-* debian.rules now passes definitions to Configure, instead of running 
+* Updated to 5.001n: big patch, small problems remain.
+* debian.rules now passes definitions to Configure, instead of running
   Configure with a modified hints/linux.sh.
 * Use a variable in debian.rules to test the binary format.
 * With ELF, DB_File support is disabled (rather ad hoc).
@@ -2030,7 +2057,7 @@ Perl 5.001 Debian 2 - 5/8/95 Carl Streeter <streeter@cae.wisc.edu>
 * Added dialog.pl interface to dialog for Jim Robinson
 
 Perl 5.001 Debian 1 - 3/1/95 Carl Streeter <streeter@cae.wisc.edu>
-* Updated perl version to 5.001.  
+* Updated perl version to 5.001.
 * Added black magic to figure out if a kernel tree was installed
 * Yelled a lot if one wasn't
 * added unofficial patches a-e from perl5-porters
@@ -2053,7 +2080,7 @@ Perl 5.000 Debian 2 - 2/27/95 Carl Streeter <streeter@cae.wisc.edu>
 * generally fixed it up so it was useful for debian.
 
 Perl 5.000 Debian 1 - Robert Sanders <Robert.Sanders@linux.org>
-* Initial release. 
+* Initial release.
 
 Local variables:
 mode: debian-changelog

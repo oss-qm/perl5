@@ -1,9 +1,9 @@
 Revert DynaLoader to 5.8.3 version so as not to break programs linked
 with pre-5.8.4 libperl.so (and DynaLoader.a).
 
-diff -Naur --exclude=debian perl-5.8.7.orig/ext/DynaLoader/DynaLoader_pm.PL perl-5.8.7/ext/DynaLoader/DynaLoader_pm.PL
---- perl-5.8.7.orig/ext/DynaLoader/DynaLoader_pm.PL	2004-11-23 02:32:13.000000000 +1100
-+++ perl-5.8.7/ext/DynaLoader/DynaLoader_pm.PL	2005-06-02 23:34:24.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.8.orig/ext/DynaLoader/DynaLoader_pm.PL perl-5.8.8/ext/DynaLoader/DynaLoader_pm.PL
+--- perl-5.8.8.orig/ext/DynaLoader/DynaLoader_pm.PL	2004-11-23 02:32:13.000000000 +1100
++++ perl-5.8.8/ext/DynaLoader/DynaLoader_pm.PL	2006-02-01 23:34:15.000000000 +1100
 @@ -29,7 +29,7 @@
  
  use vars qw($VERSION *AUTOLOAD);
@@ -50,10 +50,10 @@ diff -Naur --exclude=debian perl-5.8.7.orig/ext/DynaLoader/DynaLoader_pm.PL perl
  =item dl_error()
  
  Syntax:
-diff -Naur --exclude=debian perl-5.8.7.orig/ext/DynaLoader/XSLoader_pm.PL perl-5.8.7/ext/DynaLoader/XSLoader_pm.PL
---- perl-5.8.7.orig/ext/DynaLoader/XSLoader_pm.PL	2004-05-30 19:41:19.000000000 +1000
-+++ perl-5.8.7/ext/DynaLoader/XSLoader_pm.PL	2005-06-02 23:34:24.000000000 +1000
-@@ -115,7 +115,6 @@
+diff -Naur --exclude=debian perl-5.8.8.orig/ext/DynaLoader/XSLoader_pm.PL perl-5.8.8/ext/DynaLoader/XSLoader_pm.PL
+--- perl-5.8.8.orig/ext/DynaLoader/XSLoader_pm.PL	2005-10-16 23:50:05.000000000 +1000
++++ perl-5.8.8/ext/DynaLoader/XSLoader_pm.PL	2006-02-01 23:34:15.000000000 +1100
+@@ -118,7 +118,6 @@
      my $xs = dl_install_xsub("${module}::bootstrap", $boot_symbol_ref, $file);
  
      # See comment block above
@@ -61,9 +61,9 @@ diff -Naur --exclude=debian perl-5.8.7.orig/ext/DynaLoader/XSLoader_pm.PL perl-5
      return &$xs(@_);
  
    retry:
-diff -Naur --exclude=debian perl-5.8.7.orig/ext/DynaLoader/dl_hpux.xs perl-5.8.7/ext/DynaLoader/dl_hpux.xs
---- perl-5.8.7.orig/ext/DynaLoader/dl_hpux.xs	2004-01-20 08:54:32.000000000 +1100
-+++ perl-5.8.7/ext/DynaLoader/dl_hpux.xs	2005-06-02 23:34:24.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.8.orig/ext/DynaLoader/dl_hpux.xs perl-5.8.8/ext/DynaLoader/dl_hpux.xs
+--- perl-5.8.8.orig/ext/DynaLoader/dl_hpux.xs	2004-01-20 08:54:32.000000000 +1100
++++ perl-5.8.8/ext/DynaLoader/dl_hpux.xs	2006-02-01 23:34:15.000000000 +1100
 @@ -102,19 +102,6 @@
          sv_setiv( ST(0), PTR2IV(obj) );
  

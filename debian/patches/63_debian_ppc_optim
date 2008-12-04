@@ -1,9 +1,9 @@
 Don't need to downgrade optimisation on ppc with gcc 4.0
 
-diff -Naur --exclude=debian perl-5.8.7.orig/hints/linux.sh perl-5.8.7/hints/linux.sh
---- perl-5.8.7.orig/hints/linux.sh	2005-04-05 06:08:31.000000000 +1000
-+++ perl-5.8.7/hints/linux.sh	2005-06-03 00:28:56.000000000 +1000
-@@ -89,13 +89,6 @@
+diff -Naur --exclude=debian perl-5.8.8.orig/hints/linux.sh perl-5.8.8/hints/linux.sh
+--- perl-5.8.8.orig/hints/linux.sh	2005-11-18 12:18:45.000000000 +1100
++++ perl-5.8.8/hints/linux.sh	2006-02-03 00:15:03.000000000 +1100
+@@ -94,13 +94,6 @@
  # use -O2 by default ; -O3 doesn't seem to bring significant benefits with gcc
  '')
      optimize='-O2'

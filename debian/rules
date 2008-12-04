@@ -187,9 +187,6 @@ endif
 	chmod 755 $(build)/perl/usr/bin/perldoc
 
 	# install rename script to bin (as prename, alternative configured)
-	mkdir -p $(build)/perl-modules/usr/bin \
-	    $(build)/perl-modules/usr/share/man/man1
-
 	cp debian/rename $(build)/perl/usr/bin/prename
 	chmod 755 $(build)/perl/usr/bin/prename
 
@@ -223,17 +220,17 @@ endif
 
 	# remove empty directories left after moving module docs
 	find $(build)/perl-modules/usr/share/perl/$(fullversion) \
-	    -depth -type d -empty | xargs rmdir
+	    -depth -type d -empty | xargs -r rmdir
 
 	# want these in /etc since /usr may not be writable
 	mkdir -p $(build)/perl-modules/etc/perl/CPAN \
 	    $(build)/perl-modules/etc/perl/Net
 
 	# compress
-	find $(build)/*/usr/share/man -type f -print | xargs gzip -9
+	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -9
 	find $(build)/*/usr/share/doc -type f \
 	    \( -name changelog\* -o \( -size +4k ! -name copyright \) \) \
-	    -print | xargs gzip -9
+	    -print | xargs -r gzip -9
 
 ifeq ($(strip),yes)
 	# strip
@@ -250,13 +247,13 @@ ifeq ($(strip),yes)
 endif
 
 	# fixperms
-	find $(build) -print | xargs chown -h root:root
-	find $(build) -type d -print | xargs chmod 755
-	find $(build) -type f -print | xargs chmod go=rX,u+rw,a-s
-	find $(build)/*/usr/bin -type f -print | xargs chmod a+x
-	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs chmod a-x
+	find $(build) -print | xargs -r chown -h root:root
+	find $(build) -type d -print | xargs -r chmod 755
+	find $(build) -type f -print | xargs -r chmod go=rX,u+rw,a-s
+	find $(build)/*/usr/bin -type f -print | xargs -r chmod a+x
+	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs -r chmod a-x
 	find $(build)/*/usr/share/doc $(build)/*/usr/share/man -type f \
-	    -print | xargs chmod 644
+	    -print | xargs -r chmod 644
 
 	# suidperl needs to be...
 	chmod u+s $(build)/perl-suid/usr/bin/sperl$(fullversion)

@@ -332,7 +332,7 @@ This isn't.
 .PP
 .Vb 2
 \& This is.  And this:    is an internal tab.  It should be:
-\&                    |--| <= lined up with that.
+\&                    |\-\-| <= lined up with that.
 .Ve
 .PP
 (Tricky, but tabs should be expanded before the translator starts in on

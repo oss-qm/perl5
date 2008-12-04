@@ -1,9 +1,9 @@
 Package dependencies ensure the correct library is linked at run-time.
 Remove overly restictive version check.
 
-diff --exclude=debian -Naur perl-5.8.7.orig/ext/DB_File/version.c perl-5.8.7/ext/DB_File/version.c
---- perl-5.8.7.orig/ext/DB_File/version.c	2002-01-07 03:12:55.000000000 +1100
-+++ perl-5.8.7/ext/DB_File/version.c	2005-12-16 00:24:16.000000000 +1100
+diff -Naur --exclude=debian perl-5.8.8.orig/ext/DB_File/version.c perl-5.8.8/ext/DB_File/version.c
+--- perl-5.8.8.orig/ext/DB_File/version.c	2002-01-07 03:12:55.000000000 +1100
++++ perl-5.8.8/ext/DB_File/version.c	2006-02-03 00:52:55.000000000 +1100
 @@ -48,12 +48,14 @@
  
      (void)db_version(&Major, &Minor, &Patch) ;

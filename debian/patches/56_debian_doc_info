@@ -1,10 +1,10 @@
 Replace generic man(1) instructions with Debian-specific information.
 Indicate that the user needs to install the perl-doc package.
 
-diff -Naur --exclude=debian perl-5.8.7.orig/pod/perl.pod perl-5.8.7/pod/perl.pod
---- perl-5.8.7.orig/pod/perl.pod	2005-05-30 01:02:44.000000000 +1000
-+++ perl-5.8.7/pod/perl.pod	2005-06-03 00:11:00.000000000 +1000
-@@ -195,32 +195,16 @@
+diff -Naur --exclude=debian perl-5.8.8.orig/pod/perl.pod perl-5.8.8/pod/perl.pod
+--- perl-5.8.8.orig/pod/perl.pod	2006-01-08 00:24:56.000000000 +1100
++++ perl-5.8.8/pod/perl.pod	2006-02-02 23:41:42.000000000 +1100
+@@ -203,32 +203,16 @@
      perlwin32		Perl notes for Windows
  
  
