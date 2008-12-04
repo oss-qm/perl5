@@ -1243,7 +1243,7 @@ Net::FTP - FTP Client class
     $ftp = Net::FTP->new("some.host.name", Debug => 0)
       or die "Cannot connect to some.host.name: $@";
 
-    $ftp->login("anonymous",'-anonymous@')
+    $ftp->login("anonymous",'\-anonymous@')
       or die "Cannot login ", $ftp->message;
 
     $ftp->cwd("/pub")

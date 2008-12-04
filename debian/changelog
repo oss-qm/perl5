@@ -1,3 +1,24 @@
+perl (5.8.8-7) unstable; urgency=low
+
+  * Apply optimisation for File::Spec->abs2rel suggested by joeyh
+    (closes: #376658).
+
+  * Patch perl5db.pl to cope with lines from a remote socket requiring
+    multiple calls to recv (fixes a problem reported by EPIC folks).
+
+  * Merge NMU.
+
+  [Marc 'HE' Brockschmidt] (closes: #398331)
+  * Completly replace libnet-perl:
+   + Integrate some patches for the Net:: modules
+   + debian/control: Update to replace the last libnet-perl version.
+   + Update configuration mechanism so that /etc/perl/Net/libnet.cfg
+     sources in /etc/libnet.cfg if it exists, otherwise the
+     configuration is stored there. This saves us trouble from
+     converting debconf-managed /etc/libnet.cfg to a dpkg conffile
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 19 Nov 2006 01:07:26 +1100
+
 perl (5.8.8-6.1) unstable; urgency=high
 
   * Non-maintainer upload to fix Failure To Build From Source in hppa, mips
