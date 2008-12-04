@@ -33,11 +33,6 @@ if ($^O eq 'unicos') { 	# For some reason root() produces very inaccurate
 }			# cos(), sin(), cosh(), sinh().  The division
 			# of doubles is the current suspect.
 
-my %skip;
-if (`uname -m` =~ /^arm/) {
-    $skip{$_} = 'non-IEEE fp rounding' for 267, 487;
-}
-
 while (<DATA>) {
 	s/^\s+//;
 	next if $_ eq '' || /^\#/;
@@ -451,9 +446,7 @@ sub check {
 
 	print "# @_\n";
 
-	if ($skip{$test}) {
-		print "ok $test # skipped: $skip{$test}\n";
-	} elsif ("$got" eq "$expected"
+	if ("$got" eq "$expected"
 	    ||
 	    ($expected =~ /^-?\d/ && $got == $expected)
 	    ||

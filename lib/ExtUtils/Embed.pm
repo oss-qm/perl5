@@ -297,9 +297,6 @@ and extensions in your C/C++ applications.
 Typically, an application B<Makefile> will invoke ExtUtils::Embed
 functions while building your application.  
 
-Note that on Debian systems the B<libperl-dev> package is required for
-compiling applications which embed an interpreter.
-
 =head1 @EXPORT
 
 ExtUtils::Embed exports the following functions:

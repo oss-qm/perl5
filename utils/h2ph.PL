@@ -734,13 +734,10 @@ sub queue_includes_from
 # non-GCC?) C compilers, but gcc uses an additional include directory.
 sub inc_dirs
 {
-    my @inc = $Config{usrinc};
-    my $from_gcc = `$Config{cc} --print-libgcc-file-name 2>&1`;
-    if ($from_gcc =~ s!/libgcc\..*!/include!s and -d $from_gcc)
-    {
-	unshift @inc, $from_gcc;
-    }
-    @inc;
+    my $from_gcc    = `$Config{cc} -v 2>&1`;
+    $from_gcc       =~ s:^Reading specs from (.*?)/specs\b.*:$1/include:s;
+
+    length($from_gcc) ? ($from_gcc, $Config{usrinc}) : ($Config{usrinc});
 }
 
 

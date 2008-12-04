@@ -8702,31 +8702,21 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	if (*q == '%') {
 	    eptr = q++;
 	    elen = 1;
-	    if (vectorize) {
-		c = '%';
-		goto unknown;
-	    }
 	    goto string;
 	}
 
-	if (!vectorize && !args) {
-	    if (efix) {
-		const I32 i = efix-1;
-		argsv = (i >= 0 && i < svmax) ? svargs[i] : &PL_sv_undef;
-	    } else {
-		argsv = (svix >= 0 && svix < svmax)
-		    ? svargs[svix++] : &PL_sv_undef;
-	    }
-	}
+	if (vectorize)
+	    argsv = vecsv;
+	else if (!args)
+	    argsv = (efix ? efix <= svmax : svix < svmax) ?
+		    svargs[efix ? efix-1 : svix++] : &PL_sv_undef;
 
 	switch (c = *q++) {
 
 	    /* STRINGS */
 
 	case 'c':
-	    if (vectorize)
-		goto unknown;
-	    uv = (args) ? va_arg(*args, int) : SvIVx(argsv);
+	    uv = (args && !vectorize) ? va_arg(*args, int) : SvIVx(argsv);
 	    if ((uv > 255 ||
 		 (!UNI_IS_INVARIANT(uv) && SvUTF8(sv)))
 		&& !IN_BYTES) {
@@ -8742,9 +8732,7 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	    goto string;
 
 	case 's':
-	    if (vectorize)
-		goto unknown;
-	    if (args) {
+	    if (args && !vectorize) {
 		eptr = va_arg(*args, char*);
 		if (eptr)
 #ifdef MACOS_TRADITIONAL
@@ -8792,6 +8780,7 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 		is_utf8 = TRUE;
 
 	string:
+	    vectorize = FALSE;
 	    if (has_precis && elen > precis)
 		elen = precis;
 	    break;
@@ -8983,8 +8972,6 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 		    *--eptr = '0';
 		break;
 	    case 2:
-		if (!uv)
-		    alt = FALSE;
 		do {
 		    dig = uv & 1;
 		    *--eptr = '0' + dig;
@@ -9031,8 +9018,6 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	case 'e': case 'E':
 	case 'f':
 	case 'g': case 'G':
-	    if (vectorize)
-		goto unknown;
 
 	    /* This is evil, but floating point is even more evil */
 
@@ -9065,7 +9050,7 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	    }
 
 	    /* now we need (long double) if intsize == 'q', else (double) */
-	    nv = (args) ?
+	    nv = (args && !vectorize) ?
 #if LONG_DOUBLESIZE > DOUBLESIZE
 		intsize == 'q' ?
 		    va_arg(*args, long double) :
@@ -9076,6 +9061,7 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 		: SvNVx(argsv);
 
 	    need = 0;
+	    vectorize = FALSE;
 	    if (c != 'e' && c != 'E') {
 		i = PERL_INT_MIN;
 		/* FIXME: if HAS_LONG_DOUBLE but not USE_LONG_DOUBLE this
@@ -9230,10 +9216,8 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	    /* SPECIAL */
 
 	case 'n':
-	    if (vectorize)
-		goto unknown;
 	    i = SvCUR(sv) - origlen;
-	    if (args) {
+	    if (args && !vectorize) {
 		switch (intsize) {
 		case 'h':	*(va_arg(*args, short*)) = i; break;
 		default:	*(va_arg(*args, int*)) = i; break;
@@ -9246,6 +9230,7 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	    }
 	    else
 		sv_setuv_mg(argsv, (UV)i);
+	    vectorize = FALSE;
 	    continue;	/* not "break" */
 
 	    /* UNKNOWN */
@@ -9289,8 +9274,6 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 
 	/* calculate width before utf8_upgrade changes it */
 	have = esignlen + zeros + elen;
-	if (have < zeros)
-	    Perl_croak_nocontext(PL_memory_wrap);
 
 	if (is_utf8 != has_utf8) {
 	     if (is_utf8) {
@@ -9318,8 +9301,6 @@ Perl_sv_vcatpvfn(pTHX_ SV *sv, const char *pat, STRLEN patlen, va_list *args, SV
 	need = (have > width ? have : width);
 	gap = need - have;
 
-	if (need >= (((STRLEN)~0) - SvCUR(sv) - dotstrlen - 1))
-	    Perl_croak_nocontext(PL_memory_wrap);
 	SvGROW(sv, SvCUR(sv) + need + dotstrlen + 1);
 	p = SvEND(sv);
 	if (esignlen && fill == '0') {
