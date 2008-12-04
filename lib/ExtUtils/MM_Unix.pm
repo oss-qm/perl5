@@ -546,10 +546,9 @@ sub constants {
 
 	      AR_STATIC_ARGS NAME DISTNAME NAME_SYM VERSION
 	      VERSION_SYM XS_VERSION INST_BIN INST_EXE INST_LIB
-	      INST_ARCHLIB INST_SCRIPT PREFIX SITEPREFIX INSTALLDIRS
+	      INST_ARCHLIB INST_SCRIPT PREFIX  INSTALLDIRS
 	      INSTALLPRIVLIB INSTALLARCHLIB INSTALLSITELIB
-	      INSTALLSITEARCH INSTALLVENDORLIB INSTALLVENDORARCH
-	      INSTALLBIN INSTALLSCRIPT INSTALLSITEBIN PERL_LIB
+	      INSTALLSITEARCH INSTALLBIN INSTALLSCRIPT PERL_LIB
 	      PERL_ARCHLIB SITELIBEXP SITEARCHEXP LIBPERL_A MYEXTLIB
 	      FIRST_MAKEFILE MAKE_APERL_FILE PERLMAINCC PERL_SRC
 	      PERL_INC PERL FULLPERL FULL_AR
@@ -605,8 +604,8 @@ MAN3PODS = ".join(" \\\n\t", sort keys %{$self->{MAN3PODS}})."
 	      INST_HTMLSITELIBDIR INSTALLHTMLSITELIBDIR
 	      INST_HTMLSCRIPTDIR  INSTALLHTMLSCRIPTDIR
 	      INST_HTMLLIBDIR                    HTMLEXT
-	      INST_MAN1DIR        INSTALLMAN1DIR INSTALLSITEMAN1DIR MAN1EXT
-	      INST_MAN3DIR        INSTALLMAN3DIR INSTALLSITEMAN3DIR MAN3EXT
+	      INST_MAN1DIR        INSTALLMAN1DIR MAN1EXT
+	      INST_MAN3DIR        INSTALLMAN3DIR MAN3EXT
 	      /) {
 	next unless defined $self->{$tmp};
 	push @m, "$tmp = $self->{$tmp}\n";
@@ -1846,56 +1845,53 @@ usually solves this kind of problem.
     # or prefix/lib/perl5/man exist, we'll replace those instead
     # of /prefix/{lib,man}
 
-    # Config doesn't have defaults for these, dammit
-    $self->{INSTALLSITEMAN1DIR} ||= "$Config{siteprefix}/man/man1";
-    $self->{INSTALLSITEMAN3DIR} ||= "$Config{siteprefix}/man/man3";
-
-    # replace siteprefix first, as it may contain prefix
-    for $install_variable (qw/
-			   INSTALLSITEBIN
-			   INSTALLSITELIB
-			   INSTALLSITEARCH
-			   INSTALLSITEMAN1DIR
-			   INSTALLSITEMAN3DIR
-			   /) {
-	$self->prefixify($install_variable,$Config{siteprefix},'$(SITEPREFIX)');
-    }
-
     $replace_prefix = qq[\$\(PREFIX\)];
     for $install_variable (qw/
-			   SITEPREFIX
 			   INSTALLBIN
 			   INSTALLSCRIPT
-			   INSTALLSITEBIN
 			   /) {
 	$self->prefixify($install_variable,$configure_prefix,$replace_prefix);
     }
+    my $funkylibdir = $self->catdir($configure_prefix,"lib","perl5");
+    $funkylibdir = '' unless -d $funkylibdir;
+    $search_prefix = $funkylibdir || $self->catdir($configure_prefix,"lib");
     if ($self->{LIB}) {
 	$self->{INSTALLPRIVLIB} = $self->{INSTALLSITELIB} = $self->{LIB};
 	$self->{INSTALLARCHLIB} = $self->{INSTALLSITEARCH} = 
 	    $self->catdir($self->{LIB},$Config{'archname'});
     }
     else {
+	if (-d $self->catdir($self->{PREFIX},"lib","perl5")) {
+	    $replace_prefix = $self->catdir(qq[\$\(PREFIX\)],"lib", "perl5");
+	}
+	else {
+	    $replace_prefix = $self->catdir(qq[\$\(PREFIX\)],"lib");
+	}
 	for $install_variable (qw/
 			       INSTALLPRIVLIB
 			       INSTALLARCHLIB
 			       INSTALLSITELIB
 			       INSTALLSITEARCH
-			       INSTALLVENDORLIB
-			       INSTALLVENDORARCH
 			       /)
 	{
-	    $self->prefixify($install_variable,$configure_prefix,$replace_prefix);
+	    $self->prefixify($install_variable,$search_prefix,$replace_prefix);
 	}
+    }
+    my $funkymandir = $self->catdir($configure_prefix,"lib","perl5","man");
+    $funkymandir = '' unless -d $funkymandir;
+    $search_prefix = $funkymandir || $self->catdir($configure_prefix,"man");
+    if (-d $self->catdir($self->{PREFIX},"lib","perl5", "man")) {
+	$replace_prefix = $self->catdir(qq[\$\(PREFIX\)],"lib", "perl5", "man");
+    }
+    else {
+	$replace_prefix = $self->catdir(qq[\$\(PREFIX\)],"man");
     }
     for $install_variable (qw/
 			   INSTALLMAN1DIR
 			   INSTALLMAN3DIR
-			   INSTALLSITEMAN1DIR
-			   INSTALLSITEMAN3DIR
 			   /)
     {
-	$self->prefixify($install_variable,$configure_prefix,$replace_prefix);
+	$self->prefixify($install_variable,$search_prefix,$replace_prefix);
     }
 
     # Now we head at the manpages. Maybe they DO NOT want manpages
@@ -2117,14 +2113,13 @@ install_perl :: all pure_perl_install doc_perl_install
 
 install_site :: all pure_site_install doc_site_install
 
-install_vendor :: all pure_vendor_install doc_vendor_install
-
 install_ :: install_site
 	@echo INSTALLDIRS not defined, defaulting to INSTALLDIRS=site
 
 pure_install :: pure_$(INSTALLDIRS)_install
 
 doc_install :: doc_$(INSTALLDIRS)_install
+	}.$self->{NOECHO}.q{echo Appending installation info to $(INSTALLARCHLIB)/perllocal.pod
 
 pure__install : pure_site_install
 	@echo INSTALLDIRS not defined, defaulting to INSTALLDIRS=site
@@ -2133,7 +2128,7 @@ doc__install : doc_site_install
 	@echo INSTALLDIRS not defined, defaulting to INSTALLDIRS=site
 
 pure_perl_install ::
-	}.$self->{NOECHO}.q{umask 022; $(MOD_INSTALL) \
+	}.$self->{NOECHO}.q{$(MOD_INSTALL) \
 		read }.$self->catfile('$(PERL_ARCHLIB)','auto','$(FULLEXT)','.packlist').q{ \
 		write }.$self->catfile('$(INSTALLARCHLIB)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(INSTALLPRIVLIB) \
@@ -2149,32 +2144,23 @@ pure_perl_install ::
 
 
 pure_site_install ::
-	}.$self->{NOECHO}.q{umask 02; $(MOD_INSTALL) \
+	}.$self->{NOECHO}.q{$(MOD_INSTALL) \
 		read }.$self->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').q{ \
 		write }.$self->catfile('$(INSTALLSITEARCH)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(INSTALLSITELIB) \
 		$(INST_ARCHLIB) $(INSTALLSITEARCH) \
-		$(INST_BIN) $(INSTALLSITEBIN) \
-		$(INST_SCRIPT) $(INSTALLSITEBIN) \
-		$(INST_MAN1DIR) $(INSTALLSITEMAN1DIR) \
-		$(INST_MAN3DIR) $(INSTALLSITEMAN3DIR)
+		$(INST_BIN) $(INSTALLBIN) \
+		$(INST_SCRIPT) $(INSTALLSCRIPT) \
+		$(INST_HTMLLIBDIR) $(INSTALLHTMLSITELIBDIR) \
+		$(INST_HTMLSCRIPTDIR) $(INSTALLHTMLSCRIPTDIR) \
+		$(INST_MAN1DIR) $(INSTALLMAN1DIR) \
+		$(INST_MAN3DIR) $(INSTALLMAN3DIR)
 	}.$self->{NOECHO}.q{$(WARN_IF_OLD_PACKLIST) \
 		}.$self->catdir('$(PERL_ARCHLIB)','auto','$(FULLEXT)').q{
 
-
-pure_vendor_install ::
-	}.$self->{NOECHO}.q{umask 022; $(MOD_INSTALL) \
-		$(INST_LIB) $(INSTALLVENDORLIB) \
-		$(INST_ARCHLIB) $(INSTALLVENDORARCH) \
-		$(INST_BIN) $(INSTALLBIN) \
-		$(INST_SCRIPT) $(INSTALLSCRIPT) \
-		$(INST_MAN1DIR) $(INSTALLMAN1DIR) \
-		$(INST_MAN3DIR) $(INSTALLMAN3DIR)
-
 doc_perl_install ::
-	}.$self->{NOECHO}.q{echo Appending installation info to $(INSTALLARCHLIB)/perllocal.pod
-	-}.$self->{NOECHO}.q{umask 022; $(MKPATH) $(INSTALLARCHLIB)
-	-}.$self->{NOECHO}.q{umask 022; $(DOC_INSTALL) \
+	-}.$self->{NOECHO}.q{$(MKPATH) $(INSTALLARCHLIB)
+	-}.$self->{NOECHO}.q{$(DOC_INSTALL) \
 		"Module" "$(NAME)" \
 		"installed into" "$(INSTALLPRIVLIB)" \
 		LINKTYPE "$(LINKTYPE)" \
@@ -2183,17 +2169,14 @@ doc_perl_install ::
 		>> }.$self->catfile('$(INSTALLARCHLIB)','perllocal.pod').q{
 
 doc_site_install ::
-	}.$self->{NOECHO}.q{echo Appending installation info to $(INSTALLSITEARCH)/perllocal.pod
-	-}.$self->{NOECHO}.q{umask 02; $(MKPATH) $(INSTALLSITEARCH)
-	-}.$self->{NOECHO}.q{umask 02; $(DOC_INSTALL) \
+	-}.$self->{NOECHO}.q{$(MKPATH) $(INSTALLARCHLIB)
+	-}.$self->{NOECHO}.q{$(DOC_INSTALL) \
 		"Module" "$(NAME)" \
 		"installed into" "$(INSTALLSITELIB)" \
 		LINKTYPE "$(LINKTYPE)" \
 		VERSION "$(VERSION)" \
 		EXE_FILES "$(EXE_FILES)" \
-		>> }.$self->catfile('$(INSTALLSITEARCH)','perllocal.pod').q{
-
-doc_vendor_install ::
+		>> }.$self->catfile('$(INSTALLARCHLIB)','perllocal.pod').q{
 
 };
 

@@ -56,7 +56,7 @@ $header = "perl5db.pl version $VERSION";
 # TTY  - the TTY to use for debugging i/o.
 #
 # noTTY - if set, goes in NonStop mode.  On interrupt if TTY is not set
-# uses the value of noTTY or "$HOME/.perldbtty$$" to find TTY using
+# uses the value of noTTY or "/tmp/perldbtty$$" to find TTY using
 # Term::Rendezvous.  Current variant is to have the name of TTY in this
 # file.
 #
@@ -290,7 +290,7 @@ signalLevel($signalLevel);
 	? $ENV{PAGER}
 	: ($^O eq 'os2' 
 	   ? 'cmd /c more' 
-	   : '/usr/bin/pager'))) unless defined $pager;
+	   : 'more'))) unless defined $pager;
 setman();
 &recallCommand("!") unless defined $prc;
 &shellBang("!") unless defined $psh;
@@ -1755,7 +1755,7 @@ sub setterm {
 	    select($sel);
 	} else {
 	    eval "require Term::Rendezvous;" or die;
-	    my $rv = $ENV{PERLDB_NOTTY} || "$ENV{HOME}/.perldbtty$$";
+	    my $rv = $ENV{PERLDB_NOTTY} || "/tmp/perldbtty$$";
 	    my $term_rv = new Term::Rendezvous $rv;
 	    $IN = $term_rv->IN;
 	    $OUT = $term_rv->OUT;

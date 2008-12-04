@@ -236,8 +236,6 @@ START_EXTERN_C
 #define PL_fdpid		(*Perl_Ifdpid_ptr(aTHXo))
 #undef  PL_fdpid_mutex
 #define PL_fdpid_mutex		(*Perl_Ifdpid_mutex_ptr(aTHXo))
-#undef  PL_fdscript
-#define PL_fdscript		(*Perl_Ifdscript_ptr(aTHX))
 #undef  PL_filemode
 #define PL_filemode		(*Perl_Ifilemode_ptr(aTHXo))
 #undef  PL_forkprocess
@@ -498,8 +496,6 @@ START_EXTERN_C
 #define PL_subline		(*Perl_Isubline_ptr(aTHXo))
 #undef  PL_subname
 #define PL_subname		(*Perl_Isubname_ptr(aTHXo))
-#undef  PL_suidscript
-#define PL_suidscript		(*Perl_Isuidscript_ptr(aTHX))
 #undef  PL_sv_arenaroot
 #define PL_sv_arenaroot		(*Perl_Isv_arenaroot_ptr(aTHXo))
 #undef  PL_sv_count

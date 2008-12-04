@@ -78,7 +78,7 @@ my \@patches = (
 print OUT <<'!NO!SUBS!';
 
 use Config;
-use File::Temp;
+use File::Spec;		# keep perlbug Perl 5.005 compatible
 use Getopt::Std;
 use strict;
 
@@ -913,9 +913,10 @@ EOF
 }
 
 sub filename {
-    my ($fh, $filename) = File::Temp::tempfile(UNLINK => 1);
-    close($fh);
-    return $filename;
+    my $dir = File::Spec->tmpdir();
+    $filename = "bugrep0$$";
+    $filename++ while -e File::Spec->catfile($dir, $filename);
+    $filename = File::Spec->catfile($dir, $filename);
 }
 
 sub paraprint {

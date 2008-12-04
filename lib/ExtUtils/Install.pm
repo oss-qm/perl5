@@ -120,6 +120,7 @@ sub install {
 	    return unless -f _;
 	    return if $_ eq ".exists";
 	    my $targetdir  = MY->catdir($targetroot, $File::Find::dir);
+	    my $origfile   = $_;
 	    my $targetfile = MY->catfile($targetdir, $_);
 
 	    my $diff = 0;
@@ -135,8 +136,8 @@ sub install {
 		if (-f $targetfile){
 		    forceunlink($targetfile) unless $nonono;
 		} else {
-		    mkpath($targetdir) unless $nonono;
-		    print "mkpath($targetdir)\n" if $verbose>1;
+		    mkpath($targetdir,0,0755) unless $nonono;
+		    print "mkpath($targetdir,0,0755)\n" if $verbose>1;
 		}
 		copy($_,$targetfile) unless $nonono;
 		print "Installing $targetfile\n";
@@ -155,7 +156,7 @@ sub install {
 	    } else {
 		inc_uninstall($_,$File::Find::dir,$verbose,0); # nonono set to 0
 	    }
-	    $packlist->{$targetfile}++;
+	    $packlist->{$origfile}++;
 
 	}, ".");
 	chdir($cwd) or Carp::croak("Couldn't chdir to $cwd: $!");

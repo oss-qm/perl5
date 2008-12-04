@@ -79,7 +79,7 @@ runpod2man('utils', $opts{man1dir}, $opts{man1ext}, 'c2ph', 'h2ph', 'h2xs',
 runpod2man('x2p', $opts{man1dir}, $opts{man1ext}, 's2p', 'a2p.pod',
 	   'find2perl');
 runpod2man('pod', $opts{man1dir}, $opts{man1ext}, 'pod2man', 'pod2html',
-	   'pod2latex', 'pod2text', 'pod2usage', 'podchecker', 'podselect');
+	   'pod2text', 'pod2usage', 'podchecker', 'podselect');
 
 # It would probably be better to have this page linked
 # to the c2ph man page.  Or, this one could say ".so man1/c2ph.1",

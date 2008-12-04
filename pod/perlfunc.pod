@@ -2717,7 +2717,7 @@ Examples:
     open(ARTICLE, "caesar <$article |")		# ditto
 	or die "Can't start caesar: $!";
 
-    open(EXTRACT, "|sort >Tmp$$")		# $$ is our process id
+    open(EXTRACT, "|sort >/tmp/Tmp$$")		# $$ is our process id
 	or die "Can't start sort: $!";
 
     # process argument list of files along with any includes
@@ -4370,7 +4370,7 @@ characters at each point it matches that way.  For example:
 
 produces the output 'h:i:t:h:e:r:e'.
 
-Empty leading (or trailing) fields are produced when there are positive width
+Empty leading (or trailing) fields are produced when there positive width
 matches at the beginning (or end) of the string; a zero-width match at the
 beginning (or end) of the string does not produce an empty field.  For
 example:
@@ -5778,7 +5778,7 @@ The status is returned in C<$?>.  If you say
     use POSIX ":sys_wait_h";
     #...
     do { 
-	$kid = waitpid(-1,WNOHANG);
+	$kid = waitpid(-1,&WNOHANG);
     } until $kid == -1;
 
 then you can do a non-blocking wait for all pending zombie processes.

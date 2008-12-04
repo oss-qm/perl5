@@ -1029,7 +1029,11 @@ libswanted_uselargefiles=''
 defvoidused=15
 
 : List of libraries we want.
-libswanted='gdbm db dl m c crypt'
+: If anyone needs -lnet, put it in a hint file.
+libswanted='sfio socket bind inet nsl nm ndbm gdbm dbm db malloc dl'
+libswanted="$libswanted dld ld sun m c cposix posix"
+libswanted="$libswanted ndir dir crypt sec"
+libswanted="$libswanted ucb bsd BSD PW x iconv util"
 : We probably want to search /usr/shlib before most other libraries.
 : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
 glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
@@ -14745,7 +14749,7 @@ set mntent.h i_mntent
 eval $inhdr
 
 : see if ndbm.h is available
-set gdbm-ndbm.h t_ndbm
+set ndbm.h t_ndbm
 eval $inhdr
 case "$t_ndbm" in
 $define)

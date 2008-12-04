@@ -1,7 +1,6 @@
 package AutoLoader;
 
 use 5.005_64;
-use Errno;
 our(@EXPORT, @EXPORT_OK, $VERSION);
 
 my $is_dosish;
@@ -248,7 +247,7 @@ lines:
         (my $constname = $sub) =~ s/.*:://;
         my $val = constant($constname, @_ ? $_[0] : 0);
         if ($! != 0) {
-            if ($!{EINVAL}) {
+            if ($! =~ /Invalid/ || $!{EINVAL}) {
                 $AutoLoader::AUTOLOAD = $sub;
                 goto &AutoLoader::AUTOLOAD;
             }

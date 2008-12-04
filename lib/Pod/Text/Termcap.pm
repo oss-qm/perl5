@@ -1,18 +1,18 @@
 # Pod::Text::Termcap -- Convert POD data to ASCII text with format escapes.
-# $Id: Termcap.pm,v 1.6 2001/11/28 05:44:09 eagle Exp $
+# $Id: Termcap.pm,v 1.0 2000/12/25 12:52:48 eagle Exp $
 #
-# Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>
+# Copyright 1999 by Russ Allbery <rra@stanford.edu>
 #
-# This program is free software; you may redistribute it and/or modify it
+# This program is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 #
 # This is a simple subclass of Pod::Text that overrides a few key methods to
-# output the right termcap escape sequences for formatted text on the current
-# terminal type.
+# output the right termcap escape sequences for formatted text on the
+# current terminal type.
 
-##############################################################################
+############################################################################
 # Modules and declarations
-##############################################################################
+############################################################################
 
 package Pod::Text::Termcap;
 
@@ -27,44 +27,36 @@ use vars qw(@ISA $VERSION);
 
 @ISA = qw(Pod::Text);
 
-# Don't use the CVS revision as the version, since this module is also in Perl
-# core and too many things could munge CVS magic revision strings.  This
-# number should ideally be the same as the CVS revision in podlators, however.
-$VERSION = 1.06;
+# Don't use the CVS revision as the version, since this module is also in
+# Perl core and too many things could munge CVS magic revision strings.
+# This number should ideally be the same as the CVS revision in podlators,
+# however.
+$VERSION = 1.00;
 
 
-##############################################################################
+############################################################################
 # Overrides
-##############################################################################
+############################################################################
 
 # In the initialization method, grab our terminal characteristics as well as
 # do all the stuff we normally do.
 sub initialize {
     my $self = shift;
-    my ($ospeed, $term, $termios);
 
     # The default Term::Cap path won't work on Solaris.
     $ENV{TERMPATH} = "$ENV{HOME}/.termcap:/etc/termcap"
         . ":/usr/share/misc/termcap:/usr/share/lib/termcap";
 
-    # Fall back on a hard-coded terminal speed if POSIX::Termios isn't
-    # available (such as on VMS).
-    eval { $termios = POSIX::Termios->new };
-    if ($@) {
-        $ospeed = '9600';
-    } else {
-        $termios->getattr;
-        $ospeed = $termios->getospeed;
-    }
-
-    # Fall back on the ANSI escape sequences if Term::Cap doesn't work.
-    eval { $term = Tgetent Term::Cap { TERM => undef, OSPEED => $ospeed } };
-    $$self{BOLD} = $$term{_md} || "\e[1m";
-    $$self{UNDL} = $$term{_us} || "\e[4m";
-    $$self{NORM} = $$term{_me} || "\e[m";
+    my $termios = POSIX::Termios->new;
+    $termios->getattr;
+    my $ospeed = $termios->getospeed;
+    my $term = Tgetent Term::Cap { TERM => undef, OSPEED => $ospeed };
+    $$self{BOLD} = $$term{_md} or die 'BOLD';
+    $$self{UNDL} = $$term{_us} or die 'UNDL';
+    $$self{NORM} = $$term{_me} or die 'NORM';
 
     unless (defined $$self{width}) {
-        $$self{width} = $ENV{COLUMNS} || $$term{_co} || 80;
+        $$self{width} = $ENV{COLUMNS} || $$term{_co} || 78;
         $$self{width} -= 2;
     }
 
@@ -91,12 +83,6 @@ sub cmd_head2 {
 sub seq_b { my $self = shift; return "$$self{BOLD}$_[0]$$self{NORM}" }
 sub seq_i { my $self = shift; return "$$self{UNDL}$_[0]$$self{NORM}" }
 
-# Output any included code in bold.
-sub output_code {
-    my ($self, $code) = @_;
-    $self->output ($$self{BOLD} . $code . $$self{NORM});
-}
-
 # Override the wrapping code to igore the special sequences.
 sub wrap {
     my $self = shift;
@@ -119,9 +105,9 @@ sub wrap {
 }
 
 
-##############################################################################
+############################################################################
 # Module return value and documentation
-##############################################################################
+############################################################################
 
 1;
 __END__
@@ -148,27 +134,12 @@ text using the correct termcap escape sequences for the current terminal.
 Apart from the format codes, it in all ways functions like Pod::Text.  See
 L<Pod::Text> for details and available options.
 
-=head1 NOTES
-
-This module uses Term::Cap to retrieve the formatting escape sequences for
-the current terminal, and falls back on the ECMA-48 (the same in this
-regard as ANSI X3.64 and ISO 6429, the escape codes also used by DEC VT100
-terminals) if the bold, underline, and reset codes aren't set in the
-termcap information.
-
 =head1 SEE ALSO
 
-L<Pod::Text>, L<Pod::Parser>, L<Term::Cap>
+L<Pod::Text|Pod::Text>, L<Pod::Parser|Pod::Parser>
 
 =head1 AUTHOR
 
-Russ Allbery <rra@stanford.edu>.
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>.
-
-This program is free software; you may redistribute it and/or modify it
-under the same terms as Perl itself.
+Russ Allbery E<lt>rra@stanford.eduE<gt>.
 
 =cut

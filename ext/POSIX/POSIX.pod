@@ -407,9 +407,9 @@ Retrieves the value of a configurable limit on a file or directory.  This
 uses file descriptors such as those obtained by calling C<POSIX::open>.
 
 The following will determine the maximum length of the longest allowable
-pathname on the filesystem which holds C</var/foo>.
+pathname on the filesystem which holds C</tmp/foo>.
 
-	$fd = POSIX::open( "/var/foo", &POSIX::O_RDONLY );
+	$fd = POSIX::open( "/tmp/foo", &POSIX::O_RDONLY );
 	$path_max = POSIX::fpathconf( $fd, &POSIX::_PC_PATH_MAX );
 
 Returns C<undef> on failure.
@@ -875,7 +875,7 @@ See also L<perlfunc/sysopen>.
 
 Open a directory for reading.
 
-	$dir = POSIX::opendir( "/var" );
+	$dir = POSIX::opendir( "/tmp" );
 	@files = POSIX::readdir( $dir );
 	POSIX::closedir( $dir );
 
@@ -886,9 +886,9 @@ Returns C<undef> on failure.
 Retrieves the value of a configurable limit on a file or directory.
 
 The following will determine the maximum length of the longest allowable
-pathname on the filesystem which holds C</var>.
+pathname on the filesystem which holds C</tmp>.
 
-	$path_max = POSIX::pathconf( "/var", &POSIX::_PC_PATH_MAX );
+	$path_max = POSIX::pathconf( "/tmp", &POSIX::_PC_PATH_MAX );
 
 Returns C<undef> on failure.
 

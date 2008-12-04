@@ -214,7 +214,6 @@ temporary files in one process, use a counter:
 	    my $count = 0;
 	    until (defined(fileno(FH)) || $count++ > 100) {
 		$base_name =~ s/-(\d+)$/"-" . (1 + $1)/e;
-		# O_EXCL is required for security reasons.
 		sysopen(FH, $base_name, O_WRONLY|O_EXCL|O_CREAT);
 	    }
 	    if (defined(fileno(FH))
@@ -550,8 +549,8 @@ To open file for update, file must not exist:
 
 To open a file without blocking, creating if necessary:
 
-    sysopen(FH, "/foo/somefile", O_WRONLY|O_NDELAY|O_CREAT)
-	    or die "can't open /foo/somefile: $!":
+    sysopen(FH, "/tmp/somefile", O_WRONLY|O_NDELAY|O_CREAT)
+	    or die "can't open /tmp/somefile: $!":
 
 Be warned that neither creation nor deletion of files is guaranteed to
 be an atomic operation over NFS.  That is, two processes might both
@@ -1094,7 +1093,7 @@ There's also a File::Tail module from CPAN.
 If you check L<perlfunc/open>, you'll see that several of the ways
 to call open() should do the trick.  For example:
 
-    open(LOG, ">>/foo/logfile");
+    open(LOG, ">>/tmp/logfile");
     open(STDERR, ">&LOG");
 
 Or even with a literal numeric descriptor:

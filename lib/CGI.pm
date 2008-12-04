@@ -1500,7 +1500,6 @@ sub startform {
        $action = $self->url(-absolute=>1,-path=>1);
        $action .= "?$ENV{QUERY_STRING}" if $ENV{QUERY_STRING};
     }
-    $action =~ s/\"/%22/g;  # fix cross-site scripting bug reported by obscure
     $action = qq(action="$action");
     my($other) = @other ? " @other" : '';
     $self->{'.parametersToAdd'}={};

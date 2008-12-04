@@ -196,9 +196,7 @@ Perl_do_open9(pTHX_ GV *gv, register char *name, I32 len, int as_raw,
 	}
 	mode[0] = mode[1] = mode[2] = mode[3] = '\0';
 	IoTYPE(io) = *type;
-	if (*type == IoTYPE_RDWR && tlen > 1 &&
-           (*(type+1) == IoTYPE_RDONLY || *(type+1) == IoTYPE_WRONLY) &&
-	   type[tlen-1] != IoTYPE_PIPE) { /* scary */
+	if (*type == IoTYPE_RDWR && tlen > 1 && type[tlen-1] != IoTYPE_PIPE) { /* scary */
 	    mode[1] = *type++;
 	    --tlen;
 	    writing = 1;

@@ -470,12 +470,6 @@ PERLVAR(Ihe_arenaroot,	XPV*)		/* list of allocated he areas */
 PERLVAR(Inumeric_radix_sv,	SV *)	/* The radix separator if not '.' */
 #endif
 
-/* These two variables are needed to preserve 5.6.x bincompat because we can't
-   change function prototypes of two exported functions.  Probably should be
-   taken out of blead soon, and relevant prototypes changed.  */
-PERLVARI(Ifdscript, int, -1)	/* fd for script */
-PERLVARI(Isuidscript, int, -1)	/* fd for suid script */
-
 /* New variables must be added to the very end for binary compatibility.
  * XSUB.h provides wrapper functions via perlapi.h that make this
  * irrelevant, but not all code may be expected to #include XSUB.h. */

@@ -58,7 +58,6 @@ See L<perlfunc/stat> about the S_I* constants.
 our($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $AUTOLOAD);
 
 require Exporter;
-use Errno;
 use XSLoader ();
 @ISA = qw(Exporter);
 $VERSION = "1.03";
@@ -204,7 +203,7 @@ sub AUTOLOAD {
     (my $constname = $AUTOLOAD) =~ s/.*:://;
     my $val = constant($constname, 0);
     if ($! != 0) {
-	if ($!{EINVAL}) {
+	if ($! =~ /Invalid/ || $!{EINVAL}) {
 	    $AutoLoader::AUTOLOAD = $AUTOLOAD;
 	    goto &AutoLoader::AUTOLOAD;
 	}

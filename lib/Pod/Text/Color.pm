@@ -1,18 +1,18 @@
 # Pod::Text::Color -- Convert POD data to formatted color ASCII text
-# $Id: Color.pm,v 1.3 2001/11/28 01:16:54 eagle Exp $
+# $Id: Color.pm,v 0.6 2000/12/25 12:52:39 eagle Exp $
 #
-# Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>
+# Copyright 1999 by Russ Allbery <rra@stanford.edu>
 #
-# This program is free software; you may redistribute it and/or modify it
+# This program is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 #
-# This is just a basic proof of concept.  It should later be modified to make
-# better use of color, take options changing what colors are used for what
-# text, and the like.
+# This is just a basic proof of concept.  It should later be modified to
+# make better use of color, take options changing what colors are used for
+# what text, and the like.
 
-##############################################################################
+############################################################################
 # Modules and declarations
-##############################################################################
+############################################################################
 
 package Pod::Text::Color;
 
@@ -26,15 +26,16 @@ use vars qw(@ISA $VERSION);
 
 @ISA = qw(Pod::Text);
 
-# Don't use the CVS revision as the version, since this module is also in Perl
-# core and too many things could munge CVS magic revision strings.  This
-# number should ideally be the same as the CVS revision in podlators, however.
-$VERSION = 1.03;
+# Don't use the CVS revision as the version, since this module is also in
+# Perl core and too many things could munge CVS magic revision strings.
+# This number should ideally be the same as the CVS revision in podlators,
+# however.
+$VERSION = 0.06;
 
 
-##############################################################################
+############################################################################
 # Overrides
-##############################################################################
+############################################################################
 
 # Make level one headings bold.
 sub cmd_head1 {
@@ -52,17 +53,10 @@ sub cmd_head2 {
     $self->SUPER::cmd_head2 (colored ($_, 'bold'));
 }
 
-# Fix the various formatting codes.
+# Fix the various interior sequences.
 sub seq_b { return colored ($_[1], 'bold')   }
 sub seq_f { return colored ($_[1], 'cyan')   }
 sub seq_i { return colored ($_[1], 'yellow') }
-
-# Output any included code in green.
-sub output_code {
-    my ($self, $code) = @_;
-    $code = colored ($code, 'green');
-    $self->output ($code);
-}
 
 # We unfortunately have to override the wrapping code here, since the normal
 # wrapping code gets really confused by all the escape sequences.
@@ -85,9 +79,9 @@ sub wrap {
     $output;
 }
 
-##############################################################################
+############################################################################
 # Module return value and documentation
-##############################################################################
+############################################################################
 
 1;
 __END__
@@ -125,17 +119,10 @@ B<pod2text> should be taught about those.
 
 =head1 SEE ALSO
 
-L<Pod::Text>, L<Pod::Parser>
+L<Pod::Text|Pod::Text>, L<Pod::Parser|Pod::Parser>
 
 =head1 AUTHOR
 
-Russ Allbery <rra@stanford.edu>.
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 1999, 2001 by Russ Allbery <rra@stanford.edu>.
-
-This program is free software; you may redistribute it and/or modify it
-under the same terms as Perl itself.
+Russ Allbery E<lt>rra@stanford.eduE<gt>.
 
 =cut

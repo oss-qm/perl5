@@ -38,7 +38,7 @@ BEGIN {
     }
 }
 
-$PATH = "sock-$$";
+$PATH = "/tmp/sock-$$";
 
 # Test if we can create the file within the tmp directory
 if (-e $PATH or not open(TEST, ">$PATH") and $^O ne 'os2') {

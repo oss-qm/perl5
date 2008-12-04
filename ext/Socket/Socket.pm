@@ -32,8 +32,8 @@ Socket, sockaddr_in, sockaddr_un, inet_aton, inet_ntoa - load the C socket.h def
 
     $proto = getprotobyname('tcp');
     socket(Socket_Handle, PF_UNIX, SOCK_STREAM, $proto);
-    unlink('/var/run/usock');
-    $sun = sockaddr_un('/var/run/usock');
+    unlink('/tmp/usock');
+    $sun = sockaddr_un('/tmp/usock');
     connect(Socket_Handle,$sun);
 
 =head1 DESCRIPTION

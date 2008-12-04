@@ -249,7 +249,6 @@
 #define PL_expect		(PERL_GET_INTERP->Iexpect)
 #define PL_fdpid		(PERL_GET_INTERP->Ifdpid)
 #define PL_fdpid_mutex		(PERL_GET_INTERP->Ifdpid_mutex)
-#define PL_fdscript		(PERL_GET_INTERP->Ifdscript)
 #define PL_filemode		(PERL_GET_INTERP->Ifilemode)
 #define PL_forkprocess		(PERL_GET_INTERP->Iforkprocess)
 #define PL_formfeed		(PERL_GET_INTERP->Iformfeed)
@@ -531,7 +530,6 @@
 #define PL_expect		(vTHX->Iexpect)
 #define PL_fdpid		(vTHX->Ifdpid)
 #define PL_fdpid_mutex		(vTHX->Ifdpid_mutex)
-#define PL_fdscript		(vTHX->Ifdscript)
 #define PL_filemode		(vTHX->Ifilemode)
 #define PL_forkprocess		(vTHX->Iforkprocess)
 #define PL_formfeed		(vTHX->Iformfeed)
@@ -662,7 +660,6 @@
 #define PL_sublex_info		(vTHX->Isublex_info)
 #define PL_subline		(vTHX->Isubline)
 #define PL_subname		(vTHX->Isubname)
-#define PL_suidscript		(vTHX->Isuidscript)
 #define PL_sv_arenaroot		(vTHX->Isv_arenaroot)
 #define PL_sv_count		(vTHX->Isv_count)
 #define PL_sv_lock_mutex	(vTHX->Isv_lock_mutex)
@@ -1233,7 +1230,6 @@
 #define PL_Iexpect		PL_expect
 #define PL_Ifdpid		PL_fdpid
 #define PL_Ifdpid_mutex		PL_fdpid_mutex
-#define PL_Ifdscript		PL_fdscript
 #define PL_Ifilemode		PL_filemode
 #define PL_Iforkprocess		PL_forkprocess
 #define PL_Iformfeed		PL_formfeed
@@ -1364,7 +1360,6 @@
 #define PL_Isublex_info		PL_sublex_info
 #define PL_Isubline		PL_subline
 #define PL_Isubname		PL_subname
-#define PL_Isuidscript		PL_suidscript
 #define PL_Isv_arenaroot	PL_sv_arenaroot
 #define PL_Isv_count		PL_sv_count
 #define PL_Isv_lock_mutex	PL_sv_lock_mutex

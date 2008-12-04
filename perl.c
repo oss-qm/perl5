@@ -11,65 +11,6 @@
  * "A ship then new they built for him/of mithril and of elven glass" --Bilbo
  */
 
-/* PSz 12 Nov 03
- * 
- * Be proud that perl(1) may proclaim:
- *   Setuid Perl scripts are safer than C programs ...
- * Do not abandon (deprecate) suidperl. Do not advocate C wrappers.
- * 
- * The flow was: perl starts, notices script is suid, execs suidperl with same
- * arguments; suidperl opens script, checks many things, sets itself with
- * right UID, execs perl with similar arguments but with script pre-opened on
- * /dev/fd/xxx; perl checks script is as should be and does work. This was
- * insecure: see perlsec(1) for many problems with this approach.
- * 
- * The "correct" flow should be: perl starts, opens script and notices it is
- * suid, checks many things, execs suidperl with similar arguments but with
- * script on /dev/fd/xxx; suidperl checks script and /dev/fd/xxx object are
- * same, checks arguments match #! line, sets itself with right UID, execs
- * perl with same arguments; perl checks many things and does work.
- * 
- * (Opening the script in perl instead of suidperl, we "lose" scripts that
- * are readable to the target UID but not to the invoker. Where did
- * unreadable scripts work anyway?)
- * 
- * For now, suidperl and perl are pretty much the same large and cumbersome
- * program, so suidperl can check its argument list (see comments elsewhere).
- * 
- * References:
- * Original bug report:
- *   http://bugs.perl.org/index.html?req=bug_id&bug_id=20010322.218
- *   http://rt.perl.org/rt2/Ticket/Display.html?id=6511
- * Comments and discussion with Debian:
- *   http://bugs.debian.org/203426
- *   http://bugs.debian.org/220486
- * Debian Security Advisory DSA 431-1 (does not fully fix problem):
- *   http://www.debian.org/security/2004/dsa-431
- * CVE candidate:
- *   http://cve.mitre.org/cgi-bin/cvename.cgi?name=CAN-2003-0618
- * Previous versions of this patch sent to perl5-porters:
- *   http://www.mail-archive.com/perl5-porters@perl.org/msg71953.html
- *   http://www.mail-archive.com/perl5-porters@perl.org/msg75245.html
- *   http://www.mail-archive.com/perl5-porters@perl.org/msg75563.html
- *   http://www.mail-archive.com/perl5-porters@perl.org/msg75635.html
- * 
-Paul Szabo - psz@maths.usyd.edu.au  http://www.maths.usyd.edu.au:8000/u/psz/
-School of Mathematics and Statistics  University of Sydney   2006  Australia
- * 
- */
-/* PSz 13 Nov 03
- * Use truthful, neat, specific error messages.
- * Cannot always hide the truth; security must not depend on doing so.
- */
-
-/* PSz 18 Feb 04
- * Use global(?), thread-local fdscript for easier checks.
- * (I do not understand how we could possibly get a thread race:
- * do not all threads go through the same initialization? Or in
- * fact, are not threads started only after we get the script and
- * so know what to do? Oh well, make things super-safe...)
- */
-
 #include "EXTERN.h"
 #define PERL_IN_PERL_C
 #include "perl.h"
@@ -90,7 +31,7 @@ static I32 read_e_script(pTHXo_ int idx, SV *buf_sv, int maxlen);
 #ifndef DOSUID
 #define DOSUID
 #endif
-#endif /* IAMSUID */
+#endif
 
 #ifdef SETUID_SCRIPTS_ARE_SECURE_NOW
 #ifdef DOSUID
@@ -904,7 +845,7 @@ perl_parse(pTHXx_ XSINIT_t xsinit, int argc, char **argv, char **env)
 #undef IAMSUID
     Perl_croak(aTHX_ "suidperl is no longer needed since the kernel can now execute\n\
 setuid perl scripts securely.\n");
-#endif /* IAMSUID */
+#endif
 #endif
 
 #if defined(__DYNAMIC__) && (defined(NeXT) || defined(__NeXT__))
@@ -996,17 +937,13 @@ S_parse_body(pTHX_ char **env, XSINIT_t xsinit)
     int argc = PL_origargc;
     char **argv = PL_origargv;
     char *scriptname = NULL;
-/* PSz 18 Feb 04  fdscript now global, keep from confusion */
-    int dummy_fdscript = -1;
+    int fdscript = -1;
     VOL bool dosearch = FALSE;
     char *validarg = "";
     AV* comppadlist;
     register SV *sv;
     register char *s;
     char *cddir = Nullch;
-
-    PL_fdscript = -1;
-    PL_suidscript = -1;
 
     sv_setpvn(PL_linestr,"",0);
     sv = newSVpvn("",0);		/* first used for -I flags */
@@ -1021,12 +958,6 @@ S_parse_body(pTHX_ char **env, XSINIT_t xsinit)
 	validarg = " PHOOEY ";
     else
 	validarg = argv[0];
-    /*
-     * Can we rely on the kernel to start scripts with argv[1] set to
-     * contain all #! line switches (the whole line)? (argv[0] is set to
-     * the interpreter name, argv[2] to the script name; argv[3] and
-     * above may contain other arguments.)
-     */
 #endif
 	s = argv[0]+1;
       reswitch:
@@ -1075,7 +1006,8 @@ S_parse_body(pTHX_ char **env, XSINIT_t xsinit)
 	    if (argv[1] && !strcmp(argv[1], "Dev:Pseudo"))
 	    	break; 
 #endif
-	    forbid_setid("-e");
+	    if (PL_euid != PL_uid || PL_egid != PL_gid)
+		Perl_croak(aTHX_ "No -e allowed in setuid scripts");
 	    if (!PL_e_script) {
 		PL_e_script = newSVpvn("",0);
 		filter_add(read_e_script, NULL);
@@ -1284,9 +1216,9 @@ print \"  \\@INC:\\n    @INC\\n\";");
 
     init_perllib();
 
-    open_script(scriptname,dosearch,sv,&dummy_fdscript);
+    open_script(scriptname,dosearch,sv,&fdscript);
 
-    validate_suid(validarg, scriptname,dummy_fdscript);
+    validate_suid(validarg, scriptname,fdscript);
 
 #if defined(SIGCHLD) || defined(SIGCLD)
     {
@@ -2604,12 +2536,10 @@ S_init_main_stash(pTHX)
     sv_setpvn(get_sv("/", TRUE), "\n", 1);
 }
 
-/* PSz 18 Nov 03  fdscript now global but do not change prototype */
 STATIC void
-S_open_script(pTHX_ char *scriptname, bool dosearch, SV *sv, int *dummy_fdscript)
+S_open_script(pTHX_ char *scriptname, bool dosearch, SV *sv, int *fdscript)
 {
-    PL_fdscript = -1;
-    PL_suidscript = -1;
+    *fdscript = -1;
 
     if (PL_e_script) {
 	PL_origfilename = savepv("-e");
@@ -2620,30 +2550,10 @@ S_open_script(pTHX_ char *scriptname, bool dosearch, SV *sv, int *dummy_fdscript
 
 	if (strnEQ(scriptname, "/dev/fd/", 8) && isDIGIT(scriptname[8]) ) {
 	    char *s = scriptname + 8;
-	    PL_fdscript = atoi(s);
+	    *fdscript = atoi(s);
 	    while (isDIGIT(*s))
 		s++;
 	    if (*s) {
-		/* PSz 18 Feb 04
-		 * Tell apart "normal" usage of fdscript, e.g.
-		 * with bash on FreeBSD:
-		 *   perl <( echo '#!perl -DA'; echo 'print "$0\n"')
-		 * from usage in suidperl.
-		 * Does any "normal" usage leave garbage after the number???
-		 * Is it a mistake to use a similar /dev/fd/ construct for
-		 * suidperl?
-		 */
-		PL_suidscript = 1;
-		/* PSz 20 Feb 04  
-		 * Be supersafe and do some sanity-checks.
-		 * Still, can we be sure we got the right thing?
-		 */
-		if (*s != '/') {
-		    Perl_croak(aTHX_ "Wrong syntax (suid) fd script name \"%s\"\n", s);
-		}
-		if (! *(s+1)) {
-		    Perl_croak(aTHX_ "Missing (suid) fd script name\n");
-		}
 		scriptname = savepv(s + 1);
 		Safefree(PL_origfilename);
 		PL_origfilename = scriptname;
@@ -2659,28 +2569,14 @@ S_open_script(pTHX_ char *scriptname, bool dosearch, SV *sv, int *dummy_fdscript
     CopFILE_set(PL_curcop, PL_origfilename);
     if (strEQ(PL_origfilename,"-"))
 	scriptname = "";
-    if (PL_fdscript >= 0) {
-	PL_rsfp = PerlIO_fdopen(PL_fdscript,PERL_SCRIPT_MODE);
+    if (*fdscript >= 0) {
+	PL_rsfp = PerlIO_fdopen(*fdscript,PERL_SCRIPT_MODE);
 #if defined(HAS_FCNTL) && defined(F_SETFD)
 	if (PL_rsfp)
 	    fcntl(PerlIO_fileno(PL_rsfp),F_SETFD,1);  /* ensure close-on-exec */
 #endif
     }
-#ifdef IAMSUID
-    else {
-	Perl_croak(aTHX_ "suidperl needs fd script\n");
-/* PSz 11 Nov 03
- * Do not open (or do other fancy stuff) while setuid.
- * Perl does the open, and hands script to suidperl on a fd;
- * suidperl only does some checks, sets up UIDs and re-execs
- * perl with that fd as it has always done.
- */
-    }
-    if (PL_suidscript != 1) {
-	Perl_croak(aTHX_ "suidperl needs (suid) fd script\n");
-    }
-#else /* IAMSUID */
-  else if (PL_preprocess) {
+    else if (PL_preprocess) {
 	char *cpp_cfg = CPPSTDIN;
 	SV *cpp = newSVpvn("",0);
 	SV *cmd = NEWSV(0,0);
@@ -2746,6 +2642,25 @@ sed %s -e \"/^[^#]/b\" \
 #endif
 	  scriptname, cpp, sv, CPPMINUS);
 	PL_doextract = FALSE;
+#ifdef IAMSUID				/* actually, this is caught earlier */
+	if (PL_euid != PL_uid && !PL_euid) {	/* if running suidperl */
+#ifdef HAS_SETEUID
+	    (void)seteuid(PL_uid);		/* musn't stay setuid root */
+#else
+#ifdef HAS_SETREUID
+	    (void)setreuid((Uid_t)-1, PL_uid);
+#else
+#ifdef HAS_SETRESUID
+	    (void)setresuid((Uid_t)-1, PL_uid, (Uid_t)-1);
+#else
+	    PerlProc_setuid(PL_uid);
+#endif
+#endif
+#endif
+	    if (PerlProc_geteuid() != PL_uid)
+		Perl_croak(aTHX_ "Can't do seteuid!\n");
+	}
+#endif /* IAMSUID */
 	PL_rsfp = PerlProc_popen(SvPVX(cmd), "r");
 	SvREFCNT_dec(cmd);
 	SvREFCNT_dec(cpp);
@@ -2761,9 +2676,21 @@ sed %s -e \"/^[^#]/b\" \
 	    fcntl(PerlIO_fileno(PL_rsfp),F_SETFD,1);  /* ensure close-on-exec */
 #endif
     }
-#endif /* IAMSUID */
     if (!PL_rsfp) {
-/* PSz 16 Sep 03  Keep neat error message */
+#ifdef DOSUID
+#ifndef IAMSUID		/* in case script is not readable before setuid */
+	if (PL_euid &&
+	    PerlLIO_stat(CopFILE(PL_curcop),&PL_statbuf) >= 0 &&
+	    PL_statbuf.st_mode & (S_ISUID|S_ISGID))
+	{
+	    /* try again */
+	    PerlProc_execv(Perl_form(aTHX_ "%s/sperl"PERL_FS_VER_FMT, BIN_EXP,
+				     (int)PERL_REVISION, (int)PERL_VERSION,
+				     (int)PERL_SUBVERSION), PL_origargv);
+	    Perl_croak(aTHX_ "Can't do setuid\n");
+	}
+#endif
+#endif
 	Perl_croak(aTHX_ "Can't open perl script \"%s\": %s\n",
 		   CopFILE(PL_curcop), Strerror(errno));
     }
@@ -2780,19 +2707,8 @@ sed %s -e \"/^[^#]/b\" \
 STATIC int
 S_fd_on_nosuid_fs(pTHX_ int fd)
 {
-/* PSz 27 Feb 04
- * We used to do this as "plain" user (after swapping UIDs with setreuid);
- * but is needed also on machines without setreuid.
- * Seems safe enough to run as root.
- */
     int check_okay = 0; /* able to do all the required sys/libcalls */
     int on_nosuid  = 0; /* the fd is on a nosuid fs */
-    /* PSz 12 Nov 03
-     * Need to check noexec also: nosuid might not be set, the average
-     * sysadmin would say that nosuid is irrelevant once he sets noexec.
-     */
-    int on_noexec  = 0; /* the fd is on a noexec fs */
-
 /*
  * Preferred order: fstatvfs(), fstatfs(), ustat()+getmnt(), getmntent().
  * fstatvfs() is UNIX98.
@@ -2811,16 +2727,10 @@ S_fd_on_nosuid_fs(pTHX_ int fd)
 
     check_okay = fstatvfs(fd, &stfs) == 0;
     on_nosuid  = check_okay && (stfs.f_flag  & ST_NOSUID);
-#ifdef ST_NOEXEC
-    /* ST_NOEXEC certainly absent on AIX 5.1, and doesn't seem to be documented
-       on platforms where it is present.  */
-    on_noexec  = check_okay && (stfs.f_flag  & ST_NOEXEC);
-#endif
 #   endif /* fstatvfs */
  
 #   if !defined(FD_ON_NOSUID_CHECK_OKAY) && \
         defined(PERL_MOUNT_NOSUID)	&& \
-        defined(PERL_MOUNT_NOEXEC)	&& \
         defined(HAS_FSTATFS) 		&& \
         defined(HAS_STRUCT_STATFS)	&& \
         defined(HAS_STRUCT_STATFS_F_FLAGS)
@@ -2829,12 +2739,10 @@ S_fd_on_nosuid_fs(pTHX_ int fd)
 
     check_okay = fstatfs(fd, &stfs)  == 0;
     on_nosuid  = check_okay && (stfs.f_flags & PERL_MOUNT_NOSUID);
-    on_noexec  = check_okay && (stfs.f_flags & PERL_MOUNT_NOEXEC);
 #   endif /* fstatfs */
 
 #   if !defined(FD_ON_NOSUID_CHECK_OKAY) && \
         defined(PERL_MOUNT_NOSUID)	&& \
-        defined(PERL_MOUNT_NOEXEC)	&& \
         defined(HAS_FSTAT)		&& \
         defined(HAS_USTAT)		&& \
         defined(HAS_GETMNT)		&& \
@@ -2857,7 +2765,6 @@ S_fd_on_nosuid_fs(pTHX_ int fd)
                     fdst.st_dev == fsd.fd_req.dev) {
                         check_okay = 1;
                         on_nosuid = fsd.fd_req.flags & PERL_MOUNT_NOSUID;
-                        on_noexec = fsd.fd_req.flags & PERL_MOUNT_NOEXEC;
                     }
                 }
             }
@@ -2868,8 +2775,7 @@ S_fd_on_nosuid_fs(pTHX_ int fd)
 #   if !defined(FD_ON_NOSUID_CHECK_OKAY) && \
         defined(HAS_GETMNTENT)		&& \
         defined(HAS_HASMNTOPT)		&& \
-        defined(MNTOPT_NOSUID)		&& \
-        defined(MNTOPT_NOEXEC)
+        defined(MNTOPT_NOSUID)
 #   define FD_ON_NOSUID_CHECK_OKAY
     FILE                *mtab = fopen("/etc/mtab", "r");
     struct mntent       *entry;
@@ -2884,8 +2790,6 @@ S_fd_on_nosuid_fs(pTHX_ int fd)
                 check_okay = 1;
                 if (hasmntopt(entry, MNTOPT_NOSUID))
                     on_nosuid = 1;
-                if (hasmntopt(entry, MNTOPT_NOEXEC))
-                    on_noexec = 1;
                 break;
             } /* A single fs may well fail its stat(). */
         }
@@ -2895,22 +2799,17 @@ S_fd_on_nosuid_fs(pTHX_ int fd)
 #   endif /* getmntent+hasmntopt */
 
     if (!check_okay) 
-	Perl_croak(aTHX_ "Can't check filesystem of script \"%s\" for nosuid/noexec", PL_origfilename);
-    if (on_nosuid)
-	Perl_croak(aTHX_ "Setuid script \"%s\" on nosuid filesystem", PL_origfilename);
-    if (on_noexec)
-	Perl_croak(aTHX_ "Setuid script \"%s\" on noexec filesystem", PL_origfilename);
-    return ((!check_okay) || on_nosuid || on_noexec);
+	Perl_croak(aTHX_ "Can't check filesystem of script \"%s\" for nosuid", PL_origfilename);
+    return on_nosuid;
 }
 #endif /* IAMSUID */
 
-/* PSz 18 Nov 03  fdscript now global but do not change prototype */
 STATIC void
-S_validate_suid(pTHX_ char *validarg, char *scriptname, int dummy_fdscript)
+S_validate_suid(pTHX_ char *validarg, char *scriptname, int fdscript)
 {
 #ifdef IAMSUID
-    /* int which; */
-#endif /* IAMSUID */
+    int which;
+#endif
 
     /* do we need to emulate setuid on scripts? */
 
@@ -2926,13 +2825,6 @@ S_validate_suid(pTHX_ char *validarg, char *scriptname, int dummy_fdscript)
      * uid.  We don't just make perl setuid root because that loses the
      * effective uid we had before invoking perl, if it was different from the
      * uid.
-     * PSz 27 Feb 04
-     * Description/comments above do not match current workings:
-     *   suidperl must be hardlinked to sperlN.NNN (that is what we exec);
-     *   suidperl called with script open and name changed to /dev/fd/N/X;
-     *   suidperl croaks if script is not setuid;
-     *   making perl setuid would be a huge security risk (and yes, that
-     *     would lose any euid we might have had).
      *
      * DOSUID must be defined in both perl and suidperl, and IAMSUID must
      * be defined in suidperl only.  suidperl must be setuid root.  The
@@ -2944,33 +2836,12 @@ S_validate_suid(pTHX_ char *validarg, char *scriptname, int dummy_fdscript)
 
     if (PerlLIO_fstat(PerlIO_fileno(PL_rsfp),&PL_statbuf) < 0)	/* normal stat is insecure */
 	Perl_croak(aTHX_ "Can't stat script \"%s\"",PL_origfilename);
-    if (PL_statbuf.st_mode & (S_ISUID|S_ISGID)) {
+    if (fdscript < 0 && PL_statbuf.st_mode & (S_ISUID|S_ISGID)) {
 	I32 len;
 	STRLEN n_a;
 
 #ifdef IAMSUID
-	if (PL_fdscript < 0 || PL_suidscript != 1)
-	    Perl_croak(aTHX_ "Need (suid) fdscript in suidperl\n");	/* We already checked this */
-	/* PSz 11 Nov 03
-	 * Since the script is opened by perl, not suidperl, some of these
-	 * checks are superfluous. Leaving them in probably does not lower
-	 * security(?!).
-	 */
-	/* PSz 27 Feb 04
-	 * Do checks even for systems with no HAS_SETREUID.
-	 * We used to swap, then re-swap UIDs with
-#ifdef HAS_SETREUID
-	    if (setreuid(PL_euid,PL_uid) < 0
-		|| PerlProc_getuid() != PL_euid || PerlProc_geteuid() != PL_uid)
-		Perl_croak(aTHX_ "Can't swap uid and euid");
-#endif
-#ifdef HAS_SETREUID
-	    if (setreuid(PL_uid,PL_euid) < 0
-		|| PerlProc_getuid() != PL_uid || PerlProc_geteuid() != PL_euid)
-		Perl_croak(aTHX_ "Can't reswap uid and euid");
-#endif
-	 */
-
+#ifndef HAS_SETREUID
 	/* On this access check to make sure the directories are readable,
 	 * there is actually a small window that the user could use to make
 	 * filename point to an accessible directory.  So there is a faint
@@ -2978,87 +2849,70 @@ S_validate_suid(pTHX_ char *validarg, char *scriptname, int dummy_fdscript)
 	 * non-accessible directory.  I don't know what to do about that.
 	 * But I don't think it's too important.  The manual lies when
 	 * it says access() is useful in setuid programs.
-	 * 
-	 * So, access() is pretty useless... but not harmful... do anyway.
 	 */
-	if (PerlLIO_access(CopFILE(PL_curcop),1)) { /*double check*/
-	    Perl_croak(aTHX_ "Can't access() script\n");
-	}
-
+	if (PerlLIO_access(CopFILE(PL_curcop),1)) /*double check*/
+	    Perl_croak(aTHX_ "Permission denied");
+#else
 	/* If we can swap euid and uid, then we can determine access rights
 	 * with a simple stat of the file, and then compare device and
 	 * inode to make sure we did stat() on the same file we opened.
 	 * Then we just have to make sure he or she can execute it.
-	 * 
-	 * PSz 24 Feb 04
-	 * As the script is opened by perl, not suidperl, we do not need to
-	 * care much about access rights.
-	 * 
-	 * The 'script changed' check is needed, or we can get lied to
-	 * about $0 with e.g.
-	 *  suidperl /dev/fd/4//bin/x 4<setuidscript
-	 * Without HAS_SETREUID, is it safe to stat() as root?
-	 * 
-	 * Are there any operating systems that pass /dev/fd/xxx for setuid
-	 * scripts, as suggested/described in perlsec(1)? Surely they do not
-	 * pass the script name as we do, so the "script changed" test would
-	 * fail for them... but we never get here with
-	 * SETUID_SCRIPTS_ARE_SECURE_NOW defined.
-	 * 
-	 * This is one place where we must "lie" about return status: not
-	 * say if the stat() failed. We are doing this as root, and could
-	 * be tricked into reporting existence or not of files that the
-	 * "plain" user cannot even see.
 	 */
 	{
 	    struct stat tmpstatbuf;
-	    if (PerlLIO_stat(CopFILE(PL_curcop),&tmpstatbuf) < 0 ||
-		tmpstatbuf.st_dev != PL_statbuf.st_dev ||
-  		tmpstatbuf.st_ino != PL_statbuf.st_ino) {
-		Perl_croak(aTHX_ "Setuid script changed\n");
-	    }
-	}
-	if (!cando(S_IXUSR,FALSE,&PL_statbuf))		/* can real uid exec? */
-	    Perl_croak(aTHX_ "Real UID cannot exec script\n");
 
-	/* PSz 27 Feb 04
-	 * We used to do this check as the "plain" user (after swapping
-	 * UIDs). But the check for nosuid and noexec filesystem is needed,
-	 * and should be done even without HAS_SETREUID. (Maybe those
-	 * operating systems do not have such mount options anyway...)
-	 * Seems safe enough to do as root.
-	 */
-#if !defined(NO_NOSUID_CHECK)
-	if (fd_on_nosuid_fs(PerlIO_fileno(PL_rsfp))) {
-	    Perl_croak(aTHX_ "Setuid script on nosuid or noexec filesystem\n");
-	}
+	    if (
+#ifdef HAS_SETREUID
+		setreuid(PL_euid,PL_uid) < 0
+#else
+# if HAS_SETRESUID
+		setresuid(PL_euid,PL_uid,(Uid_t)-1) < 0
+# endif
 #endif
+		|| PerlProc_getuid() != PL_euid || PerlProc_geteuid() != PL_uid)
+		Perl_croak(aTHX_ "Can't swap uid and euid");	/* really paranoid */
+	    if (PerlLIO_stat(CopFILE(PL_curcop),&tmpstatbuf) < 0)
+		Perl_croak(aTHX_ "Permission denied");	/* testing full pathname here */
+#if defined(IAMSUID) && !defined(NO_NOSUID_CHECK)
+	    if (fd_on_nosuid_fs(PerlIO_fileno(PL_rsfp)))
+		Perl_croak(aTHX_ "Permission denied");
+#endif
+	    if (tmpstatbuf.st_dev != PL_statbuf.st_dev ||
+		tmpstatbuf.st_ino != PL_statbuf.st_ino) {
+		(void)PerlIO_close(PL_rsfp);
+		Perl_croak(aTHX_ "Permission denied\n");
+	    }
+	    if (
+#ifdef HAS_SETREUID
+              setreuid(PL_uid,PL_euid) < 0
+#else
+# if defined(HAS_SETRESUID)
+              setresuid(PL_uid,PL_euid,(Uid_t)-1) < 0
+# endif
+#endif
+              || PerlProc_getuid() != PL_uid || PerlProc_geteuid() != PL_euid)
+		Perl_croak(aTHX_ "Can't reswap uid and euid");
+	    if (!cando(S_IXUSR,FALSE,&PL_statbuf))		/* can real uid exec? */
+		Perl_croak(aTHX_ "Permission denied\n");
+	}
+#endif /* HAS_SETREUID */
 #endif /* IAMSUID */
 
 	if (!S_ISREG(PL_statbuf.st_mode))
-	    Perl_croak(aTHX_ "Setuid script not plain file\n");
+	    Perl_croak(aTHX_ "Permission denied");
 	if (PL_statbuf.st_mode & S_IWOTH)
 	    Perl_croak(aTHX_ "Setuid/gid script is writable by world");
 	PL_doswitches = FALSE;		/* -s is insecure in suid */
-	/* PSz 13 Nov 03  But -s was caught elsewhere ... so unsetting it here is useless(?!) */
 	CopLINE_inc(PL_curcop);
 	if (sv_gets(PL_linestr, PL_rsfp, 0) == Nullch ||
 	  strnNE(SvPV(PL_linestr,n_a),"#!",2) )	/* required even on Sys V */
 	    Perl_croak(aTHX_ "No #! line");
 	s = SvPV(PL_linestr,n_a)+2;
-	/* PSz 27 Feb 04 */
-	/* Sanity check on line length */
-	if (strlen(s) < 1 || strlen(s) > 4000)
-	    Perl_croak(aTHX_ "Very long #! line");
-	/* Allow more than a single space after #! */
-	while (isSPACE(*s)) s++;
-	/* Sanity check on buffer end */
-	while ((*s) && !isSPACE(*s)) s++;
+	if (*s == ' ') s++;
+	while (!isSPACE(*s)) s++;
 	for (s2 = s;  (s2 > SvPV(PL_linestr,n_a)+2 &&
 		       (isDIGIT(s2[-1]) || strchr("._-", s2[-1])));  s2--) ;
-	/* Sanity check on buffer start */
-	if ( (s2-4 < SvPV(PL_linestr,n_a)+2 || strnNE(s2-4,"perl",4)) &&
-	      (s-9 < SvPV(PL_linestr,n_a)+2 || strnNE(s-9,"perl",4)) )
+	if (strnNE(s2-4,"perl",4) && strnNE(s-9,"perl",4))  /* sanity check */
 	    Perl_croak(aTHX_ "Not a perl script");
 	while (*s == ' ' || *s == '\t') s++;
 	/*
@@ -3066,99 +2920,31 @@ S_validate_suid(pTHX_ char *validarg, char *scriptname, int dummy_fdscript)
 	 * mentioning suidperl explicitly, but they may not add any strange
 	 * arguments beyond what #! says if they do invoke suidperl that way.
 	 */
-	/*
-	 * The way validarg was set up, we rely on the kernel to start
-	 * scripts with argv[1] set to contain all #! line switches (the
-	 * whole line).
-	 */
-	/*
-	 * Check that we got all the arguments listed in the #! line (not
-	 * just that there are no extraneous arguments). Might not matter
-	 * much, as switches from #! line seem to be acted upon (also), and
-	 * so may be checked and trapped in perl. But, security checks must
-	 * be done in suidperl and not deferred to perl. Note that suidperl
-	 * does not get around to parsing (and checking) the switches on
-	 * the #! line (but execs perl sooner).
-	 * Allow (require) a trailing newline (which may be of two
-	 * characters on some architectures?) (but no other trailing
-	 * whitespace).
-	 */
 	len = strlen(validarg);
 	if (strEQ(validarg," PHOOEY ") ||
-	    strnNE(s,validarg,len) || !isSPACE(s[len]) ||
-	    !(strlen(s) == len+1 || (strlen(s) == len+2 && isSPACE(s[len+1]))))
+	    strnNE(s,validarg,len) || !isSPACE(s[len]))
 	    Perl_croak(aTHX_ "Args must match #! line");
 
 #ifndef IAMSUID
-	if (PL_fdscript < 0 &&
-	    PL_euid != PL_uid && (PL_statbuf.st_mode & S_ISUID) &&
+	if (PL_euid != PL_uid && (PL_statbuf.st_mode & S_ISUID) &&
 	    PL_euid == PL_statbuf.st_uid)
 	    if (!PL_do_undump)
 		Perl_croak(aTHX_ "YOU HAVEN'T DISABLED SET-ID SCRIPTS IN THE KERNEL YET!\n\
 FIX YOUR KERNEL, PUT A C WRAPPER AROUND THIS SCRIPT, OR USE -u AND UNDUMP!\n");
 #endif /* IAMSUID */
 
-	if (PL_fdscript < 0 &&
-	    PL_euid) {	/* oops, we're not the setuid root perl */
-	    /* PSz 18 Feb 04
-	     * When root runs a setuid script, we do not go through the same
-	     * steps of execing sperl and then perl with fd scripts, but
-	     * simply set up UIDs within the same perl invocation; so do
-	     * not have the same checks (on options, whatever) that we have
-	     * for plain users. No problem really: would have to be a script
-	     * that does not actually work for plain users; and if root is
-	     * foolish and can be persuaded to run such an unsafe script, he
-	     * might run also non-setuid ones, and deserves what he gets.
-	     * 
-	     * Or, we might drop the PL_euid check above (and rely just on
-	     * PL_fdscript to avoid loops), and do the execs
-	     * even for root.
-	     */
+	if (PL_euid) {	/* oops, we're not the setuid root perl */
+	    (void)PerlIO_close(PL_rsfp);
 #ifndef IAMSUID
-	    int which;
-	    /* PSz 11 Nov 03
-	     * Pass fd script to suidperl.
-	     * Exec suidperl, substituting fd script for scriptname.
-	     * Pass script name as "subdir" of fd, which perl will grok;
-	     * in fact will use that to distinguish this from "normal"
-	     * usage, see comments above.
-	     */
-	    PerlIO_rewind(PL_rsfp);
-	    PerlLIO_lseek(PerlIO_fileno(PL_rsfp),(Off_t)0,0);  /* just in case rewind didn't */
-	    /* PSz 27 Feb 04  Sanity checks on scriptname */
-	    if ((!scriptname) || (!*scriptname) ) {
-		Perl_croak(aTHX_ "No setuid script name\n");
-	    }
-	    if (*scriptname == '-') {
-		Perl_croak(aTHX_ "Setuid script name may not begin with dash\n");
-		/* Or we might confuse it with an option when replacing
-		 * name in argument list, below (though we do pointer, not
-		 * string, comparisons).
-		 */
-	    }
-	    for (which = 1; PL_origargv[which] && PL_origargv[which] != scriptname; which++) ;
-	    if (!PL_origargv[which]) {
-		Perl_croak(aTHX_ "Can't change argv to have fd script\n");
-	    }
-	    PL_origargv[which] = savepv(Perl_form(aTHX_ "/dev/fd/%d/%s",
-					  PerlIO_fileno(PL_rsfp), PL_origargv[which]));
-#if defined(HAS_FCNTL) && defined(F_SETFD)
-	    fcntl(PerlIO_fileno(PL_rsfp),F_SETFD,0);	/* ensure no close-on-exec */
-#endif
+	    /* try again */
 	    PerlProc_execv(Perl_form(aTHX_ "%s/sperl"PERL_FS_VER_FMT, BIN_EXP,
 				     (int)PERL_REVISION, (int)PERL_VERSION,
 				     (int)PERL_SUBVERSION), PL_origargv);
-#endif /* IAMSUID */
-	    Perl_croak(aTHX_ "Can't do setuid (cannot exec sperl)\n");
+#endif
+	    Perl_croak(aTHX_ "Can't do setuid\n");
 	}
 
 	if (PL_statbuf.st_mode & S_ISGID && PL_statbuf.st_gid != PL_egid) {
-/* PSz 26 Feb 04
- * This seems back to front: we try HAS_SETEGID first; if not available
- * then try HAS_SETREGID; as a last chance we try HAS_SETRESGID. May be OK
- * in the sense that we only want to set EGID; but are there any machines
- * with either of the latter, but not the former? Same with UID, later.
- */
 #ifdef HAS_SETEGID
 	    (void)setegid(PL_statbuf.st_gid);
 #else
@@ -3212,70 +2998,33 @@ FIX YOUR KERNEL, PUT A C WRAPPER AROUND THIS SCRIPT, OR USE -u AND UNDUMP!\n");
 	}
 	init_ids();
 	if (!cando(S_IXUSR,TRUE,&PL_statbuf))
-	    Perl_croak(aTHX_ "Effective UID cannot exec script\n");	/* they can't do this */
+	    Perl_croak(aTHX_ "Permission denied\n");	/* they can't do this */
     }
 #ifdef IAMSUID
-    else if (PL_preprocess)	/* PSz 13 Nov 03  Caught elsewhere, useless(?!) here */
+    else if (PL_preprocess)
 	Perl_croak(aTHX_ "-P not allowed for setuid/setgid script\n");
-    else if (PL_fdscript < 0 || PL_suidscript != 1)
-	/* PSz 13 Nov 03  Caught elsewhere, useless(?!) here */
-	Perl_croak(aTHX_ "(suid) fdscript needed in suidperl\n");
+    else if (fdscript >= 0)
+	Perl_croak(aTHX_ "fd script not allowed in suidperl\n");
     else
-/* PSz 16 Sep 03  Keep neat error message */
 	Perl_croak(aTHX_ "Script is not setuid/setgid in suidperl\n");
 
     /* We absolutely must clear out any saved ids here, so we */
     /* exec the real perl, substituting fd script for scriptname. */
     /* (We pass script name as "subdir" of fd, which perl will grok.) */
-    /* 
-     * It might be thought that using setresgid and/or setresuid (changed to
-     * set the saved IDs) above might obviate the need to exec, and we could
-     * go on to "do the perl thing".
-     * 
-     * Is there such a thing as "saved GID", and is that set for setuid (but
-     * not setgid) execution like suidperl? Without exec, it would not be
-     * cleared for setuid (but not setgid) scripts (or might need a dummy
-     * setresgid).
-     * 
-     * We need suidperl to do the exact same argument checking that perl
-     * does. Thus it cannot be very small; while it could be significantly
-     * smaller, it is safer (simpler?) to make it essentially the same
-     * binary as perl (but they are not identical). - Maybe could defer that
-     * check to the invoked perl, and suidperl be a tiny wrapper instead;
-     * but prefer to do thorough checks in suidperl itself. Such deferral
-     * would make suidperl security rely on perl, a design no-no.
-     * 
-     * Setuid things should be short and simple, thus easy to understand and
-     * verify. They should do their "own thing", without influence by
-     * attackers. It may help if their internal execution flow is fixed,
-     * regardless of platform: it may be best to exec anyway.
-     * 
-     * Suidperl should at least be conceptually simple: a wrapper only,
-     * never to do any real perl. Maybe we should put
-     * #ifdef IAMSUID
-     *         Perl_croak(aTHX_ "Suidperl should never do real perl\n");
-     * #endif
-     * into the perly bits.
-     */
     PerlIO_rewind(PL_rsfp);
     PerlLIO_lseek(PerlIO_fileno(PL_rsfp),(Off_t)0,0);  /* just in case rewind didn't */
-    /* PSz 11 Nov 03
-     * Keep original arguments: suidperl already has fd script.
-     */
-/*  for (which = 1; PL_origargv[which] && PL_origargv[which] != scriptname; which++) ;	*/
-/*  if (!PL_origargv[which]) {						*/
-/*	errno = EPERM;							*/
-/*	Perl_croak(aTHX_ "Permission denied\n");			*/
-/*  }									*/
-/*  PL_origargv[which] = savepv(Perl_form(aTHX_ "/dev/fd/%d/%s",	*/
-/*				  PerlIO_fileno(PL_rsfp), PL_origargv[which]));	*/
+    for (which = 1; PL_origargv[which] && PL_origargv[which] != scriptname; which++) ;
+    if (!PL_origargv[which])
+	Perl_croak(aTHX_ "Permission denied");
+    PL_origargv[which] = savepv(Perl_form(aTHX_ "/dev/fd/%d/%s",
+				  PerlIO_fileno(PL_rsfp), PL_origargv[which]));
 #if defined(HAS_FCNTL) && defined(F_SETFD)
     fcntl(PerlIO_fileno(PL_rsfp),F_SETFD,0);	/* ensure no close-on-exec */
 #endif
     PerlProc_execv(Perl_form(aTHX_ "%s/perl"PERL_FS_VER_FMT, BIN_EXP,
 			     (int)PERL_REVISION, (int)PERL_VERSION,
 			     (int)PERL_SUBVERSION), PL_origargv);/* try again */
-    Perl_croak(aTHX_ "Can't do setuid (suidperl cannot exec perl)\n");
+    Perl_croak(aTHX_ "Can't do setuid\n");
 #endif /* IAMSUID */
 #else /* !DOSUID */
     if (PL_euid != PL_uid || PL_egid != PL_gid) {	/* (suidperl doesn't exist, in fact) */
@@ -3355,54 +3104,15 @@ S_init_ids(pTHX)
     PL_euid |= PL_egid << 16;
 #endif
     PL_tainting |= (PL_uid && (PL_euid != PL_uid || PL_egid != PL_gid));
-    /* BUG */
-    /* PSz 27 Feb 04
-     * Should go by suidscript, not uid!=euid: why disallow
-     * system("ls") in scripts run from setuid things?
-     * Or, is this run before we check arguments and set suidscript?
-     * What about SETUID_SCRIPTS_ARE_SECURE_NOW: could we use fdscript then?
-     * (We never have suidscript, can we be sure to have fdscript?)
-     * Or must then go by UID checks? See comments in forbid_setid also.
-     */
 }
 
 STATIC void
 S_forbid_setid(pTHX_ char *s)
 {
-#ifdef SETUID_SCRIPTS_ARE_SECURE_NOW
     if (PL_euid != PL_uid)
         Perl_croak(aTHX_ "No %s allowed while running setuid", s);
     if (PL_egid != PL_gid)
         Perl_croak(aTHX_ "No %s allowed while running setgid", s);
-#endif /* SETUID_SCRIPTS_ARE_SECURE_NOW */
-    /* PSz 29 Feb 04
-     * Checks for UID/GID above "wrong": why disallow
-     *   perl -e 'print "Hello\n"'
-     * from within setuid things?? Simply drop them: replaced by
-     * fdscript/suidscript and #ifdef IAMSUID checks below.
-     * 
-     * This may be too late for command-line switches. Will catch those on
-     * the #! line, after finding the script name and setting up
-     * fdscript/suidscript. Note that suidperl does not get around to
-     * parsing (and checking) the switches on the #! line, but checks that
-     * the two sets are identical.
-     * 
-     * With SETUID_SCRIPTS_ARE_SECURE_NOW, could we use fdscript, also or
-     * instead, or would that be "too late"? (We never have suidscript, can
-     * we be sure to have fdscript?)
-     * 
-     * Catch things with suidscript (in descendant of suidperl), even with
-     * right UID/GID. Was already checked in suidperl, with #ifdef IAMSUID,
-     * below; but I am paranoid.
-     * 
-     * Also see comments about root running a setuid script, elsewhere.
-     */
-    if (PL_suidscript >= 0)
-        Perl_croak(aTHX_ "No %s allowed with (suid) fdscript", s);
-#ifdef IAMSUID
-    /* PSz 11 Nov 03  Catch it in suidperl, always! */
-    Perl_croak(aTHX_ "No %s allowed in suidperl", s);
-#endif /* IAMSUID */
 }
 
 void
@@ -3704,10 +3414,8 @@ S_init_perllib(pTHX)
     incpush(APPLLIB_EXP, TRUE, TRUE);
 #endif
 
-#ifndef DEBIAN
 #ifdef ARCHLIB_EXP
     incpush(ARCHLIB_EXP, FALSE, FALSE);
-#endif
 #endif
 #ifdef MACOS_TRADITIONAL
     {
@@ -3733,12 +3441,10 @@ S_init_perllib(pTHX)
 #ifndef PRIVLIB_EXP
 #  define PRIVLIB_EXP "/usr/local/lib/perl5:/usr/local/lib/perl"
 #endif
-#ifndef DEBIAN
 #if defined(WIN32) 
     incpush(PRIVLIB_EXP, TRUE, FALSE);
 #else
     incpush(PRIVLIB_EXP, FALSE, FALSE);
-#endif
 #endif
 
 #ifdef SITEARCH_EXP
@@ -3779,61 +3485,6 @@ S_init_perllib(pTHX)
 
 #ifdef PERL_VENDORLIB_STEM /* Search for version-specific dirs below here */
     incpush(PERL_VENDORLIB_STEM, FALSE, TRUE);
-#endif
-
-#ifdef DEBIAN
-    incpush(ARCHLIB_EXP, FALSE, FALSE);
-    incpush(PRIVLIB_EXP, FALSE, FALSE);
-
-    /* Non-versioned site directory for local modules and for
-       compatability with the previous packages' site dirs */
-    incpush("/usr/local/lib/site_perl", TRUE, FALSE);
-
-#ifdef PERL_INC_VERSION_LIST
-    {
-	struct stat s;
-
-	/* add small buffer in case old versions are longer than the
-	   current version */
-	char sitearch[sizeof(SITEARCH_EXP)+16] = SITEARCH_EXP;
-	char sitelib[sizeof(SITELIB_EXP)+16] = SITELIB_EXP;
-	char const *vers[] = { PERL_INC_VERSION_LIST };
-	char const **p;
-
-	char *arch_vers = strrchr(sitearch, '/');
-	char *lib_vers = strrchr(sitelib, '/');
-
-	if (arch_vers && isdigit(*++arch_vers))
-	    *arch_vers = 0;
-	else
-	    arch_vers = 0;
-
-	if (lib_vers && isdigit(*++lib_vers))
-	    *lib_vers = 0;
-	else
-	    lib_vers = 0;
-
-	/* there is some duplication here as incpush does something
-	   similar internally, but required as sitearch is not a
-	   subdirectory of sitelib */
-	for (p = vers; *p; p++)
-	{
-	    if (arch_vers)
-	    {
-		strcpy(arch_vers, *p);
-		if (PerlLIO_stat(sitearch, &s) >= 0 && S_ISDIR(s.st_mode))
-		    incpush(sitearch, FALSE, FALSE);
-	    }
-
-	    if (lib_vers)
-	    {
-		strcpy(lib_vers, *p);
-		if (PerlLIO_stat(sitelib, &s) >= 0 && S_ISDIR(s.st_mode))
-		    incpush(sitelib, FALSE, FALSE);
-	    }
-	}
-    }
-#endif
 #endif
 
 #ifdef PERL_OTHERLIBDIRS

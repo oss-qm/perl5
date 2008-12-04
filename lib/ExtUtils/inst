@@ -2,7 +2,6 @@
 
 use strict;
 use IO::File;
-use File::Temp;
 use ExtUtils::Packlist;
 use ExtUtils::Installed;
 
@@ -59,12 +58,16 @@ while (1)
       $reply =~ /^t\s*/ and do
          {
          my $file = (split(' ', $reply))[1];
-         my ($fh, $tmp) = File::Temp::tempfile(UNLINK => 1);
-         $fh->print(join("\n", $Inst->files($module)));
-         $fh->close();
-         # This used to use -I which is wrong for GNU tar.
-         system("tar cvf $file -T $tmp");
-         unlink($tmp);
+         my $tmp = "/tmp/inst.$$";
+         if (my $fh = IO::File->new($tmp, "w"))
+            {
+            $fh->print(join("\n", $Inst->files($module)));
+            $fh->close();
+            system("tar cvf $file -I $tmp");
+            unlink($tmp);
+            last CASE;
+            }
+         else { print("Can't open $file: $!\n"); }
          last CASE;
          };
       $reply eq 'v' and do

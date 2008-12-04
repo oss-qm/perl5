@@ -76,9 +76,7 @@ C<_PATH_LOG> macro (if you system defines it) in F<syslog.h>.  A value of
 C<_PATH_LOG> is unavailable or if getservbyname() fails, returns undef.  Any
 other value croaks.
 
-The default on Debian systems is for the UNIX socket to be used (as the
-standard syslogd configuration on such systems does not accept INET
-connections).  Note that as distributed, the default is INET.
+The default is for the INET socket to be used.
 
 =item closelog
 
@@ -142,7 +140,6 @@ sub AUTOLOAD {
 bootstrap Sys::Syslog $VERSION;
 
 $maskpri = &LOG_UPTO(&LOG_DEBUG);
-$sock_type = length _PATH_LOG() > 0;
 
 sub openlog {
     ($ident, $logopt, $facility) = @_;  # package vars

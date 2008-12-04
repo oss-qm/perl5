@@ -363,8 +363,8 @@ Consider the module C<MyMod::Abc> below.
     sub open {
         my $path = shift ;
         if (warnings::enabled() && $path !~ m#^/#) {
-            warnings::warn("changing relative path to /var/abc/");
-            $path = "/var/abc/$path" ; 
+            warnings::warn("changing relative path to /tmp/");
+            $path = "/tmp/$path" ; 
         }
     }
 

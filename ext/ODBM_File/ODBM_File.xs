@@ -27,7 +27,7 @@
  * Set DBM_BUG_DUPLICATE_FREE in the extension hint file.
  */
 /* Close the previous dbm, and fail to open a new dbm */
-#define dbmclose()	((void) dbminit("/nonexistent"))
+#define dbmclose()	((void) dbminit("/tmp/x/y/z/z/y"))
 #endif
 
 #include <fcntl.h>

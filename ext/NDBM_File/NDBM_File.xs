@@ -6,7 +6,7 @@
  * See also INSTALL section on DB3.
  * -- Stanislav Brabec <utx@penguin.cz> */
 #undef ENTER
-#include <gdbm-ndbm.h>
+#include <ndbm.h>
 
 typedef struct {
 	DBM * 	dbp ;
