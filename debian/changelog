@@ -1,3 +1,12 @@
+perl (5.8.8-11.1) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * Urgency high because of RC bug fix.
+  * Fix h2ph to generate a correct check to distinguish i386/amd64 systems.
+    (Closes: #443785)
+
+ -- Faidon Liambotis <paravoid@debian.org>  Wed, 17 Oct 2007 16:26:33 +0300
+
 perl (5.8.8-11) unstable; urgency=low
 
   * Remove arm and alpha special cases (closes: #443353).
