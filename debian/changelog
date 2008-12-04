@@ -1,3 +1,13 @@
+perl (5.8.7-7) unstable; urgency=low
+
+  * ARM optimisation fix take 2.  Downgrade optimisation of pp_pack to
+    -Os (closes:  #333510).  Thanks to Bill Gatliff for the extended
+    use of the CSB625 is his basement.
+
+  * Change section of perl-base to "perl".
+
+ -- Brendan O'Dea <bod@debian.org>  Mon, 17 Oct 2005 23:16:32 +1000
+
 perl (5.8.7-6) unstable; urgency=low
 
   * Downgrade optimisation on arm to -O1 for certain files due to

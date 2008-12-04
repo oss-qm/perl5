@@ -107,12 +107,13 @@ for file do
     perlmain) ;;
     perly) ;;
     pp) ;;
-    pp_ctl|pp_hot|pp_sort)
+    pp_ctl) ;;
+    pp_hot) ;;
+    pp_pack)
 	case $archname in
 	    arm-*)
-		optimize=-O1;;
+		optimize=-Os;;
 	esac;;
-    pp_pack) ;;
     pp_sys) ;;
     regcomp) ;;
     regexec) ;;

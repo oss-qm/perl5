@@ -2,18 +2,17 @@ Bug#333510: fails to build on arm/armeb with -O2 optimization and current gcc4.
 
 diff -Naur --exclude=debian perl-5.8.7.orig/cflags.SH perl-5.8.7/cflags.SH
 --- perl-5.8.7.orig/cflags.SH	2002-09-30 20:59:07.000000000 +1000
-+++ perl-5.8.7/cflags.SH	2005-10-13 13:29:01.000000000 +1000
-@@ -107,8 +107,11 @@
-     perlmain) ;;
-     perly) ;;
++++ perl-5.8.7/cflags.SH	2005-10-17 20:57:13.000000000 +1000
+@@ -109,7 +109,11 @@
      pp) ;;
--    pp_ctl) ;;
--    pp_hot) ;;
-+    pp_ctl|pp_hot|pp_sort)
+     pp_ctl) ;;
+     pp_hot) ;;
+-    pp_pack) ;;
++    pp_pack)
 +	case $archname in
 +	    arm-*)
-+		optimize=-O1;;
++		optimize=-Os;;
 +	esac;;
-     pp_pack) ;;
      pp_sys) ;;
      regcomp) ;;
+     regexec) ;;
