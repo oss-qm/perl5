@@ -351,10 +351,8 @@ sub _rmtree {
             }
 
             my $nperm = $perm & 07777 | 0600;
-            if ($nperm != $perm and not chmod $nperm, $root) {
-                if ($Force_Writeable) {
-                    _error($arg, "cannot make file writeable", $canon);
-                }
+            if ($Force_Writeable && $nperm != $perm and not chmod $nperm, $root) {
+                _error($arg, "cannot make file writeable", $canon);
             }
             print "unlink $canon\n" if $arg->{verbose};
             # delete all versions under VMS
