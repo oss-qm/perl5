@@ -1262,7 +1262,7 @@ sub Configure (@) {
 	elsif ( $try eq 'ignorecase' or $try eq 'ignore_case' ) {
 	    $ignorecase = $action;
 	}
-	elsif ( $try eq 'ignore_case_always' ) {
+	elsif ( $try eq 'ignorecase_always' or $try eq 'ignore_case_always' ) {
 	    $ignorecase = $action ? 2 : 0;
 	}
 	elsif ( $try eq 'bundling' ) {
