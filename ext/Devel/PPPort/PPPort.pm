@@ -349,19 +349,13 @@ foreach $filename (map(glob($_),@ARGV)) {
 	}
 	
 	if ($changes) {
-		require POSIX; use Fcntl;
-		for(;;) {
-		    $tmp = POSIX::tmpnam();
-		    sysopen(OUT, $tmp, O_CREAT|O_WRONLY|O_EXCL, 0700) && last;
-		}
-
+		open(OUT,">/tmp/ppport.h.$$");
 		print OUT $c;
 		close(OUT);
-
-		open(DIFF, "diff -u $filename $tmp|");
-		while (<DIFF>) { s!$tmp!$filename.patched!; print STDOUT; }
+		open(DIFF, "diff -u $filename /tmp/ppport.h.$$|");
+		while (<DIFF>) { s!/tmp/ppport\.h\.$$!$filename.patched!; print STDOUT; }
 		close(DIFF);
-		unlink($tmp);
+		unlink("/tmp/ppport.h.$$");
 	} else {
 		print "Looks OK\n";
 	}

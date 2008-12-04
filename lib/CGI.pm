@@ -2545,7 +2545,7 @@ sub url {
     if (exists($ENV{REQUEST_URI})) {
         my $index;
 	$script_name = unescape($ENV{REQUEST_URI});
-        $script_name =~ s/\?.+$//s;   # strip query string
+        $script_name =~ s/\?.+$//;   # strip query string
         # and path
         if (exists($ENV{PATH_INFO})) {
            my $encoded_path = unescape($ENV{PATH_INFO});

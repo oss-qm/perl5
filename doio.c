@@ -1014,14 +1014,11 @@ Perl_io_close(pTHX_ IO *io, bool not_implicit)
 	    retval = TRUE;
 	else {
 	    if (IoOFP(io) && IoOFP(io) != IoIFP(io)) {		/* a socket */
-		bool prev_err = PerlIO_error(IoOFP(io));
-		retval = (PerlIO_close(IoOFP(io)) != EOF && !prev_err);
+		retval = (PerlIO_close(IoOFP(io)) != EOF);
 		PerlIO_close(IoIFP(io));	/* clear stdio, fd already closed */
 	    }
-	    else {
-		bool prev_err = PerlIO_error(IoIFP(io));
-		retval = (PerlIO_close(IoIFP(io)) != EOF && !prev_err);
-	    }
+	    else
+		retval = (PerlIO_close(IoIFP(io)) != EOF);
 	}
 	IoOFP(io) = IoIFP(io) = Nullfp;
     }

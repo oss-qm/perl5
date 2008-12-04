@@ -1,7 +1,7 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
-#include <gdbm-ndbm.h>
+#include <ndbm.h>
 
 typedef struct {
 	DBM * 	dbp ;
