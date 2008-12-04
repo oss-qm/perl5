@@ -1,0 +1,16 @@
+Bug#303308: Patch for Perl untaint bug (blead #25932).
+
+diff --exclude=debian -Naur perl-5.8.7.orig/mg.c perl-5.8.7/mg.c
+--- perl-5.8.7.orig/mg.c	2005-04-23 00:12:49.000000000 +1000
++++ perl-5.8.7/mg.c	2005-11-02 01:36:07.000000000 +1100
+@@ -768,7 +768,10 @@
+ 
+ 	      getrx:
+ 		if (i >= 0) {
++		    int oldtainted = PL_tainted;
++		    TAINT_NOT;
+ 		    sv_setpvn(sv, s, i);
++		    PL_tainted = oldtainted;
+ 		    if (RX_MATCH_UTF8(rx) && is_utf8_string((U8*)s, i))
+ 			SvUTF8_on(sv);
+ 		    else

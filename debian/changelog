@@ -1,3 +1,18 @@
+perl (5.8.7-8) unstable; urgency=low
+
+  * ARM fix is also required for armeb.
+  * Skip lib/Net/hostent.t test if no /etc/hosts (some buildds).
+  * Fix debugger termination message to refer to "o" rather than "O" for
+    setting options (closes: #334516).
+
+  * Fix problem with untainting of captured $N (thanks to Chris Heath
+    for analysis and patch; closes: #303308).
+
+  * Fix h2ph to correctly locate gcc's include directory (closes: #328500).
+  * Update to DB_File to db4.3 (closes: #336486).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 13 Nov 2005 12:05:29 +1100
+
 perl (5.8.7-7) unstable; urgency=low
 
   * ARM optimisation fix take 2.  Downgrade optimisation of pp_pack to
