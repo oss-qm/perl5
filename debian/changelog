@@ -1,3 +1,17 @@
+perl (5.8.8-12) unstable; urgency=high
+
+  * SECURITY [CVE-2007-5116] (closes: #450456): Apply patch from
+    Will Drewry and Tavis Ormandy of the Google Security Team to fix a
+    UTF-8 related heap overflow in Perl's regular expression compiler,
+    probably allowing attackers to execute arbitrary code by compiling
+    specially crafted regular expressions.
+
+  * Support "nocheck" option in DEB_BUILD_OPTIONS (closes: #449549).
+  * Suppress Configure test for ualarm() so that setitimer() emulation
+    is used (closes: #448965).
+
+ -- Brendan O'Dea <bod@debian.org>  Thu, 08 Nov 2007 08:42:01 +1100
+
 perl (5.8.8-11.1) unstable; urgency=high
 
   * Non-maintainer upload.

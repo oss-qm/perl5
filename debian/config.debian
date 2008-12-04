@@ -35,6 +35,13 @@ case "$1" in
 	    *)				exec echo yes;;
 	esac;;
 
+    --test-target)
+    	case ",$DEB_BUILD_OPTIONS," in
+	    *[,\ ]nocheck[,\ ]*)	exit;;
+	    *[,\ ]x-perl-notest[,\ ]*)	exit;;
+	    *)				exec echo test;;
+	esac;;
+
     --install-type)
 	# The default installation type for /usr/bin/perl of shared or
 	# static may be changed by including x-perl-static or x-perl-shared
@@ -47,12 +54,6 @@ case "$1" in
 	case "$arch_cpu" in
 	    i386)			exec echo static;;
 	    *)				exec echo shared;;
-	esac;;
-
-    --test-target)
-    	case ",$DEB_BUILD_OPTIONS," in
-	    *[,\ ]x-perl-notest[,\ ]*)	exit;;
-	    *)				exec echo test;;
 	esac;;
 
     *)	echo "$0: need --shared, --static, or --debug option"
@@ -99,6 +100,7 @@ eval /bin/bash Configure			\
     -Dpager=/usr/bin/sensible-pager		\
     -Uafs					\
     -Ud_csh					\
+    -Ud_ualarm					\
     -Uusesfio					\
     -Uusenm					\
     $opts -des
