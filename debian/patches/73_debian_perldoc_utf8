@@ -1,0 +1,18 @@
+Make /usr/bin/perldoc invoke pod2man with the "--utf8" option if it detects a new enough Pod::Man version. (Closes: #492037)
+
+[rt.cpan.org #39000], no comment from upstream yet.
+diff --git a/lib/Pod/Perldoc/ToMan.pm b/lib/Pod/Perldoc/ToMan.pm
+index 4319122..f697e5c 100644
+--- a/lib/Pod/Perldoc/ToMan.pm
++++ b/lib/Pod/Perldoc/ToMan.pm
+@@ -60,6 +60,10 @@ sub parse_from_file {
+       unless -e $pod2man;
+   }
+ 
++  eval { require Pod::Man };
++  $switches .= " --utf8"
++    if (!$@ && $Pod::Man::VERSION >= 2.18);
++
+   my $command = "$pod2man $switches --lax $file | $render -man";
+          # no temp file, just a pipe!
+ 
