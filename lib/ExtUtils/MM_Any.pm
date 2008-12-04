@@ -2,7 +2,7 @@ package ExtUtils::MM_Any;
 
 use strict;
 use vars qw($VERSION @ISA);
-$VERSION = '0.13_01';
+$VERSION = '0.13';
 
 use File::Spec;
 BEGIN { @ISA = qw(File::Spec); }
@@ -645,6 +645,8 @@ all POD files in MAN1PODS and MAN3PODS.
 sub manifypods_target {
     my($self) = shift;
 
+    my $man1pods      = '';
+    my $man3pods      = '';
     my $dependencies  = '';
 
     # populate manXpods & dependencies:
@@ -664,7 +666,7 @@ END
     foreach my $section (qw(1 3)) {
         my $pods = $self->{"MAN${section}PODS"};
         push @man_cmds, $self->split_command(<<CMD, %$pods);
-	\$(NOECHO) \$(POD2MAN) --section=\$(MAN${section}EXT) --perm_rw=\$(PERM_RW)
+	\$(NOECHO) \$(POD2MAN) --section=$section --perm_rw=\$(PERM_RW)
 CMD
     }
 
@@ -1043,18 +1045,11 @@ sub init_INSTALL_from_PREFIX {
 
     $self->{INSTALLSITEBIN} ||= '$(INSTALLBIN)'
       unless $Config{installsitebin};
-    $self->{INSTALLSITESCRIPT} ||= '$(INSTALLSCRIPT)'
-      unless $Config{installsitescript};
 
     unless( $Config{installvendorbin} ) {
         $self->{INSTALLVENDORBIN} ||= $Config{usevendorprefix} 
                                     ? $Config{installbin}
                                     : '';
-    }
-    unless( $Config{installvendorscript} ) {
-        $self->{INSTALLVENDORSCRIPT} ||= $Config{usevendorprefix}
-                                       ? $Config{installscript}
-                                       : '';
     }
 
 
@@ -1078,11 +1073,9 @@ sub init_INSTALL_from_PREFIX {
         $self->{SITEPREFIX}   ||= $sprefix;
         $self->{VENDORPREFIX} ||= $vprefix;
 
-	my $p = $self->{PREFIX} = $self->{PERLPREFIX};
-	for my $t (qw/PERL SITE VENDOR/)
-	{
-	    $self->{"${t}PREFIX"} =~ s!^\Q$p\E(?=/|$)!\$(PREFIX)!;
-	}
+        # Lots of MM extension authors like to use $(PREFIX) so we
+        # put something sensible in there no matter what.
+        $self->{PREFIX} = '$('.uc $self->{INSTALLDIRS}.'PREFIX)';
     }
 
     my $arch    = $Config{archname};
@@ -1117,12 +1110,6 @@ sub init_INSTALL_from_PREFIX {
                          d => 'bin' },
         script      => { s => $iprefix,
                          t => 'perl',
-                         d => 'bin' },
-        vendorscript=> { s => $vprefix,
-                         t => 'vendor',
-                         d => 'bin' },
-        sitescript  => { s => $sprefix,
-                         t => 'site',
                          d => 'bin' },
     );
     
@@ -1266,6 +1253,7 @@ sub init_INSTALL_from_INSTALLBASE {
     # Adjust for variable quirks.
     $install{INSTALLARCHLIB} ||= delete $install{INSTALLARCH};
     $install{INSTALLPRIVLIB} ||= delete $install{INSTALLLIB};
+    delete @install{qw(INSTALLVENDORSCRIPT INSTALLSITESCRIPT)};
 
     foreach my $key (keys %install) {
         $self->{$key} ||= $install{$key};
@@ -1639,7 +1627,7 @@ sub installvars {
     return qw(PRIVLIB SITELIB  VENDORLIB
               ARCHLIB SITEARCH VENDORARCH
               BIN     SITEBIN  VENDORBIN
-              SCRIPT  SITESCRIPT  VENDORSCRIPT
+              SCRIPT
               MAN1DIR SITEMAN1DIR VENDORMAN1DIR
               MAN3DIR SITEMAN3DIR VENDORMAN3DIR
              );

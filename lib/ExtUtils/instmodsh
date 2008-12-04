@@ -18,10 +18,8 @@ instmodsh - A shell to examine installed modules
 
 =head1 DESCRIPTION
 
-A little interface to ExtUtils::Installed to examine locally* installed modules,
+A little interface to ExtUtils::Installed to examine installed modules,
 validate your packlists and even create a tarball from an installed module.
-
-*On Debian system, B<core> and B<vendor> modules are managed by C<dpkg>.
 
 =head1 SEE ALSO
 

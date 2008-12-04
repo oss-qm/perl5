@@ -358,7 +358,7 @@ If you don\'t understand this question, just press ENTER.
 
 };
 
-    $default = $CPAN::Config->{makepl_arg} || "INSTALLDIRS=site";
+    $default = $CPAN::Config->{makepl_arg} || "";
     $CPAN::Config->{makepl_arg} =
 	prompt("Parameters for the 'perl Makefile.PL' command?
 Typical frequently used settings:
@@ -464,7 +464,6 @@ be echoed to the terminal!
 
     # We don't ask that now, it will be noticed in time, won't it?
     $CPAN::Config->{'inhibit_startup_message'} = 0;
-    $CPAN::Config->{'cpan_version_check'} = 1;
     $CPAN::Config->{'getcwd'} = 'cwd';
 
     print "\n\n";
@@ -554,9 +553,6 @@ sub picklist {
         $pos = 0 if $pos >= @$items;
 
         my $num = prompt($prompt,$default);
-        unless ($num or -t) {
-            die "No default for '$prompt',\naborting non-interactive setup.\n";
-        }
 
         @nums = split (' ', $num);
         my $i = scalar @$items;

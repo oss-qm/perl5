@@ -20,7 +20,7 @@ use vars qw($VERSION @ISA
 
 use ExtUtils::MakeMaker qw($Verbose neatvalue);
 
-$VERSION = '1.50_01';
+$VERSION = '1.50';
 
 require ExtUtils::MM_Any;
 @ISA = qw(ExtUtils::MM_Any);
@@ -2054,7 +2054,9 @@ doc__install : doc_site_install
 	$(NOECHO) $(ECHO) INSTALLDIRS not defined, defaulting to INSTALLDIRS=site
 
 pure_perl_install ::
-	$(NOECHO) umask 022; $(MOD_INSTALL) \
+	$(NOECHO) $(MOD_INSTALL) \
+		read }.$self->catfile('$(PERL_ARCHLIB)','auto','$(FULLEXT)','.packlist').q{ \
+		write }.$self->catfile('$(DESTINSTALLARCHLIB)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(DESTINSTALLPRIVLIB) \
 		$(INST_ARCHLIB) $(DESTINSTALLARCHLIB) \
 		$(INST_BIN) $(DESTINSTALLBIN) \
@@ -2066,41 +2068,61 @@ pure_perl_install ::
 
 
 pure_site_install ::
-	$(NOECHO) umask 02; $(MOD_INSTALL) \
+	$(NOECHO) $(MOD_INSTALL) \
 		read }.$self->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').q{ \
 		write }.$self->catfile('$(DESTINSTALLSITEARCH)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(DESTINSTALLSITELIB) \
 		$(INST_ARCHLIB) $(DESTINSTALLSITEARCH) \
 		$(INST_BIN) $(DESTINSTALLSITEBIN) \
-		$(INST_SCRIPT) $(DESTINSTALLSITESCRIPT) \
+		$(INST_SCRIPT) $(DESTINSTALLSCRIPT) \
 		$(INST_MAN1DIR) $(DESTINSTALLSITEMAN1DIR) \
 		$(INST_MAN3DIR) $(DESTINSTALLSITEMAN3DIR)
 	$(NOECHO) $(WARN_IF_OLD_PACKLIST) \
 		}.$self->catdir('$(PERL_ARCHLIB)','auto','$(FULLEXT)').q{
 
 pure_vendor_install ::
-	$(NOECHO) umask 022; $(MOD_INSTALL) \
+	$(NOECHO) $(MOD_INSTALL) \
+		read }.$self->catfile('$(VENDORARCHEXP)','auto','$(FULLEXT)','.packlist').q{ \
+		write }.$self->catfile('$(DESTINSTALLVENDORARCH)','auto','$(FULLEXT)','.packlist').q{ \
 		$(INST_LIB) $(DESTINSTALLVENDORLIB) \
 		$(INST_ARCHLIB) $(DESTINSTALLVENDORARCH) \
 		$(INST_BIN) $(DESTINSTALLVENDORBIN) \
-		$(INST_SCRIPT) $(DESTINSTALLVENDORSCRIPT) \
+		$(INST_SCRIPT) $(DESTINSTALLSCRIPT) \
 		$(INST_MAN1DIR) $(DESTINSTALLVENDORMAN1DIR) \
 		$(INST_MAN3DIR) $(DESTINSTALLVENDORMAN3DIR)
 
 doc_perl_install ::
+	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
+	-$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
+	-$(NOECHO) $(DOC_INSTALL) \
+		"Module" "$(NAME)" \
+		"installed into" "$(INSTALLPRIVLIB)" \
+		LINKTYPE "$(LINKTYPE)" \
+		VERSION "$(VERSION)" \
+		EXE_FILES "$(EXE_FILES)" \
+		>> }.$self->catfile('$(DESTINSTALLARCHLIB)','perllocal.pod').q{
 
 doc_site_install ::
-	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLSITEARCH)/perllocal.pod
-	-$(NOECHO) umask 02; $(MKPATH) $(DESTINSTALLSITEARCH)
-	-$(NOECHO) umask 02; $(DOC_INSTALL) \
+	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
+	-$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
+	-$(NOECHO) $(DOC_INSTALL) \
 		"Module" "$(NAME)" \
 		"installed into" "$(INSTALLSITELIB)" \
 		LINKTYPE "$(LINKTYPE)" \
 		VERSION "$(VERSION)" \
 		EXE_FILES "$(EXE_FILES)" \
-		>> }.$self->catfile('$(DESTINSTALLSITEARCH)','perllocal.pod').q{
+		>> }.$self->catfile('$(DESTINSTALLARCHLIB)','perllocal.pod').q{
 
 doc_vendor_install ::
+	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
+	-$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
+	-$(NOECHO) $(DOC_INSTALL) \
+		"Module" "$(NAME)" \
+		"installed into" "$(INSTALLVENDORLIB)" \
+		LINKTYPE "$(LINKTYPE)" \
+		VERSION "$(VERSION)" \
+		EXE_FILES "$(EXE_FILES)" \
+		>> }.$self->catfile('$(DESTINSTALLARCHLIB)','perllocal.pod').q{
 
 };
 
@@ -2109,12 +2131,13 @@ uninstall :: uninstall_from_$(INSTALLDIRS)dirs
 	$(NOECHO) $(NOOP)
 
 uninstall_from_perldirs ::
+	$(NOECHO) $(UNINSTALL) }.$self->catfile('$(PERL_ARCHLIB)','auto','$(FULLEXT)','.packlist').q{
 
 uninstall_from_sitedirs ::
 	$(NOECHO) $(UNINSTALL) }.$self->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').q{
 
 uninstall_from_vendordirs ::
-
+	$(NOECHO) $(UNINSTALL) }.$self->catfile('$(VENDORARCHEXP)','auto','$(FULLEXT)','.packlist').q{
 };
 
     join("",@m);
@@ -2392,7 +2415,7 @@ MAP_PRELIBS   = $Config{perllibs} $Config{cryptlib}
 	($lperl = $libperl) =~ s/\$\(A\)/$self->{LIB_EXT}/;
     }
     unless ($libperl && -f $lperl) { # Ilya's code...
-	my $dir = $self->{PERL_SRC} || "/usr/lib";
+	my $dir = $self->{PERL_SRC} || "$self->{PERL_ARCHLIB}/CORE";
 	$dir = "$self->{PERL_ARCHLIB}/.." if $self->{UNINSTALLED_PERL};
 	$libperl ||= "libperl$self->{LIB_EXT}";
 	$libperl   = "$dir/$libperl";
@@ -2984,7 +3007,8 @@ sub prefixify {
     print STDERR "  prefixify $var => $path\n" if $Verbose >= 2;
     print STDERR "    from $sprefix to $rprefix\n" if $Verbose >= 2;
 
-    if( $path !~ s{^\Q$sprefix\E\b}{$rprefix}s && $self->{ARGS}{PREFIX} )
+    if( $self->{ARGS}{PREFIX} && $self->file_name_is_absolute($path) && 
+        $path !~ s{^\Q$sprefix\E\b}{$rprefix}s ) 
     {
 
         print STDERR "    cannot prefix, using default.\n" if $Verbose >= 2;
@@ -3028,11 +3052,14 @@ sub processPL {
 	    # pm_to_blib depends on then it can't depend on pm_to_blib
 	    # else we have a dependency loop.
 	    my $pm_dep;
+	    my $perlrun;
 	    if( defined $self->{PM}{$target} ) {
 		$pm_dep  = '';
+		$perlrun = 'PERLRUN';
 	    }
 	    else {
 		$pm_dep  = 'pm_to_blib';
+		$perlrun = 'PERLRUNINST';
 	    }
 
             $m .= <<MAKE_FRAG;
@@ -3041,7 +3068,7 @@ all :: $target
 	\$(NOECHO) \$(NOOP)
 
 $target :: $plfile $pm_dep
-	\$(PERLRUNINST) $plfile $target
+	\$($perlrun) $plfile $target
 MAKE_FRAG
 
 	}

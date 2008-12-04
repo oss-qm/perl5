@@ -57,8 +57,9 @@ my %nc = (
 }
 TRY_INTERNET_CONFIG
 
-my $file = '/etc/perl/Net/libnet.cfg';
+my $file = __FILE__;
 my $ref;
+$file =~ s/Config.pm/libnet.cfg/;
 if ( -f $file ) {
     $ref = eval { local $SIG{__DIE__}; do $file };
     if (ref($ref) eq 'HASH') {
@@ -130,8 +131,8 @@ Net::Config - Local configuration data for libnet
 C<Net::Config> holds configuration data for the modules in the libnet
 distribuion. During installation you will be asked for these values.
 
-The configuration data is held globally in C</etc/perl/Net/libnet.cfg>,
-but a user may override any of these values by providing their own. This
+The configuration data is held globally in a file in the perl installation
+tree, but a user may override any of these values by providing their own. This
 can be done by having a C<.libnetrc> file in their home directory. This file
 should return a reference to a HASH containing the keys described below.
 For example
@@ -156,7 +157,7 @@ C<Net::LocalCfg> so you can override these methods if you want.
 Attempts to determine if a given host is outside your firewall. Possible
 return values are.
 
-  \-1  Cannot lookup hostname
+  -1  Cannot lookup hostname
    0  Host is inside firewall (or there is no ftp_firewall entry)
    1  Host is outside the firewall
 

@@ -454,11 +454,7 @@ Perl_re_intuit_start(pTHX_ regexp *prog, SV *sv, char *strpos,
 			      "String too short... [re_intuit_start]\n"));
 	goto fail;
     }
-    /* quarl 2007-03-14
-     *     Need to check SvPOKp rather than SvPOK in case of taint mode +
-     *     studied regexp.  Reference: 615e0643-ac86-4c31-9cd3-3526b2fc883c */
-    strbeg = (sv && (SvPOK(sv) || SvPOKp(sv))) ? strend - SvCUR(sv) : strpos;
-    /* DEBUG_r( PerlIO_printf(Perl_debug_log, "## sv_flags=%p, SvPOK=%d, SvPOKp=%d, strbeg = %p\n", sv ? sv->sv_flags : 0, (sv && SvPOK(sv) ? 1:0), (sv && SvPOKp(sv) ? 1:0), strbeg) ); */
+    strbeg = (sv && SvPOK(sv)) ? strend - SvCUR(sv) : strpos;
     PL_regeol = strend;
     if (do_utf8) {
 	if (!prog->check_utf8 && prog->check_substr)

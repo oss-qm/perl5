@@ -354,30 +354,23 @@ Based on code written by Shigio Yamaguchi.
 sub abs2rel {
     my($self,$path,$base) = @_;
 
-    # Figure out the effective $base and clean it up.
-    if ( !defined( $base ) || $base eq '' ) {
-        $base = $self->_cwd();
-    }
-    elsif ( ! $self->file_name_is_absolute( $base ) ) {
-	if ( ! $self->file_name_is_absolute( $path ) ) {
-	    # optimisation where both paths are relative: save 2 x cwd
-	    $base = $self->canonpath( "/$base" );
-	    $path = "/$path";
-	}
-	else {
-	    $base = $self->rel2abs( $base ) ;
-	}
-    }
-    else {
-        $base = $self->canonpath( $base ) ;
-    }
-
     # Clean up $path
     if ( ! $self->file_name_is_absolute( $path ) ) {
         $path = $self->rel2abs( $path ) ;
     }
     else {
         $path = $self->canonpath( $path ) ;
+    }
+
+    # Figure out the effective $base and clean it up.
+    if ( !defined( $base ) || $base eq '' ) {
+        $base = $self->_cwd();
+    }
+    elsif ( ! $self->file_name_is_absolute( $base ) ) {
+        $base = $self->rel2abs( $base ) ;
+    }
+    else {
+        $base = $self->canonpath( $base ) ;
     }
 
     # Now, remove all leading components that are the same

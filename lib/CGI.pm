@@ -3411,7 +3411,7 @@ END_OF_FUNC
 'upload' =><<'END_OF_FUNC',
 sub upload {
     my($self,$param_name) = self_or_default(@_);
-    my @param = grep(ref && defined(fileno($_)), $self->param($param_name));
+    my @param = grep(ref && fileno($_), $self->param($param_name));
     return unless @param;
     return wantarray ? @param : $param[0];
 }

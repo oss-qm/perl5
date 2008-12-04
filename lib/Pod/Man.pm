@@ -74,11 +74,11 @@ $PREAMBLE = <<'----END OF PREAMBLE----';
 ..
 .\" Set up some character translations and predefined strings.  \*(-- will
 .\" give an unbreakable dash, \*(PI will give pi, \*(L" will give a left
-.\" double quote, and \*(R" will give a right double quote.  \*(C+ will
-.\" give a nicer C++.  Capital omega is used to do unbreakable dashes and
-.\" therefore won't be available.  \*(C` and \*(C' expand to `' in nroff,
-.\" nothing in troff, for use with C<>.
-.tr \(*W-
+.\" double quote, and \*(R" will give a right double quote.  | will give a
+.\" real vertical bar.  \*(C+ will give a nicer C++.  Capital omega is used to
+.\" do unbreakable dashes and therefore won't be available.  \*(C` and \*(C'
+.\" expand to `' in nroff, nothing in troff, for use with C<>.
+.tr \(*W-|\(bv\*(Tr
 .ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
 .ie n \{\
 .    ds -- \(*W-
@@ -517,8 +517,6 @@ sub verbatim {
     my $lines = tr/\n/\n/;
     1 while s/^(.*?)(\t+)/$1 . ' ' x (length ($2) * 8 - length ($1) % 8)/me;
     s/\\/\\e/g;
-    s/-/\\-/g;
-    s/'/\\(aq/g;
     s/^(\s*\S)/'\&' . $1/gme;
     $self->makespace;
     $self->output (".Vb $lines\n$_.Ve\n");
@@ -1072,7 +1070,6 @@ sub outindex {
     for (@output) {
         my ($type, $entry) = @$_;
         $entry =~ s/\"/\"\"/g;
-        $entry =~ s/\\/\\e/g;
         $self->output (".IX $type " . '"' . $entry . '"' . "\n");
     }
 }

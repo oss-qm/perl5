@@ -173,8 +173,8 @@ sub install {
 		if (-f $targetfile){
 		    forceunlink($targetfile) unless $nonono;
 		} else {
-		    mkpath($targetdir) unless $nonono;
-		    print "mkpath($targetdir)\n" if $verbose>1;
+		    mkpath($targetdir,0,0755) unless $nonono;
+		    print "mkpath($targetdir,0,0755)\n" if $verbose>1;
 		}
 		copy($sourcefile, $targetfile) unless $nonono;
 		print "Installing $targetfile\n";
