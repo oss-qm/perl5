@@ -7,6 +7,7 @@ usr/lib/perl/*/DynaLoader.pm
 usr/lib/perl/*/Errno.pm
 usr/lib/perl/*/Fcntl.pm
 usr/lib/perl/*/File/Glob.pm
+usr/lib/perl/*/Hash/Util.pm
 usr/lib/perl/*/IO.pm
 usr/lib/perl/*/IO/File.pm
 usr/lib/perl/*/IO/Handle.pm
@@ -24,6 +25,7 @@ usr/lib/perl/*/auto/Cwd
 usr/lib/perl/*/auto/DynaLoader
 usr/lib/perl/*/auto/Fcntl
 usr/lib/perl/*/auto/File/Glob
+usr/lib/perl/*/auto/Hash/Util/Util.so
 usr/lib/perl/*/auto/IO
 usr/lib/perl/*/auto/List/Util
 usr/lib/perl/*/auto/POSIX/POSIX.so
