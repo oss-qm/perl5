@@ -453,7 +453,7 @@ sub _can_write_dir {
     return 0;
 }
 
-=item _mkpath($dir,$show,$mode,$verbose,$fake)
+=item _mkpath($dir,$show,$verbose,$fake)
 
 Wrapper around File::Path::mkpath() to handle errors.
 
@@ -470,13 +470,13 @@ writable.
 =cut
 
 sub _mkpath {
-    my ($dir,$show,$mode,$verbose,$fake)=@_;
+    my ($dir,$show,$verbose,$fake)=@_;
     if ( $verbose && $verbose > 1 && ! -d $dir) {
         $show= 1;
-        printf "mkpath(%s,%d,%#o)\n", $dir, $show, $mode;
+        printf "mkpath(%s,%d)\n", $dir, $show;
     }
     if (!$fake) {
-        if ( ! eval { File::Path::mkpath($dir,$show,$mode); 1 } ) {
+        if ( ! eval { File::Path::mkpath($dir,$show); 1 } ) {
             _choke("Can't create '$dir'","$@");
         }
 
@@ -644,7 +644,7 @@ sub install { #XXX OS-SPECIFIC
     }   
     
     foreach my $targetdir (sort keys %check_dirs) {
-        _mkpath( $targetdir, 0, 0755, $verbose, $nonono );
+        _mkpath( $targetdir, 0, $verbose, $nonono );
     }
     foreach my $found (@found_files) {
         my ($diff, $ffd, $origfile, $mode, $size, $atime, $mtime,
@@ -657,7 +657,7 @@ sub install { #XXX OS-SPECIFIC
                 $targetfile= _unlink_or_rename( $targetfile, 'tryhard', 'install' )
                     unless $nonono;
             } elsif ( ! -d $targetdir ) {
-                _mkpath( $targetdir, 0, 0755, $verbose, $nonono );
+                _mkpath( $targetdir, 0, $verbose, $nonono );
             }
             print "Installing $targetfile\n";
             _copy( $sourcefile, $targetfile, $verbose, $nonono, );
@@ -686,7 +686,7 @@ sub install { #XXX OS-SPECIFIC
 
     if ($pack{'write'}) {
         $dir = install_rooted_dir(dirname($pack{'write'}));
-        _mkpath( $dir, 0, 0755, $verbose, $nonono );
+        _mkpath( $dir, 0, $verbose, $nonono );
         print "Writing $pack{'write'}\n";
         $packlist->write(install_rooted_file($pack{'write'})) unless $nonono;
     }
@@ -984,7 +984,7 @@ be prepended as a directory to each installed file (and directory).
 sub pm_to_blib {
     my($fromto,$autodir,$pm_filter) = @_;
 
-    _mkpath($autodir,0,0755);
+    _mkpath($autodir,0);
     while(my($from, $to) = each %$fromto) {
         if( -f $to && -s $from == -s $to && -M $to < -M $from ) {
             print "Skip $to (unchanged)\n";
@@ -1007,7 +1007,7 @@ sub pm_to_blib {
             # we wont try hard here. its too likely to mess things up.
             forceunlink($to);
         } else {
-            _mkpath(dirname($to),0,0755);
+            _mkpath(dirname($to),0);
         }
         if ($need_filtering) {
             run_filter($pm_filter, $from, $to);

@@ -7,7 +7,7 @@ Perl Packages for Debian
   perl-doc         - Perl documentation.
   perl-debug       - Debug-enabled Perl interpreter.
   perl-suid        - Runs setuid Perl scripts.
-  libperl5.8       - Shared Perl library.
+  libperl5.10      - Shared Perl library.
   libperl-dev      - Perl library: development files.
   libcgi-fast-perl - CGI::Fast Perl module.
 
@@ -87,7 +87,7 @@ The Debian build process consists of the following components:
     source with the exception of the debian subdir.  Any changes are
     made, patches applied etc., then:
 
-      (cd ..; diff -Naur --exclude=debian perl-5.8.2.orig perl-5.8.2) \
+      (cd ..; diff -Naur --exclude=debian perl-5.10.0.orig perl-5.10.0) \
 	  >debian/patches/<new>
       patch -Rp1 <debian/patches/<new>
       debian/rules patch

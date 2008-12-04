@@ -26,7 +26,6 @@ usr/lib/perl/*/auto/Fcntl
 usr/lib/perl/*/auto/File/Glob
 usr/lib/perl/*/auto/IO
 usr/lib/perl/*/auto/List/Util
-usr/lib/perl/*/auto/POSIX/POSIX.bs
 usr/lib/perl/*/auto/POSIX/POSIX.so
 usr/lib/perl/*/auto/POSIX/autosplit.ix
 usr/lib/perl/*/auto/POSIX/load_imports.al

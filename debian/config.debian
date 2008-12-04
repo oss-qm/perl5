@@ -75,6 +75,9 @@ esac
 
 test -n "$optimize" && opts="$opts -Doptimize='$optimize'"
 
+# post-configure tweaks
+cp debian/config.over .
+
 # need bash when sourcing config.over
 eval /bin/bash Configure			\
     -Dusethreads				\

@@ -68,7 +68,7 @@ use Time::HiRes qw(gettimeofday);
 
 my $have_alarm = $Config{d_alarm};
 my $have_fork  = $Config{d_fork};
-my $waitfor = 180; # 30-45 seconds is normal (load affects this).
+my $waitfor = 300; # 30-45 seconds is normal (load affects this).
 my $timer_pid;
 my $TheEnd;
 
