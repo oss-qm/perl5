@@ -1,3 +1,10 @@
+perl (5.10.0-2) experimental; urgency=low
+
+  * Fix libperl-dev depends (closes: #458135).
+  * Skip failing Sys::Syslog test when /dev/log unavailable (closes: #457760).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 30 Dec 2007 12:51:30 +1100
+
 perl (5.10.0-1) experimental; urgency=low
 
   * New upstream version.
