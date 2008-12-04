@@ -16,7 +16,7 @@ BEGIN {
 }
 
 use strict;
-use Test::More tests => 32;
+use Test::More tests => 36;
 use MakeMaker::Test::Utils;
 use ExtUtils::MakeMaker;
 use File::Spec;
@@ -60,9 +60,9 @@ isa_ok( $mm, 'ExtUtils::MakeMaker' );
 is( $mm->{NAME}, 'Big::Dummy',  'NAME' );
 is( $mm->{VERSION}, 0.01,            'VERSION' );
 
-#foreach my $prefix (qw(PREFIX PERLPREFIX SITEPREFIX VENDORPREFIX)) {
-#    unlike( $mm->{$prefix}, qr/\$\(PREFIX\)/ );
-#}
+foreach my $prefix (qw(PREFIX PERLPREFIX SITEPREFIX VENDORPREFIX)) {
+    unlike( $mm->{$prefix}, qr/\$\(PREFIX\)/ );
+}
 
 
 my $PREFIX = File::Spec->catdir('foo', 'bar');

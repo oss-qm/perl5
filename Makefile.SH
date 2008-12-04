@@ -39,7 +39,12 @@ case "$useshrplib" in
 true)
 	# Prefix all runs of 'miniperl' and 'perl' with
 	# $ldlibpth so that ./perl finds *this* shared libperl.
-	ldlibpth=LD_LIBRARY_PATH=`pwd`'$${LD_LIBRARY_PATH:+:}$$LD_LIBRARY_PATH'
+	case "$LD_LIBRARY_PATH" in
+	'')
+		ldlibpth="LD_LIBRARY_PATH=`pwd`";;
+	*)
+		ldlibpth="LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}";;
+	esac
 
 	pldlflags="$cccdlflags"
 	static_target='static_pic'
@@ -88,7 +93,7 @@ true)
 	    ;;
 	esac
 	case "$ldlibpthname" in
-	''|LD_LIBRARY_PATH) ;;
+	'') ;;
 	*)
 	    case "$osname" in
 	    os2)
