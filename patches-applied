@@ -8,6 +8,8 @@ debian/patches/06_fix_utf8_changelog
 debian/patches/07_fix_nullok
 debian/patches/08_fix_udp_typo
 debian/patches/09_fix_memory_debugging
+debian/patches/10_fix_h2ph_include_quote
+debian/patches/11_disable_vstring_warning
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
@@ -29,3 +31,4 @@ debian/patches/67_debian_db_file_ver
 debian/patches/68_debian_errno_ver
 debian/patches/69_debian_m68k_time_hires
 debian/patches/70_debian_hppa_mips_optim
+debian/patches/71_debian_module_build_man_extensions

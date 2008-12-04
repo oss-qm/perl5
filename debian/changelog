@@ -1,3 +1,15 @@
+perl (5.10.0-10) unstable; urgency=low
+
+  * Integrate NMU, thanks Bastian.
+  * Make h2ph allow the quote mark delimiter also for those #include directives
+    chased with "h2ph -a". (Closes: #479762)
+  * Adjust manual page sections in Module::Build::Base for the Debian Perl
+    policy. (Closes: #479460)
+  * Disable the "v-string in use/require is non-portable" warning again.
+    (Closes: #479863)
+
+ -- Niko Tyni <ntyni@debian.org>  Thu, 08 May 2008 14:32:30 +0300
+
 perl (5.10.0-9.1) unstable; urgency=low
 
   * Non-maintainer upload.
