@@ -1,6 +1,8 @@
 #!./perl
 
-print "1..30\n";
+print "1..31\n";
+
+my $Is_EBCDIC = (ord('A') == 193) ? 1 : 0;
 
 print vec($foo,0,1) == 0 ? "ok 1\n" : "not ok 1\n";
 print length($foo) == 0 ? "ok 2\n" : "not ok 2\n";
@@ -44,7 +46,7 @@ $x = eval { vec $foo, 0, -13 };
 print "not " if defined $x or $@ !~ /^Illegal number of bits in vec/;
 print "ok 21\n";
 $x = eval { vec($foo, -1, 4) = 2 };
-print "not " if defined $x or $@ !~ /^Assigning to negative offset in vec/;
+print "not " if defined $x or $@ !~ /^Negative offset to vec in lvalue context/;
 print "ok 22\n";
 print "not " if vec('abcd', 7, 8);
 print "ok 23\n";
@@ -62,8 +64,14 @@ print "ok 25\n";
 eval { vec($foo, 1, 8) = 13 };
 print "not " if $@;
 print "ok 26\n";
-print "not " if $foo ne "\xc4\x0d\xc3\xbf\xc3\xbe";
-print "ok 27\n";
+if ($Is_EBCDIC) {
+    print "not " if $foo ne "\x8c\x0d\xff\x8a\x69";
+    print "ok 27\n";
+}
+else {
+    print "not " if $foo ne "\xc4\x0d\xc3\xbf\xc3\xbe";
+    print "ok 27\n";
+}
 $foo = "\x{100}" . "\xff\xfe";
 $x = substr $foo, 1;
 vec($x, 2, 4) = 7;
@@ -78,3 +86,14 @@ print "ok 29\n";
 vec(substr($foo, 1,3), 5, 4) = 3;
 print "not " if $foo ne "\x61\x62\x63\x34\x65\x66";
 print "ok 30\n";
+
+# A variation of [perl #20933]
+{
+    my $s = "";
+    vec($s, 0, 1) = 0;
+    vec($s, 1, 1) = 1;
+    my @r;
+    $r[$_] = \ vec $s, $_, 1 for (0, 1);
+    print "not " if (${ $r[0] } != 0 || ${ $r[1] } != 1);
+    print "ok 31\n";
+}

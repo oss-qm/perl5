@@ -1,3 +1,13 @@
+/*    taint.c
+ *
+ *    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+ *    2000, 2001, 2002, by Larry Wall and others
+ *
+ *    You may distribute under the terms of either the GNU General Public
+ *    License or the Artistic License, as specified in the README file.
+ *
+ */
+
 /*
  * "...we will have peace, when you and all your works have perished--and
  * the works of your dark master to whom you would deliver us.  You are a
@@ -13,9 +23,26 @@ Perl_taint_proper(pTHX_ const char *f, const char *s)
 {
     char *ug;
 
-#ifdef HAS_SETEUID
-    DEBUG_u(PerlIO_printf(Perl_debug_log,
-            "%s %d %"Uid_t_f" %"Uid_t_f"\n", s, PL_tainted, PL_uid, PL_euid));
+#if defined(HAS_SETEUID) && defined(DEBUGGING)
+#   if Uid_t_size == 1
+    {
+	 UV  uid = PL_uid;
+	 UV euid = PL_euid;
+
+	 DEBUG_u(PerlIO_printf(Perl_debug_log,
+			       "%s %d %"UVuf" %"UVuf"\n",
+			       s, PL_tainted, uid, euid));
+    }
+#   else
+    {
+	 IV  uid = PL_uid;
+	 IV euid = PL_euid;
+
+	 DEBUG_u(PerlIO_printf(Perl_debug_log,
+			       "%s %d %"IVdf" %"IVdf"\n",
+			       s, PL_tainted, uid, euid));
+    }
+#   endif
 #endif
 
     if (PL_tainted) {
@@ -25,12 +52,17 @@ Perl_taint_proper(pTHX_ const char *f, const char *s)
 	    ug = " while running setuid";
 	else if (PL_egid != PL_gid)
 	    ug = " while running setgid";
-	else
+	else if (PL_taint_warn)
+            ug = " while running with -t switch";
+        else
 	    ug = " while running with -T switch";
-	if (!PL_unsafe)
-	    Perl_croak(aTHX_ f, s, ug);
-	else if (ckWARN(WARN_TAINT))
-	    Perl_warner(aTHX_ WARN_TAINT, f, s, ug);
+	if (PL_unsafe || PL_taint_warn) {
+            if(ckWARN(WARN_TAINT))
+                Perl_warner(aTHX_ packWARN(WARN_TAINT), f, s, ug);
+        }
+        else {
+            Perl_croak(aTHX_ f, s, ug);
+        }
     }
 }
 
@@ -66,7 +98,7 @@ Perl_taint_env(pTHX)
 	    TAINT;
 	    taint_proper("Insecure %s%s", "$ENV{DCL$PATH}");
 	}
-	if ((mg = mg_find(*svp, 'e')) && MgTAINTEDDIR(mg)) {
+	if ((mg = mg_find(*svp, PERL_MAGIC_envelem)) && MgTAINTEDDIR(mg)) {
 	    TAINT;
 	    taint_proper("Insecure directory in %s%s", "$ENV{DCL$PATH}");
 	}
@@ -81,7 +113,7 @@ Perl_taint_env(pTHX)
 	    TAINT;
 	    taint_proper("Insecure %s%s", "$ENV{PATH}");
 	}
-	if ((mg = mg_find(*svp, 'e')) && MgTAINTEDDIR(mg)) {
+	if ((mg = mg_find(*svp, PERL_MAGIC_envelem)) && MgTAINTEDDIR(mg)) {
 	    TAINT;
 	    taint_proper("Insecure directory in %s%s", "$ENV{PATH}");
 	}
@@ -98,7 +130,7 @@ Perl_taint_env(pTHX)
 	PL_tainted = was_tainted;
 	if (t < e && isALNUM(*t))
 	    t++;
-	while (t < e && (isALNUM(*t) || *t == '-' || *t == ':'))
+	while (t < e && (isALNUM(*t) || strchr("-_.+", *t)))
 	    t++;
 	if (t < e) {
 	    TAINT;
