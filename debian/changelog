@@ -1,10 +1,19 @@
+perl (5.10.0-8) experimental; urgency=low
+
+  * Apply upstream change 33388 to fix a segmentation fault with
+    'debugperl -Dm'. (Closes: #474613)
+  * Move Tie::Hash into perl-base, as it's now needed by POSIX.pm.
+    (Closes: #475909)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 13 Apr 2008 23:40:04 +0300
+
 perl (5.10.0-7) experimental; urgency=low
 
   * New comaintainer.
   * Make perl replace libmodule-corelist-perl (<< 2.14-2) because of
     /usr/bin/corelist. (Closes: #470385)
-  * Update the perl-modules libmodule-corelist-perl conflict version to 
-    (<< 2.14-2) accordingly.  (Closes: #471515)
+  * Update the libmodule-corelist-perl conflict version to 2.13-1.
+    (Closes: #471515)
   * Apply upstream change 33554 to make IO::Socket::INET able to 
     resolve "udp" without /etc/protocols.
   * Make perl recommend netbase. Along with the new fallback defaults for the
