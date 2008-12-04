@@ -1,3 +1,25 @@
+perl (5.8.8-8) unstable; urgency=low
+
+  * Include unicore/{PVA,Exact,Canonical}.pl in perl-base (closes: #437142).
+  * Install libnet.cfg in /etc/perl/Net (closes: #425850).
+  * Update makedepend.SH from perl-current to handle changed
+    preprocessor output from new gcc (closes: #381703).
+
+  * Fix CGI::upload when fileno == 0 (closes: #383378).
+  * Abort CPAN setup if stdin is not a tty (closes: #246511).
+  * Bump gcc build-depends to 4.2 and remove workaround added for register
+    declaration problems in g++ 4.1 (closes: #378399).
+
+  * Replace '_' with '.' in conflict version for libattribute-handlers-perl
+    (closes: #403249).
+
+  * Fix hang when using study + taint (closes: #415296).
+  * Remove libcgi-fast-perl as a separate package (closes: #422592).
+  * Pod/Man.pm: escape backslashes in index entries (closes: #440448).
+  * Pod/Html.pm: Fix handling of nested definition lists (closes: #423168).
+
+ -- Brendan O'Dea <bod@debian.org>  Mon, 17 Sep 2007 03:42:48 +1000
+
 perl (5.8.8-7) unstable; urgency=low
 
   * Apply optimisation for File::Spec->abs2rel suggested by joeyh

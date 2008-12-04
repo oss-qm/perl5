@@ -62,6 +62,9 @@ usr/share/perl/*/overload.pm
 usr/share/perl/*/strict.pm
 usr/share/perl/*/utf8.pm
 usr/share/perl/*/utf8_heavy.pl
+usr/share/perl/*/unicore/PVA.pl
+usr/share/perl/*/unicore/Exact.pl
+usr/share/perl/*/unicore/Canonical.pl
 usr/share/perl/*/vars.pm
 usr/share/perl/*/warnings.pm
 usr/share/perl/*/warnings/register.pm
