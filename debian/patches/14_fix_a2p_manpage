@@ -1,9 +1,9 @@
 Normalise case of OPTIONS section.
 Place optional filename in brackets.
 
-diff -Naur --exclude=debian perl-5.8.4.orig/x2p/a2p.pod perl-5.8.4/x2p/a2p.pod
---- perl-5.8.4.orig/x2p/a2p.pod	2001-03-01 01:36:45.000000000 +1100
-+++ perl-5.8.4/x2p/a2p.pod	2005-03-06 23:08:17.000000000 +1100
+diff -Naur --exclude=debian perl-5.8.6.orig/x2p/a2p.pod perl-5.8.6/x2p/a2p.pod
+--- perl-5.8.6.orig/x2p/a2p.pod	2001-03-01 01:36:45.000000000 +1100
++++ perl-5.8.6/x2p/a2p.pod	2005-05-21 14:50:18.000000000 +1000
 @@ -4,7 +4,7 @@
  
  =head1 SYNOPSIS

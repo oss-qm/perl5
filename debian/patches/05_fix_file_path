@@ -5,9 +5,9 @@ attacker with write permission on directories in the tree being
 removed to make files setuid or to remove arbitrary files (see
 http://bugs.debian.org/286905 and http://bugs.debian.org/286922).
 
-diff -Naur --exclude=debian perl-5.8.4.orig/lib/File/Path.pm perl-5.8.4/lib/File/Path.pm
---- perl-5.8.4.orig/lib/File/Path.pm	2003-08-14 16:00:52.000000000 +1000
-+++ perl-5.8.4/lib/File/Path.pm	2005-03-08 19:23:47.000000000 +1100
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/File/Path.pm perl-5.8.6/lib/File/Path.pm
+--- perl-5.8.6.orig/lib/File/Path.pm	2003-08-14 16:00:52.000000000 +1000
++++ perl-5.8.6/lib/File/Path.pm	2005-05-21 14:27:00.000000000 +1000
 @@ -72,27 +72,17 @@
  
  =item *

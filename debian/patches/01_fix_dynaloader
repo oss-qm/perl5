@@ -1,9 +1,9 @@
 Revert DynaLoader to 5.8.3 version so as not to break programs linked
 with pre-5.8.4 libperl.so (and DynaLoader.a).
 
-diff -ur perl-5.8.4/ext/DynaLoader/DynaLoader_pm.PL perl-5.8.3/ext/DynaLoader/DynaLoader_pm.PL
---- perl-5.8.4/ext/DynaLoader/DynaLoader_pm.PL	2004-04-04 23:31:25.000000000 +1000
-+++ perl-5.8.3/ext/DynaLoader/DynaLoader_pm.PL	2003-12-13 23:40:30.000000000 +1100
+diff -Naur --exclude=debian perl-5.8.6.orig/ext/DynaLoader/DynaLoader_pm.PL perl-5.8.6/ext/DynaLoader/DynaLoader_pm.PL
+--- perl-5.8.6.orig/ext/DynaLoader/DynaLoader_pm.PL	2004-11-23 02:32:13.000000000 +1100
++++ perl-5.8.6/ext/DynaLoader/DynaLoader_pm.PL	2005-05-21 13:48:54.000000000 +1000
 @@ -29,7 +29,7 @@
  
  use vars qw($VERSION *AUTOLOAD);
@@ -13,14 +13,14 @@ diff -ur perl-5.8.4/ext/DynaLoader/DynaLoader_pm.PL perl-5.8.3/ext/DynaLoader/Dy
  
  require AutoLoader;
  *AUTOLOAD = \&AutoLoader::AUTOLOAD;
-@@ -80,7 +80,6 @@
- my $Mac_FS;
- $Mac_FS = eval { require Mac::FileSpec::Unixish } if $Is_MacOS;
- 
--@dl_shared_objects  = ();       # shared objects for symbols we have 
- @dl_require_symbols = ();       # names of symbols we need
- @dl_resolve_using   = ();       # names of files to link with
+@@ -85,7 +85,6 @@
  @dl_library_path    = ();       # path to look for files
+ 
+ #XSLoader.pm may have added elements before we were required
+-#@dl_shared_objects  = ();       # shared objects for symbols we have 
+ #@dl_librefs         = ();       # things we have loaded
+ #@dl_modules         = ();       # Modules we have loaded
+ 
 @@ -340,9 +339,6 @@
      my $xs = dl_install_xsub("${module}::bootstrap", $boot_symbol_ref, $file);
  
@@ -50,9 +50,20 @@ diff -ur perl-5.8.4/ext/DynaLoader/DynaLoader_pm.PL perl-5.8.3/ext/DynaLoader/Dy
  =item dl_error()
  
  Syntax:
-diff -ur perl-5.8.4/ext/DynaLoader/dl_hpux.xs perl-5.8.3/ext/DynaLoader/dl_hpux.xs
---- perl-5.8.4/ext/DynaLoader/dl_hpux.xs	2004-01-20 08:54:32.000000000 +1100
-+++ perl-5.8.3/ext/DynaLoader/dl_hpux.xs	2001-10-25 12:34:02.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.6.orig/ext/DynaLoader/XSLoader_pm.PL perl-5.8.6/ext/DynaLoader/XSLoader_pm.PL
+--- perl-5.8.6.orig/ext/DynaLoader/XSLoader_pm.PL	2004-05-30 19:41:19.000000000 +1000
++++ perl-5.8.6/ext/DynaLoader/XSLoader_pm.PL	2005-05-21 13:51:07.000000000 +1000
+@@ -115,7 +115,6 @@
+     my $xs = dl_install_xsub("${module}::bootstrap", $boot_symbol_ref, $file);
+ 
+     # See comment block above
+-    push(@DynaLoader::dl_shared_objects, $file); # record files loaded
+     return &$xs(@_);
+ 
+   retry:
+diff -Naur --exclude=debian perl-5.8.6.orig/ext/DynaLoader/dl_hpux.xs perl-5.8.6/ext/DynaLoader/dl_hpux.xs
+--- perl-5.8.6.orig/ext/DynaLoader/dl_hpux.xs	2004-01-20 08:54:32.000000000 +1100
++++ perl-5.8.6/ext/DynaLoader/dl_hpux.xs	2005-05-21 13:45:34.000000000 +1000
 @@ -102,19 +102,6 @@
          sv_setiv( ST(0), PTR2IV(obj) );
  

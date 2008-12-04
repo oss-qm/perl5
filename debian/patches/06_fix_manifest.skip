@@ -1,8 +1,8 @@
 Use correct MANIFEST.SKIP.
 
-diff -Naur --exclude=debian perl-5.8.4.orig/lib/ExtUtils/MANIFEST.SKIP perl-5.8.4/lib/ExtUtils/MANIFEST.SKIP
---- perl-5.8.4.orig/lib/ExtUtils/MANIFEST.SKIP	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.4/lib/ExtUtils/MANIFEST.SKIP	2004-12-11 22:33:13.000000000 +1100
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/MANIFEST.SKIP perl-5.8.6/lib/ExtUtils/MANIFEST.SKIP
+--- perl-5.8.6.orig/lib/ExtUtils/MANIFEST.SKIP	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.6/lib/ExtUtils/MANIFEST.SKIP	2005-05-21 14:28:39.000000000 +1000
 @@ -1,17 +1,22 @@
 -\.ppd$
 +# Avoid version control files.

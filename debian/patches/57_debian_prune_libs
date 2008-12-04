@@ -2,9 +2,9 @@ Prune the list of libs wanted to what we actually need.  We want to
 keep the dependencies on perl-base as small as possible, and some of
 the original list may be present on buildds (see Bug#128355).
 
-diff -Naur --exclude=debian perl-5.8.4.orig/Configure perl-5.8.4/Configure
---- perl-5.8.4.orig/Configure	2004-04-01 23:48:18.000000000 +1000
-+++ perl-5.8.4/Configure	2004-05-02 10:39:11.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.6.orig/Configure perl-5.8.6/Configure
+--- perl-5.8.6.orig/Configure	2004-09-10 16:25:52.000000000 +1000
++++ perl-5.8.6/Configure	2005-05-21 15:18:16.000000000 +1000
 @@ -1266,8 +1266,7 @@
  
  : List of libraries we want.
@@ -15,7 +15,7 @@ diff -Naur --exclude=debian perl-5.8.4.orig/Configure perl-5.8.4/Configure
  : We probably want to search /usr/shlib before most other libraries.
  : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
  glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
-@@ -20351,7 +20350,7 @@
+@@ -20374,7 +20373,7 @@
      ;;
  *) case "$usedl" in
      $define|true|[yY]*)

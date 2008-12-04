@@ -27,6 +27,7 @@ Memoize/TODO			Memoize
 NEXT/Changes			NEXT
 NEXT/README			NEXT
 Net/ChangeLog.libnet		Net
+Net/Changes.libnet		Net
 Net/Config.eg			Net
 Net/Hostname.eg			Net
 Net/Ping/Changes		Net::Ping

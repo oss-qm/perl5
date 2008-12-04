@@ -352,8 +352,6 @@ all POD files in MAN1PODS and MAN3PODS.
 sub manifypods_target {
     my($self) = shift;
 
-    my $man1pods      = '';
-    my $man3pods      = '';
     my $dependencies  = '';
 
     # populate manXpods & dependencies:
@@ -373,7 +371,7 @@ END
     foreach my $section (qw(1 3)) {
         my $pods = $self->{"MAN${section}PODS"};
         push @man_cmds, $self->split_command(<<CMD, %$pods);
-	\$(NOECHO) \$(POD2MAN) --section=$section --perm_rw=\$(PERM_RW)
+	\$(NOECHO) \$(POD2MAN) --section=\$(MAN${section}EXT) --perm_rw=\$(PERM_RW)
 CMD
     }
 

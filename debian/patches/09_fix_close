@@ -4,10 +4,10 @@
 	success of the close itself, but also on whether the output stream had
 	a previous error.
 
-diff -Naur --exclude=debian perl-5.8.4.orig/doio.c perl-5.8.4/doio.c
---- perl-5.8.4.orig/doio.c	2004-03-23 06:53:39.000000000 +1100
-+++ perl-5.8.4/doio.c	2005-02-02 23:47:31.000000000 +1100
-@@ -1014,11 +1014,14 @@
+diff -Naur --exclude=debian perl-5.8.6.orig/doio.c perl-5.8.6/doio.c
+--- perl-5.8.6.orig/doio.c	2004-09-10 17:06:36.000000000 +1000
++++ perl-5.8.6/doio.c	2005-05-21 14:34:46.000000000 +1000
+@@ -1019,11 +1019,14 @@
  	    retval = TRUE;
  	else {
  	    if (IoOFP(io) && IoOFP(io) != IoIFP(io)) {		/* a socket */

@@ -1,9 +1,9 @@
 Fix error in perlipc documentation of "|-" (closes: #282110).
 
-diff -Naur --exclude=debian perl-5.8.4.orig/pod/perlipc.pod perl-5.8.4/pod/perlipc.pod
---- perl-5.8.4.orig/pod/perlipc.pod	2004-04-22 01:45:29.000000000 +1000
-+++ perl-5.8.4/pod/perlipc.pod	2004-12-11 22:49:26.000000000 +1100
-@@ -616,7 +616,7 @@
+diff -Naur --exclude=debian perl-5.8.6.orig/pod/perlipc.pod perl-5.8.6/pod/perlipc.pod
+--- perl-5.8.6.orig/pod/perlipc.pod	2004-11-26 09:31:25.000000000 +1100
++++ perl-5.8.6/pod/perlipc.pod	2005-05-21 14:30:02.000000000 +1000
+@@ -621,7 +621,7 @@
  
  forks the ps(1) command (without spawning a shell, as there are more than
  three arguments to open()), and reads its standard output via the

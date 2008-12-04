@@ -1,9 +1,9 @@
 Provide a method for supressing CPAN's version check.
 Patch from Robert Bihlmeyer <robbe@orcus.priv.at> (Bug#98235)
 
-diff -Naur --exclude=debian perl-5.8.4.orig/lib/CPAN/FirstTime.pm perl-5.8.4/lib/CPAN/FirstTime.pm
---- perl-5.8.4.orig/lib/CPAN/FirstTime.pm	2003-07-30 02:05:27.000000000 +1000
-+++ perl-5.8.4/lib/CPAN/FirstTime.pm	2004-05-02 10:42:02.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/CPAN/FirstTime.pm perl-5.8.6/lib/CPAN/FirstTime.pm
+--- perl-5.8.6.orig/lib/CPAN/FirstTime.pm	2003-07-30 02:05:27.000000000 +1000
++++ perl-5.8.6/lib/CPAN/FirstTime.pm	2005-05-21 15:21:05.000000000 +1000
 @@ -464,6 +464,7 @@
  
      # We don't ask that now, it will be noticed in time, won't it?
@@ -12,9 +12,9 @@ diff -Naur --exclude=debian perl-5.8.4.orig/lib/CPAN/FirstTime.pm perl-5.8.4/lib
      $CPAN::Config->{'getcwd'} = 'cwd';
  
      print "\n\n";
-diff -Naur --exclude=debian perl-5.8.4.orig/lib/CPAN.pm perl-5.8.4/lib/CPAN.pm
---- perl-5.8.4.orig/lib/CPAN.pm	2003-09-22 15:42:59.000000000 +1000
-+++ perl-5.8.4/lib/CPAN.pm	2004-05-02 10:42:02.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/CPAN.pm perl-5.8.6/lib/CPAN.pm
+--- perl-5.8.6.orig/lib/CPAN.pm	2003-09-22 15:42:59.000000000 +1000
++++ perl-5.8.6/lib/CPAN.pm	2005-05-21 15:21:05.000000000 +1000
 @@ -3291,7 +3291,8 @@
  	      )
  	   ) {

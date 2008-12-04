@@ -1,8 +1,8 @@
 Add simple manpage for instmodsh.
 
-diff -Naur --exclude=debian perl-5.8.4.orig/lib/ExtUtils/instmodsh perl-5.8.4/lib/ExtUtils/instmodsh
---- perl-5.8.4.orig/lib/ExtUtils/instmodsh	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.4/lib/ExtUtils/instmodsh	2004-05-02 06:57:25.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/instmodsh perl-5.8.6/lib/ExtUtils/instmodsh
+--- perl-5.8.6.orig/lib/ExtUtils/instmodsh	2004-01-06 09:34:59.000000000 +1100
++++ perl-5.8.6/lib/ExtUtils/instmodsh	2005-05-21 13:40:02.000000000 +1000
 @@ -137,3 +137,28 @@
  toplevel();
  

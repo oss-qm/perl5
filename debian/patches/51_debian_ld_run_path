@@ -1,8 +1,8 @@
 Remove standard libs from LD_RUN_PATH as per Debian policy.
 
-diff -Naur --exclude=debian perl-5.8.4.orig/lib/ExtUtils/Liblist/Kid.pm perl-5.8.4/lib/ExtUtils/Liblist/Kid.pm
---- perl-5.8.4.orig/lib/ExtUtils/Liblist/Kid.pm	2004-04-04 23:31:31.000000000 +1000
-+++ perl-5.8.4/lib/ExtUtils/Liblist/Kid.pm	2004-05-02 10:25:42.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/Liblist/Kid.pm perl-5.8.6/lib/ExtUtils/Liblist/Kid.pm
+--- perl-5.8.6.orig/lib/ExtUtils/Liblist/Kid.pm	2004-04-04 23:31:31.000000000 +1000
++++ perl-5.8.6/lib/ExtUtils/Liblist/Kid.pm	2005-05-21 14:57:27.000000000 +1000
 @@ -54,6 +54,9 @@
      my($pwd) = cwd(); # from Cwd.pm
      my($found) = 0;
