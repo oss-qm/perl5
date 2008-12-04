@@ -1,3 +1,9 @@
+perl (5.8.8-11) unstable; urgency=low
+
+  * Remove arm and alpha special cases (closes: #443353).
+
+ -- Brendan O'Dea <bod@debian.org>  Fri, 21 Sep 2007 07:24:08 +1000
+
 perl (5.8.8-10) unstable; urgency=low
 
   * Add support for SH4 arch (closes: #424867).
