@@ -103,7 +103,7 @@
 #ifdef PERL_IMPLICIT_CONTEXT
 #  ifdef USE_5005THREADS
 struct perl_thread;
-#    define pTHX	register struct perl_thread *thr PERL_UNUSED_DECL
+#    define pTHX	struct perl_thread *thr PERL_UNUSED_DECL
 #    define aTHX	thr
 #    define dTHR	dNOOP /* only backward compatibility */
 #    define dTHXa(a)	pTHX = (struct perl_thread*)a
@@ -111,7 +111,7 @@ struct perl_thread;
 #    ifndef MULTIPLICITY
 #      define MULTIPLICITY
 #    endif
-#    define pTHX	register PerlInterpreter *my_perl PERL_UNUSED_DECL
+#    define pTHX	PerlInterpreter *my_perl PERL_UNUSED_DECL
 #    define aTHX	my_perl
 #    define dTHXa(a)	pTHX = (PerlInterpreter*)a
 #  endif
@@ -214,7 +214,7 @@ struct perl_thread;
 #endif
 
 #ifndef pTHXx
-#  define pTHXx		register PerlInterpreter *my_perl
+#  define pTHXx		PerlInterpreter *my_perl
 #  define pTHXx_	pTHXx,
 #  define aTHXx		my_perl
 #  define aTHXx_	aTHXx,
