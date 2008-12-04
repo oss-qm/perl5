@@ -4109,6 +4109,8 @@ CGI - Simple Common Gateway Interface Class
 	     hr;
    }
 
+   print end_html;
+
 =head1 ABSTRACT
 
 This perl library uses perl5 objects to make it easy to create Web

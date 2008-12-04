@@ -106,5 +106,5 @@ eval /bin/bash Configure			\
     -Uusesfio					\
     -Uusenm					\
     -DDEBUGGING=$debugging			\
-    -Doptimize="$optimize"			\
+    -Doptimize=\"$optimize\"			\
     $opts -des

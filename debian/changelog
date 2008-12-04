@@ -1,3 +1,44 @@
+perl (5.10.0-12) unstable; urgency=low
+
+  * Acknowledge NMU, thanks Bastian.
+  * Bugfix release targeted for lenny.
+  * Upgrade libfile-temp-perl conflict to (<= 0.18). (Closes: #480719)
+  * Add upstream integration status information into debian/patches
+    where applicable.
+  * Add Vcs-Git and Vcs-Browser information in debian/control.
+  * Fix Math::BigFloat::sqrt() breaking with too many digits. (Closes:
+    #417528)
+  * Remove numeric overloading of Getopt::Long callback functions.
+    (Closes: #479434)
+  * Support GNU/Hurd and GNU/kFreeBSD in Module::Build and
+    ExtUtils::CBuilder. (Closes: #480385, #480375)
+  * Fix a segmentation fault occurring in the mod_perl2 test suite.
+    (Closes: #475498)
+  * Fix the PerlIO_teardown prototype to suppress a compiler warning.
+    (Closes: #479540)
+  * Integrate some documentation fixes from upstream. (Closes: #357663,
+    #443733, #412542)
+  * Mention the relation between 'eval "require Foo"' and
+    PERL_DL_NONLAZY in the 'perldoc -f eval' documentation . (See
+    #479711).
+  * Fix a typo in perlpodspec.pod. (Closes: #447830)
+  * Fix 'constant subroutine SEEK_* redefined' warnings when using the
+    Fcntl and POSIX modules together. (Closes: #479957)
+  * Add conflicts/replaces/provides for libpod-simple-perl. (Closes: #481956)
+  * Fix crashes on @ISA fiddling. (Closes: #480480)
+  * Fix building with DEB_BUILD_OPTIONS=noopt. (Closes: #482110)
+  * Remove the __LONG_MAX__ kludge introduced in 5.8.1-1, it shouldn't be
+    needed anymore and emits warnings. (Closes: #480428)
+  * Make the '-x' test work with 'use filetest q/access/'. (Closes:
+    #483734)
+  * Update the description of the perl-base package. Thanks to Justin B Rye.
+    (Closes: #484681, #144193)
+  * Move /usr/share/perl/5.10/unicore/lib into perl-base. (Closes: #480533)
+  * Add conflicts/replaces/provides for libextutils-parsexs-perl.
+    (Closes: #485416)
+
+ -- Niko Tyni <ntyni@debian.org>  Tue, 05 Aug 2008 14:17:05 +0300
+
 perl (5.10.0-11.1) unstable; urgency=low
 
   * Non-maintainer upload.

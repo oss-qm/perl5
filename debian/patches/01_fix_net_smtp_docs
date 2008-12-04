@@ -1,5 +1,7 @@
 Complete the documentation for Net::SMTP
 
+[rt.cpan.org #36038]
+
 diff -Naur --exclude=debian perl-5.10.0.orig/lib/Net/SMTP.pm perl-5.10.0/lib/Net/SMTP.pm
 --- perl-5.10.0.orig/lib/Net/SMTP.pm	2007-11-18 02:26:24.000000000 +1100
 +++ perl-5.10.0/lib/Net/SMTP.pm	2007-11-25 17:46:24.000000000 +1100

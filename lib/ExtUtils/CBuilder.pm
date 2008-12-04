@@ -36,6 +36,8 @@ my %OSTYPES = qw(
 		 sunos     Unix
 		 cygwin    Unix
 		 os2       Unix
+		 gnukfreebsd Unix
+		 gnu       Unix
 		 
 		 dos       Windows
 		 MSWin32   Windows
