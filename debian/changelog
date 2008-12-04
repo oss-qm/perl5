@@ -1,3 +1,15 @@
+perl (5.10.0-5) experimental; urgency=low
+
+  * Really bump libarchive-tar-perl conflict version (closes: #466874).
+  * Fix typo in libmodule-corelist-perl conflict version (closes: #467112).
+  * Add conflicts/replaces/provides for libxsloader-perl (closes: #468121).
+  * Include debug info for all ELF files in /usr/lib/debug (closes: #468484).
+  * Apply upstream change 33287 (removes non-null contraint, closes: #467072).
+  * Regex engine in new version is no longer recursive--stops some
+    regexes from blowing the stack and segfaulting (closes:  #466298).
+
+ -- Brendan O'Dea <bod@debian.org>  Sun, 09 Mar 2008 19:54:55 +1100
+
 perl (5.10.0-4) experimental; urgency=low
 
   * New version fixes RT segfault in Text::Tabs (closes: #400733).

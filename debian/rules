@@ -4,7 +4,7 @@
 # debian/rules for perl.
 #
 
-export SHELL = /bin/sh
+export SHELL = /bin/bash
 
 fullversion := $(shell /bin/bash debian/config.debian --full-version)
 version     := $(shell /bin/bash debian/config.debian --version)
@@ -51,7 +51,6 @@ perl.debug:
 	-$(MAKE) distclean
 	$(SHELL) debian/config.debian --debug
 	$(MAKE) perl
-	mv libperl.a libperl-debug
 	mv perl perl.debug
 
 libperl.so.$(fullversion):
@@ -68,11 +67,10 @@ clean:
 	$(checkroot)
 	test -f $(patches)	# maintainer sanity check
 	-$(MAKE) distclean
-	rm -rf config.over perl.static perl.debug libperl-static \
-	    libperl-debug libperl.so* build-stamp install-stamp \
-	    t/auto debian/shlibs.local debian/perl-base.shlibs \
-	    debian/libperl$(version).shlibs debian/substvars \
-	    debian/files debian/list.tmp $(tmp) $(build)
+	rm -rf config.over perl.static perl.debug libperl-static libperl.so* \
+	    build-stamp install-stamp t/auto debian/shlibs.local \
+	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
+	    debian/substvars debian/files debian/list.tmp $(tmp) $(build)
 
 install-stamp: build-stamp
 	$(checkdir)
@@ -112,7 +110,6 @@ install-stamp: build-stamp
 
 	# relocate perl libraries and create links
 	cp libperl-static $(tmp)/usr/lib/libperl.a
-	cp libperl-debug $(tmp)/usr/lib/libperld.a
 	mv $(lib)/CORE/libperl.so.$(fullversion) $(tmp)/usr/lib
 
 	ln -s libperl.so.$(fullversion) $(tmp)/usr/lib/libperl.so.$(version)
@@ -244,32 +241,33 @@ endif
 	    \( -name changelog\* -o \( -size +4k ! -name copyright \) \) \
 	    -print | xargs -r gzip -9
 
-	mkdir -p $(debug)/usr/bin $(debug)/usr/lib
-
 ifeq ($(strip),yes)
-	# stash debugging symbols
-	objcopy --only-keep-debug $(build)/*/usr/bin/perl $(debug)/usr/bin/perl
-	objcopy --only-keep-debug $(build)/*/usr/lib/libperl.so.$(fullversion) \
-	    $(debug)/usr/lib/libperl.so.$(fullversion)
-
 	# strip
 	find $(build)/*/usr/bin $(build)/*/usr/lib -type f \
 	    \( -name \*.so\* -o -name \*.a -o -perm +111 \) -print | \
 	    grep -v ^$(build)/perl-debug/ | \
 	    while read f; \
 	    do \
-		case `file $$f` in \
-		*ELF*shared\ object*) strip --remove-section=.comment \
-		    --remove-section=.note --strip-unneeded $$f;; \
-		*ELF*) strip --remove-section=.comment \
-		    --remove-section=.note $$f;; \
+		type=`file $$f`; \
+		extra=; \
+		case "$$type" in \
+		    *ELF*shared\ object*) \
+		    	extra=--strip-unneeded;; \
+		esac; \
+		case "$$type" in \
+		    *ELF*) \
+			path=/$${f#$(build)/*/}; \
+			dir=$${path%/*}; \
+			test -d $(debug)$$dir || mkdir -p $(debug)$$dir; \
+			# stash debugging symbols \
+			objcopy --only-keep-debug $$f $(debug)$$path; \
+			# strip \
+			strip --remove-section=.comment --remove-section=.note \
+			    $$extra $$f; \
+			# add debuglink \
+			objcopy --add-gnu-debuglink=$(debug)$$path $$f; \
 		esac; \
 	    done
-
-	# add debuglink
-	objcopy --add-gnu-debuglink=$(debug)/usr/bin/perl $(build)/*/usr/bin/perl
-	objcopy --add-gnu-debuglink=$(debug)/usr/lib/libperl.so.$(fullversion) \
-	    $(build)/*/usr/lib/libperl.so.$(fullversion)
 endif
 
 	# fixperms
