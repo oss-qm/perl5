@@ -3,10 +3,10 @@ site directories for example are created on demand).
 
 Suggested by Joey Hess <joeyh@debian.org>.
 
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/Pod/Perldoc.pm perl-5.8.6/lib/Pod/Perldoc.pm
---- perl-5.8.6.orig/lib/Pod/Perldoc.pm	2004-06-09 20:09:54.000000000 +1000
-+++ perl-5.8.6/lib/Pod/Perldoc.pm	2005-05-21 15:13:18.000000000 +1000
-@@ -1520,6 +1520,7 @@
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/Pod/Perldoc.pm perl-5.8.7/lib/Pod/Perldoc.pm
+--- perl-5.8.7.orig/lib/Pod/Perldoc.pm	2004-12-29 23:15:33.000000000 +1100
++++ perl-5.8.7/lib/Pod/Perldoc.pm	2005-06-03 00:08:51.000000000 +1000
+@@ -1533,6 +1533,7 @@
      $self->{'target'} = (splitdir $s)[-1];  # XXX: why not use File::Basename?
      for ($i=0; $i<@dirs; $i++) {
  	$dir = $dirs[$i];

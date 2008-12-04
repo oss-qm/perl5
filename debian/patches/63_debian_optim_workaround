@@ -1,8 +1,8 @@
 Work around toolchain breakage on ia64, arm and powerpc - #247176
 
-diff -Naur --exclude=debian perl-5.8.6.orig/cflags.SH perl-5.8.6/cflags.SH
---- perl-5.8.6.orig/cflags.SH	2002-09-30 20:59:07.000000000 +1000
-+++ perl-5.8.6/cflags.SH	2005-05-21 15:28:57.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/cflags.SH perl-5.8.7/cflags.SH
+--- perl-5.8.7.orig/cflags.SH	2002-09-30 20:59:07.000000000 +1000
++++ perl-5.8.7/cflags.SH	2005-06-03 00:28:56.000000000 +1000
 @@ -107,8 +107,11 @@
      perlmain) ;;
      perly) ;;
@@ -17,10 +17,10 @@ diff -Naur --exclude=debian perl-5.8.6.orig/cflags.SH perl-5.8.6/cflags.SH
      pp_pack) ;;
      pp_sys) ;;
      regcomp) ;;
-diff -Naur --exclude=debian perl-5.8.6.orig/hints/linux.sh perl-5.8.6/hints/linux.sh
---- perl-5.8.6.orig/hints/linux.sh	2004-04-17 02:09:50.000000000 +1000
-+++ perl-5.8.6/hints/linux.sh	2005-05-21 15:26:30.000000000 +1000
-@@ -88,13 +88,6 @@
+diff -Naur --exclude=debian perl-5.8.7.orig/hints/linux.sh perl-5.8.7/hints/linux.sh
+--- perl-5.8.7.orig/hints/linux.sh	2005-04-05 06:08:31.000000000 +1000
++++ perl-5.8.7/hints/linux.sh	2005-06-03 00:28:56.000000000 +1000
+@@ -89,13 +89,6 @@
  # use -O2 by default ; -O3 doesn't seem to bring significant benefits with gcc
  '')
      optimize='-O2'

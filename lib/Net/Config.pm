@@ -57,9 +57,8 @@ my %nc = (
 }
 TRY_INTERNET_CONFIG
 
-my $file = __FILE__;
+my $file = '/etc/perl/Net/libnet.cfg';
 my $ref;
-$file =~ s/Config.pm/libnet.cfg/;
 if ( -f $file ) {
     $ref = eval { local $SIG{__DIE__}; do $file };
     if (ref($ref) eq 'HASH') {

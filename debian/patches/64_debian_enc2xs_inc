@@ -1,9 +1,9 @@
 Tweak enc2xs to handle Debian @INC:  ignore missing directories,
 follow symlinks (/usr/share/perl/5.8 -> 5.8.4).
 
-diff -Naur --exclude=debian perl-5.8.6.orig/ext/Encode/bin/enc2xs perl-5.8.6/ext/Encode/bin/enc2xs
---- perl-5.8.6.orig/ext/Encode/bin/enc2xs	2004-09-03 01:53:51.000000000 +1000
-+++ perl-5.8.6/ext/Encode/bin/enc2xs	2005-05-21 15:30:39.000000000 +1000
+diff -Naur --exclude=debian perl-5.8.7.orig/ext/Encode/bin/enc2xs perl-5.8.7/ext/Encode/bin/enc2xs
+--- perl-5.8.7.orig/ext/Encode/bin/enc2xs	2004-09-03 01:53:51.000000000 +1000
++++ perl-5.8.7/ext/Encode/bin/enc2xs	2005-06-03 00:30:11.000000000 +1000
 @@ -909,10 +909,11 @@
      eval { require File::Find; };
      my (@inc, %e2x_dir);

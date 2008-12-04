@@ -5,10 +5,10 @@ attacker with write permission on directories in the tree being
 removed to make files setuid or to remove arbitrary files (see
 http://bugs.debian.org/286905 and http://bugs.debian.org/286922).
 
-diff -Naur --exclude=debian perl-5.8.6.orig/lib/File/Path.pm perl-5.8.6/lib/File/Path.pm
---- perl-5.8.6.orig/lib/File/Path.pm	2003-08-14 16:00:52.000000000 +1000
-+++ perl-5.8.6/lib/File/Path.pm	2005-05-21 14:27:00.000000000 +1000
-@@ -72,27 +72,17 @@
+diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File/Path.pm
+--- perl-5.8.7.orig/lib/File/Path.pm	2005-05-06 02:00:32.000000000 +1000
++++ perl-5.8.7/lib/File/Path.pm	2005-06-02 23:49:34.000000000 +1000
+@@ -72,33 +72,17 @@
  
  =item *
  
@@ -29,27 +29,33 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/File/Path.pm perl-5.8.6/lib/File
  It returns the number of files successfully deleted.  Symlinks are
  simply deleted and not followed.
  
--B<NOTE:> If the third parameter is not TRUE, C<rmtree> is B<unsecure>
--in the face of failure or interruption.  Files and directories which
--were not deleted may be left with permissions reset to allow world
--read and write access.  Note also that the occurrence of errors in
--rmtree can be determined I<only> by trapping diagnostic messages
--using C<$SIG{__WARN__}>; it is not apparent from the return value.
--Therefore, you must be extremely careful about using C<rmtree($foo,$bar,0)>
--in situations where security is an issue.
+-B<NOTE:> There are race conditions internal to the implementation of
+-C<rmtree> making it unsafe to use on directory trees which may be
+-altered or moved while C<rmtree> is running, and in particular on any
+-directory trees with any path components or subdirectories potentially
+-writable by untrusted users.
+-
+-Additionally, if the third parameter is not TRUE and C<rmtree> is
+-interrupted, it may leave files and directories with permissions altered
+-to allow deletion (and older versions of this module would even set
+-files and directories to world-read/writable!)
+-
+-Note also that the occurrence of errors in C<rmtree> can be determined I<only>
+-by trapping diagnostic messages using C<$SIG{__WARN__}>; it is not apparent
+-from the return value.
 -
  =head1 DIAGNOSTICS
  
  =over 4
-@@ -118,6 +108,7 @@
+@@ -124,6 +108,7 @@
  use Exporter ();
  use strict;
  use warnings;
 +use Cwd 'getcwd';
  
- our $VERSION = "1.06";
+ our $VERSION = "1.07";
  our @ISA = qw( Exporter );
-@@ -166,111 +157,129 @@
+@@ -172,111 +157,129 @@
      @created;
  }
  
@@ -92,11 +98,11 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/File/Path.pm perl-5.8.6/lib/File
 -	(undef, undef, my $rp) = lstat $root or next;
 -	$rp &= 07777;	# don't forget setuid, setgid, sticky bits
 -	if ( -d _ ) {
--	    # notabene: 0777 is for making readable in the first place,
+-	    # notabene: 0700 is for making readable in the first place,
 -	    # it's also intended to change it to writable in case we have
 -	    # to recurse in which case we are better than rm -rf for 
 -	    # subtrees with strange permissions
--	    chmod(0777, ($Is_VMS ? VMS::Filespec::fileify($root) : $root))
+-	    chmod($rp | 0700, ($Is_VMS ? VMS::Filespec::fileify($root) : $root))
 -	      or carp "Can't make directory $root read+writeable: $!"
 -		unless $safe;
 -
@@ -130,7 +136,7 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/File/Path.pm perl-5.8.6/lib/File
 -		print "skipped $root\n" if $verbose;
 -		next;
 -	    }
--	    chmod 0777, $root
+-	    chmod $rp | 0700, $root
 -	      or carp "Can't make directory $root writeable: $!"
 -		if $force_writeable;
 -	    print "rmdir $root\n" if $verbose;
@@ -152,7 +158,7 @@ diff -Naur --exclude=debian perl-5.8.6.orig/lib/File/Path.pm perl-5.8.6/lib/File
 -		print "skipped $root\n" if $verbose;
 -		next;
 -	    }
--	    chmod 0666, $root
+-	    chmod $rp | 0600, $root
 -	      or carp "Can't make file $root writeable: $!"
 -		if $force_writeable;
 -	    print "unlink $root\n" if $verbose;

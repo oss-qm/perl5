@@ -1,3 +1,20 @@
+perl (5.8.7-1) experimental; urgency=low
+
+  * New upstream version.
+  * Update perl conflict versions for:
+      libtime-hires-perl (1.66).
+
+  * Update perl-module conflict versions for:
+      libcgi-pm-perl (3.10),
+      libfile-temp-perl (1.16),
+      libmath-bigint-perl (1.77),
+      libpod-parser-perl (1.30),
+      libansicolor-perl (1.09),
+      libtest-harness-perl (2.48) and
+      libtest-simple-perl (0.54).
+
+ -- Brendan O'Dea <bod@debian.org>  Fri,  3 Jun 2005 00:40:00 +1000
+
 perl (5.8.6-1) experimental; urgency=low
 
   * New upstream version.  Uploading to experimental due to the sarge

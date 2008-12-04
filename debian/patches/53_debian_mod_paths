@@ -11,10 +11,10 @@ The rationale being that an admin (via site), or module packager
 (vendor) can chose to shadow core modules when there is a newer
 version than is included in core.
 
-diff -Naur --exclude=debian perl-5.8.6.orig/perl.c perl-5.8.6/perl.c
---- perl-5.8.6.orig/perl.c	2004-11-24 02:16:56.000000000 +1100
-+++ perl-5.8.6/perl.c	2005-05-21 15:12:15.000000000 +1000
-@@ -4320,9 +4320,14 @@
+diff -Naur --exclude=debian perl-5.8.7.orig/perl.c perl-5.8.7/perl.c
+--- perl-5.8.7.orig/perl.c	2005-04-23 00:14:27.000000000 +1000
++++ perl-5.8.7/perl.c	2005-06-03 00:06:39.000000000 +1000
+@@ -4397,9 +4397,14 @@
      incpush(APPLLIB_EXP, TRUE, TRUE, TRUE);
  #endif
  
@@ -29,7 +29,7 @@ diff -Naur --exclude=debian perl-5.8.6.orig/perl.c perl-5.8.6/perl.c
  #ifdef MACOS_TRADITIONAL
      {
  	Stat_t tmpstatbuf;
-@@ -4347,11 +4352,13 @@
+@@ -4424,11 +4429,13 @@
  #ifndef PRIVLIB_EXP
  #  define PRIVLIB_EXP "/usr/local/lib/perl5:/usr/local/lib/perl"
  #endif
@@ -43,7 +43,7 @@ diff -Naur --exclude=debian perl-5.8.6.orig/perl.c perl-5.8.6/perl.c
  
  #ifdef SITEARCH_EXP
      /* sitearch is always relative to sitelib on Windows for
-@@ -4394,6 +4401,61 @@
+@@ -4471,6 +4478,61 @@
      incpush(PERL_VENDORLIB_STEM, FALSE, TRUE, TRUE);
  #endif
  

@@ -1,8 +1,8 @@
 Debian policy doesn't install .packlist files for core or vendor.
 
 diff -Naur --exclude=debian perl-5.8.6.orig/lib/ExtUtils/instmodsh perl-5.8.6/lib/ExtUtils/instmodsh
---- perl-5.8.6.orig/lib/ExtUtils/instmodsh	2004-01-06 09:34:59.000000000 +1100
-+++ perl-5.8.6/lib/ExtUtils/instmodsh	2005-05-21 13:40:02.000000000 +1000
+--- perl-5.8.7.orig/lib/ExtUtils/instmodsh	2005-06-03 00:22:15.000000000 +1000
++++ perl-5.8.7/lib/ExtUtils/instmodsh	2005-06-03 00:22:22.000000000 +1000
 @@ -148,12 +148,14 @@
  =head1 DESCRIPTION
  
