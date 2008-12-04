@@ -1,3 +1,14 @@
+perl (5.8.7-10) unstable; urgency=low
+
+  * Remove DB_File version checks (closes: #340047, #343335).
+  * Remove Errno version check, which can cause problems with long-running
+    processes that embed perl when perl is upgraded (closes: #343351)
+
+  * Apply upstream 26321: Disallow sprintf's vector handling for
+    non-integer formats.
+
+ -- Brendan O'Dea <bod@debian.org>  Fri, 16 Dec 2005 01:32:14 +1100
+
 perl (5.8.7-9) unstable; urgency=high
 
   * SECURITY [CVE-2005-3962] (closes: #341542):
