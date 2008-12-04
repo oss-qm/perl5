@@ -60,10 +60,6 @@ sub parse_from_file {
       unless -e $pod2man;
   }
 
-  eval { require Pod::Man };
-  $switches .= " --utf8"
-    if (!$@ && $Pod::Man::VERSION >= 2.18);
-
   my $command = "$pod2man $switches --lax $file | $render -man";
          # no temp file, just a pipe!
 
