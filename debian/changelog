@@ -1,3 +1,10 @@
+perl (5.8.8-7etch6) stable-security; urgency=low
+
+  * Amend security fix to allow removal of the current directory by
+    rmtree (closes: #479317).
+
+ -- Brendan O'Dea <bod@debian.org>  Wed, 17 Dec 2008 02:43:50 +1100
+
 perl (5.8.8-7etch5) stable-security; urgency=high
 
   * SECURITY [CAN-2005-0448]: re-rewrite File::Path::rmtree to avoid race

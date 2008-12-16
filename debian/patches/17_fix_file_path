@@ -5,10 +5,14 @@ attacker with write permission on directories in the tree being
 removed to make files setuid or to remove arbitrary files (see
 http://bugs.debian.org/286905 and http://bugs.debian.org/286922).
 
-diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File/Path.pm
---- perl-5.8.7.orig/lib/File/Path.pm	2005-05-06 02:00:32.000000000 +1000
-+++ perl-5.8.7/lib/File/Path.pm	2005-06-02 23:49:34.000000000 +1000
-@@ -72,33 +72,17 @@
+Revised for 5.8.8-7etch6 to avoid failure when rmtree removes the
+current directory.
+
+diff --git a/lib/File/Path.pm b/lib/File/Path.pm
+index 2e41ff3..fd32b96 100644
+--- a/lib/File/Path.pm
++++ b/lib/File/Path.pm
+@@ -72,33 +72,17 @@ or C<unlink> to remove it, or that it's skipping it.
  
  =item *
  
@@ -47,15 +51,7 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
  =head1 DIAGNOSTICS
  
  =over 4
-@@ -124,6 +108,7 @@
- use Exporter ();
- use strict;
- use warnings;
-+use Cwd 'getcwd';
- 
- our $VERSION = "1.07";
- our @ISA = qw( Exporter );
-@@ -172,111 +157,129 @@
+@@ -172,111 +156,127 @@ sub mkpath {
      @created;
  }
  
@@ -65,26 +61,11 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
 -    my($count) = 0;
 -    $verbose ||= 0;
 -    $safe ||= 0;
--
--    if ( defined($roots) && length($roots) ) {
--      $roots = [$roots] unless ref $roots;
--    }
--    else {
--      carp "No root path(s) specified\n";
--      return 0;
--    }
--
--    my($root);
--    foreach $root (@{$roots}) {
--    	if ($Is_MacOS) {
--	    $root = ":$root" if $root !~ /:/;
--	    $root =~ s#([^:])\z#$1:#;
--	} else {
--	    $root =~ s#/\z##;
 +sub _rmtree;
 +sub _rmtree
 +{
 +    my ($path, $prefix, $up, $up_dev, $up_ino, $verbose, $safe) = @_;
++    my $up_name = $up eq '..' ? 'parent' : 'initial';
 +
 +    my ($dev, $ino) = lstat $path or return 0;
 +    unless (-d _)
@@ -94,7 +75,30 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
 +	{
 +	    carp "Can't remove file $prefix$path ($!)";
 +	    return 0;
- 	}
++	}
+ 
+-    if ( defined($roots) && length($roots) ) {
+-      $roots = [$roots] unless ref $roots;
++	return 1;
+     }
+-    else {
+-      carp "No root path(s) specified\n";
+-      return 0;
++
++    unless (chdir $path)
++    {
++	carp "Can't chdir to $prefix$path ($!)";
++	return 0;
+     }
+ 
+-    my($root);
+-    foreach $root (@{$roots}) {
+-    	if ($Is_MacOS) {
+-	    $root = ":$root" if $root !~ /:/;
+-	    $root =~ s#([^:])\z#$1:#;
+-	} else {
+-	    $root =~ s#/\z##;
+-	}
 -	(undef, undef, my $rp) = lstat $root or next;
 -	$rp &= 07777;	# don't forget setuid, setgid, sticky bits
 -	if ( -d _ ) {
@@ -120,6 +124,13 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
 -	        carp "Can't read $root: $!";
 -		@files = ();
 -	    }
++    # avoid a race condition where a directory may be replaced by a
++    # symlink between the lstat and the chdir
++    my ($new_dev, $new_ino, $perm) = stat '.';
++    unless ("$new_dev:$new_ino" eq "$dev:$ino")
++    {
++	croak "Directory $prefix$path changed before chdir, aborting";
++    }
  
 -	    # Deleting large numbers of files from VMS Files-11 filesystems
 -	    # is faster if done in reverse ASCIIbetical order 
@@ -176,23 +187,6 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
 -		++$count;
 -		last unless $Is_VMS && lstat $root;
 -	    }
-+	return 1;
-+    }
-+
-+    unless (chdir $path)
-+    {
-+	carp "Can't chdir to $prefix$path ($!)";
-+	return 0;
-+    }
-+
-+    # avoid a race condition where a directory may be replaced by a
-+    # symlink between the lstat and the chdir
-+    my ($new_dev, $new_ino, $perm) = stat '.';
-+    unless ("$new_dev:$new_ino" eq "$dev:$ino")
-+    {
-+	croak "Directory $prefix$path changed before chdir, aborting";
-+    }
-+
 +    $perm &= 07777;
 +    my $nperm = $perm | 0700;
 +    unless ($safe or $nperm == $perm or chmod $nperm, '.')
@@ -227,15 +221,15 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
 +    # don't leave the caller in an unexpected directory
 +    unless (chdir $up)
 +    {
-+	croak "Can't return to $up from $prefix$path ($!)";
++	croak "Can't return to $up_name directory from $prefix$path ($!)";
 +    }
 +
-+    # ensure that a chdir ..  didn't take us somewhere other than
++    # ensure that a chdir .. didn't take us somewhere other than
 +    # where we expected (see CVE-2002-0435)
 +    unless (($new_dev, $new_ino) = stat '.'
 +	and "$new_dev:$new_ino" eq "$up_dev:$up_ino")
 +    {
-+	croak "Previous directory $up changed since entering $prefix$path";
++	croak "\u$up_name directory changed since entering $prefix$path";
 +    }
 +
 +    print "rmdir $prefix$path\n" if $verbose;
@@ -267,7 +261,7 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
 +	return;
 +    }
 +
-+    my $oldpwd = getcwd or do {
++    opendir my $oldpwd, '.' or do {
 +	carp "Can't fetch initial working directory";
 +	return;
 +    };
@@ -276,9 +270,6 @@ diff -Naur --exclude=debian perl-5.8.7.orig/lib/File/Path.pm perl-5.8.7/lib/File
 +	carp "Can't stat initial working directory";
 +	return;
 +    };
-+
-+    # untaint
-+    for ($oldpwd) { /^(.*)$/s; $_ = $1 }
 +
 +    my $count = 0;
 +    for my $path (@paths)

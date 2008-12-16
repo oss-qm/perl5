@@ -108,7 +108,6 @@ use File::Basename ();
 use Exporter ();
 use strict;
 use warnings;
-use Cwd 'getcwd';
 
 our $VERSION = "1.08";
 our @ISA = qw( Exporter );
@@ -161,6 +160,7 @@ sub _rmtree;
 sub _rmtree
 {
     my ($path, $prefix, $up, $up_dev, $up_ino, $verbose, $safe) = @_;
+    my $up_name = $up eq '..' ? 'parent' : 'initial';
 
     my ($dev, $ino) = lstat $path or return 0;
     unless (-d _)
@@ -223,15 +223,15 @@ sub _rmtree
     # don't leave the caller in an unexpected directory
     unless (chdir $up)
     {
-	croak "Can't return to $up from $prefix$path ($!)";
+	croak "Can't return to $up_name directory from $prefix$path ($!)";
     }
 
-    # ensure that a chdir ..  didn't take us somewhere other than
+    # ensure that a chdir .. didn't take us somewhere other than
     # where we expected (see CVE-2002-0435)
     unless (($new_dev, $new_ino) = stat '.'
 	and "$new_dev:$new_ino" eq "$up_dev:$up_ino")
     {
-	croak "Previous directory $up changed since entering $prefix$path";
+	croak "\u$up_name directory changed since entering $prefix$path";
     }
 
     print "rmdir $prefix$path\n" if $verbose;
@@ -263,7 +263,7 @@ sub rmtree
 	return;
     }
 
-    my $oldpwd = getcwd or do {
+    opendir my $oldpwd, '.' or do {
 	carp "Can't fetch initial working directory";
 	return;
     };
@@ -272,9 +272,6 @@ sub rmtree
 	carp "Can't stat initial working directory";
 	return;
     };
-
-    # untaint
-    for ($oldpwd) { /^(.*)$/s; $_ = $1 }
 
     my $count = 0;
     for my $path (@paths)
