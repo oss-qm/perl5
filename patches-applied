@@ -34,6 +34,7 @@ debian/patches/32_fix_fork_rand
 debian/patches/33_fix_qr-memory-leak-1
 debian/patches/34_fix_qr-memory-leak-2
 debian/patches/35_fix_file_path_rmtree_setuid
+debian/patches/36_fix_file_temp_cleanup
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

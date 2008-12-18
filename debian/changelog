@@ -2,6 +2,8 @@ perl (5.10.0-19) UNRELEASED; urgency=low
 
   * Downgrade the perl-doc recommendation to a suggestion.
     (Closes: #496770, #442805)
+  * Make File::Temp warn on cleaning up the current working directory at
+    exit instead of bailing out. (Closes: #479317)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 18 Dec 2008 20:33:29 +0200
 
