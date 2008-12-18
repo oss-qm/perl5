@@ -1,3 +1,10 @@
+perl (5.10.0-19) UNRELEASED; urgency=low
+
+  * Downgrade the perl-doc recommendation to a suggestion.
+    (Closes: #496770, #442805)
+
+ -- Niko Tyni <ntyni@debian.org>  Thu, 18 Dec 2008 20:33:29 +0200
+
 perl (5.10.0-18) unstable; urgency=high
 
   * [SECURITY] CVE-2005-0448 revisited: File::Path::rmtree no longer

@@ -128,8 +128,8 @@ Depends: perl-base (= ${source:Version}), perl-modules (>= ${source:Version}), $
 Conflicts: perl-doc (<< ${Upstream-Version}-1), libdigest-md5-perl (<< 3.07-1), libmime-base64-perl (<< 3.07-1), libtime-hires-perl (<< 1.86-1), libstorable-perl (<< 2.15-1), libdigest-sha-perl (<< 5.45-1), libtime-piece-perl (<< 1.12-1)
 Replaces: perl-base (<< 5.8.8-1), perl-doc (<< 5.8.0-1), perl-modules (<< 5.8.1-1), libarchive-tar-perl (<= 1.38-2), libdigest-md5-perl, libmime-base64-perl, libtime-hires-perl, libstorable-perl, libdigest-sha-perl, libtime-piece-perl, libmodule-corelist-perl (<< 2.14-2)
 Provides: data-dumper, perl5, libdigest-md5-perl, libmime-base64-perl, libtime-hires-perl, libstorable-perl, libdigest-sha-perl, libtime-piece-perl
-Recommends: perl-doc, netbase
-Suggests: libterm-readline-gnu-perl | libterm-readline-perl-perl
+Recommends: netbase
+Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl
 Description: Larry Wall's Practical Extraction and Report Language
  An interpreted scripting language, known among some as "Unix's Swiss
  Army Chainsaw".
