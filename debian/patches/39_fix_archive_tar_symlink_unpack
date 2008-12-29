@@ -1,72 +1,7 @@
 http://rt.cpan.org/Public/Bug/Display.html?id=30380#txn-436899
 second half of unpack issue CVE-2007-4829, from 1.39_01 of Archive::Tar
 
-diff -uNrp perl-5.10.0~/lib/Archive/Tar/t/90_symlink.t perl-5.10.0/lib/Archive/Tar/t/90_symlink.t
---- perl-5.10.0~/lib/Archive/Tar/t/90_symlink.t	1969-12-31 16:00:00.000000000 -0800
-+++ perl-5.10.0/lib/Archive/Tar/t/90_symlink.t	2008-12-03 12:56:19.000000000 -0800
-@@ -0,0 +1,62 @@
-+BEGIN {
-+    if( $ENV{PERL_CORE} ) {
-+        chdir '../lib/Archive/Tar' if -d '../lib/Archive/Tar';
-+    }       
-+    use lib '../../..';
-+}
-+
-+BEGIN { chdir 't' if -d 't' }
-+
-+use lib '../lib';
-+
-+use strict;
-+use File::Spec;
-+use File::Path;
-+use Test::More;
-+
-+### developer tests mostly, so enable them with an extra argument
-+plan skip_all => "Skipping tests on this platform" unless @ARGV;
-+plan 'no_plan';
-+
-+my $Class   = 'Archive::Tar';
-+my $Dir     = File::Spec->catdir( qw[src linktest] );    
-+my %Map     = (
-+    File::Spec->catfile( $Dir, "linktest_with_dir.tar" ) => [
-+        [ 0, qr/SECURE EXTRACT MODE/ ],
-+        [ 1, qr/^$/ ]
-+    ],
-+    File::Spec->catfile( $Dir, "linktest_missing_dir.tar" ) => [
-+        [ 0, qr/SECURE EXTRACT MODE/ ],
-+        [ 0, qr/File exists/ ],
-+    ],
-+);
-+
-+use_ok( $Class );
-+
-+{   while( my($file, $aref) = each %Map ) {
-+
-+        for my $mode ( 0, 1 ) {
-+            my $expect = $aref->[$mode]->[0];
-+            my $regex  = $aref->[$mode]->[1];
-+
-+            my $tar  = $Class->new( $file );
-+            ok( $tar,                   "Object created from $file" );
-+
-+            ### damn warnings
-+            local $Archive::Tar::INSECURE_EXTRACT_MODE = $mode;
-+            local $Archive::Tar::INSECURE_EXTRACT_MODE = $mode;
-+            
-+            ok( 1,                  "   Extracting with insecure mode: $mode" );
-+
-+            my $warning;
-+            local $SIG{__WARN__} = sub { $warning .= "@_"; warn @_; };
-+
-+            my $rv = eval { $tar->extract } || 0;
-+            ok( !$@,                "       No fatal error" );
-+            is( !!$rv, !!$expect,   "       RV as expected" );
-+            like( $warning, $regex, "       Error matches $regex" );
-+    
-+            rmtree( 'linktest' );
-+        }
-+    }        
-+}    
+Original patch from Ubuntu version 5.10.0-11.1ubuntu2.2.
 diff -uNrp perl-5.10.0~/lib/Archive/Tar.pm perl-5.10.0/lib/Archive/Tar.pm
 --- perl-5.10.0~/lib/Archive/Tar.pm	2007-12-18 02:47:07.000000000 -0800
 +++ perl-5.10.0/lib/Archive/Tar.pm	2008-12-03 12:56:19.000000000 -0800
@@ -182,14 +117,3 @@ diff -uNrp perl-5.10.0~/lib/Archive/Tar.pm perl-5.10.0/lib/Archive/Tar.pm
  
      } elsif ( $entry->is_hardlink ) {
          my $fail;
-diff -uNrp perl-5.10.0~/MANIFEST perl-5.10.0/MANIFEST
---- perl-5.10.0~/MANIFEST	2007-12-18 02:47:07.000000000 -0800
-+++ perl-5.10.0/MANIFEST	2008-12-03 12:57:37.000000000 -0800
-@@ -1413,6 +1413,7 @@ lib/Archive/Tar/t/01_use.t	Archive::Tar 
- lib/Archive/Tar/t/02_methods.t	Archive::Tar tests
- lib/Archive/Tar/t/03_file.t	Archive::Tar tests
- lib/Archive/Tar/t/04_resolved_issues.t	Archive::Tar tests
-+lib/Archive/Tar/t/90_symlink.t	Archive::Tar tests
- lib/Archive/Tar/t/src/long/b	Archive::Tar tests
- lib/Archive/Tar/t/src/long/bar.tar.packed	Archive::Tar tests
- lib/Archive/Tar/t/src/long/foo.tgz.packed	Archive::Tar tests
