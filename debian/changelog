@@ -1,4 +1,4 @@
-perl (5.10.0-19) UNRELEASED; urgency=low
+perl (5.10.0-19) unstable; urgency=low
 
   * Downgrade the perl-doc recommendation to a suggestion.
     (Closes: #496770, #442805)
@@ -10,7 +10,7 @@ perl (5.10.0-19) UNRELEASED; urgency=low
     follows symlinks when unpacking. Upstream fix backported by Ubuntu.
     (Closes: #509802)
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 18 Dec 2008 20:33:29 +0200
+ -- Niko Tyni <ntyni@debian.org>  Thu, 01 Jan 2009 14:15:07 +0200
 
 perl (5.10.0-18) unstable; urgency=high
 
