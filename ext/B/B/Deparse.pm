@@ -1456,7 +1456,6 @@ sub declare_hints {
 my %ignored_hints = (
     'open<' => 1,
     'open>' => 1,
-    'v_string' => 1,
     );
 
 sub declare_hinthash {
