@@ -1,0 +1,7 @@
+Subject: Fix tainted usage of $ENV{TMPDIR} as an sprintf format in CGI.pm. (Closes: #494679)
+
+[rt.perl.org #50322]
+Bleadperl change 33143.
+
+Note that the inconsistent usage of backslashes doesn't matter, as
+the whole thing is eval'd in.
