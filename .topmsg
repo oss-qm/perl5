@@ -1,2 +1,4 @@
-Subject: Bug#333510: fails to build on arm/armeb with -O2 optimization and current gcc4.                                                                                       
+Subject: Work around a gcc-4.1 bug on hppa and mips caused by delayed branch.
+
+See: http://bugs.debian.org/374396
 
