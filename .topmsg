@@ -1,0 +1,11 @@
+Subject: Fix issues with (nested) definition lists in lib/Pod/Html.pm
+
+- <dt> tags are not closed
+- generated code contains spurious </li> closing tags
+- when other (definition) lists are nested in a definition list, the
+  indentation of sublevels gets messed up because of incorrect
+  placement of <dt> tags
+
+http://rt.perl.org/rt3/Public/Bug/Display.html?id=45211
+
+Upstream change 32727.
