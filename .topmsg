@@ -1,0 +1,6 @@
+Subject: Fix $? when dumping core. (Closes: #509041)
+
+WCOREDUMP is in <sys/wait.h>
+
+Without this, $? & 128 doesn't get set properly on some (glibc) systems
+when dumping core.
