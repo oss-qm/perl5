@@ -367,14 +367,34 @@ endif
 binary: binary-indep binary-arch
 
 # maintainer targets
-patch:
+new-build: $(patches)
+	test -d .git # only for the git repository
+	-git branch -D tmp-build
+	git checkout -b tmp-build
+	git rm .top*
+	git add debian/patches
+	git add $(patches)
+	git commit -m 'export all the patches'
+
+$(patches): debian/patches/series
+	sed 's|^|debian/patches/| ; s/ -p1$$//' debian/patches/series >$(patches)
+
+check-patched:
 	test ! -f $(patches) # already patched
-	ls debian/patches/* >$(patches)
+
+patch: check-patched $(patches)
 	cat `cat $(patches)` | patch -p1 --no-backup-if-mismatch
 
 unpatch:
-	test -f $(patches) # not patched
+	test -s $(patches) # not patched
 	cat `tac $(patches)` | patch -Rp1 --no-backup-if-mismatch
 	rm -f $(patches)
 
-.PHONY: build clean binary-indep binary-arch binary install patch unpatch
+debian/patches/series:
+	test -d .git # patch export only works in the TopGit repository
+	-rmdir debian/patches
+	tg export --quilt debian/patches
+	rm debian/patches/master.diff
+	sed -i '/master.diff/ d' debian/patches/series
+
+.PHONY: build clean binary-indep binary-arch binary install patch unpatch new-build
