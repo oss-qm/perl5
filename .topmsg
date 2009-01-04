@@ -1,0 +1,5 @@
+Subject: [SECURITY] CVE-2005-0448 revisited: File::Path::rmtree no longer allows creating of setuid files. (Closes: #286905)
+
+This vulnerability was fixed in 5.8.4-7 but re-introduced in 5.8.8-1.
+It's also present in File::Path 2.xx, up to and including 2.07 which
+has only a partial fix.
