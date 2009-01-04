@@ -1,0 +1,5 @@
+Subject: Fix a segmentation fault occurring in the mod_perl2 test suite. (Closes: #475498)
+
+Upstream change #33807 backported from blead.
+
+[perl #52740]
