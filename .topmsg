@@ -1,0 +1,4 @@
+Subject: Make File::Temp warn on cleaning up the current working directory at exit instead of bailing out. (Closes: #479317)
+
+Adapted from File-Temp 0.21.
+[rt.cpan.org #35779]
