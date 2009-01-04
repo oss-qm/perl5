@@ -10,7 +10,6 @@ debian/enc2xs_inc
 debian/errno_ver
 debian/extutils_hacks
 debian/fakeroot
-debian/hppa_mips_optim
 debian/instmodsh_doc
 debian/ld_run_path
 debian/libnet_config_path
