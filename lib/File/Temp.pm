@@ -890,7 +890,12 @@ sub _can_do_level {
 		  @{ $dirs_to_unlink{$$} } : () );
       foreach my $dir (@dirs) {
 	if (-d $dir) {
-	  rmtree($dir, $DEBUG, 0);
+          # Some versions of rmtree will abort if you attempt to remove
+          # the directory you are sitting in. We protect that and turn it
+          # into a warning. We do this because this occurs during
+          # cleanup and so can not be caught by the user.
+          eval { rmtree($dir, $DEBUG, 0); };
+          warn $@ if ($@ && $^W);
 	}
       }
 
@@ -2233,6 +2238,12 @@ temporary files, you may need to reset the random number seed using
 srand(EXPR) in each child else all the children will attempt to walk
 through the same set of random file names and may well cause
 themselves to give up if they exceed the number of retry attempts.
+
+=head2 Directory removal
+
+Note that if you have chdir'ed into the temporary directory and it is
+subsequently cleaned up in the END block, then you will get a warning
+from File::Path::rmtree().
 
 =head2 BINMODE
 
