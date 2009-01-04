@@ -1,0 +1,2 @@
+Subject: Disable ext/threads/shared/t/stress.t on m68k for now. (Closes: #495826)
+
