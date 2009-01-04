@@ -1,0 +1,6 @@
+Subject: Fix crashes on @ISA fiddling. (Closes: #480480)
+
+Applicable parts of blead changes 33684 and 33898.
+
+[perl #52074]
+[perl #54566]
