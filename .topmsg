@@ -1,0 +1,11 @@
+Subject: Change 33287 by nicholas@nicholas-pecuchet on 2008/02/12 11:52:30
+
+	In Perl_load_module_nocontext(), ver can actually be NULL.
+	In Perl_hv_copy_hints_hv(), ohv can actually be NULL.
+	In Perl_sortsv(), Perl_sortsv_flags() and S_qsortsvu(), array can be
+	NULL (if the number of elements to sort is <= 1).
+	In Perl_save_nogv(), gv can not be NULL.
+	In Perl_sv_cmp() and Perl_sv_cmp_locale(), both SVs can be NULL.
+	In Perl_ptr_table_fetch(), the sv can be NULL.
+	In PerlIO_set_ptrcnt(), ptr can be NULL.
+
