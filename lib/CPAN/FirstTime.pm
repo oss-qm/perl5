@@ -940,7 +940,7 @@ substitute. You can then revisit this dialog with
     }
 
     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
-        my_dflt_prompt(makepl_arg => "", $matcher);
+        my_dflt_prompt(makepl_arg => "INSTALLDIRS=site", $matcher);
         my_dflt_prompt(make_arg => "", $matcher);
     }
 
