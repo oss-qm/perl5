@@ -1,0 +1,5 @@
+Subject: Make the "udp" protocol resolve without netbase.
+
+Fix a typo in the predefined common protocols to make "udp" resolve
+without netbase. Upstream change 33554.
+
