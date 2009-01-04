@@ -1,0 +1,15 @@
+Subject: Various debian-specific ExtUtils changes:
+
+ * Respect umask during installation, and set as appropriate for each of
+   perl, vendor and site (policy requires group writable site dirs).
+
+ * Don't install .packlist or perllocal.pod for perl or vendor.
+ * Fiddle with *PREFIX and variables written to the makefile so that
+   install directories may be changed when make is run by passing
+   PREFIX= to the "make install" command (used when packaging
+   modules).
+
+ * Set location of libperl.a to /usr/lib.
+ * Note that libperl-dev package is required for embedded linking.
+ * Change install target dependencies to facilitate parallel makes.
+
