@@ -16,6 +16,9 @@ BEGIN {
     }
     if ($^O eq 'MacOS' || ($^O eq 'irix' && $Config{osvers} == 5)) {
 	plan skip_all => "Test relies on resolution of localhost, fails on $^O ($Config{osvers})";
+    } elsif (!-f '/etc/hosts') {
+	# /etc/hosts is not always present on buildds
+	plan skip_all => "Test requires /etc/hosts: not found";
     }
 }
 
