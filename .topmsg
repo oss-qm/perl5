@@ -1,0 +1,6 @@
+Subject: Always use PERLRUNINST when building perl modules.
+
+Revert part of upstream change 24524 to always use PERLRUNINST when
+building perl modules:  Some PDL demos expect blib to be implicitly
+searched.
+
