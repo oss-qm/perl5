@@ -1,0 +1,6 @@
+Subject: Support GNU/Hurd and GNU/kFreeBSD in Module::Build and ExtUtils::CBuilder. (Closes: #480385, #480375)
+
+Dual-lived modules, fixed upstream but still unreleased on the CPAN side.
+
+[rt.cpan.org #35780] for Module::Build
+[rt.cpan.org #35782] for ExtUtils::CBuilder
