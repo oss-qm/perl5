@@ -1,0 +1,13 @@
+Subject: Fix 'Unknown error' messages with attribute.pm. (Closes: #488088)
+
+[perl #49472]
+blead change 33265
+
+From: Dave Mitchell <davem@fdisolutions.com>
+Date: Sat, 9 Feb 2008 14:56:23 +0000
+Subject: [PATCH] [perl #49472] Attributes + Unkown Error
+ An errored attribute sub still processes the attributes,
+ which require's attribute.pm, so make sure the error state is
+ passed to the new require
+
+p4raw-id: //depot/perl@33265
