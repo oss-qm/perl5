@@ -1,0 +1,7 @@
+Subject: Fix Sys::Syslog slowness when logging with non-native mechanisms. (Closes: #498776)
+
+Revert the 0.25 second timeout change that was added in 0.19 to address
+an OSX problem with UDP sockets and ICMP responses.
+
+Fixed upstream in Sys::Syslog 0.25, which changes the timeout default
+to 0 again on non-OSX hosts and makes it configurable with setlogsock().
