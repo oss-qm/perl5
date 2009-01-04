@@ -1,5 +1,7 @@
-[SECURITY] "second half of CVE-2007-4829": Archive::Tar no longer follows
-symlinks when unpacking.  Upstream fix backported by Ubuntu. (Closes: #509802)
+[SECURITY] "second half of CVE-2007-4829": Archive::Tar no longer follows symlinks.
+
+Archive::Tar no longer follows symlinks when unpacking.
+Upstream fix backported by Ubuntu. (Closes: #509802)
 
 http://rt.cpan.org/Public/Bug/Display.html?id=30380#txn-436899
 second half of unpack issue CVE-2007-4829, from 1.39_01 of Archive::Tar

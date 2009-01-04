@@ -1,5 +1,8 @@
-Allow the quote mark delimiter also for those #include directives chased with 
-"h2ph -a". Debian bug #479762.
+Fix h2ph with double-quote-delimited #include directives.
+
+Allow the quote mark delimiter also for those #include directives chased with "h2ph -a".
+
+Debian bug #479762.
 
 Also add the directory prefix of the current file when the quote syntax is
 used; 'require' will only look in @INC, not the current directory.

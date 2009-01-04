@@ -1,5 +1,8 @@
-Use gdbm for ODBM_File/NDBM_File.  The compatability header is named
-gdbm-ndbm.h on debian machines.  Explicitly link against -lgdbm_compat.
+Use gdbm for ODBM_File/NDBM_File. 
+
+The compatability header is named gdbm-ndbm.h on debian machines.
+
+Explicitly link against -lgdbm_compat.
 
 diff -Naur --exclude=debian perl-5.10.0.orig/Configure perl-5.10.0/Configure
 --- perl-5.10.0.orig/Configure	2007-12-18 21:47:07.000000000 +1100

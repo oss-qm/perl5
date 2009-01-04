@@ -1,3 +1,5 @@
+Skip two Math::Complex tests on the arm architectures.
+
 Some tests fail on ARM due to non-IEEE fp rounding rules in the kernel
 fp emulation.
 

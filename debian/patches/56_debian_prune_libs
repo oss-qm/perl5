@@ -1,6 +1,7 @@
-Prune the list of libs wanted to what we actually need.  We want to
-keep the dependencies on perl-base as small as possible, and some of
-the original list may be present on buildds (see Bug#128355).
+Prune the list of libraries wanted to what we actually need.
+
+We want to keep the dependencies on perl-base as small as possible,
+and some of the original list may be present on buildds (see Bug#128355).
 
 diff -Naur --exclude=debian perl-5.10.0.orig/Configure perl-5.10.0/Configure
 --- perl-5.10.0.orig/Configure	2007-11-18 02:26:25.000000000 +1100

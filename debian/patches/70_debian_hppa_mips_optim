@@ -1,4 +1,5 @@
 Work around a gcc-4.1 bug on hppa and mips caused by delayed branch.
+
 See: http://bugs.debian.org/374396
 
 diff -Naur --exclude=debian perl-5.10.0.orig/cflags.SH perl-5.10.0/cflags.SH

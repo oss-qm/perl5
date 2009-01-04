@@ -1,4 +1,5 @@
 Replace generic man(1) instructions with Debian-specific information.
+
 Indicate that the user needs to install the perl-doc package.
 
 diff -Naur --exclude=debian perl-5.10.0.orig/pod/perl.pod perl-5.10.0/pod/perl.pod

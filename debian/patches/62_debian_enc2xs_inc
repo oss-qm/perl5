@@ -1,5 +1,7 @@
-Tweak enc2xs to handle Debian @INC:  ignore missing directories,
-follow symlinks (/usr/share/perl/5.8 -> 5.8.4).
+Tweak enc2xs to handle Debian @INC.
+
+- ignore missing directories,
+- follow symlinks (/usr/share/perl/5.8 -> 5.8.4).
 
 diff -Naur --exclude=debian perl-5.10.0.orig/ext/Encode/bin/enc2xs perl-5.10.0/ext/Encode/bin/enc2xs
 --- perl-5.10.0.orig/ext/Encode/bin/enc2xs	2007-11-18 02:26:25.000000000 +1100

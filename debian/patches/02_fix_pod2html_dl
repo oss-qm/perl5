@@ -1,4 +1,5 @@
-Fix issue with (nested) definition lists in lib/Pod/Html.pm
+Fix issues with (nested) definition lists in lib/Pod/Html.pm
+
 - <dt> tags are not closed
 - generated code contains spurious </li> closing tags
 - when other (definition) lists are nested in a definition list, the

@@ -1,4 +1,5 @@
 Adjust the manual page extensions for the Debian Perl policy.
+
 Debian bug #479460.
 
 diff --git a/lib/Module/Build/Base.pm b/lib/Module/Build/Base.pm
