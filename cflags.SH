@@ -307,8 +307,6 @@ for file do
 	case $archname in
 	    arm-*|armeb-*)
 		optimize=-Os;;
-	    hppa-*|mips*-*)
-		optimize="$optimize -fno-delayed-branch";;
 	esac;;
     pp_sort) ;;
     pp_sys) ;;
