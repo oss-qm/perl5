@@ -1,0 +1,8 @@
+Subject: Fix Math::BigFloat::sqrt() breaking with too many digits. (Closes: #417528)
+
+Dual-lived module, fixed on the CPAN side in 1.89.
+
+Integrated with the other 1.89 changes in blead as change 33715
+and maint-5.10 as change 33821.
+
+[rt.cpan.org #34459]
