@@ -1,0 +1,4 @@
+Subject: Disable the "v-string in use/require is non-portable" warning (again).
+
+Upstream change 32910, Debian bug #479863
+
