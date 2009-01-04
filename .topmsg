@@ -1,0 +1,3 @@
+Subject: Make the '-x' test work with 'use filetest q/access/'. (Closes: #483734)
+
+[perl #49003], blead change 32874.
