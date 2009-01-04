@@ -1,0 +1,6 @@
+Subject: Revert an incorrect substitution optimization introduced in 5.10.0. (Closes: #501178)
+
+[perl #52658]
+
+Bug introduced by upstream change 26334, reverted with change 33685 in blead
+and 33732 in maint-5.10.
