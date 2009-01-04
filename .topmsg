@@ -1,0 +1,3 @@
+Subject: Mention the relation between 'eval "require Foo"' and PERL_DL_NONLAZY in the 'perldoc -f eval' documentation . (See #479711).
+
+Upstream change 33848.
