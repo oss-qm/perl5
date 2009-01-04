@@ -1,0 +1,4 @@
+Subject: Replace generic man(1) instructions with Debian-specific information.
+
+Indicate that the user needs to install the perl-doc package.
+
