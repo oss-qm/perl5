@@ -1,0 +1,3 @@
+Subject: Fix memory leak with qr//. (Closes: #503975)
+
+Adapted from upstream change 34506.
