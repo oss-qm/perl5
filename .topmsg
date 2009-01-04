@@ -1,0 +1,7 @@
+Subject: File::Path::rmtree() no longer makes symlink targets world-writable. Patch by Ben Hutchings. (Closes: #487319)
+
+With this, chmod(2) following symlinks is no longer our problem because
+$Force_Writeable isn't set on unixish operating systems. This was the
+case for the Etch version too.
+
+[rt.cpan.org #36982]
