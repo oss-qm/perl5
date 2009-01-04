@@ -1,0 +1,7 @@
+Subject: Rearrange perl.pod
+
+As reported in http://bugs.debian.org/278323 , the TOC in perl.pod
+should probably not be in the synopsis.
+
+Note NN_debian_ rather than NN_fix_ since it's upstream doesn't agree.
+
