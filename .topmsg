@@ -1,0 +1,5 @@
+Subject: Fix a typo in perlpodspec.pod. (Closes: #447830)
+
+Upstream change 33797, picked for maint-5.10.
+
+[perl #53908]
