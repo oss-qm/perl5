@@ -1,0 +1,15 @@
+Subject: Fix a memory leak with Scalar::Util::weaken(). (Closes: #506324)
+
+Upstream change 34209:
+
+DBI memory leak in 5.10.0 due to change 26530
+
+A weakref to a HV would leak, because the xhv_backreferences
+array is created with a refcount of 2 (to avoid premature freeing
+during global destruction), but the RC was only decremented once
+when the parent HV was freed.
+Also, when thread cloned, the new array was being created with a
+RC of 1, rather than 2, which coincidentally worked due to the
+first bug.
+
+p4raw-id: //depot/perl@34209
