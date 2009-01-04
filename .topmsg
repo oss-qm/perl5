@@ -1,0 +1,5 @@
+Subject: Fix memory corruption with in-place sorting. (Closes: #498769)
+
+[perl #54758]
+
+Fixed in bleadperl by change 33937.
