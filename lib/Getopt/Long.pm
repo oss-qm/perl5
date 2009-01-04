@@ -1483,7 +1483,6 @@ sub name {
 use overload
   # Treat this object as an oridinary string for legacy API.
   '""'	   => \&name,
-  '0+'	   => sub { 0 },
   fallback => 1;
 
 1;

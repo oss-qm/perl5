@@ -1,0 +1,8 @@
+Subject: Remove numeric overloading of Getopt::Long callback functions. (Closes: #479434)
+
+The numeric overloading introduced in Getopt::Long 2.36 broke
+lintian and libvcp-perl.
+
+Dual-lived module, fixed on the CPAN side in 2.37_01.
+
+[rt.cpan.org #35759]
