@@ -49,6 +49,8 @@ my %OSTYPES = qw(
 		 cygwin    Unix
 		 os2       Unix
 		 interix   Unix
+		 gnukfreebsd Unix
+		 gnu       Unix
 		 
 		 dos       Windows
 		 MSWin32   Windows

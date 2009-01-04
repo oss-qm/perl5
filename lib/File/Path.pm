@@ -316,10 +316,8 @@ sub _rmtree {
                     print "skipped $root\n" if $arg->{verbose};
                     next ROOT_DIR;
                 }
-                if (!chmod $perm | 0700, $root) {
-                    if ($Force_Writeable) {
-                        _error($arg, "cannot make directory writeable", $canon);
-                    }
+                if ($Force_Writeable && !chmod $perm | 0700, $root) {
+                    _error($arg, "cannot make directory writeable", $canon);
                 }
                 print "rmdir $root\n" if $arg->{verbose};
                 if (rmdir $root) {
@@ -328,7 +326,7 @@ sub _rmtree {
                 }
                 else {
                     _error($arg, "cannot remove directory", $canon);
-                    if (!chmod($perm, ($Is_VMS ? VMS::Filespec::fileify($root) : $root))
+                    if ($Force_Writeable && !chmod($perm, ($Is_VMS ? VMS::Filespec::fileify($root) : $root))
                     ) {
                         _error($arg, sprintf("cannot restore permissions to 0%o",$perm), $canon);
                     }
@@ -351,10 +349,8 @@ sub _rmtree {
             }
 
             my $nperm = $perm & 07777 | 0600;
-            if ($nperm != $perm and not chmod $nperm, $root) {
-                if ($Force_Writeable) {
-                    _error($arg, "cannot make file writeable", $canon);
-                }
+            if ($Force_Writeable && $nperm != $perm and not chmod $nperm, $root) {
+                _error($arg, "cannot make file writeable", $canon);
             }
             print "unlink $canon\n" if $arg->{verbose};
             # delete all versions under VMS

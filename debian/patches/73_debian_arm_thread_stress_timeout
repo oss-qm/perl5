@@ -1,0 +1,15 @@
+Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts. (Closes: #501970)
+
+diff --git a/ext/threads/shared/t/stress.t b/ext/threads/shared/t/stress.t
+index 93e2311..b137e5c 100644
+--- a/ext/threads/shared/t/stress.t
++++ b/ext/threads/shared/t/stress.t
+@@ -42,7 +42,7 @@ use threads::shared;
+ {
+     my $cnt = 50;
+ 
+-    my $TIMEOUT = 30;
++    my $TIMEOUT = 150;
+ 
+     my $mutex = 1;
+     share($mutex);

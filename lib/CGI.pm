@@ -4032,7 +4032,7 @@ sub new {
     my $filename;
     find_tempdir() unless -w $TMPDIRECTORY;
     for (my $i = 0; $i < $MAXTRIES; $i++) {
-	last if ! -f ($filename = sprintf("${TMPDIRECTORY}${SL}CGItemp%d",$sequence++));
+	last if ! -f ($filename = sprintf("\%s${SL}CGItemp%d",$TMPDIRECTORY,$sequence++));
     }
     # check that it is a more-or-less valid filename
     return unless $filename =~ m!^([a-zA-Z0-9_ \'\":/.\$\\-]+)$!;
@@ -4108,6 +4108,8 @@ CGI - Simple Common Gateway Interface Class
 	     "Your favorite color is ",em(escapeHTML($color)),
 	     hr;
    }
+
+   print end_html;
 
 =head1 ABSTRACT
 
@@ -5388,7 +5390,7 @@ Generate just the protocol and net location, as in http://www.foo.com:8000
 If Apache's mod_rewrite is turned on, then the script name and path
 info probably won't match the request that the user sent. Set
 -rewrite=>1 (default) to return URLs that match what the user sent
-(the original request URI). Set -rewrite->0 to return URLs that match
+(the original request URI). Set -rewrite=>0 to return URLs that match
 the URL after mod_rewrite's rules have run. Because the additional
 path information only makes sense in the context of the rewritten URL,
 -rewrite is set to false when you request path info in the URL.

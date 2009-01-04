@@ -526,7 +526,7 @@ sub load {
         $configpm = $INC{"CPAN/MyConfig.pm"};
         $redo++;
     } else {
-        my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
+        my($path_to_cpan) = '/etc/perl';
         my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
         my($configpmtest) = File::Spec->catfile($configpmdir,"Config.pm");
         my $inc_key;

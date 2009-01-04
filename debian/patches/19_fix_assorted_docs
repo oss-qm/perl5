@@ -1,0 +1,56 @@
+Integrate some documentation fixes from upstream. (Closes: #357663, #443733, #412542)
+
+This is the rest of upstream change 33129, continuing from
+04_fix_cgi_rewrite_typo.
+diff --git a/lib/CGI.pm b/lib/CGI.pm
+index f48cca4..c0158cb 100644
+--- a/lib/CGI.pm
++++ b/lib/CGI.pm
+@@ -4109,6 +4109,8 @@ CGI - Simple Common Gateway Interface Class
+ 	     hr;
+    }
+ 
++   print end_html;
++
+ =head1 ABSTRACT
+ 
+ This perl library uses perl5 objects to make it easy to create Web
+diff --git a/lib/Math/BigInt/CalcEmu.pm b/lib/Math/BigInt/CalcEmu.pm
+index 79efac6..5810f5d 100644
+--- a/lib/Math/BigInt/CalcEmu.pm
++++ b/lib/Math/BigInt/CalcEmu.pm
+@@ -295,7 +295,7 @@ Math::BigInt::CalcEmu - Emulate low-level math with BigInt code
+ =head1 DESCRIPTION
+ 
+ Contains routines that emulate low-level math functions in BigInt, e.g.
+-optional routines the low-level math package does not provide on it's own.
++optional routines the low-level math package does not provide on its own.
+ 
+ Will be loaded on demand and called automatically by BigInt.
+ 
+diff --git a/pod/perllol.pod b/pod/perllol.pod
+index c348ec4..c42c977 100644
+--- a/pod/perllol.pod
++++ b/pod/perllol.pod
+@@ -276,7 +276,7 @@ have selected map for that
+ 
+     @newAoA = map { [ @{ $AoA[$_] } [ 7..12 ] ] } 4 .. 8;
+ 
+-Although if your manager accused of seeking job security (or rapid
++Although if your manager accused you of seeking job security (or rapid
+ insecurity) through inscrutable code, it would be hard to argue. :-)
+ If I were you, I'd put that in a function:
+ 
+diff --git a/pod/perlre.pod b/pod/perlre.pod
+index 015881b..9d2af58 100644
+--- a/pod/perlre.pod
++++ b/pod/perlre.pod
+@@ -102,7 +102,7 @@ X</x>
+ 
+ =head3 Metacharacters
+ 
+-The patterns used in Perl pattern matching evolved from the ones supplied in
++The patterns used in Perl pattern matching evolved from those supplied in
+ the Version 8 regex routines.  (The routines are derived
+ (distantly) from Henry Spencer's freely redistributable reimplementation
+ of the V8 routines.)  See L<Version 8 Regular Expressions> for

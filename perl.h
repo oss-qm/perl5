@@ -663,6 +663,11 @@ register struct op *Perl_op asm(stringify(OP_IN_REGISTER));
 #   include <unistd.h>
 #endif
 
+/* for WCOREDUMP */
+#ifdef I_SYS_WAIT
+#   include <sys/wait.h>
+#endif
+
 #ifdef __SYMBIAN32__
 #   undef _SC_ARG_MAX /* Symbian has _SC_ARG_MAX but no sysconf() */
 #endif
@@ -3966,7 +3971,7 @@ typedef Sighandler_t Sigsave_t;
 #endif
 
 #ifdef USE_PERLIO
-EXTERN_C void PerlIO_teardown();
+EXTERN_C void PerlIO_teardown(void);
 # ifdef USE_ITHREADS
 #  define PERLIO_INIT MUTEX_INIT(&PL_perlio_mutex)
 #  define PERLIO_TERM 				\

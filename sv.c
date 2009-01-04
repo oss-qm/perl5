@@ -3557,8 +3557,10 @@ Perl_sv_setsv_flags(pTHX_ SV *dstr, register SV *sstr, I32 flags)
 		GvMULTI_on(dstr);
 		return;
 	    }
-	    glob_assign_glob(dstr, sstr, dtype);
-	    return;
+	    if (isGV_with_GP(sstr)) {
+		glob_assign_glob(dstr, sstr, dtype);
+		return;
+	    }
 	}
 
 	if (dtype >= SVt_PV) {
@@ -10263,10 +10265,11 @@ Perl_sv_dup(pTHX_ const SV *sstr, CLONE_PARAMS* param)
 			daux->xhv_eiter = saux->xhv_eiter
 			    ? he_dup(saux->xhv_eiter,
 					(bool)!!HvSHAREKEYS(sstr), param) : 0;
+			/* backref array needs refcnt=2; see sv_add_backref */
 			daux->xhv_backreferences =
 			    saux->xhv_backreferences
 				? (AV*) SvREFCNT_inc(
-					sv_dup((SV*)saux->xhv_backreferences, param))
+					sv_dup_inc((SV*)saux->xhv_backreferences, param))
 				: 0;
 
                         daux->xhv_mro_meta = saux->xhv_mro_meta
