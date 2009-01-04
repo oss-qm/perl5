@@ -1,0 +1,5 @@
+Subject: Fix 'constant subroutine SEEK_* redefined' warnings when using the Fcntl and POSIX modules together. (Closes: #479957)
+
+[perl #54186]
+
+Upstream change 33825.
