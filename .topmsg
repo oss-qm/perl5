@@ -1,0 +1,2 @@
+Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts. (Closes: #501970)
+
