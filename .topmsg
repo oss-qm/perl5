@@ -1,0 +1,6 @@
+Subject: Use gdbm for ODBM_File/NDBM_File. 
+
+The compatability header is named gdbm-ndbm.h on debian machines.
+
+Explicitly link against -lgdbm_compat.
+
