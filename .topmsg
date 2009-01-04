@@ -1,0 +1,3 @@
+Subject: Skip test when /dev/log unavailable.  Avoids a problem on buildds where syslogd is not running.
+
+Included in Sys-Syslog 0.24, integrated in bleadperl as change 32799.
