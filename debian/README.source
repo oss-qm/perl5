@@ -107,7 +107,7 @@ as of this writing is 0.5-1.
 The TopGit procedure for applying a new patch is:
 
  tg create fixes/foo upstream # s|fixes|debian| for Debian-specific changes
- <edit .topmsg, add a meaningful subject>
+ <edit .topmsg, include a meaningful Subject for 'tg summary'>
  <hack the source and commit away>
  git checkout master
  tg depend add fixes/foo
@@ -121,12 +121,15 @@ The procedure for tagging a new package version is (broadly):
  git tag -m 'Debian release x' debian/x
  git branch -D tmp-build
  git push --tags
+
+Note that this will create a 'detached' tag: we don't need a long-lived
+build branch as debian/patches is regenerated every time.
  
 Retiring a source fix (for instance because upstream used a different
 implementation):
 
  git checkout fixes/obsolete
- git diff upstream | patch -Rp1 # generate a 'revert commit'
+ tg patch | patch -Rp1 # generate a 'revert commit'
  git commit -m 'Revert to upstream fix' # please elaborate
  git checkout master
  tg update
