@@ -1,2 +1,3 @@
-Subject: Upgrade to Pod::Man 2.18 to get the 'pod2man --utf8' functionality in lenny. (Closes: #480997)
+Subject: Make Pod::Man use the PerlIO UTF-8 output layer when --utf8 is enabled. (See #500210)
 
+Modified from upstream patch in Debian bug #500210.
