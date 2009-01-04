@@ -48,12 +48,14 @@ __getBerkeleyDBInfo()
 
     (void)db_version(&Major, &Minor, &Patch) ;
 
+#ifndef DEBIAN
     /* Check that the versions of db.h and libdb.a are the same */
     if (Major != DB_VERSION_MAJOR || Minor != DB_VERSION_MINOR 
 		|| Patch != DB_VERSION_PATCH)
 	croak("\nDB_File needs compatible versions of libdb & db.h\n\tyou have db.h version %d.%d.%d and libdb version %d.%d.%d\n",  
 		DB_VERSION_MAJOR, DB_VERSION_MINOR, DB_VERSION_PATCH, 
 		Major, Minor, Patch) ;
+#endif /* DEBIAN */
     
     /* check that libdb is recent enough  -- we need 2.3.4 or greater */
     if (Major == 2 && (Minor < 3 || (Minor ==  3 && Patch < 4)))
