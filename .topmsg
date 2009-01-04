@@ -1,0 +1,5 @@
+Subject: Tweak enc2xs to handle Debian @INC.
+
+- ignore missing directories,
+- follow symlinks (/usr/share/perl/5.8 -> 5.8.4).
+
