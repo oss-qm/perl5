@@ -1,0 +1,13 @@
+Subject: Tweak @INC so that the ordering is:
+
+    etc (for config files)
+    site (5.8.1)
+    vendor (all)
+    core (5.8.1)
+    site (version-indep)
+    site (pre-5.8.1)
+
+The rationale being that an admin (via site), or module packager
+(vendor) can chose to shadow core modules when there is a newer
+version than is included in core.
+
