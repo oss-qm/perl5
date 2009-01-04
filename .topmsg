@@ -1,0 +1,3 @@
+Subject: Fix the PerlIO_teardown prototype to suppress a compiler warning. (Closes: #479540)
+
+Part of upstream change 33370, also in maint-5.10.
