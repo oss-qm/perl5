@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Elaborate a confusing cross-reference in 'perldoc -f sort'.
+Closes: 405470
+
+The sort documentation said 'see sort', which was a bit confusing.
+
+Signed-off-by: Niko Tyni <ntyni@debian.org>
