@@ -7,6 +7,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Activate delayed-branch optimizations on hppa and mips again.
   * Small improvements to README.source
   * Make perlivp skip include directories in /usr/local. (Closes: #510895)
+  * Elaborate a confusing cross-reference in 'perldoc -f sort'.
+    (Closes: 405470)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
