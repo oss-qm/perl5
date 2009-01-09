@@ -62,3 +62,4 @@ fixes/syslog_test
 fixes/udp_typo
 fixes/utf8_changelog
 fixes/weaken_memleak
+debian/perlivp
