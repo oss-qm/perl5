@@ -64,3 +64,4 @@ fixes/utf8_changelog
 fixes/weaken_memleak
 debian/perlivp
 fixes/doc-perlfunc-sort
+fixes/lvalue-qr-crash

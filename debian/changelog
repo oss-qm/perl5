@@ -9,6 +9,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Make perlivp skip include directories in /usr/local. (Closes: #510895)
   * Elaborate a confusing cross-reference in 'perldoc -f sort'.
     (Closes: 405470)
+  * Fix a crash on binary-or lvalue operation on qr//. (Closes: #483150)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
