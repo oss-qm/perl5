@@ -1,0 +1,11 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: crash on binary-or lvalue operation on qr//
+Closes: #483150
+
+[rt.perl.org #54956]
+Blead change 8c8eee8276dbc780932b841fe5183943a7117a3d
+
+# ./miniperl -e 'my $re = qr/x/; $re |= "y"'
+miniperl: doop.c:1259: Perl_do_vop: Assertion `((svtype)((sv)->sv_flags & 0xff)) >= SVt_PV' failed.
+
+Signed-off-by: Niko Tyni <ntyni@debian.org>
