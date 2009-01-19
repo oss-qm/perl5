@@ -65,3 +65,4 @@ fixes/weaken_memleak
 debian/perlivp
 fixes/doc-perlfunc-sort
 fixes/lvalue-qr-crash
+fixes/h2xs-comments
