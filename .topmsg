@@ -1,0 +1,20 @@
+From 2870df4c70e265accf1994265abe1f597fd820b4 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sun, 19 Oct 2008 23:21:30 +0300
+Subject: [PATCH] Fix h2xs enum handling with C++ comments
+
+Contrary to the comment in the code, h2xs mishandles enums that
+contain C++ style comments.
+
+An example of a failing header:
+enum {
+    A = -1, // negative one
+            // with more comments
+    B = -2, // negative two
+    C = -3 // negative two
+};
+
+which generates exported constants for 'A' and 'negative'.
+
+The patch is slightly modified from the one by Daniel Burr in
+http://bugs.debian.org/320286
