@@ -947,7 +947,7 @@ PP(pp_grepstart)
     if (PL_op->op_private & OPpGREP_LEX)
 	PAD_SVl(PL_op->op_targ) = src;
     else
-	DEFSV = src;
+	DEFSV_set(src);
 
     PUTBACK;
     if (PL_op->op_type == OP_MAPSTART)
@@ -1058,7 +1058,7 @@ PP(pp_mapwhile)
 	if (PL_op->op_private & OPpGREP_LEX)
 	    PAD_SVl(PL_op->op_targ) = src;
 	else
-	    DEFSV = src;
+	    DEFSV_set(src);
 
 	RETURNOP(cLOGOP->op_other);
     }
@@ -4684,7 +4684,7 @@ S_run_user_filter(pTHX_ int idx, SV *buf_sv, int maxlen)
 	SAVETMPS;
 	EXTEND(SP, 2);
 
-	DEFSV = upstream;
+	DEFSV_set(upstream);
 	PUSHMARK(SP);
 	PUSHs(sv_2mortal(newSViv(0)));
 	if (filter_state) {
