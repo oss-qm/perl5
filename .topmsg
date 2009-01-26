@@ -1,0 +1,13 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix Data::Dumper::new() argument checking.
+
+#512036
+[perl #56766]
+
+The following script crashes perl reliably
+
+#! /usr/bin/perl
+use Data::Dumper ();
+print Data::Dumper->Dump(['a'], 'b');
+
+
