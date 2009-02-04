@@ -12,6 +12,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Fix a crash on binary-or lvalue operation on qr//. (Closes: #483150)
   * Fix h2xs enum handling with C++ comments. (Closes: #320826) 
   * Fix Data::Dumper::new() argument checking. (Closes: #512036)
+  * setpgrp() no longer corrupts the stack. (Closes: #512796)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
