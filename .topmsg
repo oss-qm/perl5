@@ -1,0 +1,6 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: setpgrp() should extend the stack before modifying it
+Closes: #512796
+
+As reported by Marcin Owsiany in <http://bugs.debian.org/512796>,
+invoking setpgrp without any arguments could corrupt the stack.
