@@ -14,6 +14,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Fix Data::Dumper::new() argument checking. (Closes: #512036)
   * setpgrp() no longer corrupts the stack. (Closes: #512796)
   * Wrap overlong dependency lines in debian/control.
+  * Add conflicts/replaces/provides for libcpanplus-perl. (Closes: #516289)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 

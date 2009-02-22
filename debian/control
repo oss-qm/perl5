@@ -104,6 +104,7 @@ Conflicts: libpod-parser-perl (<< 1.32-1),
  libversion-perl (<< 1:0.7400-2),
  libpod-simple-perl (<< 3.05-2),
  libextutils-parsexs-perl (<= 2.18),
+ libcpanplus-perl (<< 0.84),
  podlators-perl (<< 2.2.0)
 Replaces: libpod-parser-perl,
  libansicolor-perl,
@@ -132,6 +133,7 @@ Replaces: libpod-parser-perl,
  libversion-perl,
  libpod-simple-perl,
  libextutils-parsexs-perl,
+ libcpanplus-perl,
  podlators-perl
 Provides: libpod-parser-perl,
  libansicolor-perl,
@@ -160,6 +162,7 @@ Provides: libpod-parser-perl,
  libversion-perl,
  libpod-simple-perl,
  libextutils-parsexs-perl,
+ libcpanplus-perl,
  podlators-perl
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
