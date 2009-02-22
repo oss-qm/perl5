@@ -17,6 +17,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Add conflicts/replaces/provides for
     + libcpanplus-perl (Closes: #516289)
     + libsys-syslog-perl (Closes: #498885)
+  * Version the build-conflict with libterm-readline-gnu-perl.
+    (Closes: #498807)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
