@@ -20,7 +20,6 @@ Conflicts: autoconf2.13 (<< 2.13-45),
  libxsloader-perl (<< 0.08-1)
 Replaces: perl (<= 5.10.0-9), perl-modules (<< 5.10.0-12), libperl5.8 (<< 5.8.0-20),
  libscalar-list-utils-perl,
- libclass-multimethods-perl (<< 1.70-4),
  libxsloader-perl 
 Provides: perl5-base, ${perlapi:Provides},
  libscalar-list-utils-perl,
