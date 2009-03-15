@@ -631,7 +631,7 @@ sub _handle_element_end {
             $$self{PENDING}[-1][1] = $_;
         }
     }
-    if ($$self{USAGE_SKIPPING}) {
+    if ($$self{USAGE_SKIPPING} && $element !~ m/^over-/) {
         pop @{ $$self{PENDING} };
     } else {
         $self->SUPER::_handle_element_end($element);
