@@ -21,6 +21,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     (Closes: #498807)
   * Remove the Etch->Lenny upgrade specific conflicts introduced in 5.10.0-14.
   * Remove the obsolete replacement of libclass-multimethods-perl.
+  * Include copyright and license information for the Unicode database.
+    (Closes: #493421)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
