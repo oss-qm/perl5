@@ -1,2 +1,3 @@
-Subject: Disable ext/threads/shared/t/stress.t on m68k for now. (Closes: #495826)
+Subject: Disable some threads tests on m68k for now due to missing TLS.
+Closes: #495826, #517938
 
