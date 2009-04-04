@@ -25,6 +25,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     (Closes: #493421)
   * Disable ext/threads/shared/t/waithires.t on m68k due to missing TLS.
     (Closes: #517938)
+  * Test .ph files during the build phase. Thanks to Kees Cook for the patch.
+    (Closes: #511848)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 

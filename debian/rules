@@ -97,6 +97,13 @@ install-stamp: build-stamp
 	# simple wrapper around Errno module
 	cp debian/errno.ph $(lib)
 
+	# Verify that the headers are usable
+	for ph in `< $(srcdir)/debian/headers sed -e 's/\.h$$/.ph/'`; do \
+		$(srcdir)/perl.static -I $(srcdir)/$(lib) -e \
+			"print '"$$ph": '; require '"$$ph"'; print \"ok\n\";" \
+				|| exit 1; \
+	done
+
 	# remove some cruft
 	rm -f $(bin)/suidperl
 	rm -f $(lib)/.packlist
