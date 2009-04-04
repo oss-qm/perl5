@@ -23,6 +23,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Remove the obsolete replacement of libclass-multimethods-perl.
   * Include copyright and license information for the Unicode database.
     (Closes: #493421)
+  * Disable ext/threads/shared/t/waithires.t on m68k due to missing TLS.
+    (Closes: #517938)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
