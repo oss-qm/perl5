@@ -733,7 +733,7 @@ sub queue_includes_from
 
 
 # Determine include directories; $Config{usrinc} should be enough for (all
-# non-GCC?) C compilers, but gcc uses an additional include directory.
+# non-GCC?) C compilers, but gcc uses additional include directories.
 sub inc_dirs
 {
     my $from_gcc    = `LC_ALL=C $Config{cc} -v 2>&1`;
@@ -745,7 +745,7 @@ sub inc_dirs
            $from_gcc = '';
        };
     };
-    length($from_gcc) ? ($from_gcc, $Config{usrinc}) : ($Config{usrinc});
+    length($from_gcc) ? ($from_gcc, $from_gcc . "-fixed", $Config{usrinc}) : ($Config{usrinc});
 }
 
 
