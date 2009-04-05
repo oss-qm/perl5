@@ -39,7 +39,7 @@ build-stamp: perl.static perl.debug libperl.so.$(fullversion)
 perl.static:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 	$(SHELL) debian/config.debian --static
 	$(MAKE) perl $(test_target)
 	mv libperl.a libperl-static
@@ -48,14 +48,14 @@ perl.static:
 perl.debug:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 	$(SHELL) debian/config.debian --debug
 	$(MAKE) perl
 	mv perl perl.debug
 
 libperl.so.$(fullversion):
 	$(checkdir)
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 	$(SHELL) debian/config.debian --shared
 	$(MAKE) SHRPLDFLAGS='$$(LDDLFLAGS) -Wl,-soname,libperl.so.$(version)' $@
 	ln -s libperl.so.$(fullversion) libperl.so.$(version)
@@ -66,7 +66,7 @@ clean:
 	$(checkdir)
 	$(checkroot)
 	test -f $(patches)	# maintainer sanity check
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -rf config.over perl.static perl.debug libperl-static libperl.so* \
 	    build-stamp install-stamp t/auto debian/shlibs.local \
 	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
