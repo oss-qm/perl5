@@ -1,0 +1,6 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Document PERL_SYS_* macros.
+Closes: #522099
+
+As seen in #522099, the PERL_SYS_* macros need better documentation.
+
