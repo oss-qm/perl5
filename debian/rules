@@ -376,8 +376,7 @@ binary: binary-indep binary-arch
 # maintainer targets
 new-build: $(patches)
 	test -d .git # only for the git repository
-	-git branch -D tmp-build
-	git checkout -b tmp-build
+	git checkout refs/heads/master # detach from 'master'
 	git rm .top*
 	git add debian/patches
 	git add $(patches)

@@ -119,7 +119,6 @@ The procedure for tagging a new package version is (broadly):
  dch -r
  ./debian/rules new-build
  git tag -m 'Debian release x' debian/x
- git branch -D tmp-build
  git push --tags
 
 Note that this will create a 'detached' tag: we don't need a long-lived
