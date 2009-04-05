@@ -31,6 +31,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Various lintian fixes:
     + Use ${binary:Version} for arch:any->anydependencies.
     + Don't ignore the exit code of 'make distclean'.
+  * Document PERL_SYS_* macros. (Closes: #522099)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
