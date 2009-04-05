@@ -295,6 +295,7 @@ endif
 
 	ln -s perl.1.gz $(build)/perl-debug/usr/share/man/man1/debugperl.1.gz
 	ln -s perl.1.gz $(build)/perl-suid/usr/share/man/man1/suidperl.1.gz
+	ln -s perl.1.gz $(build)/perl-base/usr/share/man/man1/perl$(fullversion).1.gz
 	ln -s c2ph.1.gz $(build)/perl/usr/share/man/man1/pstruct.1.gz
 	ln -s s2p.1.gz $(build)/perl/usr/share/man/man1/psed.1.gz
 
