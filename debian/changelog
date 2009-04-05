@@ -28,6 +28,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Test .ph files during the build phase. Thanks to Kees Cook for the patch.
     (Closes: #511848)
     + fix h2ph to find <syslimits.h> again. (Closes: #522673)
+  * Use ${binary:Version} instead of ${source:Version} for arch:any->any
+    dependencies. Thanks, lintian.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
