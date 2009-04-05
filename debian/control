@@ -169,7 +169,7 @@ Architecture: any
 Depends: perl (= ${binary:Version}), ${shlibs:Depends}
 Description: Runs setuid Perl scripts
  suidperl is a setuid root helper program which is invoked by perl when
- executing scripts with setuid/gid bits set on systems (like linux) which
+ executing scripts with setuid/gid bits set on systems (like Linux) which
  don't have support setuid script execution natively in the kernel.
 
 Package: libperl5.10

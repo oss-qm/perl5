@@ -30,6 +30,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     + Use ${binary:Version} for arch:any->anydependencies.
     + Don't ignore the exit code of 'make distclean'.
     + install shlibs with mode 644
+    + capitalize Linux in the perl-doc long description
   * Document PERL_SYS_* macros. (Closes: #522099)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
