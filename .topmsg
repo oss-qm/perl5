@@ -1,0 +1,14 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [PATCH] Make h2ph look in "include-fixed", needed by at least gcc 4.3
+Closes: #522673
+
+As seen in <http://bugs.debian.org/522673>, since 4.2.0 or so
+gcc's search path has a new "include-fixed" directory,
+which currently contains <syslimits.h> and a few other headers.
+
+Converting <syslimits.h> therefore fails unless h2ph knows about the new
+directory too.
+
+See http://gcc.gnu.org/ml/gcc-patches/2007-02/msg02038.html for some
+background to the gcc change.
+
