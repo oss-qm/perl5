@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Escape backslashes in .IX entries
+Closes: 521256
+
+Applicable parts of podlators upstream git commit
+release/2.2.2-6-g8de2177 
+
