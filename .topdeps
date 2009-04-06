@@ -70,3 +70,4 @@ fixes/data-dumper-arguments
 fixes/setpgrp-stack
 fixes/h2ph-gcc-fixed
 fixes/perlembed-docs
+fixes/pod2man-index-backslash
