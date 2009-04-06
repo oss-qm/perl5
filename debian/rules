@@ -361,7 +361,7 @@ endif
 		cp debian/$$p.$$c $(build)/$$p/DEBIAN/$$c; \
 		chmod 755 $(build)/$$p/DEBIAN/$$c; \
 	    done; \
-	    chmod 644 $(build)/$$p/DEBIAN/shlibs; \
+	    ! test -f $(build)/$$p/DEBIAN/shlibs || chmod 644 $(build)/$$p/DEBIAN/shlibs; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    find $(build)/$$p/usr -type f \
