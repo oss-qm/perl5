@@ -155,10 +155,6 @@ endif
 	# move pod out of -base modules and into .pod files in -doc
 	./perl.static debian/splitdoc $(build)/perl-base
 
-	# re-create versioned link so that suidperl works
-	ln $(build)/perl-base/usr/bin/perl \
-	    $(build)/perl-base/usr/bin/perl$(fullversion)
-
 	# provide suidperl link
 	ln -s perl $(build)/perl-suid/usr/bin/suidperl
 
@@ -275,7 +271,15 @@ ifeq ($(strip),yes)
 			objcopy --add-gnu-debuglink=$(debug)$$path $$f; \
 		esac; \
 	    done
+	    # versioned hardlink for the detached debug symbols
+	    ln $(debug)/usr/bin/perl \
+	        $(debug)/usr/bin/perl$(fullversion)
 endif
+	# re-create versioned link so that suidperl works
+	# this needs to be after the stripping part
+	ln $(build)/perl-base/usr/bin/perl \
+	    $(build)/perl-base/usr/bin/perl$(fullversion)
+
 
 	# fixperms
 	find $(build) -print | xargs -r chown -h root:root
