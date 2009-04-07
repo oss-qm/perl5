@@ -31,7 +31,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     + Don't ignore the exit code of 'make distclean'.
     + install shlibs with mode 644
     + capitalize Linux in the perl-doc long description
-    + add man page symlink for perl5.10.0
+    + add man page symlinks for perl5.10.0 and sperl5.10.0
   * Document PERL_SYS_* macros. (Closes: #522099)
   * Fix pod2man to escape backslashes in .IX entries. (Closes: #521256)
 
