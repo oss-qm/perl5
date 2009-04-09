@@ -1,0 +1,11 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix h2xs enum handling
+Closes: 502297
+
+Use ExtUtils::Constant::Base hashrefs to get rid of the preprocessor
+directives.
+
+Patches by Rainer Weikusat and Daniel Burr.
+
+Upstream commit GitLive-blead-912-g36d7a91.
+
