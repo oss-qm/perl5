@@ -27,7 +27,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     (Closes: #511848)
     + fix h2ph to find <syslimits.h> again. (Closes: #522673)
   * Various lintian fixes:
-    + Use ${binary:Version} for arch:any->anydependencies.
+    + Use ${binary:Version} for arch:any->any dependencies.
     + Don't ignore the exit code of 'make distclean'.
     + install shlibs with mode 644
     + capitalize Linux in the perl-doc long description
