@@ -214,6 +214,17 @@ endif
 	    test -d $$doc/$$p || ln -s perl $$doc/$$p; \
 	done
 
+	# lintian overrides
+	for p in $(packages); \
+	do \
+	    if test -f debian/$$p.lintian-overrides; \
+	    then \
+	    d="$(build)/$$p/usr/share/lintian/overrides"; \
+	    mkdir -p $$d; \
+	    cp debian/$$p.lintian-overrides $$d/$$p; \
+	    fi; \
+	done
+
 	# move module docs to /usr/share/doc/perl
 	while read src target; \
 	do \

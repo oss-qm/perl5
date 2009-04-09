@@ -33,6 +33,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     + capitalize Linux in the perl-doc long description
     + add man page symlinks for perl5.10.0 and sperl5.10.0
     + fix perl5.10.0 detached debugging symbols with a hardlink
+    + add overrides for /usr/share/doc/perl{-base,} symlinks. (See #522827)
   * Document PERL_SYS_* macros. (Closes: #522099)
   * Fix pod2man to escape backslashes in .IX entries. (Closes: #521256)
 
