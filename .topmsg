@@ -1,0 +1,5 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Disable zlib bundling in Compress::Raw::Zlib
+
+Compress::Raw::Zlib statically links its bundled version of zlib
+by default, but we use the system library instead.
