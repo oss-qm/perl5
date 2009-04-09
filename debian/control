@@ -206,6 +206,8 @@ Conflicts: perl-doc (<< ${Upstream-Version}-1),
  libstorable-perl (<< 2.15-1),
  libdigest-sha-perl (<< 5.45-1),
  libsys-syslog-perl (<< 0.22),
+ libcompress-zlib-perl (<< 2.008),
+ libcompress-raw-zlib-perl (<< 2.008),
  libtime-piece-perl (<< 1.12-1)
 Replaces: perl-base (<< 5.8.8-1),
  perl-doc (<< 5.8.0-1),
@@ -218,6 +220,8 @@ Replaces: perl-base (<< 5.8.8-1),
  libdigest-sha-perl,
  libtime-piece-perl,
  libsys-syslog-perl,
+ libcompress-zlib-perl,
+ libcompress-raw-zlib-perl,
  libmodule-corelist-perl (<< 2.14-2)
 Provides: data-dumper, perl5,
  libdigest-md5-perl,
@@ -226,6 +230,8 @@ Provides: data-dumper, perl5,
  libstorable-perl,
  libdigest-sha-perl,
  libsys-syslog-perl,
+ libcompress-zlib-perl,
+ libcompress-raw-zlib-perl,
  libtime-piece-perl
 Recommends: netbase
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl

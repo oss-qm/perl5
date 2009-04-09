@@ -15,6 +15,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Add conflicts/replaces/provides for
     + libcpanplus-perl (Closes: #516289)
     + libsys-syslog-perl (Closes: #498885)
+    + libcompress-zlib-perl
+    + libcompress-raw-zlib-perl
   * Version the build-conflict with libterm-readline-gnu-perl.
     (Closes: #498807)
   * Remove the Etch->Lenny upgrade specific conflicts introduced in 5.10.0-14.
