@@ -37,6 +37,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Document PERL_SYS_* macros. (Closes: #522099)
   * Fix pod2man to escape backslashes in .IX entries. (Closes: #521256)
   * Fix h2xs enum handling. (Closes: #502297)
+  * Include sysexits.ph. (Closes: #505289)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
