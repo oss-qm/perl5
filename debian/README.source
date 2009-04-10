@@ -27,7 +27,7 @@ Patches Applied
 A copy of all patches which have been applied to the source are in the
 debian/patches directory of the Debian source package.
 
-There are two classes of patches in the directory:  fixes/* patches are
+There are two classes of patches in the directory: debian/patches/fixes/* are
 generally applicable to any Perl installation (and usually back-ported
 from upstream, or posted to p5p when applied).
 
@@ -102,7 +102,7 @@ and the like can use the old way of standalone patch handling described
 above, or just hack the source and ignore debian/patches altogether.
 
 First, you need to have the 'topgit' package installed. The current version
-as of this writing is 0.5-1.
+as of this writing is 0.7-1.
 
 The TopGit procedure for applying a new patch is:
 
