@@ -1,16 +1,21 @@
 perl (5.10.0-20) UNRELEASED; urgency=low
 
-  * Manage debian/patches with TopGit.
+  * Manage debian/patches with TopGit as documented in README.source.
     + tweak patch descriptions to consistently have a one-line subject
-    + document TopGit usage in README.source
+  * Fixes cherry-picked from upstream:
+    + Elaborate a confusing cross-reference in 'perldoc -f sort'.
+      (Closes: #405470)
+    + Fix a crash on binary-or lvalue operation on qr//. (Closes: #483150)
+    + Fix h2xs enum handling with C++ comments. (Closes: #320826) 
+    + Fix Data::Dumper::new() argument checking. (Closes: #512036)
+    + setpgrp() no longer corrupts the stack. (Closes: #512796)
+    + Document PERL_SYS_* macros. (Closes: #522099)
+    + Fix pod2man to escape backslashes in .IX entries. (Closes: #521256)
+    + Fix h2xs enum handling. (Closes: #502297)
   * Activate delayed-branch optimizations on hppa and mips again.
+  * Disable ext/threads/shared/t/waithires.t on m68k due to missing TLS.
+    (Closes: #517938)
   * Make perlivp skip include directories in /usr/local. (Closes: #510895)
-  * Elaborate a confusing cross-reference in 'perldoc -f sort'.
-    (Closes: #405470)
-  * Fix a crash on binary-or lvalue operation on qr//. (Closes: #483150)
-  * Fix h2xs enum handling with C++ comments. (Closes: #320826) 
-  * Fix Data::Dumper::new() argument checking. (Closes: #512036)
-  * setpgrp() no longer corrupts the stack. (Closes: #512796)
   * Wrap overlong dependency lines in debian/control.
   * Add conflicts/replaces/provides for
     + libcpanplus-perl (Closes: #516289)
@@ -26,25 +31,14 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     + the embedded zlib source in Compress::Raw::Zlib
     + the Cwd module
     + the C parts of File::Glob
-  * Disable ext/threads/shared/t/waithires.t on m68k due to missing TLS.
-    (Closes: #517938)
   * Test .ph files during the build phase. Thanks to Kees Cook for the patch.
     (Closes: #511848)
     + fix h2ph to find <syslimits.h> again. (Closes: #522673)
-  * Various lintian fixes:
+  * Various lintian fixes and overrides, most importantly:
     + Use ${binary:Version} for arch:any->any dependencies.
-    + Don't ignore the exit code of 'make distclean'.
-    + install shlibs with mode 644
-    + capitalize Linux in the perl-doc long description
-    + add man page symlinks for perl5.10.0 and sperl5.10.0
-    + fix perl5.10.0 detached debugging symbols with a hardlink
-    + add overrides for /usr/share/doc/perl{-base,} symlinks. (See #522827)
-  * Document PERL_SYS_* macros. (Closes: #522099)
-  * Fix pod2man to escape backslashes in .IX entries. (Closes: #521256)
-  * Fix h2xs enum handling. (Closes: #502297)
+    + Disable zlib bundling in Compress::Raw::Zlib.
+      * needs a build-dependency on zlib1g-dev | libz-dev.
   * Include sysexits.ph. (Closes: #505289)
-  * Disable zlib bundling in Compress::Raw::Zlib.
-    + needs a build-dependency on zlib1g-dev | libz-dev.
   * Upgrade to Standards-Version 3.8.1.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
