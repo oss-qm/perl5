@@ -45,6 +45,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Include sysexits.ph. (Closes: #505289)
   * Disable zlib bundling in Compress::Raw::Zlib.
     + needs a build-dependency on zlib1g-dev | libz-dev.
+  * Upgrade to Standards-Version 3.8.1.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
 
