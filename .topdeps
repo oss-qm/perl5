@@ -72,3 +72,4 @@ fixes/h2ph-gcc-fixed
 fixes/perlembed-docs
 fixes/pod2man-index-backslash
 fixes/h2xs-enum
+debian/disable-zlib-bundling
