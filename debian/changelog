@@ -23,7 +23,8 @@ perl (5.10.0-20) UNRELEASED; urgency=low
   * Remove the obsolete replacement of libclass-multimethods-perl.
   * Include copyright and license information for
     + the Unicode database (Closes: #493421)
-    + the embedded zlib source in Compress::Raw::Zlib.
+    + the embedded zlib source in Compress::Raw::Zlib
+    + the Cwd module
   * Disable ext/threads/shared/t/waithires.t on m68k due to missing TLS.
     (Closes: #517938)
   * Test .ph files during the build phase. Thanks to Kees Cook for the patch.
