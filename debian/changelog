@@ -26,6 +26,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     (Closes: #498807)
   * Remove the Etch->Lenny upgrade specific conflicts introduced in 5.10.0-14.
   * Remove the obsolete replacement of libclass-multimethods-perl.
+  * Remove the obsolete conflict with libapache-mod-perl.
   * Include copyright and license information for
     + the Unicode database (Closes: #493421)
     + the embedded zlib source in Compress::Raw::Zlib
