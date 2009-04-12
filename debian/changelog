@@ -12,6 +12,7 @@ perl (5.10.0-20) UNRELEASED; urgency=low
     + Document PERL_SYS_* macros. (Closes: #522099)
     + Fix pod2man to escape backslashes in .IX entries. (Closes: #521256)
     + Fix h2xs enum handling. (Closes: #502297)
+    + Add a SEE ALSO section to perldoc.pod. (Closes: #444932)
   * Activate delayed-branch optimizations on hppa and mips again.
   * Disable ext/threads/shared/t/waithires.t on m68k due to missing TLS.
     (Closes: #517938)

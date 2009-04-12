@@ -74,3 +74,4 @@ fixes/pod2man-index-backslash
 fixes/h2xs-enum
 debian/disable-zlib-bundling
 fixes/pod-nitpicks
+fixes/perldoc-see-also
