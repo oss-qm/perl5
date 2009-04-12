@@ -1,0 +1,5 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: add a SEE ALSO section to perldoc.pod
+Closes: 444932
+
+Blead change 373b131131d48670ca1f2081fcd02b380b66f41b
