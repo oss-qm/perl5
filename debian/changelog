@@ -1,4 +1,4 @@
-perl (5.10.0-20) UNRELEASED; urgency=low
+perl (5.10.0-20) experimental; urgency=low
 
   * Manage debian/patches with TopGit as documented in README.source.
     + tweak patch descriptions to consistently have a one-line subject
@@ -45,8 +45,9 @@ perl (5.10.0-20) UNRELEASED; urgency=low
       * needs a build-dependency on zlib1g-dev | libz-dev.
   * Include sysexits.ph. (Closes: #505289)
   * Upgrade to Standards-Version 3.8.1.
+  * Upload to experimental to test the new h2ph checks.
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 09 Jan 2009 19:00:00 +0200
+ -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 00:01:02 +0300
 
 perl (5.10.0-19) unstable; urgency=low
 
