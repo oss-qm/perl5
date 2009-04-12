@@ -1,6 +1,6 @@
 From: Niko Tyni <ntyni@debian.org>
-Subject: [PATCH] fixes/pod-nitpicks
+Subject: fix pod errors
 
-<patch description>
+POD formatting errors already fixed upstream.
 
 Signed-off-by: Niko Tyni <ntyni@debian.org>
