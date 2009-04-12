@@ -87,6 +87,7 @@ Conflicts: libpod-parser-perl (<< 1.32-1),
  libpod-simple-perl (<< 3.05-2),
  libextutils-parsexs-perl (<= 2.18),
  libcpanplus-perl (<< 0.84),
+ libpod-escapes-perl (<< 1.04),
  podlators-perl (<< 2.2.0)
 Replaces: libpod-parser-perl,
  libansicolor-perl,
@@ -116,6 +117,7 @@ Replaces: libpod-parser-perl,
  libpod-simple-perl,
  libextutils-parsexs-perl,
  libcpanplus-perl,
+ libpod-escapes-perl,
  podlators-perl
 Provides: libpod-parser-perl,
  libansicolor-perl,
@@ -145,6 +147,7 @@ Provides: libpod-parser-perl,
  libpod-simple-perl,
  libextutils-parsexs-perl,
  libcpanplus-perl,
+ libpod-escapes-perl,
  podlators-perl
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
@@ -207,6 +210,8 @@ Conflicts: perl-doc (<< ${Upstream-Version}-1),
  libsys-syslog-perl (<< 0.22),
  libcompress-zlib-perl (<< 2.008),
  libcompress-raw-zlib-perl (<< 2.008),
+ libio-compress-zlib-perl (<< 2.008),
+ libio-compress-base-perl (<< 2.008),
  libtime-piece-perl (<< 1.12-1)
 Replaces: perl-base (<< 5.8.8-1),
  perl-doc (<< 5.8.0-1),
@@ -221,6 +226,8 @@ Replaces: perl-base (<< 5.8.8-1),
  libsys-syslog-perl,
  libcompress-zlib-perl,
  libcompress-raw-zlib-perl,
+ libio-compress-zlib-perl,
+ libio-compress-base-perl,
  libmodule-corelist-perl (<< 2.14-2)
 Provides: data-dumper, perl5,
  libdigest-md5-perl,
@@ -231,6 +238,8 @@ Provides: data-dumper, perl5,
  libsys-syslog-perl,
  libcompress-zlib-perl,
  libcompress-raw-zlib-perl,
+ libio-compress-zlib-perl,
+ libio-compress-base-perl,
  libtime-piece-perl
 Recommends: netbase
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl
