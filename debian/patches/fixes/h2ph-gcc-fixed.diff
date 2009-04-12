@@ -1,0 +1,44 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [PATCH] Make h2ph look in "include-fixed", needed by at least gcc 4.3
+Closes: #522673
+
+As seen in <http://bugs.debian.org/522673>, since 4.2.0 or so
+gcc's search path has a new "include-fixed" directory,
+which currently contains <syslimits.h> and a few other headers.
+
+Converting <syslimits.h> therefore fails unless h2ph knows about the new
+directory too.
+
+See http://gcc.gnu.org/ml/gcc-patches/2007-02/msg02038.html for some
+background to the gcc change.
+
+Upstream commit GitLive-blead-896-g05d7b09
+
+---
+ utils/h2ph.PL |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/utils/h2ph.PL b/utils/h2ph.PL
+index 0bfea18..b2a1113 100644
+--- a/utils/h2ph.PL
++++ b/utils/h2ph.PL
+@@ -733,7 +733,7 @@ sub queue_includes_from
+ 
+ 
+ # Determine include directories; $Config{usrinc} should be enough for (all
+-# non-GCC?) C compilers, but gcc uses an additional include directory.
++# non-GCC?) C compilers, but gcc uses additional include directories.
+ sub inc_dirs
+ {
+     my $from_gcc    = `LC_ALL=C $Config{cc} -v 2>&1`;
+@@ -745,7 +745,7 @@ sub inc_dirs
+            $from_gcc = '';
+        };
+     };
+-    length($from_gcc) ? ($from_gcc, $Config{usrinc}) : ($Config{usrinc});
++    length($from_gcc) ? ($from_gcc, $from_gcc . "-fixed", $Config{usrinc}) : ($Config{usrinc});
+ }
+ 
+ 
+-- 
+tg: (71b2123..) fixes/h2ph-gcc-fixed (depends on: upstream)

@@ -1,0 +1,25 @@
+Subject: Revert an incorrect substitution optimization introduced in 5.10.0. (Closes: #501178)
+
+[perl #52658]
+
+Bug introduced by upstream change 26334, reverted with change 33685 in blead
+and 33732 in maint-5.10.
+
+---
+ pp_ctl.c |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+diff --git a/pp_ctl.c b/pp_ctl.c
+index 64157f3..3691d25 100644
+--- a/pp_ctl.c
++++ b/pp_ctl.c
+@@ -218,7 +218,6 @@ PP(pp_substcont)
+ 	if (!(cx->sb_rxtainted & 2) && SvTAINTED(TOPs))
+ 	    cx->sb_rxtainted |= 2;
+ 	sv_catsv(dstr, POPs);
+-	FREETMPS; /* Prevent excess tmp stack */
+ 
+ 	/* Are we done */
+ 	if (cx->sb_once || !CALLREGEXEC(rx, s, cx->sb_strend, orig,
+-- 
+tg: (71b2123..) fixes/freetmps (depends on: upstream)

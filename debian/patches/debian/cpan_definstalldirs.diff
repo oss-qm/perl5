@@ -1,0 +1,26 @@
+Subject: Provide a sensible INSTALLDIRS default for modules installed from CPAN.
+
+Some modules which are included in core set INSTALLDIRS => 'perl'
+explicitly in Makefile.PL.  This makes sense for the normal @INC
+ordering, but not ours.
+
+
+---
+ lib/CPAN/FirstTime.pm |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/CPAN/FirstTime.pm b/lib/CPAN/FirstTime.pm
+index d5d3e21..bed023b 100644
+--- a/lib/CPAN/FirstTime.pm
++++ b/lib/CPAN/FirstTime.pm
+@@ -940,7 +940,7 @@ substitute. You can then revisit this dialog with
+     }
+ 
+     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
+-        my_dflt_prompt(makepl_arg => "", $matcher);
++        my_dflt_prompt(makepl_arg => "INSTALLDIRS=site", $matcher);
+         my_dflt_prompt(make_arg => "", $matcher);
+     }
+ 
+-- 
+tg: (71b2123..) debian/cpan_definstalldirs (depends on: upstream)

@@ -1,0 +1,22 @@
+Subject: Fix formatting of bydepth option (upstream CL33127).
+
+
+---
+ lib/File/Find.pm |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/File/Find.pm b/lib/File/Find.pm
+index c41c4dc..d8dd4f4 100644
+--- a/lib/File/Find.pm
++++ b/lib/File/Find.pm
+@@ -84,7 +84,7 @@ described in L<The wanted function> below.
+ 
+ Reports the name of a directory only AFTER all its entries
+ have been reported.  Entry point C<finddepth()> is a shortcut for
+-specifying C<<{ bydepth => 1 }>> in the first argument of C<find()>.
++specifying C<{ bydepth =E<gt> 1 }> in the first argument of C<find()>.
+ 
+ =item C<preprocess>
+ 
+-- 
+tg: (71b2123..) fixes/find_bydepth_doc (depends on: upstream)
