@@ -421,4 +421,6 @@ debian/patches/series:
 	rm debian/patches/master.diff
 	sed -i '/master.diff/ d' debian/patches/series
 
+.NOTPARALLEL:
+
 .PHONY: build clean binary-indep binary-arch binary install patch unpatch new-build

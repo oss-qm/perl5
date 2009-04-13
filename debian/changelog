@@ -2,6 +2,8 @@ perl (5.10.0-21) UNRELEASED; urgency=low
 
   * Make the perl package recommend make because /usr/bin/cpan uses it.
     (Closes: #293908)
+  * Add a .NOTPARALLEL debian/rules target to explicitly disable parallel
+    builds. (Closes: #523940)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 23:50:55 +0300
 
