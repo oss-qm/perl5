@@ -1,0 +1,5 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [PATCH] fixes/h2ph-undefined-warnings
+Closes: 379757
+
+Squelch 'Constant subroutine ... undefined' warnings from .ph files.
