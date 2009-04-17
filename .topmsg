@@ -1,5 +1,7 @@
 From: Niko Tyni <ntyni@debian.org>
-Subject: [PATCH] fixes/h2ph-undefined-warnings
+Subject: Squelch 'Constant subroutine ... undefined' warnings from .ph files
 Closes: 379757
 
-Squelch 'Constant subroutine ... undefined' warnings from .ph files.
+Upstream commits
+ GitLive-blead-953-gc0cc52e 
+ GitLive-blead-952-gc1a2df7
