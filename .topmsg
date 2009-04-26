@@ -4,3 +4,6 @@ Closes: #522099
 
 As seen in #522099, the PERL_SYS_* macros need better documentation.
 
+Upstream commits:
+ eb53357261107ec40e8c517666330fc71276b6fb 
+ 31f6f5aa00011d88da3c64e4e1cb9629c8334dda
