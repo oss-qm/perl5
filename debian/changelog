@@ -4,6 +4,8 @@ perl (5.10.0-21) UNRELEASED; urgency=low
     (Closes: #293908)
   * Add a .NOTPARALLEL debian/rules target to explicitly disable parallel
     builds. (Closes: #523940)
+  * Squelch 'Constant subroutine ... undefined' warnings from .ph files.
+    (Closes: #379757)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 23:50:55 +0300
 

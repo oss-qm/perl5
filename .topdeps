@@ -75,3 +75,4 @@ fixes/h2xs-enum
 debian/disable-zlib-bundling
 fixes/pod-nitpicks
 fixes/perldoc-see-also
+fixes/h2ph-warnings
