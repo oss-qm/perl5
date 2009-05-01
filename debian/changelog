@@ -1,6 +1,7 @@
 perl (5.10.0-21) UNRELEASED; urgency=low
 
-  * 
+  * Make the perl package recommend make because /usr/bin/cpan uses it.
+    (Closes: #293908)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 23:50:55 +0300
 

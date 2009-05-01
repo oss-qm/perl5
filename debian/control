@@ -241,7 +241,7 @@ Provides: data-dumper, perl5,
  libio-compress-zlib-perl,
  libio-compress-base-perl,
  libtime-piece-perl
-Recommends: netbase
+Recommends: netbase, make
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl
 Description: Larry Wall's Practical Extraction and Report Language
  An interpreted scripting language, known among some as "Unix's Swiss
