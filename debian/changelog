@@ -7,6 +7,7 @@ perl (5.10.0-21) UNRELEASED; urgency=low
   * Squelch 'Constant subroutine ... undefined' warnings from .ph files.
     (Closes: #379757)
   * Elaborate PERL_SYS_* documentation a bit. 
+  * Fix a segmentation fault with array ties. (Closes: #525180)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 23:50:55 +0300
 
