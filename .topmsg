@@ -1,0 +1,12 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Archive::Tar now validates archives created by SunOS and HP-UX tar.
+Closes: 516472
+    
+[rt.cpan.org #43513]
+ 
+Hand-picked from the patch between Archive-Tar 1.44 and 1.46.
+
+Original patch from Nicolas FRANCOIS (Nekral).
+
+Upstream test suite change not included because it contains a binary file.
+  
