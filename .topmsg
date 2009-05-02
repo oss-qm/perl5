@@ -1,0 +1,8 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Improve Archive::Tar error reporting on short corrupted archives
+Closes: #521613
+
+[rt.perl.org #44680]
+
+Hand-picked from the patch between Archive-Tar 1.46 and 1.48.
+
