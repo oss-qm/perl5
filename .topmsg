@@ -1,0 +1,12 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: fix a segmentation fault with array ties
+Closes: 525180
+
+[perl #51636]
+
+The bug triggers with Gtk2::SimpleList, as discussed in
+ http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2009-04/msg00368.html
+
+Upstream changes 
+ 33495 b63c7c552a2e9cf2b2c5eb492358b8567fd16179
+ 33778 90630e3c741716305d7f1da4df5eab5c1bee42cc
