@@ -77,3 +77,4 @@ fixes/pod-nitpicks
 fixes/perldoc-see-also
 fixes/h2ph-warnings
 fixes/tied-array-crash
+fixes/archive-tar-error-reporting
