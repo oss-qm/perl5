@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix use of -section in Pod::Usage and =over,=back
+Closes: 519785
+
+[rt.cpan.org #41136]
+Fixed in Pod::Parser 1.36
+
