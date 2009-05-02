@@ -79,3 +79,4 @@ fixes/h2ph-warnings
 fixes/tied-array-crash
 fixes/archive-tar-error-reporting
 fixes/pod2usage-formatting
+fixes/archive-tar-wrong-checksum

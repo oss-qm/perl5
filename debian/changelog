@@ -11,6 +11,8 @@ perl (5.10.0-21) UNRELEASED; urgency=low
   * Improve Archive::Tar error reporting on short corrupted archives.
     (Closes: #521613)
   * Fix use of -section in Pod::Usage and =over, =back. (Closes: #519785)
+  * Archive::Tar now validates archives created by SunOS and HP-UX tar.
+    (Closes: #516472)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 23:50:55 +0300
 
