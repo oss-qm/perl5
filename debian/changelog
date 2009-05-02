@@ -10,6 +10,7 @@ perl (5.10.0-21) UNRELEASED; urgency=low
   * Fix a segmentation fault with array ties. (Closes: #525180)
   * Improve Archive::Tar error reporting on short corrupted archives.
     (Closes: #521613)
+  * Fix use of -section in Pod::Usage and =over, =back. (Closes: #519785)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 23:50:55 +0300
 
