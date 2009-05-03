@@ -1,0 +1,40 @@
+Subject: Support GNU/Hurd and GNU/kFreeBSD in Module::Build and ExtUtils::CBuilder. (Closes: #480385, #480375)
+
+Dual-lived modules, fixed upstream but still unreleased on the CPAN side.
+
+[rt.cpan.org #35780] for Module::Build
+[rt.cpan.org #35782] for ExtUtils::CBuilder
+
+---
+ lib/ExtUtils/CBuilder.pm |    2 ++
+ lib/Module/Build.pm      |    2 ++
+ 2 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/lib/ExtUtils/CBuilder.pm b/lib/ExtUtils/CBuilder.pm
+index fae01b1..615901f 100644
+--- a/lib/ExtUtils/CBuilder.pm
++++ b/lib/ExtUtils/CBuilder.pm
+@@ -36,6 +36,8 @@ my %OSTYPES = qw(
+ 		 sunos     Unix
+ 		 cygwin    Unix
+ 		 os2       Unix
++		 gnukfreebsd Unix
++		 gnu       Unix
+ 		 
+ 		 dos       Windows
+ 		 MSWin32   Windows
+diff --git a/lib/Module/Build.pm b/lib/Module/Build.pm
+index 6a53ad8..d0bc4c8 100644
+--- a/lib/Module/Build.pm
++++ b/lib/Module/Build.pm
+@@ -49,6 +49,8 @@ my %OSTYPES = qw(
+ 		 cygwin    Unix
+ 		 os2       Unix
+ 		 interix   Unix
++		 gnukfreebsd Unix
++		 gnu       Unix
+ 		 
+ 		 dos       Windows
+ 		 MSWin32   Windows
+-- 
+tg: (71b2123..) fixes/kfreebsd_and_hurd_support (depends on: upstream)

@@ -1,0 +1,27 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: add a SEE ALSO section to perldoc.pod
+Closes: 444932
+
+Blead change 373b131131d48670ca1f2081fcd02b380b66f41b
+
+---
+ pod/perldoc.pod |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/pod/perldoc.pod b/pod/perldoc.pod
+index 8e27d05..3fd4ce9 100644
+--- a/pod/perldoc.pod
++++ b/pod/perldoc.pod
+@@ -222,6 +222,10 @@ Having PERLDOCDEBUG set to a positive integer will make perldoc emit
+ even more descriptive output than the C<-v> switch does -- the higher the
+ number, the more it emits.
+ 
++=head1 SEE ALSO
++
++L<perlpod>, L<Pod::Perldoc>
++
+ =head1 AUTHOR
+ 
+ Current maintainer: Sean M. Burke, <sburke@cpan.org>
+-- 
+tg: (71b2123..) fixes/perldoc-see-also (depends on: upstream)

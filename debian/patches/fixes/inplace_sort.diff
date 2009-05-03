@@ -1,0 +1,39 @@
+Subject: Fix memory corruption with in-place sorting. (Closes: #498769)
+
+[perl #54758]
+
+Fixed in bleadperl by change 33937.
+
+---
+ pp_sort.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/pp_sort.c b/pp_sort.c
+index 582b811..1d38bc3 100644
+--- a/pp_sort.c
++++ b/pp_sort.c
+@@ -1553,11 +1553,12 @@ PP(pp_sort)
+ 	max = AvFILL(av) + 1;
+ 	if (SvMAGICAL(av)) {
+ 	    MEXTEND(SP, max);
+-	    p2 = SP;
+ 	    for (i=0; i < max; i++) {
+ 		SV **svp = av_fetch(av, i, FALSE);
+ 		*SP++ = (svp) ? *svp : NULL;
+ 	    }
++	    SP--;
++	    p1 = p2 = SP - (max-1);
+ 	}
+ 	else {
+ 	    if (SvREADONLY(av))
+@@ -1713,7 +1714,7 @@ PP(pp_sort)
+ 	SvREADONLY_off(av);
+     else if (av && !sorting_av) {
+ 	/* simulate pp_aassign of tied AV */
+-	SV** const base = ORIGMARK+1;
++	SV** const base = MARK+1;
+ 	for (i=0; i < max; i++) {
+ 	    base[i] = newSVsv(base[i]);
+ 	}
+-- 
+tg: (71b2123..) fixes/inplace_sort (depends on: upstream)

@@ -1,0 +1,65 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix h2xs enum handling
+Closes: 502297
+
+Use ExtUtils::Constant::Base hashrefs to get rid of the preprocessor
+directives.
+
+Patches by Rainer Weikusat and Daniel Burr.
+
+Upstream commit GitLive-blead-912-g36d7a91.
+
+
+---
+ utils/h2xs.PL |   15 +++++++++++----
+ 1 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/utils/h2xs.PL b/utils/h2xs.PL
+index c774d62..3ce8deb 100644
+--- a/utils/h2xs.PL
++++ b/utils/h2xs.PL
+@@ -912,7 +912,7 @@ if( @path_h ){
+                 my ($key, $declared_val) = $item =~ /(\w+)\s*(?:=\s*(.*))?/;
+                 $val = defined($declared_val) && length($declared_val) ? $declared_val : 1 + $val;
+                 $seen_define{$key} = $val;
+-                $const_names{$key}++;
++                $const_names{$key} = { name => $key, macro => 1 };
+             }
+         } # while (...)
+       } # if (!defined $opt_e or $opt_e)
+@@ -1076,7 +1076,14 @@ if( ! $opt_X ){  # use XS, unless it was disabled
+     }
+   }
+ }
+-my @const_names = sort keys %const_names;
++my (@const_specs, @const_names);
++
++for (sort(keys(%const_names))) {
++    my $v = $const_names{$_};
++    
++    push(@const_specs, ref($v) ? $v : $_);
++    push(@const_names, $_);
++}
+ 
+ -d $modpmdir || mkpath([$modpmdir], 0, 0775);
+ open(PM, ">$modpmname") || die "Can't create $ext$modpname/$modpmname: $!\n";
+@@ -1465,7 +1472,7 @@ if( ! $opt_c ) {
+                    XS_FILE =>      $xsfallback,
+                    DEFAULT_TYPE => $opt_t,
+                    NAME =>         $module,
+-                   NAMES =>        \@const_names,
++                   NAMES =>        \@const_specs,
+                  );
+   print XS "#include \"$constscfname\"\n";
+ }
+@@ -1950,7 +1957,7 @@ if (!$opt_c) {
+                            XS_FILE =>      $constsxsfname,
+                            DEFAULT_TYPE => $opt_t,
+                            NAME =>         $module,
+-                           NAMES =>        \@const_names,
++                           NAMES =>        \@const_specs,
+                  );
+   print PL <<"END";
+ if  (eval {require ExtUtils::Constant; 1}) {
+-- 
+tg: (71b2123..) fixes/h2xs-enum (depends on: upstream)

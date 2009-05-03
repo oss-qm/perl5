@@ -1,0 +1,41 @@
+Subject: Disable some threads tests on m68k for now due to missing TLS.
+Closes: #495826, #517938
+
+
+---
+ ext/threads/shared/t/stress.t    |    4 ++++
+ ext/threads/shared/t/waithires.t |    4 ++++
+ 2 files changed, 8 insertions(+), 0 deletions(-)
+
+diff --git a/ext/threads/shared/t/stress.t b/ext/threads/shared/t/stress.t
+index 86a04e2..93e2311 100644
+--- a/ext/threads/shared/t/stress.t
++++ b/ext/threads/shared/t/stress.t
+@@ -15,6 +15,10 @@ BEGIN {
+         print("1..0 # Skip: Broken under HP-UX 10.20\n");
+         exit(0);
+     }
++    if ($^O eq 'linux' && $Config{archname} =~ /^m68k/) {
++        print("1..0 # Skip: no TLS on m68k yet <http://bugs.debian.org/495826>\n");
++        exit(0);
++    }
+ }
+ 
+ use ExtUtils::testlib;
+diff --git a/ext/threads/shared/t/waithires.t b/ext/threads/shared/t/waithires.t
+index 22e9c73..7b0ca7e 100644
+--- a/ext/threads/shared/t/waithires.t
++++ b/ext/threads/shared/t/waithires.t
+@@ -11,6 +11,10 @@ BEGIN {
+         print("1..0 # Skip: Perl not compiled with 'useithreads'\n");
+         exit(0);
+     }
++    if ($^O eq 'linux' && $Config{archname} =~ /^m68k/) {
++        print("1..0 # Skip: no TLS on m68k yet <http://bugs.debian.org/517938>\n");
++        exit(0);
++    }
+     eval {
+         require Time::HiRes;
+         Time::HiRes->import('time');
+-- 
+tg: (71b2123..) debian/m68k_thread_stress (depends on: upstream)

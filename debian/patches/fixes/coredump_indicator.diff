@@ -1,0 +1,29 @@
+Subject: Fix $? when dumping core. (Closes: #509041)
+
+WCOREDUMP is in <sys/wait.h>
+
+Without this, $? & 128 doesn't get set properly on some (glibc) systems
+when dumping core.
+
+---
+ perl.h |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/perl.h b/perl.h
+index e48f768..5ea6eaa 100644
+--- a/perl.h
++++ b/perl.h
+@@ -663,6 +663,11 @@ register struct op *Perl_op asm(stringify(OP_IN_REGISTER));
+ #   include <unistd.h>
+ #endif
+ 
++/* for WCOREDUMP */
++#ifdef I_SYS_WAIT
++#   include <sys/wait.h>
++#endif
++
+ #ifdef __SYMBIAN32__
+ #   undef _SC_ARG_MAX /* Symbian has _SC_ARG_MAX but no sysconf() */
+ #endif
+-- 
+tg: (71b2123..) fixes/coredump_indicator (depends on: upstream)

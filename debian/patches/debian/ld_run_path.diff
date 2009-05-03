@@ -1,0 +1,23 @@
+Subject: Remove standard libs from LD_RUN_PATH as per Debian policy.
+
+
+---
+ lib/ExtUtils/Liblist/Kid.pm |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/lib/ExtUtils/Liblist/Kid.pm b/lib/ExtUtils/Liblist/Kid.pm
+index bef182b..c1040dd 100644
+--- a/lib/ExtUtils/Liblist/Kid.pm
++++ b/lib/ExtUtils/Liblist/Kid.pm
+@@ -54,6 +54,9 @@ sub _unix_os2_ext {
+     my($pwd) = cwd(); # from Cwd.pm
+     my($found) = 0;
+ 
++    # Debian-specific: don't use LD_RUN_PATH for standard dirs
++    $ld_run_path_seen{$_}++ for qw(/lib /usr/lib /usr/X11R6/lib);
++
+     foreach $thislib (split ' ', $potential_libs){
+ 
+ 	# Handle possible linker path arguments.
+-- 
+tg: (71b2123..) debian/ld_run_path (depends on: upstream)

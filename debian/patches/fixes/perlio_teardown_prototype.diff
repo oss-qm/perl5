@@ -1,0 +1,51 @@
+Subject: Fix the PerlIO_teardown prototype to suppress a compiler warning. (Closes: #479540)
+
+Part of upstream change 33370, also in maint-5.10.
+
+---
+ perl.h    |    2 +-
+ perlio.c  |    2 +-
+ perliol.h |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/perl.h b/perl.h
+index e48f768..abcae45 100644
+--- a/perl.h
++++ b/perl.h
+@@ -3966,7 +3966,7 @@ typedef Sighandler_t Sigsave_t;
+ #endif
+ 
+ #ifdef USE_PERLIO
+-EXTERN_C void PerlIO_teardown();
++EXTERN_C void PerlIO_teardown(void);
+ # ifdef USE_ITHREADS
+ #  define PERLIO_INIT MUTEX_INIT(&PL_perlio_mutex)
+ #  define PERLIO_TERM 				\
+diff --git a/perlio.c b/perlio.c
+index 76fe225..b94acb0 100644
+--- a/perlio.c
++++ b/perlio.c
+@@ -2413,7 +2413,7 @@ PerlIO_cleanup(pTHX)
+     }
+ }
+ 
+-void PerlIO_teardown() /* Call only from PERL_SYS_TERM(). */
++void PerlIO_teardown(void) /* Call only from PERL_SYS_TERM(). */
+ {
+     dVAR;
+ #if 0
+diff --git a/perliol.h b/perliol.h
+index 756db2d..caba999 100644
+--- a/perliol.h
++++ b/perliol.h
+@@ -170,7 +170,7 @@ PERL_EXPORT_C void PerlIO_list_free(pTHX_ PerlIO_list_t *list);
+ 
+ /* PerlIO_teardown doesn't need exporting, but the EXTERN_C is needed
+  * for compiling as C++.  Must also match with what perl.h says. */
+-EXTERN_C void PerlIO_teardown();
++EXTERN_C void PerlIO_teardown(void);
+ 
+ /*--------------------------------------------------------------------------------------*/
+ /* Generic, or stub layer functions */
+-- 
+tg: (71b2123..) fixes/perlio_teardown_prototype (depends on: upstream)
