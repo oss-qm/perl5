@@ -550,12 +550,19 @@ sub _untar_bin {
                              $self->bin_tar, '-tf', '-'] :
             [$self->bin_tar, '-tf', $self->archive];
 
-        ### run the command ###
-        my $buffer = '';
-        unless( scalar run( command => $cmd,
+            ### run the command 
+            ### newer versions of 'tar' (1.21 and up) now print record size
+            ### to STDERR as well if v OR t is given (used to be both). This 
+            ### is a 'feature' according to the changelog, so we must now only
+            ### inspect STDOUT, otherwise, failures like these occur:
+            ### nntp.perl.org/group/perl.cpan.testers/2009/02/msg3230366.html
+            my $buffer  = '';
+            my @out     = run(  command => $cmd,
                             buffer  => \$buffer,
-                            verbose => $DEBUG )
-        ) {
+                                verbose => $DEBUG );
+
+            ### command was unsuccessful            
+            unless( $out[0] ) { 
             return $self->_error(loc(
                             "Error listing contents of archive '%1': %2",
                             $self->archive, $buffer ));
@@ -578,7 +585,8 @@ sub _untar_bin {
                                             \s+ [\d,.]+ \s tape \s blocks
                                         |x ? $1 : $_);
 
-                    } split $/, $buffer;
+                        ### only STDOUT, see above
+                        } map { split $/, $_ } @{$out[3]};     
 
             ### store the files that are in the archive ###
             $self->files(\@files);
