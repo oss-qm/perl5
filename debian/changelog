@@ -1,4 +1,4 @@
-perl (5.10.0-21) UNRELEASED; urgency=low
+perl (5.10.0-21) unstable; urgency=low
 
   * Make the perl package recommend make because /usr/bin/cpan uses it.
     (Closes: #293908)
@@ -16,7 +16,7 @@ perl (5.10.0-21) UNRELEASED; urgency=low
   * XS_VERSION_BOOTCHECK may break if $VERSION is a long floating point number,
     so recommend using a string instead. (Closes: #482139)
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 13 Apr 2009 23:50:55 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 03 May 2009 15:08:58 +0300
 
 perl (5.10.0-20) experimental; urgency=low
 
