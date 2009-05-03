@@ -1,0 +1,38 @@
+Subject: [SECURITY] CVE-2005-0448 revisited: File::Path::rmtree no longer allows creating of setuid files. (Closes: #286905)
+
+This vulnerability was fixed in 5.8.4-7 but re-introduced in 5.8.8-1.
+It's also present in File::Path 2.xx, up to and including 2.07 which
+has only a partial fix.
+
+---
+ lib/File/Path.pm |    8 +++-----
+ 1 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/lib/File/Path.pm b/lib/File/Path.pm
+index 19b5750..5820ebe 100644
+--- a/lib/File/Path.pm
++++ b/lib/File/Path.pm
+@@ -316,10 +316,8 @@ sub _rmtree {
+                     print "skipped $root\n" if $arg->{verbose};
+                     next ROOT_DIR;
+                 }
+-                if (!chmod $perm | 0700, $root) {
+-                    if ($Force_Writeable) {
+-                        _error($arg, "cannot make directory writeable", $canon);
+-                    }
++                if ($Force_Writeable && !chmod $perm | 0700, $root) {
++                    _error($arg, "cannot make directory writeable", $canon);
+                 }
+                 print "rmdir $root\n" if $arg->{verbose};
+                 if (rmdir $root) {
+@@ -328,7 +326,7 @@ sub _rmtree {
+                 }
+                 else {
+                     _error($arg, "cannot remove directory", $canon);
+-                    if (!chmod($perm, ($Is_VMS ? VMS::Filespec::fileify($root) : $root))
++                    if ($Force_Writeable && !chmod($perm, ($Is_VMS ? VMS::Filespec::fileify($root) : $root))
+                     ) {
+                         _error($arg, sprintf("cannot restore permissions to 0%o",$perm), $canon);
+                     }
+-- 
+tg: (71b2123..) fixes/file_path_rmtree_setuid (depends on: upstream)

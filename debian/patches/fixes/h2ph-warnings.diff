@@ -1,0 +1,133 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Squelch 'Constant subroutine ... undefined' warnings from .ph files
+Closes: 379757
+
+Upstream commits
+ GitLive-blead-953-gc0cc52e 
+ GitLive-blead-952-gc1a2df7
+
+---
+ lib/h2ph.t     |   10 +++++++++-
+ t/lib/h2ph.h   |    6 ++++++
+ t/lib/h2ph.pht |   24 ++++++++++++++----------
+ utils/h2ph.PL  |    2 +-
+ 4 files changed, 30 insertions(+), 12 deletions(-)
+
+diff --git a/lib/h2ph.t b/lib/h2ph.t
+index 7b339b3..e303406 100755
+--- a/lib/h2ph.t
++++ b/lib/h2ph.t
+@@ -15,7 +15,7 @@ if (!(-e $extracted_program)) {
+     exit 0;
+ }
+ 
+-print "1..2\n";
++print "1..4\n";
+ 
+ # quickly compare two text files
+ sub txt_compare {
+@@ -32,6 +32,14 @@ print(($ok == 0 ? "" : "not "), "ok 1\n");
+ $ok = txt_compare("lib/h2ph.ph", "lib/h2ph.pht");
+ print(($ok == 0 ? "" : "not "), "ok 2\n");
+     
++# does the output compile?
++$ok = system($^X, "-I../lib", "lib/h2ph.pht");
++print(($ok == 0 ? "" : "not "), "ok 3\n");
++
++# is the output warning free?
++$ok = system($^X, "-w", "-I../lib", "-e", '$SIG{__WARN__} = sub { die $_[0] }; require "lib/h2ph.pht"');
++print(($ok == 0 ? "" : "not "), "ok 4\n");
++
+ # cleanup - should this be in an END block?
+ unlink("lib/h2ph.ph");
+ unlink("_h2ph_pre.ph");
+diff --git a/t/lib/h2ph.h b/t/lib/h2ph.h
+index 495789a..78429ca 100644
+--- a/t/lib/h2ph.h
++++ b/t/lib/h2ph.h
+@@ -26,6 +26,10 @@
+ #undef MAX
+ #define MAX(a,b) ((a) > (b) ? (a) : (b))
+ 
++/* Test #undef'ining an existing constant function */
++#define NOTTRUE 0
++#undef NOTTRUE
++
+ /* Test #ifdef */
+ #ifdef __SOME_UNIMPORTANT_PROPERTY
+ #define MIN(a,b) ((a) < (b) ? (a) : (b))
+@@ -68,9 +72,11 @@ function Tru64_Pascal(n: Integer): Integer;
+  *  with `use lib qw(/opt/perl5/lib/site_perl/i586-linux/linux);' or whatever
+  *  your equivalent is...
+  */
++#if 0
+ #include <sys/socket.h>
+ #import "sys/ioctl.h"
+ #include_next <sys/fcntl.h>
++#endif
+ 
+ /* typedefs should be ignored */
+ typedef struct a_struct {
+diff --git a/t/lib/h2ph.pht b/t/lib/h2ph.pht
+index 145e682..3723fca 100644
+--- a/t/lib/h2ph.pht
++++ b/t/lib/h2ph.pht
+@@ -1,6 +1,6 @@
+ require '_h2ph_pre.ph';
+ 
+-no warnings 'redefine';
++no warnings qw(redefine misc);
+ 
+ unless(defined(&SQUARE)) {
+     sub SQUARE {
+@@ -22,6 +22,8 @@ unless(defined(&_H2PH_H_)) {
+         my($a,$b) = @_;
+ 	    eval q((($a) > ($b) ? ($a) : ($b)));
+     }' unless defined(&MAX);
++    eval 'sub NOTTRUE () {0;}' unless defined(&NOTTRUE);
++    undef(&NOTTRUE) if defined(&NOTTRUE);
+     if(defined(&__SOME_UNIMPORTANT_PROPERTY)) {
+ 	eval 'sub MIN {
+ 	    my($a,$b) = @_;
+@@ -47,15 +49,17 @@ unless(defined(&_H2PH_H_)) {
+     } else {
+ 	eval 'sub WHATEVER () {1000;}' unless defined(&WHATEVER);
+     }
+-    require 'sys/socket.ph';
+-    require 'sys/ioctl.ph';
+-    eval {
+-	my(@REM);
+-	my(%INCD) = map { $INC{$_} => 1 } (grep { $_ eq "sys/fcntl.ph" } keys(%INC));
+-	@REM = map { "$_/sys/fcntl.ph" } (grep { not exists($INCD{"$_/sys/fcntl.ph"}) and -f "$_/sys/fcntl.ph" } @INC);
+-	require "$REM[0]" if @REM;
+-    };
+-    warn($@) if $@;
++    if(0) {
++	require 'sys/socket.ph';
++	require 'sys/ioctl.ph';
++	eval {
++	    my(@REM);
++	    my(%INCD) = map { $INC{$_} => 1 } (grep { $_ eq "sys/fcntl.ph" } keys(%INC));
++	    @REM = map { "$_/sys/fcntl.ph" } (grep { not exists($INCD{"$_/sys/fcntl.ph"}) and -f "$_/sys/fcntl.ph" } @INC);
++	    require "$REM[0]" if @REM;
++	};
++	warn($@) if $@;
++    }
+     eval("sub sun () { 0; }") unless defined(&sun);
+     eval("sub mon () { 1; }") unless defined(&mon);
+     eval("sub tue () { 2; }") unless defined(&tue);
+diff --git a/utils/h2ph.PL b/utils/h2ph.PL
+index 0bfea18..ac0b5a6 100644
+--- a/utils/h2ph.PL
++++ b/utils/h2ph.PL
+@@ -123,7 +123,7 @@ while (defined (my $file = next_file())) {
+ 
+     print OUT
+         "require '_h2ph_pre.ph';\n\n",
+-        "no warnings 'redefine';\n\n";
++        "no warnings qw(redefine misc);\n\n";
+ 
+     while (defined (local $_ = next_line($file))) {
+ 	if (s/^\s*\#\s*//) {
+-- 
+tg: (71b2123..) fixes/h2ph-warnings (depends on: upstream)
