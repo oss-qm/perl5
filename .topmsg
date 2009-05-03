@@ -1,0 +1,10 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Document that XS_VERSION_BOOTCHECK may break if $VERSION is a long enough NV
+Closes: 482139
+
+Using a long floating point number as $VERSION can make
+XS_VERSION_BOOTCHECK fail because of a loss of precision in the
+stringification.
+
+Upstream commit b017ed238008af06e2764e644dee23e72b0847ec
+
