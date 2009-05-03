@@ -1,6 +1,7 @@
 perl (5.10.0-22) UNRELEASED; urgency=low
 
-  * 
+  * Make Archive::Extract work with recent versions of GNU tar.
+    (Closes: #526822)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 03 May 2009 21:54:16 +0300
 
