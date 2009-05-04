@@ -99,6 +99,7 @@ install-stamp: build-stamp
 
 	# Verify that the headers are usable
 	for ph in `< $(srcdir)/debian/headers sed -e 's/\.h$$/.ph/'`; do \
+		[ ! -f $(srcdir)/$(lib)/$$ph ] || \
 		$(srcdir)/perl.static -I $(srcdir)/$(lib) -e \
 			"print '"$$ph": '; require '"$$ph"'; print \"ok\n\";" \
 				|| exit 1; \
