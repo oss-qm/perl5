@@ -154,7 +154,8 @@ Description: Core Perl modules
  required if the `perl' package is installed.
 
 Package: perl-debug
-Priority: optional
+Section: debug
+Priority: extra
 Architecture: any
 Depends: perl (= ${binary:Version}), ${shlibs:Depends}
 Description: Debug-enabled Perl interpreter
