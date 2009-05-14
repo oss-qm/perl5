@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: fix a memory leak with the map operator
+Closes: 528332
+
+[perl #53038]
+maint-5.10 commit 8293631c04365e5d81c3bb948898f139d2f340ff
+
