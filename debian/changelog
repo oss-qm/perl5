@@ -4,6 +4,7 @@ perl (5.10.0-23) UNRELEASED; urgency=low
     doesn't have <asm/termios.h>. (Closes: #526974)
   * Change the perl-debug package section and priority to debug/extra.
   * POD fix for Module::Build::Cookbook.
+  * Fix a memory leak with the map operator. (Closes: #528332)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 04 May 2009 21:54:18 +0300
 

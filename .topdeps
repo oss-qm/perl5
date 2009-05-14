@@ -82,3 +82,4 @@ fixes/pod2usage-formatting
 fixes/archive-tar-wrong-checksum
 fixes/doc-xs-versioncheck
 fixes/archive-extract-tar
+fixes/map-memleak
