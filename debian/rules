@@ -100,10 +100,11 @@ install-stamp: build-stamp
 	# Verify that the headers are usable
 	for ph in `< $(srcdir)/debian/headers sed -e 's/\.h$$/.ph/'`; do \
 		if [ ! -f $(srcdir)/$(lib)/$$ph ]; then \
-			echo "$$ph: missing"; missing; fi; \
+			echo "$$ph: missing"; else \
 		$(srcdir)/perl.static -I $(srcdir)/$(lib) -e \
 			"print '"$$ph": '; require '"$$ph"'; print \"ok\n\";" \
 				|| exit 1; \
+		fi; \
 	done
 
 	# remove some cruft
