@@ -13,7 +13,7 @@ local  @ENV{@makefile_keys};
 delete @ENV{@makefile_keys};
 
 my @makefile_types = qw(small passthrough traditional);
-my $tests_per_type = 14;
+my $tests_per_type = 17;
 if ( $Config{make} && find_in_path($Config{make}) ) {
     plan tests => 38 + @makefile_types*$tests_per_type*2;
 } else {
