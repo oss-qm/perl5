@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [PATCH] [CVE-2009-1391] Buffer overflow in Compress::Raw::Zlib
+Closes: 532736
+
+Fix cherry-picked from upstream 2.017.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2009-1391
