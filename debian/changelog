@@ -1,11 +1,11 @@
-perl (5.10.0-23) UNRELEASED; urgency=low
+perl (5.10.0-23) unstable; urgency=high
 
   * Don't try to check nonexistent .ph files: the kFreeBSD port
     doesn't have <asm/termios.h>. (Closes: #526974)
   * [SECURITY] CVE-2009-1391: Fix a buffer overflow in Compress::Raw::Zlib.
     (Closes: #532736)
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 04 May 2009 21:54:18 +0300
+ -- Niko Tyni <ntyni@debian.org>  Fri, 12 Jun 2009 21:26:18 +0300
 
 perl (5.10.0-22) unstable; urgency=low
 
