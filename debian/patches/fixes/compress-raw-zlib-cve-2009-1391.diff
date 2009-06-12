@@ -1,0 +1,27 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [PATCH] [CVE-2009-1391] Buffer overflow in Compress::Raw::Zlib
+Closes: 532736
+
+Fix cherry-picked from upstream 2.017.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2009-1391
+
+---
+ ext/Compress/Raw/Zlib/Zlib.xs |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/ext/Compress/Raw/Zlib/Zlib.xs b/ext/Compress/Raw/Zlib/Zlib.xs
+index b100f4c..a80c581 100644
+--- a/ext/Compress/Raw/Zlib/Zlib.xs
++++ b/ext/Compress/Raw/Zlib/Zlib.xs
+@@ -1295,7 +1295,7 @@ inflate (s, buf, output, eof=FALSE)
+ 
+         if (s->stream.avail_out == 0 ) {
+ 	    /* out of space in the output buffer so make it bigger */
+-            Sv_Grow(output, SvLEN(output) + bufinc) ;
++            Sv_Grow(output, SvLEN(output) + bufinc +1) ;
+             cur_length += increment ;
+             s->stream.next_out = (Bytef*) SvPVbyte_nolen(output) + cur_length ;
+             increment = bufinc ;
+-- 
+tg: (71b2123..) fixes/compress-raw-zlib-cve-2009-1391 (depends on: upstream)
