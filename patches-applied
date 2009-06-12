@@ -38,6 +38,7 @@ debian/patches/36_fix_file_temp_cleanup
 debian/patches/37_fix_coredump_indicator
 debian/patches/38_fix_weaken_memleak
 debian/patches/39_fix_archive_tar_symlink_unpack
+debian/patches/40_compress_raw_zlib_cve_2009_1391
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
