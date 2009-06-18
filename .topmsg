@@ -1,0 +1,9 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [PATCH] fixes/kfreebsd_cppsymbols
+Closes: 533098
+
+This is needed at least by h2ph, otherwise the generated .ph files
+choke on missing __LONG_MAX__ and similar definitions.
+
+Upstream commit 3b910a06633f63976a6da223b122193040fbe96d
+
