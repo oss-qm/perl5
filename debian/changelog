@@ -3,6 +3,8 @@ perl (5.10.0-24) UNRELEASED; urgency=low
   * Change the perl-debug package section and priority to debug/extra.
   * POD fix for Module::Build::Cookbook.
   * Fix a memory leak with the map operator. (Closes: #528332)
+  * Add gcc predefined macros to $Config{cppsymbols} on GNU/kFreeBSD.
+    (Closes: #533098) 
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 12 Jun 2009 21:31:17 +0300
 
