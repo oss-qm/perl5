@@ -1,6 +1,6 @@
 Subject: Provide a sensible INSTALLDIRS default for modules installed from CPAN.
 
 Some modules which are included in core set INSTALLDIRS => 'perl'
-explicitly in Makefile.PL.  This makes sense for the normal @INC
+explicitly in Makefile.PL or Build.PL.  This makes sense for the normal @INC
 ordering, but not ours.
 
