@@ -5,10 +5,8 @@ perl (5.10.0-24) UNRELEASED; urgency=low
   * Fix a memory leak with the map operator. (Closes: #528332)
   * Add gcc predefined macros to $Config{cppsymbols} on GNU/kFreeBSD.
     (Closes: #533098) 
-  * Change the default CPAN Build.PL flags to '--installdirs site',
-    matching the Makefile.PL ones. (See #533707)
-  * Configure CPANPLUS to use the site directories by default.
-    (Closes: #533707)
+  * Fix CPAN and CPANPLUS configuration to consistently use the
+    site directories with both Build.PL and Makefile.PL. (Closes: #533707)
   * Save local versions of CPANPLUS::Config::System into /etc/perl.
     (See #533707)
 
