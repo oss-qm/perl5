@@ -276,6 +276,7 @@ Saves the configuration to the package name you provided.
 If this package is not C<CPANPLUS::Config::System>, it will
 be saved in your C<.cpanplus> directory, otherwise it will
 be attempted to be saved in the system wide directory.
+(On Debian systems, this system wide directory is /etc/perl.)
 
 If no argument is provided, it will default to your personal
 config.
