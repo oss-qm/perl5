@@ -85,3 +85,4 @@ fixes/archive-extract-tar
 fixes/compress-raw-zlib-cve-2009-1391
 fixes/map-memleak
 fixes/kfreebsd_cppsymbols
+debian/cpanplus_definstalldirs

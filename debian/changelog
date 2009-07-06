@@ -7,6 +7,8 @@ perl (5.10.0-24) UNRELEASED; urgency=low
     (Closes: #533098) 
   * Change the default CPAN Build.PL flags to '--installdirs site',
     matching the Makefile.PL ones. (See #533707)
+  * Configure CPANPLUS to use the site directories by default.
+    (Closes: #533707)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 12 Jun 2009 21:31:17 +0300
 
