@@ -1,0 +1,9 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Configure CPANPLUS to use the site directories by default.
+Closes: 533707
+    
+The core modules usually default to INSTALLDIRS=perl (ExtUtils::MakeMaker)
+or installdirs=core (Module::Build), so we need to explicitly ask for
+the site destination to get upgraded versions into /usr/local.
+
+See also the sister patch, debian/cpan_definstalldirs .
