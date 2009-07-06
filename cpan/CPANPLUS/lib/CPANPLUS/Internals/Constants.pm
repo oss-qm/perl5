@@ -199,6 +199,9 @@ use constant CONFIG_USER_FILE    => sub {
                                     ) . '.pm';
                                 };
 use constant CONFIG_SYSTEM_FILE  => sub {
+                                    # Debian-specific shortcut
+                                    return '/etc/perl/CPANPLUS/Config/System.pm';
+                                    
                                     require CPANPLUS::Internals;
                                     require File::Basename;
                                     my $dir = File::Basename::dirname(
