@@ -145,15 +145,11 @@ Defaults to ~/.cpanplus.
 =item buildflags
 
 Any flags to be passed to 'perl Build.PL'. See C<perldoc Module::Build>
-for details.
-
-As a Debian-specific modification, this defaults to "--installdirs site"
-so that upgraded core modules will be installed in /usr/local instead of
-overwriting the packaged ones in /usr.
+for details. Defaults to an empty string.
 
 =cut
 
-        $Conf->{'conf'}->{'buildflags'} = '--installdirs site';
+        $Conf->{'conf'}->{'buildflags'} = '';
 
 =item cpantest
 
@@ -262,15 +258,11 @@ when invoked. Defaults to an empty string.
 =item makemakerflags
 
 A string holding flags that will be passed to C<perl Makefile.PL>
-when invoked.
-
-As a Debian-specific modification, this defaults to "INSTALLDIRS=site"
-so that upgraded core modules will be installed in /usr/local instead of
-overwriting the packaged ones in /usr.
+when invoked. Defaults to an empty string.
 
 =cut
 
-        $Conf->{'conf'}->{'makemakerflags'} = 'INSTALLDIRS=site';
+        $Conf->{'conf'}->{'makemakerflags'} = '';
 
 =item md5
 
