@@ -1,0 +1,133 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Document PERL_SYS_* macros.
+Closes: #522099
+
+As seen in #522099, the PERL_SYS_* macros need better documentation.
+
+Upstream commits:
+ eb53357261107ec40e8c517666330fc71276b6fb 
+ 31f6f5aa00011d88da3c64e4e1cb9629c8334dda
+
+---
+ perl.h            |   19 +++++++++++++++++++
+ pod/perlapi.pod   |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ pod/perlembed.pod |   19 ++++++++++++++-----
+ 3 files changed, 77 insertions(+), 5 deletions(-)
+
+diff --git a/perl.h b/perl.h
+index e48f768..4e52d1b 100644
+--- a/perl.h
++++ b/perl.h
+@@ -2652,6 +2652,25 @@ typedef struct clone_params CLONE_PARAMS;
+ #  define PERL_SYS_INIT3_BODY(argvp,argcp,envp) PERL_SYS_INIT_BODY(argvp,argcp)
+ #endif
+ 
++/*
++=for apidoc Am|void|PERL_SYS_INIT|int argc|char** argv
++Provides system-specific tune up of the C runtime environment necessary to
++run Perl interpreters. This should be called only once, before creating
++any Perl interpreters.
++
++=for apidoc Am|void|PERL_SYS_INIT3|int argc|char** argv|char** env
++Provides system-specific tune up of the C runtime environment necessary to
++run Perl interpreters. This should be called only once, before creating
++any Perl interpreters.
++
++=for apidoc Am|void|PERL_SYS_TERM|
++Provides system-specific clean up of the C runtime environment after
++running Perl interpreters. This should be called only once, after
++freeing any remaining Perl interpreters.
++
++=cut
++ */
++
+ #define PERL_SYS_INIT(argc, argv)	Perl_sys_init(argc, argv)
+ #define PERL_SYS_INIT3(argc, argv, env)	Perl_sys_init3(argc, argv, env)
+ #define PERL_SYS_TERM()			Perl_sys_term()
+diff --git a/pod/perlapi.pod b/pod/perlapi.pod
+index ab0463f..cb6f5ed 100644
+--- a/pod/perlapi.pod
++++ b/pod/perlapi.pod
+@@ -1193,6 +1193,50 @@ Found in file mathoms.c
+ 
+ =back
+ 
++=head1 Functions in file perl.h
++
++
++=over 8
++
++=item PERL_SYS_INIT
++X<PERL_SYS_INIT>
++
++Provides system-specific tune up of the C runtime environment necessary to
++run Perl interpreters. This should be called only once, before creating
++any Perl interpreters.
++
++	void	PERL_SYS_INIT(int argc, char** argv)
++
++=for hackers
++Found in file perl.h
++
++=item PERL_SYS_INIT3
++X<PERL_SYS_INIT3>
++
++Provides system-specific tune up of the C runtime environment necessary to
++run Perl interpreters. This should be called only once, before creating
++any Perl interpreters.
++
++	void	PERL_SYS_INIT3(int argc, char** argv, char** env)
++
++=for hackers
++Found in file perl.h
++
++=item PERL_SYS_TERM
++X<PERL_SYS_TERM>
++
++Provides system-specific clean up of the C runtime environment after
++running Perl interpreters. This should be called only once, after
++freeing any remaining Perl interpreters.
++
++	void	PERL_SYS_TERM()
++
++=for hackers
++Found in file perl.h
++
++
++=back
++
+ =head1 Functions in file pp_ctl.c
+ 
+ 
+diff --git a/pod/perlembed.pod b/pod/perlembed.pod
+index f4b13a3..98471c6 100644
+--- a/pod/perlembed.pod
++++ b/pod/perlembed.pod
+@@ -196,11 +196,20 @@ version of I<miniperlmain.c> containing the essentials of embedding:
+ 
+ Notice that we don't use the C<env> pointer.  Normally handed to
+ C<perl_parse> as its final argument, C<env> here is replaced by
+-C<NULL>, which means that the current environment will be used.  The macros
+-PERL_SYS_INIT3() and PERL_SYS_TERM() provide system-specific tune up 
+-of the C runtime environment necessary to run Perl interpreters; since
+-PERL_SYS_INIT3() may change C<env>, it may be more appropriate to provide
+-C<env> as an argument to perl_parse().
++C<NULL>, which means that the current environment will be used.
++
++The macros PERL_SYS_INIT3() and PERL_SYS_TERM() provide system-specific
++tune up of the C runtime environment necessary to run Perl interpreters;
++they should only be called once regardless of how many interpreters you
++create or destroy. Call PERL_SYS_INIT3() before you create your first
++interpreter, and PERL_SYS_TERM() after you free your last interpreter.
++
++Since PERL_SYS_INIT3() may change C<env>, it may be more appropriate to
++provide C<env> as an argument to perl_parse().
++
++Also notice that no matter what arguments you pass to perl_parse(),
++PERL_SYS_INIT3() must be invoked on the C main() argc, argv and env and
++only once.
+ 
+ Now compile this program (I'll call it I<interp.c>) into an executable:
+ 
+-- 
+tg: (71b2123..) fixes/perlembed-docs (depends on: upstream)

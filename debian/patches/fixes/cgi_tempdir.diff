@@ -1,0 +1,27 @@
+Subject: Fix tainted usage of $ENV{TMPDIR} as an sprintf format in CGI.pm. (Closes: #494679)
+
+[rt.perl.org #50322]
+Bleadperl change 33143.
+
+Note that the inconsistent usage of backslashes doesn't matter, as
+the whole thing is eval'd in.
+
+---
+ lib/CGI.pm |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/CGI.pm b/lib/CGI.pm
+index 0d5ef00..8f7d016 100644
+--- a/lib/CGI.pm
++++ b/lib/CGI.pm
+@@ -4032,7 +4032,7 @@ sub new {
+     my $filename;
+     find_tempdir() unless -w $TMPDIRECTORY;
+     for (my $i = 0; $i < $MAXTRIES; $i++) {
+-	last if ! -f ($filename = sprintf("${TMPDIRECTORY}${SL}CGItemp%d",$sequence++));
++	last if ! -f ($filename = sprintf("\%s${SL}CGItemp%d",$TMPDIRECTORY,$sequence++));
+     }
+     # check that it is a more-or-less valid filename
+     return unless $filename =~ m!^([a-zA-Z0-9_ \'\":/.\$\\-]+)$!;
+-- 
+tg: (71b2123..) fixes/cgi_tempdir (depends on: upstream)

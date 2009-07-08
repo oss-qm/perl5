@@ -1,0 +1,39 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Archive::Tar now validates archives created by SunOS and HP-UX tar.
+Closes: 516472
+    
+[rt.cpan.org #43513]
+ 
+Hand-picked from the patch between Archive-Tar 1.44 and 1.46.
+
+Original patch from Nicolas FRANCOIS (Nekral).
+
+Upstream test suite change not included because it contains a binary file.
+  
+
+---
+ lib/Archive/Tar/File.pm |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
+
+diff --git a/lib/Archive/Tar/File.pm b/lib/Archive/Tar/File.pm
+index 8c96577..450579f 100644
+--- a/lib/Archive/Tar/File.pm
++++ b/lib/Archive/Tar/File.pm
+@@ -445,7 +445,14 @@ sub validate {
+ 
+     ### don't know why this one is different from the one we /write/ ###
+     substr ($raw, 148, 8) = "        ";
+-	return unpack ("%16C*", $raw) == $self->chksum ? 1 : 0;
++
++    ### bug #43513: [PATCH] Accept wrong checksums from SunOS and HP-UX tar
++    ### like GNU tar does. See here for details:
++    ### http://www.gnu.org/software/tar/manual/tar.html#SEC139
++    ### so we do both a signed AND unsigned validate. if one succeeds, that's
++    ### good enough
++	return (   (unpack ("%16C*", $raw) == $self->chksum)
++	        or (unpack ("%16c*", $raw) == $self->chksum)) ? 1 : 0;
+ }
+ 
+ =head2 has_content
+-- 
+tg: (71b2123..) fixes/archive-tar-wrong-checksum (depends on: upstream)

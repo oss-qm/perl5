@@ -1,0 +1,69 @@
+Subject: Use gdbm for ODBM_File/NDBM_File. 
+
+The compatability header is named gdbm-ndbm.h on debian machines.
+
+Explicitly link against -lgdbm_compat.
+
+
+---
+ Configure                    |    2 +-
+ ext/NDBM_File/NDBM_File.xs   |    2 +-
+ ext/NDBM_File/hints/linux.pl |    5 +----
+ ext/ODBM_File/hints/linux.pl |    8 +-------
+ 4 files changed, 4 insertions(+), 13 deletions(-)
+
+diff --git a/Configure b/Configure
+index 77c8ee2..ef46d51 100755
+--- a/Configure
++++ b/Configure
+@@ -20560,7 +20560,7 @@ set mntent.h i_mntent
+ eval $inhdr
+ 
+ : see if ndbm.h is available
+-set ndbm.h t_ndbm
++set gdbm-ndbm.h t_ndbm
+ eval $inhdr
+ 
+ case "$t_ndbm" in
+diff --git a/ext/NDBM_File/NDBM_File.xs b/ext/NDBM_File/NDBM_File.xs
+index 53403a5..6e35121 100644
+--- a/ext/NDBM_File/NDBM_File.xs
++++ b/ext/NDBM_File/NDBM_File.xs
+@@ -1,7 +1,7 @@
+ #include "EXTERN.h"
+ #include "perl.h"
+ #include "XSUB.h"
+-#include <ndbm.h>
++#include <gdbm-ndbm.h>
+ 
+ typedef struct {
+ 	DBM * 	dbp ;
+diff --git a/ext/NDBM_File/hints/linux.pl b/ext/NDBM_File/hints/linux.pl
+index 174f913..652b75b 100644
+--- a/ext/NDBM_File/hints/linux.pl
++++ b/ext/NDBM_File/hints/linux.pl
+@@ -2,7 +2,4 @@
+ # Prefer gdbm to avoid the broken ndbm in some distributions
+ # (no null key support)
+ # Jonathan Stowe <gellyfish@gellyfish.com>
+-use Config;
+-use ExtUtils::Liblist;
+-($self->{LIBS}) = ExtUtils::Liblist->ext('-lgdbm -lgdbm_compat')
+-	if $Config{libs} =~ /(?:^|\s)-lgdbm(?:\s|$)/;
++$self->{LIBS} = ['-lgdbm_compat'];
+diff --git a/ext/ODBM_File/hints/linux.pl b/ext/ODBM_File/hints/linux.pl
+index f8ca492..2cf6b02 100644
+--- a/ext/ODBM_File/hints/linux.pl
++++ b/ext/ODBM_File/hints/linux.pl
+@@ -1,8 +1,2 @@
+ # uses GDBM dbm compatibility feature - at least on SuSE 8.0
+-$self->{LIBS} = ['-lgdbm'];
+-
+-# Debian/Ubuntu have /usr/lib/libgdbm_compat.so.3* but not this file,
+-# so linking may fail
+-if (-e '/usr/lib/libgdbm_compat.so' or -e '/usr/lib64/libgdbm_compat.so') {
+-    $self->{LIBS}->[0] .= ' -lgdbm_compat';
+-}
++$self->{LIBS} = ['-lgdbm_compat'];
+-- 
+tg: (71b2123..) debian/use_gdbm (depends on: upstream)

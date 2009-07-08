@@ -1,0 +1,27 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix use of -section in Pod::Usage and =over,=back
+Closes: 519785
+
+[rt.cpan.org #41136]
+Fixed in Pod::Parser 1.36
+
+
+---
+ lib/Pod/Usage.pm |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/Pod/Usage.pm b/lib/Pod/Usage.pm
+index cbb55c5..56958c0 100644
+--- a/lib/Pod/Usage.pm
++++ b/lib/Pod/Usage.pm
+@@ -631,7 +631,7 @@ sub _handle_element_end {
+             $$self{PENDING}[-1][1] = $_;
+         }
+     }
+-    if ($$self{USAGE_SKIPPING}) {
++    if ($$self{USAGE_SKIPPING} && $element !~ m/^over-/) {
+         pop @{ $$self{PENDING} };
+     } else {
+         $self->SUPER::_handle_element_end($element);
+-- 
+tg: (71b2123..) fixes/pod2usage-formatting (depends on: upstream)

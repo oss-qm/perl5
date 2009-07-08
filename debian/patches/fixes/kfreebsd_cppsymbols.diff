@@ -1,0 +1,29 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [PATCH] fixes/kfreebsd_cppsymbols
+Closes: 533098
+
+This is needed at least by h2ph, otherwise the generated .ph files
+choke on missing __LONG_MAX__ and similar definitions.
+
+Upstream commit 3b910a06633f63976a6da223b122193040fbe96d
+
+
+---
+ Configure |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Configure b/Configure
+index 77c8ee2..30ef72e 100755
+--- a/Configure
++++ b/Configure
+@@ -20768,7 +20768,7 @@ $eunicefix Cppsym.try
+ ./Cppsym < Cppsym.know > Cppsym.true
+ : Add in any linux cpp "predefined macros":
+ case "$osname::$gccversion" in
+-  *linux*::*.*)
++  *linux*::*.*|*gnukfreebsd*::*.*)
+     tHdrH=_tmpHdr
+     rm -f $tHdrH'.h' $tHdrH
+     touch $tHdrH'.h'
+-- 
+tg: (71b2123..) fixes/kfreebsd_cppsymbols (depends on: upstream)

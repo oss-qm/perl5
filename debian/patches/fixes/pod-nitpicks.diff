@@ -1,0 +1,53 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: fix pod errors
+
+POD formatting errors already fixed upstream.
+
+Signed-off-by: Niko Tyni <ntyni@debian.org>
+
+---
+ ext/Encode/Encode.pm         |    2 +-
+ lib/Module/Build/Cookbook.pm |    2 +-
+ lib/Object/Accessor.pm       |    1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ext/Encode/Encode.pm b/ext/Encode/Encode.pm
+index 97a5a6f..98a8a7f 100644
+--- a/ext/Encode/Encode.pm
++++ b/ext/Encode/Encode.pm
+@@ -734,7 +734,7 @@ you're not interested in this, then bitwise-or the bitmask with it.
+ 
+ =back
+ 
+-=Head2 coderef for CHECK
++=head2 coderef for CHECK
+ 
+ As of Encode 2.12 CHECK can also be a code reference which takes the
+ ord value of unmapped caharacter as an argument and returns a string
+diff --git a/lib/Module/Build/Cookbook.pm b/lib/Module/Build/Cookbook.pm
+index ba721b9..85b7c06 100644
+--- a/lib/Module/Build/Cookbook.pm
++++ b/lib/Module/Build/Cookbook.pm
+@@ -392,7 +392,7 @@ testing, do I generate a test file.
+ I'm sure I could not have handled this complexity with EU::MM, but it
+ was very easy to do with M::B.
+ 
+-=back 4
++=back
+ 
+ 
+ =head2 Modifying an action
+diff --git a/lib/Object/Accessor.pm b/lib/Object/Accessor.pm
+index dda006a..5ff4b87 100644
+--- a/lib/Object/Accessor.pm
++++ b/lib/Object/Accessor.pm
+@@ -621,6 +621,7 @@ under C<lvalue> conditions.
+ 
+ See C<perldoc perlsub> for details.
+ 
++=back
+ 
+ =cut
+ 
+-- 
+tg: (71b2123..) fixes/pod-nitpicks (depends on: upstream)

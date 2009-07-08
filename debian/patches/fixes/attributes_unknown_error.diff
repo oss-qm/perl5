@@ -1,0 +1,67 @@
+Subject: Fix 'Unknown error' messages with attribute.pm. (Closes: #488088)
+
+[perl #49472]
+blead change 33265
+
+From: Dave Mitchell <davem@fdisolutions.com>
+Date: Sat, 9 Feb 2008 14:56:23 +0000
+Subject: [PATCH] [perl #49472] Attributes + Unkown Error
+ An errored attribute sub still processes the attributes,
+ which require's attribute.pm, so make sure the error state is
+ passed to the new require
+
+p4raw-id: //depot/perl@33265
+
+---
+ t/comp/require.t |   16 +++++++++++++++-
+ toke.c           |    1 +
+ 2 files changed, 16 insertions(+), 1 deletions(-)
+
+diff --git a/t/comp/require.t b/t/comp/require.t
+index af5e4b2..0746b3b 100755
+--- a/t/comp/require.t
++++ b/t/comp/require.t
+@@ -15,7 +15,7 @@ krunch.pm krunch.pmc whap.pm whap.pmc);
+ 
+ my $Is_EBCDIC = (ord('A') == 193) ? 1 : 0;
+ my $Is_UTF8   = (${^OPEN} || "") =~ /:utf8/;
+-my $total_tests = 49;
++my $total_tests = 50;
+ if ($Is_EBCDIC || $Is_UTF8) { $total_tests -= 3; }
+ print "1..$total_tests\n";
+ 
+@@ -258,6 +258,20 @@ EOT
+     }
+ }
+ 
++#  [perl #49472] Attributes + Unkown Error
++
++{
++    do_require
++	'use strict;sub MODIFY_CODE_ATTRIBUTE{} sub f:Blah {$nosuchvar}';
++    my $err = $@;
++    $err .= "\n" unless $err =~ /\n$/;
++    unless ($err =~ /Global symbol "\$nosuchvar" requires /) {
++	$err =~ s/^/# /mg;
++	print "${err}not ";
++    }
++    print "ok ", ++$i, " [perl #49472]\n";
++}
++
+ ##########################################
+ # What follows are UTF-8 specific tests. #
+ # Add generic tests before this point.   #
+diff --git a/toke.c b/toke.c
+index 910852d..bfe90bb 100644
+--- a/toke.c
++++ b/toke.c
+@@ -692,6 +692,7 @@ Perl_lex_start(pTHX_ SV *line, PerlIO *rsfp, bool new_filter)
+ #else
+     parser->nexttoke = 0;
+ #endif
++    parser->error_count = oparser ? oparser->error_count : 0;
+     parser->copline = NOLINE;
+     parser->lex_state = LEX_NORMAL;
+     parser->expect = XSTATE;
+-- 
+tg: (71b2123..) fixes/attributes_unknown_error (depends on: upstream)

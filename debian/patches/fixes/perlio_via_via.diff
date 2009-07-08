@@ -1,0 +1,26 @@
+Subject: Fix a reference counting bug in PerlIO::via that broke the svk package. (Closes: #479698)
+
+This is triggered by PerlIO::via::dynamic-0.12, leading to memory
+corruption in svk.
+
+[perl #54934], blead change 34025
+
+---
+ ext/PerlIO/via/via.xs |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/ext/PerlIO/via/via.xs b/ext/PerlIO/via/via.xs
+index 5670887..c53e43c 100644
+--- a/ext/PerlIO/via/via.xs
++++ b/ext/PerlIO/via/via.xs
+@@ -89,7 +89,7 @@ PerlIOVia_method(pTHX_ PerlIO * f, char *method, CV ** save, int flags,
+ 	    if (!s->fh) {
+ 		GV *gv = newGVgen(HvNAME_get(s->stash));
+ 		GvIOp(gv) = newIO();
+-		s->fh = newRV_noinc((SV *) gv);
++		s->fh = newRV((SV *) gv);
+ 		s->io = GvIOp(gv);
+ 	    }
+ 	    IoIFP(s->io) = PerlIONext(f);
+-- 
+tg: (71b2123..) fixes/perlio_via_via (depends on: upstream)

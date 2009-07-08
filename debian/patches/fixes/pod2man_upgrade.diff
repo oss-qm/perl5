@@ -1,0 +1,328 @@
+Subject: Upgrade to Pod::Man 2.18 to get the 'pod2man --utf8' functionality in lenny. (Closes: #480997)
+
+
+---
+ lib/Pod/Man.pm      |  101 ++++++++++++++++++++++++++-------------------------
+ lib/Pod/t/basic.man |    4 +-
+ lib/Pod/t/man.t     |    2 +-
+ pod/pod2man.PL      |   27 +++++++++++---
+ 4 files changed, 76 insertions(+), 58 deletions(-)
+
+diff --git a/lib/Pod/Man.pm b/lib/Pod/Man.pm
+index 451ecc8..961171b 100644
+--- a/lib/Pod/Man.pm
++++ b/lib/Pod/Man.pm
+@@ -1,7 +1,6 @@
+ # Pod::Man -- Convert POD data to formatted *roff input.
+-# $Id: Man.pm,v 2.16 2007-11-29 01:35:53 eagle Exp $
+ #
+-# Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
++# Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+ #     Russ Allbery <rra@stanford.edu>
+ # Substantial contributions by Sean Burke <sburke@cpan.org>
+ #
+@@ -37,10 +36,7 @@ use POSIX qw(strftime);
+ 
+ @ISA = qw(Pod::Simple);
+ 
+-# Don't use the CVS revision as the version, since this module is also in Perl
+-# core and too many things could munge CVS magic revision strings.  This
+-# number should ideally be the same as the CVS revision in podlators, however.
+-$VERSION = '2.16';
++$VERSION = '2.18';
+ 
+ # Set the debugging level.  If someone has inserted a debug function into this
+ # class already, use that.  Otherwise, use any Pod::Simple debug function
+@@ -73,7 +69,9 @@ sub new {
+     my $class = shift;
+     my $self = $class->SUPER::new;
+ 
+-    # Tell Pod::Simple to handle S<> by automatically inserting &nbsp;.
++    # Tell Pod::Simple not to handle S<> by automatically inserting &nbsp;.
++    # Note that this messes up Unicode output by embedding explicit ISO 8859-1
++    # non-breaking spaces that we have to clean up later.
+     $self->nbsp_for_S (1);
+ 
+     # Tell Pod::Simple to keep whitespace whenever possible.
+@@ -348,23 +346,22 @@ sub format_text {
+     my $convert = $$options{convert};
+     my $literal = $$options{literal};
+ 
+-    # Normally we do character translation, but we won't even do that in
+-    # <Data> blocks.
+-    if ($convert) {
+-        if (ASCII) {
+-            $text =~ s/(\\|[^\x00-\x7F])/$ESCAPES{ord ($1)} || "X"/eg;
+-        } else {
+-            $text =~ s/(\\)/$ESCAPES{ord ($1)} || "X"/eg;
+-        }
+-    }
+-
+     # Cleanup just tidies up a few things, telling *roff that the hyphens are
+-    # hard and putting a bit of space between consecutive underscores.
++    # hard, putting a bit of space between consecutive underscores, and
++    # escaping backslashes.  Be careful not to mangle our character
++    # translations by doing this before processing character translation.
+     if ($cleanup) {
++        $text =~ s/\\/\\e/g;
+         $text =~ s/-/\\-/g;
+         $text =~ s/_(?=_)/_\\|/g;
+     }
+ 
++    # Normally we do character translation, but we won't even do that in
++    # <Data> blocks or if UTF-8 output is desired.
++    if ($convert && !$$self{utf8} && ASCII) {
++        $text =~ s/([^\x00-\x7F])/$ESCAPES{ord ($1)} || "X"/eg;
++    }
++
+     # Ensure that *roff doesn't convert literal quotes to UTF-8 single quotes,
+     # but don't mess up our accept escapes.
+     if ($literal) {
+@@ -641,10 +638,10 @@ sub switchquotes {
+         # to Roman rather than the actual previous font when used in headings.
+         # troff output may still be broken, but at least we can fix nroff by
+         # just switching the font changes to the non-fixed versions.
+-        $nroff =~ s/\Q$$self{FONTS}{100}\E(.*)\\f[PR]/$1/g;
+-        $nroff =~ s/\Q$$self{FONTS}{101}\E(.*)\\f([PR])/\\fI$1\\f$2/g;
+-        $nroff =~ s/\Q$$self{FONTS}{110}\E(.*)\\f([PR])/\\fB$1\\f$2/g;
+-        $nroff =~ s/\Q$$self{FONTS}{111}\E(.*)\\f([PR])/\\f\(BI$1\\f$2/g;
++        $nroff =~ s/\Q$$self{FONTS}{100}\E(.*?)\\f[PR]/$1/g;
++        $nroff =~ s/\Q$$self{FONTS}{101}\E(.*?)\\f([PR])/\\fI$1\\f$2/g;
++        $nroff =~ s/\Q$$self{FONTS}{110}\E(.*?)\\f([PR])/\\fB$1\\f$2/g;
++        $nroff =~ s/\Q$$self{FONTS}{111}\E(.*?)\\f([PR])/\\f\(BI$1\\f$2/g;
+ 
+         # Now finally output the command.  Bother with .ie only if the nroff
+         # and troff output aren't the same.
+@@ -851,7 +848,7 @@ sub devise_date {
+ # module, but this order is correct for both Solaris and Linux.
+ sub preamble {
+     my ($self, $name, $section, $date) = @_;
+-    my $preamble = $self->preamble_template;
++    my $preamble = $self->preamble_template (!$$self{utf8});
+ 
+     # Build the index line and make sure that it will be syntactically valid.
+     my $index = "$name $section";
+@@ -1025,7 +1022,7 @@ sub cmd_head1 {
+ sub cmd_head2 {
+     my ($self, $attrs, $text) = @_;
+     $text = $self->heading_common ($text, $$attrs{start_line});
+-    $self->output ($self->switchquotes ('.Sh', $self->mapfonts ($text)));
++    $self->output ($self->switchquotes ('.SS', $self->mapfonts ($text)));
+     $self->outindex ('Subsection', $text);
+     $$self{NEEDSPACE} = 0;
+     return '';
+@@ -1273,7 +1270,7 @@ sub parse_from_filehandle {
+ # results are pretty poor.
+ #
+ # This only works in an ASCII world.  What to do in a non-ASCII world is very
+-# unclear.
++# unclear -- hopefully we can assume UTF-8 and just leave well enough alone.
+ @ESCAPES{0xA0 .. 0xFF} = (
+     "\\ ", undef, undef, undef,            undef, undef, undef, undef,
+     undef, undef, undef, undef,            undef, "\\%", undef, undef,
+@@ -1294,27 +1291,18 @@ sub parse_from_filehandle {
+     "o\\*/" , "u\\*`", "u\\*'", "u\\*^",   "u\\*:", "y\\*'", "\\*(th", "y\\*:",
+ ) if ASCII;
+ 
+-# Make sure that at least this works even outside of ASCII.
+-$ESCAPES{ord("\\")} = "\\e";
+-
+ ##############################################################################
+ # Premable
+ ##############################################################################
+ 
+ # The following is the static preamble which starts all *roff output we
+-# generate.  It's completely static except for the font to use as a
+-# fixed-width font, which is designed by @CFONT@, and the left and right
+-# quotes to use for C<> text, designated by @LQOUTE@ and @RQUOTE@.
++# generate.  Most is static except for the font to use as a fixed-width font,
++# which is designed by @CFONT@, and the left and right quotes to use for C<>
++# text, designated by @LQOUTE@ and @RQUOTE@.  However, the second part, which
++# defines the accent marks, is only used if $escapes is set to true.
+ sub preamble_template {
+-    return <<'----END OF PREAMBLE----';
+-.de Sh \" Subsection heading
+-.br
+-.if t .Sp
+-.ne 5
+-.PP
+-\fB\\$1\fR
+-.PP
+-..
++    my ($self, $accents) = @_;
++    my $preamble = <<'----END OF PREAMBLE----';
+ .de Sp \" Vertical space (when we can't use .PP)
+ .if t .sp .5v
+ .if n .sp
+@@ -1358,7 +1346,7 @@ sub preamble_template {
+ .el       .ds Aq '
+ .\"
+ .\" If the F register is turned on, we'll generate index entries on stderr for
+-.\" titles (.TH), headers (.SH), subsections (.Sh), items (.Ip), and index
++.\" titles (.TH), headers (.SH), subsections (.SS), items (.Ip), and index
+ .\" entries marked with X<> in POD.  Of course, you'll have to process the
+ .\" output yourself in some meaningful fashion.
+ .ie \nF \{\
+@@ -1372,6 +1360,10 @@ sub preamble_template {
+ .    de IX
+ ..
+ .\}
++----END OF PREAMBLE----
++
++    if ($accents) {
++        $preamble .= <<'----END OF PREAMBLE----'
+ .\"
+ .\" Accent mark definitions (@(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2).
+ .\" Fear.  Run.  Save yourself.  No user-serviceable parts.
+@@ -1436,6 +1428,8 @@ sub preamble_template {
+ .rm #[ #] #H #V #F C
+ ----END OF PREAMBLE----
+ #`# for cperl-mode
++    }
++    return $preamble;
+ }
+ 
+ ##############################################################################
+@@ -1582,6 +1576,22 @@ that are reliably consistent are 1, 2, and 3.
+ By default, section 1 will be used unless the file ends in .pm in which case
+ section 3 will be selected.
+ 
++=item utf8
++
++By default, Pod::Man produces the most conservative possible *roff output
++to try to ensure that it will work with as many different *roff
++implementations as possible.  Many *roff implementations cannot handle
++non-ASCII characters, so this means all non-ASCII characters are converted
++either to a *roff escape sequence that tries to create a properly accented
++character (at least for troff output) or to C<X>.
++
++If this option is set, Pod::Man will instead output UTF-8.  If your *roff
++implementation can handle it, this is the best output format to use and
++avoids corruption of documents containing non-ASCII characters.  However,
++be warned that *roff source with literal UTF-8 characters is not supported
++by many implementations and may even result in segfaults and other bad
++behavior.
++
+ =back
+ 
+ The standard Pod::Simple method parse_file() takes one argument naming the
+@@ -1617,15 +1627,6 @@ invalid.  A quote specification must be one, two, or four characters long.
+ 
+ =head1 BUGS
+ 
+-Eight-bit input data isn't handled at all well at present.  The correct
+-approach would be to map EE<lt>E<gt> escapes to the appropriate UTF-8
+-characters and then do a translation pass on the output according to the
+-user-specified output character set.  Unfortunately, we can't send eight-bit
+-data directly to the output unless the user says this is okay, since some
+-vendor *roff implementations can't handle eight-bit data.  If the *roff
+-implementation can, however, that's far superior to the current hacked
+-characters that only work under troff.
+-
+ There is currently no way to turn off the guesswork that tries to format
+ unmarked text appropriately, and sometimes it isn't wanted (particularly
+ when using POD to document something other than Perl).  Most of the work
+diff --git a/lib/Pod/t/basic.man b/lib/Pod/t/basic.man
+index 9c2248e..43874b6 100644
+--- a/lib/Pod/t/basic.man
++++ b/lib/Pod/t/basic.man
+@@ -7,7 +7,7 @@ other interesting bits.
+ .ie n .SH "This ""is"" a ""level 1"" heading"
+ .el .SH "This \f(CWis\fP a ``level 1'' heading"
+ .IX Header "This is a level 1 heading"
+-.Sh "``Level'' ""2 \fIheading\fP"
++.SS "``Level'' ""2 \fIheading\fP"
+ .IX Subsection "``Level'' ""2 heading"
+ \fILevel 3 \f(BIheading \f(BIwith \f(CB\*(C`weird \f(CBstuff "" (double quote)\f(CB\*(C'\f(BI\f(BI\fI\fR
+ .IX Subsection "Level 3 heading with weird stuff """" (double quote)"
+@@ -20,7 +20,7 @@ Now try again with \fBintermixed\fR \fItext\fR.
+ .el .SH "This \f(CWis\fP a ``level 1'' heading"
+ .IX Header "This is a level 1 heading"
+ Text.
+-.Sh "``Level'' 2 \fIheading\fP"
++.SS "``Level'' 2 \fIheading\fP"
+ .IX Subsection "``Level'' 2 heading"
+ Text.
+ .PP
+diff --git a/lib/Pod/t/man.t b/lib/Pod/t/man.t
+index 5d4d231..bd8b4ee 100644
+--- a/lib/Pod/t/man.t
++++ b/lib/Pod/t/man.t
+@@ -344,7 +344,7 @@ Oboy, is this C++ "fun" yet! (guesswork)
+ ###
+ .SH "NAME"
+ "Stuff" (no guesswork)
+-.Sh "\s-1THINGS\s0"
++.SS "\s-1THINGS\s0"
+ .IX Subsection "THINGS"
+ Oboy, is this \*(C+ \*(L"fun\*(R" yet! (guesswork)
+ ###
+diff --git a/pod/pod2man.PL b/pod/pod2man.PL
+index 9a8414a..10ddbbd 100644
+--- a/pod/pod2man.PL
++++ b/pod/pod2man.PL
+@@ -36,9 +36,9 @@ $Config{startperl}
+ print OUT <<'!NO!SUBS!';
+ 
+ # pod2man -- Convert POD data to formatted *roff input.
+-# $Id: pod2man.PL,v 1.16 2006-01-21 01:53:55 eagle Exp $
+ #
+-# Copyright 1999, 2000, 2001, 2004, 2006 by Russ Allbery <rra@stanford.edu>
++# Copyright 1999, 2000, 2001, 2004, 2006, 2008
++#     Russ Allbery <rra@stanford.edu>
+ #
+ # This program is free software; you may redistribute it and/or modify it
+ # under the same terms as Perl itself.
+@@ -66,7 +66,7 @@ Getopt::Long::config ('bundling_override');
+ GetOptions (\%options, 'section|s=s', 'release|r:s', 'center|c=s',
+             'date|d=s', 'fixed=s', 'fixedbold=s', 'fixeditalic=s',
+             'fixedbolditalic=s', 'name|n=s', 'official|o', 'quotes|q=s',
+-            'lax|l', 'help|h', 'verbose|v') or exit 1;
++            'lax|l', 'help|h', 'verbose|v', 'utf8|u') or exit 1;
+ pod2usage (0) if $options{help};
+ 
+ # Official sets --center, but don't override things explicitly set.
+@@ -104,7 +104,7 @@ pod2man [B<--section>=I<manext>] [B<--release>[=I<version>]]
+ [B<--center>=I<string>] [B<--date>=I<string>] [B<--fixed>=I<font>]
+ [B<--fixedbold>=I<font>] [B<--fixeditalic>=I<font>]
+ [B<--fixedbolditalic>=I<font>] [B<--name>=I<name>] [B<--official>]
+-[B<--lax>] [B<--quotes>=I<quotes>] [B<--verbose>]
++[B<--lax>] [B<--quotes>=I<quotes>] [B<--utf8>] [B<--verbose>]
+ [I<input> [I<output>] ...]
+ 
+ pod2man B<--help>
+@@ -243,6 +243,22 @@ that are reliably consistent are 1, 2, and 3.
+ By default, section 1 will be used unless the file ends in .pm in which case
+ section 3 will be selected.
+ 
++=item B<-u>, B<--utf8>
++
++By default, B<pod2man> produces the most conservative possible *roff
++output to try to ensure that it will work with as many different *roff
++implementations as possible.  Many *roff implementations cannot handle
++non-ASCII characters, so this means all non-ASCII characters are converted
++either to a *roff escape sequence that tries to create a properly accented
++character (at least for troff output) or to C<X>.
++
++This option says to instead output literal UTF-8 characters.  If your
++*roff implementation can handle it, this is the best output format to use
++and avoids corruption of documents containing non-ASCII characters.
++However, be warned that *roff source with literal UTF-8 characters is not
++supported by many implementations and may even result in segfaults and
++other bad behavior.
++
+ =item B<-v>, B<--verbose>
+ 
+ Print out the name of each output file as it is being generated.
+@@ -537,7 +553,8 @@ page, are taken from the B<pod2man> documentation by Tom.
+ 
+ =head1 COPYRIGHT AND LICENSE
+ 
+-Copyright 1999, 2000, 2001, 2004, 2006 by Russ Allbery <rra@stanford.edu>.
++Copyright 1999, 2000, 2001, 2004, 2006, 2008 Russ Allbery
++<rra@stanford.edu>.
+ 
+ This program is free software; you may redistribute it and/or modify it
+ under the same terms as Perl itself.
+-- 
+tg: (71b2123..) fixes/pod2man_upgrade (depends on: upstream)
