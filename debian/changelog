@@ -1,4 +1,4 @@
-perl (5.10.0-24) UNRELEASED; urgency=low
+perl (5.10.0-24) unstable; urgency=low
 
   * Change the perl-debug package section and priority to debug/extra.
   * POD fix for Module::Build::Cookbook.
@@ -10,7 +10,7 @@ perl (5.10.0-24) UNRELEASED; urgency=low
   * Save local versions of CPANPLUS::Config::System into /etc/perl.
     (See #533707)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 12 Jun 2009 21:31:17 +0300
+ -- Niko Tyni <ntyni@debian.org>  Wed, 08 Jul 2009 23:21:31 +0300
 
 perl (5.10.0-23) unstable; urgency=high
 
