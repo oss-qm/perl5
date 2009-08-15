@@ -1,0 +1,12 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix File::Copy::copy with pipes on GNU/kFreeBSD
+
+Quoting Petr Salinger in http://bugs.debian.org/537555:
+The Copy tries to detect whether source and dest are the same files.
+Unfortunately, on the GNU/kFreeBSD the kernel returns for all pipes
+as device and inode numbers just zero. See pipe_stat() in
+http://www.freebsd.org/cgi/cvsweb.cgi/src/sys/kern/sys_pipe.c
+
+Patch by Petr Salinger, tests by Niko Tyni.
+
+Backported from blead change 16f708c9bc0dc48713b200031295a40bed83bbfc
