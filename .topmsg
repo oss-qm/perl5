@@ -1,0 +1,9 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Honor TMPDIR when open()ing an anonymous temporary file
+Closes: 528544
+    
+[perl #66452]
+
+As reported by Norbert Buchmuller <norbi@nix.hu>, opening an anonymous
+temporary file with the magical open($fh, '+>', undef) ignores TMPDIR.
+
