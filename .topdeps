@@ -87,3 +87,4 @@ fixes/map-memleak
 fixes/kfreebsd_cppsymbols
 debian/cpanplus_definstalldirs
 debian/cpanplus_config_path
+fixes/kfreebsd-filecopy-pipes
