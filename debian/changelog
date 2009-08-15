@@ -1,4 +1,4 @@
-perl (5.10.0-25) UNRELEASED; urgency=low
+perl (5.10.0-25) unstable; urgency=low
 
   * Fix File::Copy::copy with pipes on GNU/kFreeBSD.
     Thanks to Petr Salinger. (Closes: #537555)
@@ -8,7 +8,7 @@ perl (5.10.0-25) UNRELEASED; urgency=low
     Thanks to Norbert Buchmuller. (Closes: #528544)
   * Move to libdb4.7. (Closes: #536443)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 15 Aug 2009 22:38:14 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 15 Aug 2009 23:24:30 +0300
 
 perl (5.10.0-24) unstable; urgency=low
 
