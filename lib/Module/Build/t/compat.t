@@ -13,7 +13,7 @@ local  @ENV{@makefile_keys};
 delete @ENV{@makefile_keys};
 
 my @makefile_types = qw(small passthrough traditional);
-my $tests_per_type = 14;
+my $tests_per_type = 17;
 if ( $Config{make} && find_in_path($Config{make}) ) {
     plan tests => 38 + @makefile_types*$tests_per_type*2;
 } else {
@@ -249,8 +249,11 @@ sub test_makefile_types {
     ok $success, "make realclean ran without error";
 
     # Try again with some Makefile.PL arguments
-    test_makefile_creation($mb, [], 'INSTALLDIRS=vendor', 1);
+    test_makefile_creation($mb, [], 'INSTALLDIRS=vendor', 'realclean');
     
+    # Try again using distclean
+    test_makefile_creation($mb, [], '', 'distclean');
+
     1 while unlink 'Makefile.PL';
     ok ! -e 'Makefile.PL', "cleaned up Makefile";
   }
@@ -272,10 +275,12 @@ sub test_makefile_creation {
   ok -e 'Makefile', "Makefile exists";
   
   if ($cleanup) {
+    # default to 'realclean' unless we recognize the clean method
+    $cleanup = 'realclean' unless $cleanup =~ /^(dist|real)clean$/;
     $output = stdout_of( sub {
-      $build->do_system(@make, 'realclean');
+      $build->do_system(@make, $cleanup);
     });
-    ok ! -e 'Makefile', "Makefile cleaned up";
+    ok ! -e 'Makefile', "Makefile cleaned up with $cleanup";
   }
   else {
     pass '(skipping cleanup)'; # keep test count constant
