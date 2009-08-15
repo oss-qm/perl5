@@ -6,6 +6,7 @@ perl (5.10.0-25) UNRELEASED; urgency=low
     Thanks to Ryan Niebur. (Closes: #527993)
   * Honor TMPDIR when open()ing an anonymous temporary file.
     Thanks to Norbert Buchmuller. (Closes: #528544)
+  * Move to libdb4.7. (Closes: #536443)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 15 Aug 2009 22:38:14 +0300
 
