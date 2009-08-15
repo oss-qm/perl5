@@ -1,3 +1,9 @@
+perl (5.10.0-25) UNRELEASED; urgency=low
+
+  * 
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 15 Aug 2009 22:38:14 +0300
+
 perl (5.10.0-24) unstable; urgency=low
 
   * Change the perl-debug package section and priority to debug/extra.
