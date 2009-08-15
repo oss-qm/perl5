@@ -1,0 +1,111 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: fix a memory leak with the map operator
+Closes: 528332
+
+[perl #53038]
+maint-5.10 commit 8293631c04365e5d81c3bb948898f139d2f340ff
+
+
+---
+ XSUB.h    |    4 ++--
+ perl.h    |    8 ++++++--
+ pp_ctl.c  |    6 +++---
+ pp_hot.c  |    2 +-
+ regexec.c |    2 +-
+ 5 files changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/XSUB.h b/XSUB.h
+index a149115..6f70d6b 100644
+--- a/XSUB.h
++++ b/XSUB.h
+@@ -364,10 +364,10 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
+ 	    SAVETMPS ;						\
+ 	    SAVEINT(db->filtering) ;				\
+ 	    db->filtering = TRUE ;				\
+-	    SAVESPTR(DEFSV) ;					\
++	    SAVE_DEFSV ;					\
+             if (name[7] == 's')                                 \
+                 arg = newSVsv(arg);                             \
+-	    DEFSV = arg ;					\
++	    DEFSV_set(arg) ;					\
+ 	    SvTEMP_off(arg) ;					\
+ 	    PUSHMARK(SP) ;					\
+ 	    PUTBACK ;						\
+diff --git a/perl.h b/perl.h
+index e48f768..96e9c6b 100644
+--- a/perl.h
++++ b/perl.h
+@@ -1287,8 +1287,12 @@ EXTERN_C char *crypt(const char *, const char *);
+ #endif
+ 
+ #define ERRSV GvSV(PL_errgv)
+-/* FIXME? Change the assignments to PL_defgv to instantiate GvSV?  */
+-#define DEFSV GvSVn(PL_defgv)
++#ifdef PERL_CORE
++# define DEFSV (0 + GvSVn(PL_defgv))
++#else
++# define DEFSV GvSVn(PL_defgv)
++#endif
++#define DEFSV_set(sv) (GvSV(PL_defgv) = (sv))
+ #define SAVE_DEFSV SAVESPTR(GvSV(PL_defgv))
+ 
+ #define ERRHV GvHV(PL_errgv)	/* XXX unused, here for compatibility */
+diff --git a/pp_ctl.c b/pp_ctl.c
+index 64157f3..4e75ccb 100644
+--- a/pp_ctl.c
++++ b/pp_ctl.c
+@@ -947,7 +947,7 @@ PP(pp_grepstart)
+     if (PL_op->op_private & OPpGREP_LEX)
+ 	PAD_SVl(PL_op->op_targ) = src;
+     else
+-	DEFSV = src;
++	DEFSV_set(src);
+ 
+     PUTBACK;
+     if (PL_op->op_type == OP_MAPSTART)
+@@ -1058,7 +1058,7 @@ PP(pp_mapwhile)
+ 	if (PL_op->op_private & OPpGREP_LEX)
+ 	    PAD_SVl(PL_op->op_targ) = src;
+ 	else
+-	    DEFSV = src;
++	    DEFSV_set(src);
+ 
+ 	RETURNOP(cLOGOP->op_other);
+     }
+@@ -4684,7 +4684,7 @@ S_run_user_filter(pTHX_ int idx, SV *buf_sv, int maxlen)
+ 	SAVETMPS;
+ 	EXTEND(SP, 2);
+ 
+-	DEFSV = upstream;
++	DEFSV_set(upstream);
+ 	PUSHMARK(SP);
+ 	PUSHs(sv_2mortal(newSViv(0)));
+ 	if (filter_state) {
+diff --git a/pp_hot.c b/pp_hot.c
+index 57fa328..2dcbd24 100644
+--- a/pp_hot.c
++++ b/pp_hot.c
+@@ -2395,7 +2395,7 @@ PP(pp_grepwhile)
+ 	if (PL_op->op_private & OPpGREP_LEX)
+ 	    PAD_SVl(PL_op->op_targ) = src;
+ 	else
+-	    DEFSV = src;
++	    DEFSV_set(src);
+ 
+ 	RETURNOP(cLOGOP->op_other);
+     }
+diff --git a/regexec.c b/regexec.c
+index a02a0c0..b839b32 100644
+--- a/regexec.c
++++ b/regexec.c
+@@ -2230,7 +2230,7 @@ S_regtry(pTHX_ regmatch_info *reginfo, char **startpos)
+ 	    /* Make $_ available to executed code. */
+ 	    if (reginfo->sv != DEFSV) {
+ 		SAVE_DEFSV;
+-		DEFSV = reginfo->sv;
++		DEFSV_set(reginfo->sv);
+ 	    }
+ 	
+ 	    if (!(SvTYPE(reginfo->sv) >= SVt_PVMG && SvMAGIC(reginfo->sv)
+-- 
+tg: (71b2123..) fixes/map-memleak (depends on: upstream)

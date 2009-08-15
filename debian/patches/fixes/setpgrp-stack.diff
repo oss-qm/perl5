@@ -1,0 +1,61 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: setpgrp() should extend the stack before modifying it
+Closes: #512796
+
+As reported by Marcin Owsiany in <http://bugs.debian.org/512796>,
+invoking setpgrp without any arguments could corrupt the stack.
+
+---
+ MANIFEST            |    1 +
+ pp_sys.c            |    1 +
+ t/op/setpgrpstack.t |   16 ++++++++++++++++
+ 3 files changed, 18 insertions(+), 0 deletions(-)
+
+diff --git a/MANIFEST b/MANIFEST
+index 490dc10..ce85918 100644
+--- a/MANIFEST
++++ b/MANIFEST
+@@ -3804,6 +3804,7 @@ t/op/re_tests			Regular expressions for regexp.t
+ t/op/reverse.t			See if reverse operator works
+ t/op/runlevel.t			See if die() works from perl_call_*()
+ t/op/rxcode.t			See if /(?{ code })/ works
++t/op/setpgrpstack.t		See if setpgrp works
+ t/op/sleep.t			See if sleep works
+ t/op/smartmatch.t		See if the ~~ operator works
+ t/op/sort.t			See if sort works
+diff --git a/pp_sys.c b/pp_sys.c
+index 6aa8645..4b15d1b 100644
+--- a/pp_sys.c
++++ b/pp_sys.c
+@@ -4289,6 +4289,7 @@ PP(pp_setpgrp)
+     if (MAXARG < 2) {
+ 	pgrp = 0;
+ 	pid = 0;
++	XPUSHi(-1);
+     }
+     else {
+ 	pgrp = POPi;
+diff --git a/t/op/setpgrpstack.t b/t/op/setpgrpstack.t
+new file mode 100644
+index 0000000..31f498e
+--- /dev/null
++++ b/t/op/setpgrpstack.t
+@@ -0,0 +1,16 @@
++#!./perl -w
++
++BEGIN {
++    chdir 't' if -d 't';
++    @INC = '../lib';
++    require './test.pl';
++}
++
++use Config;
++plan tests => 2;
++
++SKIP: {
++    skip "setpgrp() is not available", 2 unless $Config{d_setpgrp};
++    ok(!eval { package A;sub foo { die("got here") }; package main; A->foo(setpgrp())});
++    ok($@ =~ /got here/, "setpgrp() should extend the stack before modifying it");
++}
+-- 
+tg: (71b2123..) fixes/setpgrp-stack (depends on: upstream)

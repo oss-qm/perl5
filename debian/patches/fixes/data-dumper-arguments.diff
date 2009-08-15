@@ -1,0 +1,33 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix Data::Dumper::new() argument checking.
+
+#512036
+[perl #56766]
+
+The following script crashes perl reliably
+
+#! /usr/bin/perl
+use Data::Dumper ();
+print Data::Dumper->Dump(['a'], 'b');
+
+
+
+---
+ ext/Data/Dumper/Dumper.pm |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/ext/Data/Dumper/Dumper.pm b/ext/Data/Dumper/Dumper.pm
+index 15d504d..3759bd5 100644
+--- a/ext/Data/Dumper/Dumper.pm
++++ b/ext/Data/Dumper/Dumper.pm
+@@ -65,7 +65,7 @@ sub new {
+ 
+   croak "Usage:  PACKAGE->new(ARRAYREF, [ARRAYREF])" 
+     unless (defined($v) && (ref($v) eq 'ARRAY'));
+-  $n = [] unless (defined($n) && (ref($v) eq 'ARRAY'));
++  $n = [] unless (defined($n) && (ref($n) eq 'ARRAY'));
+ 
+   my($s) = { 
+              level      => 0,           # current recursive depth
+-- 
+tg: (71b2123..) fixes/data-dumper-arguments (depends on: upstream)

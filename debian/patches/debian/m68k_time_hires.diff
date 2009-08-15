@@ -1,0 +1,22 @@
+Subject: m68k takes more that 60s to complete Time::HiRes test.
+
+
+---
+ ext/Time/HiRes/t/HiRes.t |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/ext/Time/HiRes/t/HiRes.t b/ext/Time/HiRes/t/HiRes.t
+index 9410e7d..c76ce78 100644
+--- a/ext/Time/HiRes/t/HiRes.t
++++ b/ext/Time/HiRes/t/HiRes.t
+@@ -68,7 +68,7 @@ use Time::HiRes qw(gettimeofday);
+ 
+ my $have_alarm = $Config{d_alarm};
+ my $have_fork  = $Config{d_fork};
+-my $waitfor = 180; # 30-45 seconds is normal (load affects this).
++my $waitfor = 300; # 30-45 seconds is normal (load affects this).
+ my $timer_pid;
+ my $TheEnd;
+ 
+-- 
+tg: (71b2123..) debian/m68k_time_hires (depends on: upstream)

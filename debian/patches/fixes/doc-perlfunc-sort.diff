@@ -1,0 +1,27 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Elaborate a confusing cross-reference in 'perldoc -f sort'.
+Closes: 405470
+
+The sort documentation said 'see sort', which was a bit confusing.
+
+Signed-off-by: Niko Tyni <ntyni@debian.org>
+
+---
+ pod/perlfunc.pod |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/pod/perlfunc.pod b/pod/perlfunc.pod
+index a779b3b..c18c72f 100644
+--- a/pod/perlfunc.pod
++++ b/pod/perlfunc.pod
+@@ -5214,7 +5214,7 @@ the original quicksort was faster.  5.8 has a sort pragma for
+ limited control of the sort.  Its rather blunt control of the
+ underlying algorithm may not persist into future Perls, but the
+ ability to characterize the input or output in implementation
+-independent ways quite probably will.  See L<sort>.
++independent ways quite probably will.  See L<the sort pragma|sort>.
+ 
+ Examples:
+ 
+-- 
+tg: (71b2123..) fixes/doc-perlfunc-sort (depends on: upstream)
