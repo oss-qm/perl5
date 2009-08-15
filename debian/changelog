@@ -4,6 +4,8 @@ perl (5.10.0-25) UNRELEASED; urgency=low
     Thanks to Petr Salinger. (Closes: #537555)
   * Module::Build::Compat makefiles now support 'distclean'.
     Thanks to Ryan Niebur. (Closes: #527993)
+  * Honor TMPDIR when open()ing an anonymous temporary file.
+    Thanks to Norbert Buchmuller. (Closes: #528544)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 15 Aug 2009 22:38:14 +0300
 
