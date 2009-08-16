@@ -1,4 +1,4 @@
-Subject: Integrate some documentation fixes from upstream. (Closes: #357663, #443733, #412542)
+Subject: Integrate a grammar fix from upstream. 
+Closes: 443733
 
-This is the rest of upstream change 33129, continuing from
-04_fix_cgi_rewrite_typo.
+This is fixed in blead by change 33129 but was skipped for maint-5.10.
