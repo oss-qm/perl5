@@ -1,5 +1,4 @@
-Subject: Skip two Math::Complex tests on the arm architectures.
+From: Niko Tyni <ntyni@debian.org>
+Subject: Helper branch: upstream + patches
 
-Some tests fail on ARM due to non-IEEE fp rounding rules in the kernel
-fp emulation.
-
+upstream + Debian patches
