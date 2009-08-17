@@ -1,6 +1,7 @@
 perl (5.10.1~rc1-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
+  * Updated the conflicts list for the various dual-lived modules.
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 16 Aug 2009 16:35:58 +0300
 
