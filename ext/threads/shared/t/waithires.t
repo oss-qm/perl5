@@ -11,6 +11,10 @@ BEGIN {
         print("1..0 # Skip: Perl not compiled with 'useithreads'\n");
         exit(0);
     }
+    if ($^O eq 'linux' && $Config{archname} =~ /^m68k/) {
+        print("1..0 # Skip: no TLS on m68k yet <http://bugs.debian.org/517938>\n");
+        exit(0);
+    }
     eval {
         require Time::HiRes;
         Time::HiRes->import('time');
