@@ -142,6 +142,7 @@ my $INC_total = 0;
 my $INC_there = 0;
 foreach (@INC) {
     next if $_ eq '.'; # skip -d test here
+    next if m|/usr/local|; # not shipped on Debian
     if ($^O eq 'MacOS') {
         next if $_ eq ':'; # skip -d test here
         next if $_ eq 'Dev:Pseudo:'; # why is this in @INC?
