@@ -5390,7 +5390,7 @@ Generate just the protocol and net location, as in http://www.foo.com:8000
 If Apache's mod_rewrite is turned on, then the script name and path
 info probably won't match the request that the user sent. Set
 -rewrite=>1 (default) to return URLs that match what the user sent
-(the original request URI). Set -rewrite->0 to return URLs that match
+(the original request URI). Set -rewrite=>0 to return URLs that match
 the URL after mod_rewrite's rules have run. Because the additional
 path information only makes sense in the context of the rewritten URL,
 -rewrite is set to false when you request path info in the URL.
