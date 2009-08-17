@@ -20,7 +20,6 @@ debian/module_build_man_extensions
 debian/perl_synopsis
 debian/ppc_ia64_optim
 debian/prune_libs
-debian/use_gdbm
 fixes/assorted_docs
 fixes/net_smtp_docs
 fixes/processPL
