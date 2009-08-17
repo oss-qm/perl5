@@ -11,7 +11,7 @@ use Test::More;
 
 my $TB = Test::More->builder;
 
-plan tests => 60;
+plan tests => 62;
 
 # We're going to override rename() later on but Perl has to see an override
 # at compile time to honor it.
@@ -190,6 +190,19 @@ for my $cross_partition_test (0..1) {
   }
 }
 
+
+SKIP: {
+    skip("fork required to test pipe copying", 2)
+        if (!$Config{'d_fork'});
+
+    open(my $IN, "-|") || exec $^X, '-e', 'print "Hello, world!\n"';
+    open(my $OUT, "|-") || exec $^X, '-ne', 'exit(/Hello/ ? 55 : 0)';
+
+    ok(copy($IN, $OUT), "copy pipe to another");
+    close($OUT);
+    is($? >> 8, 55, "content copied through the pipes");
+    close($IN);
+}
 
 END {
     1 while unlink "file-$$";
