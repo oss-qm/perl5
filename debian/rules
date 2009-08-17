@@ -182,6 +182,7 @@ endif
 	# remove some linked man pages (symlinked later and cause
 	# problems as-is when compressing)
 	rm -f $(build)/perl/usr/share/man/man1/pstruct.1 \
+	    $(build)/perl/usr/share/man/man1/perlthanks.1 \
 	    $(build)/perl/usr/share/man/man1/psed.1
 
 	# the diagnostics module needs perldiag.pod
@@ -317,6 +318,7 @@ endif
 	ln -s perl.1.gz $(build)/perl-suid/usr/share/man/man1/sperl$(fullversion).1.gz
 	ln -s c2ph.1.gz $(build)/perl/usr/share/man/man1/pstruct.1.gz
 	ln -s s2p.1.gz $(build)/perl/usr/share/man/man1/psed.1.gz
+	ln -s perlbug.1.gz $(build)/perl/usr/share/man/man1/perlthanks.1.gz
 
 	ln -s changelog.gz $(build)/perl/usr/share/doc/perl/Changes.gz
 	ln -s ../perl/changelog.gz \
