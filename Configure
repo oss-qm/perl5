@@ -20559,7 +20559,7 @@ set mntent.h i_mntent
 eval $inhdr
 
 : see if ndbm.h is available
-set ndbm.h t_ndbm
+set gdbm-ndbm.h t_ndbm
 eval $inhdr
 
 case "$t_ndbm" in
