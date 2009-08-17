@@ -101,7 +101,7 @@ install-stamp: build-stamp
 	for ph in `< $(srcdir)/debian/headers sed -e 's/\.h$$/.ph/'`; do \
 		if [ ! -f $(srcdir)/$(lib)/$$ph ]; then \
 			echo "$$ph: missing"; else \
-		$(srcdir)/perl.static -I $(srcdir)/$(lib) -e \
+		$(srcdir)/perl.static -I $(srcdir)/$(lib) -I $(srcdir)/$(share) -e \
 			"print '"$$ph": '; require '"$$ph"'; print \"ok\n\";" \
 				|| exit 1; \
 		fi; \

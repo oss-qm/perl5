@@ -10,6 +10,7 @@ perl (5.10.1~rc1-1) UNRELEASED; urgency=low
     + libparse-cpan-meta-perl
     + libparent-perl
     + libautodie-perl
+  * Update the search path in the h2ph check. Thanks to Marius Vollmer.
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 16 Aug 2009 16:35:58 +0300
 
