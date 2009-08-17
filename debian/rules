@@ -367,10 +367,6 @@ else
 	    >debian/perl-base.shlibs
 endif
 
-	# for dpkg-shlibdeps
-	LD_LIBRARY_PATH=`echo $(srcdir)/$(build)/libperl$(version)/usr/lib \
-		 $(srcdir)/$(build)/perl-base/usr/lib $$LD_LIBRARY_PATH | \
-		 sed 's/ /:/g'`; export LD_LIBRARY_PATH; \
 	for p in `./perl.static -l -00ne 'print $$1 if /^Architecture:\s+any/m \
 	    and /^Package:\s+(.*)/m' debian/control`; \
 	do \
@@ -388,7 +384,8 @@ endif
 	    find $(build)/$$p/usr -type f \
 		\( -perm +111 -o -name \*.so\* \) -print | \
 		fgrep -v /usr/lib/debug/ | \
-		xargs -r dpkg-shlibdeps 2>&1 | \
+		xargs -r dpkg-shlibdeps -S$(srcdir)/$(build)/libperl$(version)/usr/lib \
+		                        -S$(srcdir)/$(build)/perl-base/usr/lib 2>&1 | \
 		fgrep -v 'File format not recognized'; # scripts \
 	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_perlapi) $(subst_upstream); \
 	    dpkg --build $(build)/$$p ..; \
