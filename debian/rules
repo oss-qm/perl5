@@ -26,8 +26,12 @@ checkdir    = test -d debian
 checkroot   = test `id -u` -eq 0
 checkperl   = $(SHELL) debian/checkperl
 
+# this may differ from $(fullversion) for release candidates and the like
+package_upstream_version = $(shell dpkg-parsechangelog | \
+        sed -ne 's/-[^-]\+$$//; s/^Version: *\([0-9]\+:\)*//p')
+
 # control file substitutions
-subst_upstream = -VUpstream-Version=$(fullversion)
+subst_upstream = -VUpstream-Version=$(package_upstream_version)
 subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`"
 
 build: build-stamp
