@@ -940,7 +940,7 @@ substitute. You can then revisit this dialog with
     }
 
     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
-        my_dflt_prompt(makepl_arg => "", $matcher);
+        my_dflt_prompt(makepl_arg => "INSTALLDIRS=site", $matcher);
         my_dflt_prompt(make_arg => "", $matcher);
     }
 
@@ -955,7 +955,7 @@ substitute. You can then revisit this dialog with
     my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "",
                    $matcher);
 
-    my_dflt_prompt(mbuildpl_arg => "", $matcher);
+    my_dflt_prompt(mbuildpl_arg => "--installdirs site", $matcher);
     my_dflt_prompt(mbuild_arg => "", $matcher);
 
     if (exists $CPAN::HandleConfig::keys{mbuild_install_build_command}) {
