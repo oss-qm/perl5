@@ -2142,8 +2142,9 @@ sub bsqrt
   # But we need at least $scale digits, so calculate how many are missing
   my $shift = $scale - $digits;
 
-  # That should never happen (we take care of integer guesses above)
-  # $shift = 0 if $shift < 0; 
+  # This happens if the input had enough digits 
+  # (we take care of integer guesses above)
+  $shift = 0 if $shift < 0; 
 
   # Multiply in steps of 100, by shifting left two times the "missing" digits
   my $s2 = $shift * 2;
