@@ -305,7 +305,11 @@ for file do
     pp) ;;
     pp_ctl) ;;
     pp_hot) ;;
-    pp_pack) ;;
+    pp_pack)
+	case $archname in
+	    arm-*|armeb-*)
+		optimize=-Os;;
+	esac;;
     pp_sort) ;;
     pp_sys) ;;
     regcomp) ;;
