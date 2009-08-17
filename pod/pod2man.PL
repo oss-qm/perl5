@@ -36,9 +36,9 @@ $Config{startperl}
 print OUT <<'!NO!SUBS!';
 
 # pod2man -- Convert POD data to formatted *roff input.
-# $Id: pod2man.PL,v 1.16 2006-01-21 01:53:55 eagle Exp $
 #
-# Copyright 1999, 2000, 2001, 2004, 2006 by Russ Allbery <rra@stanford.edu>
+# Copyright 1999, 2000, 2001, 2004, 2006, 2008
+#     Russ Allbery <rra@stanford.edu>
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -66,7 +66,7 @@ Getopt::Long::config ('bundling_override');
 GetOptions (\%options, 'section|s=s', 'release|r:s', 'center|c=s',
             'date|d=s', 'fixed=s', 'fixedbold=s', 'fixeditalic=s',
             'fixedbolditalic=s', 'name|n=s', 'official|o', 'quotes|q=s',
-            'lax|l', 'help|h', 'verbose|v') or exit 1;
+            'lax|l', 'help|h', 'verbose|v', 'utf8|u') or exit 1;
 pod2usage (0) if $options{help};
 
 # Official sets --center, but don't override things explicitly set.
@@ -104,7 +104,7 @@ pod2man [B<--section>=I<manext>] [B<--release>[=I<version>]]
 [B<--center>=I<string>] [B<--date>=I<string>] [B<--fixed>=I<font>]
 [B<--fixedbold>=I<font>] [B<--fixeditalic>=I<font>]
 [B<--fixedbolditalic>=I<font>] [B<--name>=I<name>] [B<--official>]
-[B<--lax>] [B<--quotes>=I<quotes>] [B<--verbose>]
+[B<--lax>] [B<--quotes>=I<quotes>] [B<--utf8>] [B<--verbose>]
 [I<input> [I<output>] ...]
 
 pod2man B<--help>
@@ -242,6 +242,28 @@ that are reliably consistent are 1, 2, and 3.
 
 By default, section 1 will be used unless the file ends in .pm in which case
 section 3 will be selected.
+
+=item B<-u>, B<--utf8>
+
+By default, B<pod2man> produces the most conservative possible *roff
+output to try to ensure that it will work with as many different *roff
+implementations as possible.  Many *roff implementations cannot handle
+non-ASCII characters, so this means all non-ASCII characters are converted
+either to a *roff escape sequence that tries to create a properly accented
+character (at least for troff output) or to C<X>.
+
+This option says to instead output literal UTF-8 characters.  If your
+*roff implementation can handle it, this is the best output format to use
+and avoids corruption of documents containing non-ASCII characters.
+However, be warned that *roff source with literal UTF-8 characters is not
+supported by many implementations and may even result in segfaults and
+other bad behavior.
+
+Be aware that, when using this option, the input encoding of your POD
+source must be properly declared unless it is US-ASCII or Latin-1.  POD
+input without an C<=encoding> command will be assumed to be in Latin-1,
+and if it's actually in UTF-8, the output will be double-encoded.  See
+L<perlpod(1)> for more information on the C<=encoding> command.
 
 =item B<-v>, B<--verbose>
 
@@ -518,8 +540,8 @@ section numbering conventions.
 
 =head1 SEE ALSO
 
-L<Pod::Man>, L<Pod::Simple>, L<man(1)>, L<nroff(1)>, L<podchecker(1)>,
-L<troff(1)>, L<man(7)>
+L<Pod::Man>, L<Pod::Simple>, L<man(1)>, L<nroff(1)>, L<perlpod(1)>,
+L<podchecker(1)>, L<troff(1)>, L<man(7)>
 
 The man page documenting the an macro set may be L<man(5)> instead of
 L<man(7)> on your system.
@@ -537,7 +559,8 @@ page, are taken from the B<pod2man> documentation by Tom.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 1999, 2000, 2001, 2004, 2006 by Russ Allbery <rra@stanford.edu>.
+Copyright 1999, 2000, 2001, 2004, 2006, 2008 Russ Allbery
+<rra@stanford.edu>.
 
 This program is free software; you may redistribute it and/or modify it
 under the same terms as Perl itself.
