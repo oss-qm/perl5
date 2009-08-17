@@ -228,13 +228,16 @@ all : force_do_it
 realclean : force_do_it
 	$perl $Build realclean
 	$perl -e unlink -e shift $args{makefile}
+distclean : force_do_it
+	$perl $Build distclean
+	$perl -e unlink -e shift $args{makefile}
 
 force_do_it :
 	@ $noop
 EOF
 
   foreach my $action ($class->known_actions) {
-    next if $action =~ /^(all|realclean|force_do_it)$/;  # Don't double-define
+    next if $action =~ /^(all|distclean|realclean|force_do_it)$/;  # Don't double-define
     $maketext .= <<"EOF";
 $action : force_do_it
 	$perl $Build $action
