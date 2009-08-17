@@ -4289,6 +4289,7 @@ PP(pp_setpgrp)
     if (MAXARG < 2) {
 	pgrp = 0;
 	pid = 0;
+	XPUSHi(-1);
     }
     else {
 	pgrp = POPi;
