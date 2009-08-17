@@ -690,6 +690,7 @@ under C<lvalue> conditions.
 
 See C<perldoc perlsub> for details.
 
+=back
 
 =cut
 
