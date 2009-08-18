@@ -1,6 +1,19 @@
 perl (5.10.1~rc1-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
+    + Archive::Tar now supports bzip2 files. (Closes: #457326)
+    + Module::CoreList now includes ExtUtils::Miniperl. (Closes: #508696)
+    + ExtUtils::Manifest now handles whitespace correctly. (Closes: #538005)
+    + CGI.pm unwanted UTF-8 conversion in URLs is fixed. (Closes: #516129)
+    + FileCache needs symbolic references, documentation updated.
+      (Closes: #318579)
+    + perldoc.pod now references perlpod.pod. (Closes: #479638)
+    + Long regular expressions work again. (Closes: #527039)
+    + File::Temp::tempfile now supports TMPDIR. (Closes: #351373)
+    + File::Temp now works with ACLs. (Closes: #531770)
+    + IPC::Cmd now works with arrayrefs. (Closes: #533380)
+    + perlpod.pod documentation fix: =encoding affects the whole document.
+      (Closes: #527023)
   * Updated the conflicts list for the various dual-lived modules.
   * Added conflicts/replaces/provides for 
     + libio-compress-perl
