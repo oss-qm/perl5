@@ -1,0 +1,4 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: install Config_heavy.pl in archlib
+
+Config_heavy.pl has a special exception that was broken in 5.10.1 RC1.
