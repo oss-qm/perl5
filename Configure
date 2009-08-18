@@ -21719,7 +21719,7 @@ for xxx in $known_extensions ; do
 		esac
 		;;
 	NDBM_File|ndbm_fil)
-		case "$i_ndbm" in
+		case "$d_ndbm" in
 		$define)
 		    case "$osname-$use64bitint" in
 		    hpux-define)
