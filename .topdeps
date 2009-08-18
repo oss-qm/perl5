@@ -34,3 +34,4 @@ debian/cpanplus_config_path
 fixes/kfreebsd-filecopy-pipes
 fixes/anon-tmpfile-dir
 fixes/ndbm_file
+fixes/config-heavy-location
