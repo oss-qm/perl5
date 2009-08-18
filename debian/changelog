@@ -14,6 +14,12 @@ perl (5.10.1~rc1-1) UNRELEASED; urgency=low
     + IPC::Cmd now works with arrayrefs. (Closes: #533380)
     + perlpod.pod documentation fix: =encoding affects the whole document.
       (Closes: #527023)
+    + CPAN.pm no longer passes make arguments through to Build.
+      (Closes: #508183)
+    + using the same lexically scoped variable in a foreach loop twice
+      no longer segfaults. (Closes: #511589)
+    + unwanted filehandle stringification in CGI.pm is fixed. (Closes: #483144)
+    + script_name() in CGI.pm is fixed. (Closes: #493965)
   * Updated the conflicts list for the various dual-lived modules.
   * Added conflicts/replaces/provides for 
     + libio-compress-perl
