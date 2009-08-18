@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Correctly detect NDBM_File availability
+
+Correctly detect NDBM_File availability.
+
+Blead commit 7894ad662a3cd2f4ed62524c47717e580145900e
+
