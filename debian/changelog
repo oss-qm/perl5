@@ -20,6 +20,8 @@ perl (5.10.1~rc2-1) UNRELEASED; urgency=low
       no longer segfaults. (Closes: #511589)
     + unwanted filehandle stringification in CGI.pm is fixed. (Closes: #483144)
     + script_name() in CGI.pm is fixed. (Closes: #493965)
+    + revision information removed from perlfaq whatis entries
+      (Closes: #402046)
   * Updated the conflicts list for the various dual-lived modules.
   * Added conflicts/replaces/provides for 
     + libio-compress-perl
