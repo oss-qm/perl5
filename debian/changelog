@@ -1,4 +1,4 @@
-perl (5.10.1~rc1-1) UNRELEASED; urgency=low
+perl (5.10.1~rc2-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
     + Archive::Tar now supports bzip2 files. (Closes: #457326)
