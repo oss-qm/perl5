@@ -1,0 +1,23 @@
+Subject: Suppress test failure on buildds which don't have /etc/hosts installed.
+
+
+---
+ lib/Net/hostent.t |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/lib/Net/hostent.t b/lib/Net/hostent.t
+index 421f19d..baec89d 100755
+--- a/lib/Net/hostent.t
++++ b/lib/Net/hostent.t
+@@ -16,6 +16,9 @@ BEGIN {
+     }
+     if ($^O eq 'MacOS' || ($^O eq 'irix' && $Config{osvers} == 5)) {
+ 	plan skip_all => "Test relies on resolution of localhost, fails on $^O ($Config{osvers})";
++    } elsif (!-f '/etc/hosts') {
++	# /etc/hosts is not always present on buildds
++	plan skip_all => "Test requires /etc/hosts: not found";
+     }
+ }
+ 
+-- 
+tg: (bc65f46..) debian/missing_hosts (depends on: upstream)

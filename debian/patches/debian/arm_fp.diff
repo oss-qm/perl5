@@ -1,0 +1,39 @@
+Subject: Skip two Math::Complex tests on the arm architectures.
+
+Some tests fail on ARM due to non-IEEE fp rounding rules in the kernel
+fp emulation.
+
+
+---
+ lib/Math/Complex.t |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
+
+diff --git a/lib/Math/Complex.t b/lib/Math/Complex.t
+index ee02341..7e00cad 100755
+--- a/lib/Math/Complex.t
++++ b/lib/Math/Complex.t
+@@ -34,6 +34,11 @@ if ($^O eq 'unicos') { 	# For some reason root() produces very inaccurate
+ }			# cos(), sin(), cosh(), sinh().  The division
+ 			# of doubles is the current suspect.
+ 
++my %skip;
++if (`uname -m` =~ /^arm/) {
++    $skip{$_} = 'non-IEEE fp rounding' for 289, 509;
++}
++
+ while (<DATA>) {
+ 	s/^\s+//;
+ 	next if $_ eq '' || /^\#/;
+@@ -563,7 +568,9 @@ sub check {
+ 
+ 	print "# @_\n";
+ 
+-	if ("$got" eq "$expected"
++	if ($skip{$test}) {
++		print "ok $test # skipped: $skip{$test}\n";
++	} elsif ("$got" eq "$expected"
+ 	    ||
+ 	    ($expected =~ /^-?\d/ && $got == $expected)
+ 	    ||
+-- 
+tg: (bc65f46..) debian/arm_fp (depends on: upstream)
