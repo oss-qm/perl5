@@ -30,6 +30,8 @@ perl (5.10.1~rc2-1) UNRELEASED; urgency=low
     + libparent-perl
     + libautodie-perl
   * Update the search path in the h2ph check. Thanks to Marius Vollmer.
+  * Build-Depend on libbz2-dev instead of using the bundled library in
+    ext/Compress-Raw-Bzip2.
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 16 Aug 2009 16:35:58 +0300
 
