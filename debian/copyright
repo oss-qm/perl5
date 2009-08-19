@@ -28,7 +28,7 @@ Copyright:
 
 ----------------------------------------------------------------------
 
-The zlib library in ext/Compress/Raw/Zlib/zlib-src has the following
+The zlib library in ext/Compress-Raw-Zlib/zlib-src has the following
 copyright and license:
 
   Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
@@ -142,7 +142,7 @@ systems, this license can be found in `/usr/share/common-licenses/BSD'.
 
 ----------------------------------------------------------------------
 
-The C parts of File::Glob in ext/File/Glob/bsd_glob.[ch] hav the
+The C parts of File::Glob in ext/File-Glob/bsd_glob.[ch] hav the
 following copyright:
 
  * Copyright (c) 1989, 1993
@@ -156,7 +156,7 @@ systems, this license can be found in `/usr/share/common-licenses/BSD'.
 
 ----------------------------------------------------------------------
 
-The bzip2 library in ext/Compress/Raw/Zlib/bzip2-src has the following
+The bzip2 library in ext/Compress-Raw-Bzip2/bzip2-src has the following
 copyright and license:
 
   This program, "bzip2", the associated library "libbzip2", and all
