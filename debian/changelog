@@ -3,6 +3,8 @@ perl (5.10.1~rc2-2) UNRELEASED; urgency=low
   * Remove traces of libcpan-plus-perl provides/conflicts/replaces in favour
     of libcpanplus-perl.
   * Clean an accidentally duplicated libcpanplus-perl conflict entry.
+  * Add conflicts/replaces/provides for
+    + libio-compress-bzip2-perl
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 
