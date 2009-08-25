@@ -1,5 +1,6 @@
-perl (5.10.1~rc2-2) UNRELEASED; urgency=low
+perl (5.10.1-1) UNRELEASED; urgency=low
 
+  * New upstream release.
   * Remove traces of libcpan-plus-perl provides/conflicts/replaces in favour
     of libcpanplus-perl.
   * Clean an accidentally duplicated libcpanplus-perl conflict entry.
