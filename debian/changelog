@@ -6,6 +6,8 @@ perl (5.10.1-1) UNRELEASED; urgency=low
   * Clean an accidentally duplicated libcpanplus-perl conflict entry.
   * Add conflicts/replaces/provides for
     + libio-compress-bzip2-perl
+  * Don't test .ph file syntax when DEB_BUILD_OPTIONS contains "nocheck"
+    or "x-perl-notest"
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 
