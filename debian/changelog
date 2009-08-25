@@ -8,6 +8,10 @@ perl (5.10.1-1) UNRELEASED; urgency=low
     + libio-compress-bzip2-perl
   * Don't test .ph file syntax when DEB_BUILD_OPTIONS contains "nocheck"
     or "x-perl-notest"
+  * Replace /usr/share/doc symlinks with separate changelog and copyright
+    files in the arch-independent packages (perl-doc and perl-modules)
+    to make sure they correspond to the right package version.
+    (Closes: #536384, #542137)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 

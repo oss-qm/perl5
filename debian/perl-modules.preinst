@@ -7,4 +7,9 @@ then
     rm -f /etc/Net
 fi
 
+# this used to be a symlink, see #536384
+if [ -h /usr/share/doc/perl-modules ]; then
+    rm -f /usr/share/doc/perl-modules
+fi
+
 exit 0

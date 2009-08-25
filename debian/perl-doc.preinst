@@ -6,4 +6,9 @@ then
 	--divert /usr/bin/perldoc.stub /usr/bin/perldoc
 fi
 
+# this used to be a symlink, see #536384
+if [ -h /usr/share/doc/perl-doc ]; then
+    rm -f /usr/share/doc/perl-doc
+fi
+
 exit 0
