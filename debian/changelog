@@ -2,6 +2,7 @@ perl (5.10.0-19lenny2) UNRELEASED; urgency=low
 
   * Fix a typo in the replaces/conflicts/provides: libcpan-plus-perl
     should have been libcpanplus-perl. (Closes: #516289)
+  * Fix a memory leak with the map operator. (Closes: #528332)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 26 Aug 2009 22:31:41 +0300
 

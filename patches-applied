@@ -39,6 +39,7 @@ debian/patches/37_fix_coredump_indicator
 debian/patches/38_fix_weaken_memleak
 debian/patches/39_fix_archive_tar_symlink_unpack
 debian/patches/40_compress_raw_zlib_cve_2009_1391
+debian/patches/41_map_memleak.diff
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks
