@@ -1,0 +1,9 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Add support for Abstract namespace sockets.
+Closes: 490660, 329291
+
+blead commit 99f13d4c3419e967e95c5ac6a3af61e9bb0fd3c0
+ by Lubomir Rintel <lkundrak@v3.sk>
+
+trivially backported for 5.10.1 by Niko Tyni <ntyni@debian.org>
+
