@@ -14,7 +14,7 @@ BEGIN {
 	
 use Socket qw(:all);
 
-print "1..17\n";
+print "1..18\n";
 
 $has_echo = $^O ne 'MSWin32';
 $alarmed = 0;
@@ -163,7 +163,17 @@ if ($^O eq 'linux') {
 	print "# got <$path>\n";
         print "not ok 17\n";
     }
+
+    # see if we calculate the address structure length correctly
+    if (length ($test_abstract_socket) + 2 == length $addr) {
+        print "ok 18\n";
+    } else {
+	print "# got ".(length $addr)."\n";
+        print "not ok 18\n";
+    }
+
 } else {
     # doesn't have abstract socket support
     print "ok 17 - skipped on this platform\n";
+    print "ok 18 - skipped on this platform\n";
 }
