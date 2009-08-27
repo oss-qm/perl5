@@ -12,6 +12,8 @@ perl (5.10.1-1) UNRELEASED; urgency=low
     files in the arch-independent packages (perl-doc and perl-modules)
     to make sure they correspond to the right package version.
     (Closes: #536384, #542137)
+  * Add support for abstract sockets. Thanks to Lubomir Rintel.
+    (Closes: #329291, #490660)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 
