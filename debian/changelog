@@ -14,6 +14,10 @@ perl (5.10.1-1) UNRELEASED; urgency=low
     (Closes: #536384, #542137)
   * Add support for abstract sockets. Thanks to Lubomir Rintel.
     (Closes: #329291, #490660)
+  * In versions older than 5.10.0-24, CPANPLUS system configuration would be
+    erroneously saved under /usr/share. Avoid loss of local configuration by
+    copying it to /etc/perl/CPANPLUS/Config/System.pm on upgrades before the
+    new package overwrites it. (Closes: #543910)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 
