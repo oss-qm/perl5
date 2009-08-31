@@ -1,4 +1,4 @@
-perl (5.10.1-1) UNRELEASED; urgency=low
+perl (5.10.1-1) experimental; urgency=low
 
   * New upstream release.
   * Remove traces of libcpan-plus-perl provides/conflicts/replaces in favour
@@ -24,7 +24,7 @@ perl (5.10.1-1) UNRELEASED; urgency=low
     of EWOULDBLOCK. (Closes: #543731)
   * Move /usr/share/perl/5.10/unicore/To into perl-base. (See #543149)
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
+ -- Niko Tyni <ntyni@debian.org>  Mon, 31 Aug 2009 23:03:43 +0300
 
 perl (5.10.1~rc2-1) experimental; urgency=low
 
