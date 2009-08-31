@@ -18,6 +18,8 @@ perl (5.10.1-1) UNRELEASED; urgency=low
     erroneously saved under /usr/share. Avoid loss of local configuration by
     copying it to /etc/perl/CPANPLUS/Config/System.pm on upgrades before the
     new package overwrites it. (Closes: #543910)
+  * Add gcc predefined macros to $Config{cppsymbols} on GNU/Hurd.
+    Thanks to Samuel Thibault. (Closes: #544307)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 

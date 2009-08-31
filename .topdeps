@@ -34,3 +34,4 @@ debian/cpanplus_config_path
 fixes/kfreebsd-filecopy-pipes
 fixes/anon-tmpfile-dir
 fixes/abstract-sockets
+fixes/hurd_cppsymbols
