@@ -20,6 +20,8 @@ perl (5.10.1-1) UNRELEASED; urgency=low
     new package overwrites it. (Closes: #543910)
   * Add gcc predefined macros to $Config{cppsymbols} on GNU/Hurd.
     Thanks to Samuel Thibault. (Closes: #544307)
+  * Fix autodie on hppa by allowing for flock returning EAGAIN instead
+    of EWOULDBLOCK. (Closes: #543731)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 
