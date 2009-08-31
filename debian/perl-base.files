@@ -67,6 +67,7 @@ usr/share/perl/*/utf8_heavy.pl
 usr/share/perl/*/unicore/PVA.pl
 usr/share/perl/*/unicore/Exact.pl
 usr/share/perl/*/unicore/Canonical.pl
+usr/share/perl/*/unicore/To
 usr/share/perl/*/unicore/lib
 usr/share/perl/*/vars.pm
 usr/share/perl/*/warnings.pm

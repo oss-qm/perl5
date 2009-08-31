@@ -22,6 +22,7 @@ perl (5.10.1-1) UNRELEASED; urgency=low
     Thanks to Samuel Thibault. (Closes: #544307)
   * Fix autodie on hppa by allowing for flock returning EAGAIN instead
     of EWOULDBLOCK. (Closes: #543731)
+  * Move /usr/share/perl/5.10/unicore/To into perl-base. (See #543149)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 20 Aug 2009 14:51:52 +0300
 
