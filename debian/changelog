@@ -4,6 +4,7 @@ perl (5.10.1-2) UNRELEASED; urgency=low
     overriding PREFIX at installation time again. (Closes: #545904)
   * Separate Archive::Tar instance error strings from each other.
     (Closes: #539355)
+  * Fix a crash with \G on first match. (Closes: #545234)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 15 Sep 2009 08:12:48 +0300
 
