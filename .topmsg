@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Separate instance error strings from each other
+Closes: 539355
+
+[rt.perl.org #48879]
+Included upstream in Archive-Tar-1.54.
+
