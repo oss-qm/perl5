@@ -1853,6 +1853,8 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
 	        if (s > reginfo.ganch)
 		    goto phooey;
 		s = reginfo.ganch - prog->gofs;
+		if (s < strbeg)
+		    goto phooey;
 	    }
 	}
 	else if (data) {
@@ -1928,7 +1930,8 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
            is bogus -- we set it above, when prog->extflags & RXf_GPOS_SEEN 
            and we only enter this block when the same bit is set. */
         char *tmp_s = reginfo.ganch - prog->gofs;
-	if (regtry(&reginfo, &tmp_s))
+
+	if (tmp_s >= strbeg && regtry(&reginfo, &tmp_s))
 	    goto got_it;
 	goto phooey;
     }
