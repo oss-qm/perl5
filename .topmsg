@@ -1,0 +1,6 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix \G crash on first match
+Closes: 545234
+
+[perl 69056]
+Blead commit 63ffbc4d3039a00fa04e97838017b299c6ef612f
