@@ -1,0 +1,26 @@
+Subject: Bug#333510: fails to build on arm/armeb with -O2 optimization and current gcc4.                                                                                       
+
+
+---
+ cflags.SH |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
+
+diff --git a/cflags.SH b/cflags.SH
+index ef1c8b5..d2ab929 100755
+--- a/cflags.SH
++++ b/cflags.SH
+@@ -305,7 +305,11 @@ for file do
+     pp) ;;
+     pp_ctl) ;;
+     pp_hot) ;;
+-    pp_pack) ;;
++    pp_pack)
++	case $archname in
++	    arm-*|armeb-*)
++		optimize=-Os;;
++	esac;;
+     pp_sort) ;;
+     pp_sys) ;;
+     regcomp) ;;
+-- 
+tg: (daf8b46..) debian/arm_optim (depends on: upstream)
