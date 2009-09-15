@@ -1,4 +1,4 @@
-perl (5.10.1-2) UNRELEASED; urgency=low
+perl (5.10.1-2) experimental; urgency=low
 
   * reinstate Debian change to ExtUtils::MakeMaker for now to allow
     overriding PREFIX at installation time again. (Closes: #545904)
@@ -6,7 +6,7 @@ perl (5.10.1-2) UNRELEASED; urgency=low
     (Closes: #539355)
   * Fix a crash with \G on first match. (Closes: #545234)
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 15 Sep 2009 08:12:48 +0300
+ -- Niko Tyni <ntyni@debian.org>  Tue, 15 Sep 2009 21:23:45 +0300
 
 perl (5.10.1-1) experimental; urgency=low
 
