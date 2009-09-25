@@ -1,8 +1,8 @@
-perl (5.10.1-3) UNRELEASED; urgency=low
+perl (5.10.1-3) unstable; urgency=low
 
-  * 
+  * Upload to unstable.
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 25 Sep 2009 21:43:09 +0300
+ -- Niko Tyni <ntyni@debian.org>  Fri, 25 Sep 2009 21:47:47 +0300
 
 perl (5.10.1-2) experimental; urgency=low
 
