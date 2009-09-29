@@ -1,6 +1,7 @@
 perl (5.10.1-4) UNRELEASED; urgency=low
 
-  * 
+  * Temporarily work around an internal compiler error in Devel::PPPort
+    on ia64+gcc-4.3. (Closes: #548943)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 29 Sep 2009 22:27:24 +0300
 
