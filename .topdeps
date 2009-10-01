@@ -39,3 +39,4 @@ fixes/autodie-flock
 fixes/archive-tar-instance-error
 fixes/positive-gpos
 debian/devel-ppport-ia64-optim
+debian/dynaloader-config

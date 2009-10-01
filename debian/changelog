@@ -1,6 +1,6 @@
 perl (5.10.1-5) UNRELEASED; urgency=low
 
-  * 
+  * Make DynaLoader work without Config_heavy.pl again. (Closes: #549170)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 01 Oct 2009 10:45:08 +0300
 
