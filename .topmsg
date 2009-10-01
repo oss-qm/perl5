@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Make DynaLoader work without Config_heavy.pl again
+Closes: 549170
+
+Expand a few Config variables at build time to accommodate the
+Debian perl-base <> perl split: dl_dlext and dl_dlso come from
+Config_heavy.pl which isn't in perl-base.
