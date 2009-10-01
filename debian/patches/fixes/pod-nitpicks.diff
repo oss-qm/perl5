@@ -1,0 +1,25 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: fix pod errors
+
+POD formatting errors already fixed upstream.
+
+Signed-off-by: Niko Tyni <ntyni@debian.org>
+
+---
+ lib/Object/Accessor.pm |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/lib/Object/Accessor.pm b/lib/Object/Accessor.pm
+index e5cd266..87a4c9f 100644
+--- a/lib/Object/Accessor.pm
++++ b/lib/Object/Accessor.pm
+@@ -690,6 +690,7 @@ under C<lvalue> conditions.
+ 
+ See C<perldoc perlsub> for details.
+ 
++=back
+ 
+ =cut
+ 
+-- 
+tg: (daf8b46..) fixes/pod-nitpicks (depends on: upstream)
