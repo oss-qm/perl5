@@ -4,6 +4,7 @@ perl (5.10.1-6) UNRELEASED; urgency=low
 
   * Niko Tyni is now the maintainer and Brendan O'Dea is now the uploader
     (swapped).
+  * Added /me to Uploaders.
 
  -- Eugene V. Lyubimkin <jackyf@debian.org>  Thu, 22 Oct 2009 23:21:24 +0300
 
