@@ -164,7 +164,7 @@ Section: debug
 Priority: extra
 Architecture: any
 Depends: perl (= ${binary:Version}), ${shlibs:Depends}
-Description: Debug-enabled Perl interpreter
+Description: debug-enabled Perl interpreter
  debugperl provides a debug-enabled version of Perl which can produce
  extensive information about the interpreter as it compiles and executes
  a program (see the -D switch in perlrun(1)).
@@ -177,7 +177,7 @@ Package: perl-suid
 Priority: optional
 Architecture: any
 Depends: perl (= ${binary:Version}), ${shlibs:Depends}
-Description: Runs setuid Perl scripts
+Description: runs setuid Perl scripts
  suidperl is a setuid root helper program which is invoked by perl when
  executing scripts with setuid/gid bits set on systems (like Linux) which
  don't have support setuid script execution natively in the kernel.
@@ -188,7 +188,7 @@ Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, perl-base (= ${binary:Version})
 Replaces: perl-base (<= 5.8.7-4)
-Description: Shared Perl library
+Description: shared Perl library
  This package is required by programs which embed a Perl interpreter to
  ensure that the correct version of `perl-base' is installed.  It
  additionally contains the shared Perl library on architectures where the
@@ -270,7 +270,7 @@ Description: Larry Wall's Practical Extraction and Report Language
  Army Chainsaw".
  .
  Perl is optimised for scanning arbitrary text files and system
- administration.  It has built-in extended regular expression matching
+ administration. It has built-in extended regular expression matching
  and replacement, a data-flow mechanism to improve security with
  setuid scripts and is extensible via modules that can interface to C
  libraries.
