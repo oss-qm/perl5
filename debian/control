@@ -1,8 +1,8 @@
 Source: perl
 Section: perl
 Priority: standard
-Maintainer: Niko Tyni <ntyni@debian.org>
-Uploaders: Brendan O'Dea <bod@debian.org>, Eugene V. Lyubimkin <jackyf@debian.org>
+Maintainer: Brendan O'Dea <bod@debian.org>
+Uploaders: Niko Tyni <ntyni@debian.org>, Eugene V. Lyubimkin <jackyf@debian.org>
 Standards-Version: 3.8.1
 Build-Depends: file, cpio (>= 2.6-5), libdb4.7-dev, libgdbm-dev, netbase [!hurd-i386],
  gcc (>= 4:4.2), procps | hurd, zlib1g-dev | libz-dev, libbz2-dev
