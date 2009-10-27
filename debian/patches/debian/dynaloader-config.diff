@@ -1,0 +1,29 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Make DynaLoader work without Config_heavy.pl again
+Closes: 549170
+
+Expand a few Config variables at build time to accommodate the
+Debian perl-base <> perl split: dl_dlext and dl_dlso come from
+Config_heavy.pl which isn't in perl-base.
+
+---
+ ext/DynaLoader/DynaLoader_pm.PL |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+diff --git a/ext/DynaLoader/DynaLoader_pm.PL b/ext/DynaLoader/DynaLoader_pm.PL
+index 27ccd7d..2868cf4 100644
+--- a/ext/DynaLoader/DynaLoader_pm.PL
++++ b/ext/DynaLoader/DynaLoader_pm.PL
+@@ -111,7 +111,9 @@ sub dl_load_flags { 0x00 }
+ 
+ EOT
+ 
+-if ($ENV{PERL_BUILD_EXPAND_CONFIG_VARS}) {
++# Debian-specific shortcut for the perl-base/perl split
++# see http://bugs.debian.org/549170
++if (1 || $ENV{PERL_BUILD_EXPAND_CONFIG_VARS}) {
+     print OUT "(\$dl_dlext, \$dl_so, \$dlsrc) = (",
+               to_string($Config{'dlext'}), ",",
+               to_string($Config{'so'}), ",",
+-- 
+tg: (daf8b46..) debian/dynaloader-config (depends on: upstream)
