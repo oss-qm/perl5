@@ -1,6 +1,4 @@
-perl (5.10.1-6) UNRELEASED; urgency=low
-
-  [ Eugene V. Lyubimkin ]
+perl (5.10.1-6) unstable; urgency=high
 
   * Added /me to Uploaders.
   * Apply upstream fix to resolve some crash in pattern matching against
