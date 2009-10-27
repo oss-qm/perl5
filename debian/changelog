@@ -3,6 +3,8 @@ perl (5.10.1-6) UNRELEASED; urgency=low
   [ Eugene V. Lyubimkin ]
 
   * Added /me to Uploaders.
+  * Apply upstream fix to resolve some crash in pattern matching against
+    non-Unicode tainted string. This fixes CVE-2009-3626. (Closes: #552291)
 
  -- Eugene V. Lyubimkin <jackyf@debian.org>  Thu, 22 Oct 2009 23:21:24 +0300
 
