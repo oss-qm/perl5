@@ -2,6 +2,8 @@ perl (5.10.1-7) UNRELEASED; urgency=low
 
   * Only run dpkg-shlibdeps when all the shlibs files have been created.
     This fixes perl-suid dependencies on i386. (Closes: #552797)
+  * Set myself as Maintainer and remove Brendan O'Dea from the control
+    file at his request.
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 29 Oct 2009 21:13:00 +0200
 
