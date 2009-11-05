@@ -41,3 +41,4 @@ fixes/positive-gpos
 debian/devel-ppport-ia64-optim
 debian/dynaloader-config
 fixes/trie-logic-match
+fixes/hppa-thread-eagain
