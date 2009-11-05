@@ -1,0 +1,7 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: make the threads-shared test suite more robust, fixing failures on hppa
+Closes: 554218
+
+Fix from threads-shared-1.31:
+ Handle thread creation failures in tests due to lack of memory, etc.
+
