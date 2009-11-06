@@ -1,4 +1,4 @@
-perl (5.10.1-7) UNRELEASED; urgency=low
+perl (5.10.1-7) unstable; urgency=medium
 
   * Only run dpkg-shlibdeps when all the shlibs files have been created.
     This fixes perl-suid dependencies on i386. (Closes: #552797)
@@ -7,7 +7,7 @@ perl (5.10.1-7) UNRELEASED; urgency=low
   * Make the threads-shared test suite more robust, fixing failures on hppa.
     (Closes: #554218)
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 29 Oct 2009 21:13:00 +0200
+ -- Niko Tyni <ntyni@debian.org>  Fri, 06 Nov 2009 22:18:07 +0200
 
 perl (5.10.1-6) unstable; urgency=high
 
