@@ -402,8 +402,8 @@ endif
 	    find $(build)/$$p/usr -type f \
 		\( -perm +111 -o -name \*.so\* \) -print | \
 		fgrep -v /usr/lib/debug/ | \
-		xargs -r dpkg-shlibdeps -S$(srcdir)/$(build)/libperl$(version)/usr/lib \
-		                        -S$(srcdir)/$(build)/perl-base/usr/lib 2>&1 | \
+		xargs -r dpkg-shlibdeps -S$(srcdir)/$(build)/libperl$(version) \
+		                        -S$(srcdir)/$(build)/perl-base 2>&1 | \
 		fgrep -v 'File format not recognized'; # scripts \
 	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_perlapi) $(subst_upstream); \
 	    dpkg --build $(build)/$$p ..; \

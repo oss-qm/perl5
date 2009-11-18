@@ -1,6 +1,7 @@
 perl (5.10.1-8) UNRELEASED; urgency=low
 
-  * 
+  * Fix another perl-suid/i386 dependency bug by using dpkg-shlibdeps
+    correctly. (Closes: #556847)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 18 Nov 2009 13:30:56 +0200
 
