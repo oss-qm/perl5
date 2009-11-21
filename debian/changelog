@@ -1,11 +1,11 @@
-perl (5.10.1-8) UNRELEASED; urgency=low
+perl (5.10.1-8) unstable; urgency=medium
 
   * Fix another perl-suid/i386 dependency bug by using dpkg-shlibdeps
     correctly. (Closes: #556847)
   * Add Conflicts/Replaces/Provides for libthread-queue-perl.
     (Closes: #556793)
 
- -- Niko Tyni <ntyni@debian.org>  Wed, 18 Nov 2009 13:30:56 +0200
+ -- Niko Tyni <ntyni@debian.org>  Sat, 21 Nov 2009 21:01:14 +0200
 
 perl (5.10.1-7) unstable; urgency=medium
 
