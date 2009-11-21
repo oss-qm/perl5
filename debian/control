@@ -90,6 +90,7 @@ Conflicts: libpod-parser-perl (<< 1.37),
  libparse-cpan-meta-perl (<< 1.39),
  libparent-perl (<< 0.221),
  libautodie-perl (<< 2.06.01),
+ libthread-queue-perl (<< 2.11),
  podlators-perl (<= 2.2.2-1)
 Replaces: libpod-parser-perl,
  libansicolor-perl,
@@ -122,6 +123,7 @@ Replaces: libpod-parser-perl,
  libparse-cpan-meta-perl,
  libparent-perl,
  libautodie-perl,
+ libthread-queue-perl,
  podlators-perl
 Provides: libpod-parser-perl,
  libansicolor-perl,
@@ -154,6 +156,7 @@ Provides: libpod-parser-perl,
  libparse-cpan-meta-perl,
  libparent-perl,
  libautodie-perl,
+ libthread-queue-perl,
  podlators-perl
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
