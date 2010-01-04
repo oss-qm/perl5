@@ -1,0 +1,4 @@
+This package contains those Perl core modules that are architecture
+independent. See /usr/share/doc/perl/README.Debian for more information
+on the Perl Debian packaging.
+
