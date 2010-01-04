@@ -1,6 +1,7 @@
 perl (5.10.1-9) UNRELEASED; urgency=low
 
-  * 
+  * Move CGI/Fast.pm back to the core directory so that libcgi-pm-perl
+    can override it. (Closes: #563713)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 22 Nov 2009 12:06:38 +0200
 

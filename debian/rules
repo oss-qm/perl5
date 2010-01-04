@@ -261,11 +261,6 @@ endif
 	# default configuration for libnet
 	cp debian/libnet.cfg $(build)/perl-modules/etc/perl/Net
 
-	# relocate CGI::Fast to vendor dir
-	cd $(build)/libcgi-fast-perl/usr/share && \
-	    mv perl/$(fullversion) perl5 && \
-	    rmdir perl 
-
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -9
 	find $(build)/*/usr/share/doc -type f \
