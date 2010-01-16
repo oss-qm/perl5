@@ -1,0 +1,8 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix a NULL pointer dereference when looking for a DESTROY method
+Closes: 564074
+    
+The empty DESTROY method optimization introduced by upstream commit
+fbb3ee5af3d would crash the interpreter if a DESTROY method was declared
+but not actually defined.
+
