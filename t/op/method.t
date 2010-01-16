@@ -10,7 +10,7 @@ BEGIN {
     require "test.pl";
 }
 
-print "1..78\n";
+print "1..79\n";
 
 @A::ISA = 'B';
 @B::ISA = 'C';
@@ -291,5 +291,14 @@ EOT
 	"Foo $meth->[1]",
 	{ switches => [ '-w' ] },
 	"check if UNIVERSAL::AUTOLOAD works",
+    );
+}
+{
+    fresh_perl_is(<<'EOT',
+sub M::DESTROY; bless {}, "M" ; print "survived\n";
+EOT
+    "survived",
+    {},
+	"no crash with a declared but missing DESTROY method"
     );
 }
