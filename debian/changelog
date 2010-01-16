@@ -6,6 +6,8 @@ perl (5.10.1-9) UNRELEASED; urgency=low
   * Other packages should not depend on perl-modules but perl;
     clarify this in the perl-modules long description and the new
     README.Debian file. (Closes: #552052)
+  * Fix a NULL pointer dereference when looking for a DESTROY method.
+    (Closes: #564074)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 22 Nov 2009 12:06:38 +0200
 
