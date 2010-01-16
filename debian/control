@@ -17,6 +17,7 @@ Architecture: any
 Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.14.20)
 Conflicts: autoconf2.13 (<< 2.13-45),
  libscalar-list-utils-perl (<< 1:1.18-1),
+ libfile-spec-perl (<< 3.30),
  libxsloader-perl (<< 0.08-1)
 Replaces: perl (<= 5.10.0-9), perl-modules (<< 5.10.1-1), libperl5.8 (<< 5.8.0-20),
  libscalar-list-utils-perl,
@@ -91,6 +92,7 @@ Conflicts: libpod-parser-perl (<< 1.37),
  libparent-perl (<< 0.221),
  libautodie-perl (<< 2.06.01),
  libthread-queue-perl (<< 2.11),
+ libfile-spec-perl (<< 3.30),
  podlators-perl (<= 2.2.2-1)
 Replaces: libpod-parser-perl,
  libansicolor-perl,
@@ -124,6 +126,7 @@ Replaces: libpod-parser-perl,
  libparent-perl,
  libautodie-perl,
  libthread-queue-perl,
+ libfile-spec-perl,
  podlators-perl
 Provides: libpod-parser-perl,
  libansicolor-perl,
@@ -157,6 +160,7 @@ Provides: libpod-parser-perl,
  libparent-perl,
  libautodie-perl,
  libthread-queue-perl,
+ libfile-spec-perl,
  podlators-perl
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and

@@ -8,6 +8,10 @@ perl (5.10.1-9) UNRELEASED; urgency=low
     README.Debian file. (Closes: #552052)
   * Fix a NULL pointer dereference when looking for a DESTROY method.
     (Closes: #564074)
+  * Add conflicts/replaces/provides for libfile-spec-perl. (Closes: #556789)
+    + note that perl-base contains part of libfile-spec-perl, so it has
+      a conflicts entry for earlier versions but does not provide and
+      replace it. The rest of the functionality is in perl-modules.
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 22 Nov 2009 12:06:38 +0200
 
