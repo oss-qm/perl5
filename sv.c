@@ -5419,7 +5419,8 @@ Perl_sv_clear(pTHX_ register SV *sv)
 		if (destructor
 			/* Don't bother calling an empty destructor */
 			&& (CvISXSUB(destructor)
-			|| CvSTART(destructor)->op_next->op_type != OP_LEAVESUB))
+			|| (CvSTART(destructor)
+			    && (CvSTART(destructor)->op_next->op_type != OP_LEAVESUB))))
 		{
 		    SV* const tmpref = newRV(sv);
 	            SvREADONLY_on(tmpref);   /* DESTROY() could be naughty */
