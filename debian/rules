@@ -417,9 +417,6 @@ new-build: $(patches)
 	git add $(patches)
 	git commit -m 'export all the patches'
 
-check-patched:
-	test ! -f $(patches) # already patched
-
 $(patches):
 	test -d .git # patch export only works in the TopGit repository
 	-rmdir debian/patches
