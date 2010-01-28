@@ -1,4 +1,4 @@
-Subject: Various debian-specific ExtUtils changes:
+Subject: Various debian-specific ExtUtils changes
 
  * Respect umask during installation, and set as appropriate for each of
    perl, vendor and site (policy requires group writable site dirs).
