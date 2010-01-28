@@ -1,4 +1,2 @@
-Subject: Adjust the manual page extensions for the Debian Perl policy.
-
-Debian bug #479460.
-
+Subject: Adjust Module::Build manual page extensions for the Debian Perl policy
+Bug-Debian: http://bugs.debian.org/479460
