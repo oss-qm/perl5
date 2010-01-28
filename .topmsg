@@ -1,4 +1,5 @@
-Subject: Tweak enc2xs to handle Debian @INC.
+Subject: Tweak enc2xs to follow symlinks and ignore missing @INC directories.
+Bug-Debian: http://bugs.debian.org/290336
 
 - ignore missing directories,
 - follow symlinks (/usr/share/perl/5.8 -> 5.8.4).
