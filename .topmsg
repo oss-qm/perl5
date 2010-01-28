@@ -1,2 +1,3 @@
-Subject: Bug#333510: fails to build on arm/armeb with -O2 optimization and current gcc4.                                                                                       
+Description: use -Os instead of -O2 on arm/armeb to fix build failures with gcc4
+Bug-Debian: http://bugs.debian.org/333510
 
