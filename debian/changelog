@@ -1,6 +1,7 @@
 perl (5.10.1-10) UNRELEASED; urgency=low
 
   * Add conflicts/replaces/provides for libtime-local-perl. (Closes: #567188)
+  * Really add the new perl-modules README.Debian. (Closes: #565721)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 28 Jan 2010 11:56:28 +0200
 
