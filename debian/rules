@@ -21,7 +21,7 @@ lib         = $(tmp)/usr/lib/perl/$(version)
 share       = $(tmp)/usr/share/perl/$(version)
 build	    = debian/build
 debug       = $(build)/perl-debug/usr/lib/debug
-patches     = patches-applied
+patches     = debian/patches/series
 
 checkdir    = test -d debian
 checkroot   = test `id -u` -eq 0
@@ -417,26 +417,15 @@ new-build: $(patches)
 	git add $(patches)
 	git commit -m 'export all the patches'
 
-$(patches): debian/patches/series
-	sed 's|^|debian/patches/| ; s/ -p1$$//' debian/patches/series >$(patches)
-
 check-patched:
 	test ! -f $(patches) # already patched
 
-patch: check-patched $(patches)
-	cat `cat $(patches)` | patch -p1 --no-backup-if-mismatch
-
-unpatch:
-	test -s $(patches) # not patched
-	cat `tac $(patches)` | patch -Rp1 --no-backup-if-mismatch
-	rm -f $(patches)
-
-debian/patches/series:
+$(patches):
 	test -d .git # patch export only works in the TopGit repository
 	-rmdir debian/patches
 	tg export --quilt debian/patches
 	rm debian/patches/master.diff
-	sed -i '/master.diff/ d' debian/patches/series
+	sed -i '/master.diff/ d' $(patches)
 
 .NOTPARALLEL:
 
