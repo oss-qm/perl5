@@ -1,4 +1,4 @@
-Subject: Complete the documentation for Net::SMTP
-
-[rt.cpan.org #36038]
+Subject: Document the Net::SMTP 'Port' option
+Bug-Debian: http://bugs.debian.org/100195
+Bug: http://rt.cpan.org/Public/Bug/Display.html?id=36038
 
