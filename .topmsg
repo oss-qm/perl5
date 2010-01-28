@@ -1,5 +1,6 @@
 From: Eugene V. Lyubimkin <jackyf@debian.org>
-Subject: [PATCH] fixes/trie-logic-match
+Subject: Fix a DoS in Unicode processing [CVE-2009-3626]
+Bug-Debian: http://bugs.debian.org/552291
 
 Resolves segmentation fault in some tricky tainted non-UTF-8 matches.
 
