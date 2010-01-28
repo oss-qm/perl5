@@ -2,8 +2,10 @@
 
 eval $(echo '#include "./patchlevel.h"
 SETver=PERL_REVISION.PERL_VERSION;
-SETfullver=$ver.PERL_SUBVERSION' | gcc -E - | sed -n '/^SET/{s///;s/ //gp;}')
+SETsubver= PERL_SUBVERSION' | gcc -E - | sed -n '/^SET/{s///;s/ //gp;}')
 
+fullver="$ver.$subver"
+nextver="$ver."$(($subver+1))
 ccflags=-DDEBIAN
 arch_cpu=${DEB_BUILD_ARCH_CPU:-$(dpkg-architecture -qDEB_BUILD_ARCH_CPU)}
 gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
@@ -29,6 +31,9 @@ case "$1" in
 
     --full-version)
 	exec echo $fullver;;
+
+    --next-version)
+	exec echo $nextver;;
 
     --strip)
     	case ",$DEB_BUILD_OPTIONS," in

@@ -7,6 +7,7 @@
 export SHELL = /bin/bash
 
 fullversion := $(shell /bin/bash debian/config.debian --full-version)
+nextversion := $(shell /bin/bash debian/config.debian --next-version)
 version     := $(shell /bin/bash debian/config.debian --version)
 installtype := $(shell /bin/bash debian/config.debian --install-type)
 test_target := $(shell /bin/bash debian/config.debian --test-target)
@@ -33,6 +34,7 @@ package_upstream_version = $(shell dpkg-parsechangelog | \
 # control file substitutions
 subst_upstream = -VUpstream-Version=$(package_upstream_version)
 subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`"
+subst_next_upstream = -VNext-Upstream-Version=$(nextversion)
 
 # for ext/Compress-Raw-Bzip2
 export BUILD_BZIP2=0
@@ -355,7 +357,7 @@ binary-indep: build-stamp install-stamp
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
-	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_upstream); \
+	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_upstream) $(subst_next_upstream); \
 	    dpkg --build $(build)/$$p ..; \
 	done
 

@@ -37,7 +37,7 @@ Description: minimal Perl system
 Package: libcgi-fast-perl
 Priority: optional
 Architecture: all
-Depends: perl (>= ${source:Version}), libfcgi-perl
+Depends: perl (>= ${source:Version}), perl (<< ${Next-Upstream-Version}~), libfcgi-perl
 Description: CGI::Fast Perl module
  CGI::Fast is a subclass of the CGI object created by CGI.pm.  It is
  specialized to work well with the Open Market FastCGI standard, which
