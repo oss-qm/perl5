@@ -1,7 +1,7 @@
 From: Niko Tyni <ntyni@debian.org>
-Subject: Separate instance error strings from each other
-Closes: 539355
+Subject: Separate Archive::Tar instance error strings from each other
+Bug-Debian: http://bugs.debian.org/539355
+Bug: http://rt.cpan.org/Public/Bug/Display.html?id=48879
 
-[rt.perl.org #48879]
 Included upstream in Archive-Tar-1.54.
 
