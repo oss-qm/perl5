@@ -1,6 +1,6 @@
 From: Niko Tyni <ntyni@debian.org>
-Subject: [PATCH] fixes/kfreebsd_cppsymbols
-Closes: 533098
+Subject: Add gcc predefined macros to $Config{cppsymbols} on GNU/kFreeBSD.
+Bug-Debian: http://bugs.debian.org/533098
 
 This is needed at least by h2ph, otherwise the generated .ph files
 choke on missing __LONG_MAX__ and similar definitions.
