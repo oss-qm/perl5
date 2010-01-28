@@ -1,4 +1,6 @@
-Subject: Tweak @INC so that the ordering is:
+Subject: Tweak @INC ordering for Debian
+
+Our order is:
 
     etc (for config files)
     site (5.8.1)
