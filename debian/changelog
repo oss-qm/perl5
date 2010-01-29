@@ -5,6 +5,8 @@ perl (5.10.1-10) UNRELEASED; urgency=low
   * Make libcgi-fast-perl depend on perl (<< 5.10.2~) because
     it's now in the core directory. (Closes: #567092)
   * Switch to dpkg v3 source format.
+  * Describe the applied Debian patches in patchlevel.h (and therefore
+    `perl -V' output too.) (Closes: #567489)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 28 Jan 2010 11:56:28 +0200
 

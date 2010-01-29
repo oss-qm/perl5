@@ -31,6 +31,13 @@ checkperl   = $(SHELL) debian/checkperl
 package_upstream_version = $(shell dpkg-parsechangelog | \
         sed -ne 's/-[^-]\+$$//; s/^Version: *\([0-9]\+:\)*//p')
 
+package_version = $(shell dpkg-parsechangelog | sed -n 's/^Version: *//p')
+
+# this gets prepended to the patch names in patchlevel.h
+patchprefix = DEBPKG:
+# the name of the file in debian/patches that modifies patchlevel.h
+patchlevelpatch = patchlevel
+
 # control file substitutions
 subst_upstream = -VUpstream-Version=$(package_upstream_version)
 subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`"
@@ -79,7 +86,7 @@ clean:
 	test -f $(patches)	# maintainer sanity check
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -rf config.over perl.static perl.debug libperl-static libperl.so* \
-	    build-stamp install-stamp t/auto debian/shlibs.local \
+	    patchlevel.bak build-stamp install-stamp t/auto debian/shlibs.local \
 	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
 	    debian/substvars debian/files debian/list.tmp $(tmp) $(build)
 
@@ -409,12 +416,12 @@ endif
 binary: binary-indep binary-arch
 
 # maintainer targets
-new-build: $(patches)
+new-build: $(patches) refresh-patchlevel
 	test -d .git # only for the git repository
 	git checkout refs/heads/master # detach from 'master'
 	git rm .top*
 	git add debian/patches
-	git add $(patches)
+	git add $(patches) patchlevel.h
 	git commit -m 'export all the patches'
 
 $(patches):
@@ -424,6 +431,16 @@ $(patches):
 	rm debian/patches/master.diff
 	sed -i '/master.diff/ d' $(patches)
 
+refresh-patchlevel: $(patches)
+	sed -i '/$(patchprefix)/d' patchlevel.h
+	grep -q $(patchlevelpatch) $(patches) || echo '$(patchlevelpatch) -p1' >> $(patches)
+	sed s/VERSION/$(package_version)/ debian/$(patchlevelpatch).head > debian/patches/$(patchlevelpatch)
+	perl debian/list-patches $(patchprefix) < $(patches) | \
+	  xargs -d\\n -r perl -x patchlevel.h
+	diff --unified=0 patchlevel.bak patchlevel.h | \
+	  filterdiff --remove-timestamps --addprefix perl/ >> debian/patches/$(patchlevelpatch)
+	$(RM) patchlevel.bak
+
 .NOTPARALLEL:
 
-.PHONY: build clean binary-indep binary-arch binary install patch unpatch new-build
+.PHONY: build clean binary-indep binary-arch binary install patch unpatch new-build refresh-patchlevel
