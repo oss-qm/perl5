@@ -1,0 +1,56 @@
+Subject: List packaged patches for 5.10.1-10 in patchlevel.h
+Origin: vendor
+Bug-Debian: http://bugs.debian.org/567489
+
+The list can be refreshed from information in debian/patches by running
+'debian/rules refresh-patchlevel'.
+
+
+--- perl/patchlevel.bak
++++ perl/patchlevel.h
+@@ -133,0 +134,45 @@
++	,"DEBPKG:debian/arm_fp - Skip two Math::Complex tests on the arm architectures."
++	,"DEBPKG:debian/arm_optim - http://bugs.debian.org/333510 use -Os instead of -O2 on arm/armeb to fix build failures with gcc4"
++	,"DEBPKG:debian/arm_thread_stress_timeout - http://bugs.debian.org/501970 Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts"
++	,"DEBPKG:debian/cpan_config_path - Set location of CPAN::Config to /etc/perl as /usr may not be writable."
++	,"DEBPKG:debian/cpan_definstalldirs - Provide a sensible INSTALLDIRS default for modules installed from CPAN."
++	,"DEBPKG:debian/db_file_ver - http://bugs.debian.org/340047 Remove overly restrictive DB_File version check."
++	,"DEBPKG:debian/doc_info - Replace generic man(1) instructions with Debian-specific information."
++	,"DEBPKG:debian/enc2xs_inc - http://bugs.debian.org/290336 Tweak enc2xs to follow symlinks and ignore missing @INC directories."
++	,"DEBPKG:debian/errno_ver - http://bugs.debian.org/343351 Remove Errno version check due to upgrade problems with long-running processes."
++	,"DEBPKG:debian/extutils_hacks - Various debian-specific ExtUtils changes"
++	,"DEBPKG:debian/fakeroot - Postpone LD_LIBRARY_PATH evaluation to the binary targets."
++	,"DEBPKG:debian/instmodsh_doc - Debian policy doesn't install .packlist files for core or vendor."
++	,"DEBPKG:debian/ld_run_path - Remove standard libs from LD_RUN_PATH as per Debian policy."
++	,"DEBPKG:debian/libnet_config_path - Set location of libnet.cfg to /etc/perl/Net as /usr may not be writable."
++	,"DEBPKG:debian/m68k_thread_stress - http://bugs.debian.org/495826 Disable some threads tests on m68k for now due to missing TLS."
++	,"DEBPKG:debian/missing_hosts - Suppress test failure on buildds which don't have /etc/hosts installed."
++	,"DEBPKG:debian/mod_paths - Tweak @INC ordering for Debian"
++	,"DEBPKG:debian/module_build_man_extensions - http://bugs.debian.org/479460 Adjust Module::Build manual page extensions for the Debian Perl policy"
++	,"DEBPKG:debian/perl_synopsis - http://bugs.debian.org/278323 Rearrange perl.pod"
++	,"DEBPKG:debian/ppc_ia64_optim - Don't need to downgrade optimisation on ppc/ia64 with gcc 4.x"
++	,"DEBPKG:debian/prune_libs - http://bugs.debian.org/128355 Prune the list of libraries wanted to what we actually need."
++	,"DEBPKG:debian/use_gdbm - Explicitly link against -lgdbm_compat in ODBM_File/NDBM_File. "
++	,"DEBPKG:fixes/assorted_docs - http://bugs.debian.org/443733 Integrate a grammar fix from upstream. "
++	,"DEBPKG:fixes/net_smtp_docs - http://bugs.debian.org/100195 [rt.cpan.org #36038] Document the Net::SMTP 'Port' option"
++	,"DEBPKG:fixes/processPL - http://bugs.debian.org/357264 [rt.cpan.org #17224] Always use PERLRUNINST when building perl modules."
++	,"DEBPKG:debian/perlivp - http://bugs.debian.org/510895 Make perlivp skip include directories in /usr/local"
++	,"DEBPKG:fixes/pod2man-index-backslash - http://bugs.debian.org/521256 Escape backslashes in .IX entries"
++	,"DEBPKG:debian/disable-zlib-bundling - Disable zlib bundling in Compress::Raw::Zlib"
++	,"DEBPKG:fixes/pod-nitpicks - fix pod errors"
++	,"DEBPKG:fixes/kfreebsd_cppsymbols - http://bugs.debian.org/533098 Add gcc predefined macros to $Config{cppsymbols} on GNU/kFreeBSD."
++	,"DEBPKG:debian/cpanplus_definstalldirs - http://bugs.debian.org/533707 Configure CPANPLUS to use the site directories by default."
++	,"DEBPKG:debian/cpanplus_config_path - Save local versions of CPANPLUS::Config::System into /etc/perl."
++	,"DEBPKG:fixes/kfreebsd-filecopy-pipes - http://bugs.debian.org/537555 Fix File::Copy::copy with pipes on GNU/kFreeBSD"
++	,"DEBPKG:fixes/anon-tmpfile-dir - http://bugs.debian.org/528544 [perl #66452] Honor TMPDIR when open()ing an anonymous temporary file"
++	,"DEBPKG:fixes/abstract-sockets - http://bugs.debian.org/490660 Add support for Abstract namespace sockets."
++	,"DEBPKG:fixes/hurd_cppsymbols - http://bugs.debian.org/544307 Add gcc predefined macros to $Config{cppsymbols} on GNU/Hurd."
++	,"DEBPKG:fixes/autodie-flock - http://bugs.debian.org/543731 Allow for flock returning EAGAIN instead of EWOULDBLOCK on linux/parisc"
++	,"DEBPKG:fixes/archive-tar-instance-error - http://bugs.debian.org/539355 [rt.cpan.org #48879] Separate Archive::Tar instance error strings from each other"
++	,"DEBPKG:fixes/positive-gpos - http://bugs.debian.org/545234 [perl #69056] Fix \\G crash on first match"
++	,"DEBPKG:debian/devel-ppport-ia64-optim - http://bugs.debian.org/548943 Work around an ICE on ia64"
++	,"DEBPKG:debian/dynaloader-config - http://bugs.debian.org/549170 Make DynaLoader work without Config_heavy.pl again"
++	,"DEBPKG:fixes/trie-logic-match - http://bugs.debian.org/552291 Fix a DoS in Unicode processing [CVE-2009-3626]"
++	,"DEBPKG:fixes/hppa-thread-eagain - http://bugs.debian.org/554218 make the threads-shared test suite more robust, fixing failures on hppa"
++	,"DEBPKG:fixes/crash-on-undefined-destroy - http://bugs.debian.org/564074 [perl #71952] Fix a NULL pointer dereference when looking for a DESTROY method"
++	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-10 in patchlevel.h"
