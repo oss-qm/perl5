@@ -1,4 +1,4 @@
-perl (5.10.1-10) UNRELEASED; urgency=low
+perl (5.10.1-10) experimental; urgency=low
 
   * Add conflicts/replaces/provides for libtime-local-perl. (Closes: #567188)
   * Really add the new perl-modules README.Debian. (Closes: #565721)
@@ -12,8 +12,9 @@ perl (5.10.1-10) UNRELEASED; urgency=low
     packaging in debian/copyright.
   * Don't try to ship Changes5.* or patching.pod in perl-doc anymore,
     they have been removed upstream for 5.10.1.
+  * Upload to experimental to verify that the source format changes work
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 28 Jan 2010 11:56:28 +0200
+ -- Niko Tyni <ntyni@debian.org>  Fri, 29 Jan 2010 21:52:06 +0200
 
 perl (5.10.1-9) unstable; urgency=low
 
