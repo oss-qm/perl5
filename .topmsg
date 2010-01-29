@@ -1,7 +1,8 @@
 From: Niko Tyni <ntyni@debian.org>
 Subject: Honor TMPDIR when open()ing an anonymous temporary file
-Closes: 528544
-    
+Bug-Debian: http://bugs.debian.org/528544
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=66452
+
 [perl #66452]
 
 As reported by Norbert Buchmuller <norbi@nix.hu>, opening an anonymous
