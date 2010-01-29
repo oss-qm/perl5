@@ -1,6 +1,4 @@
-Changes5.*		perl
 Porting/Contract	perl
-Porting/patching.pod	perl
 Porting/pumpkin.pod	perl
 README			perl
 debian/changelog			perl-doc/changelog.Debian
