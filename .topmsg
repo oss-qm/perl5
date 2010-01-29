@@ -1,4 +1,5 @@
 Subject: Prune the list of libraries wanted to what we actually need.
+Bug-Debian: http://bugs.debian.org/128355
 
 We want to keep the dependencies on perl-base as small as possible,
 and some of the original list may be present on buildds (see Bug#128355).
