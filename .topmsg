@@ -1,5 +1,6 @@
-From: Niko Tyni <ntyni@debian.org>
+From: Samuel Thibault <sthibault@debian.org>
 Subject: Add gcc predefined macros to $Config{cppsymbols} on GNU/Hurd.
-Closes: 544307
-    
-Patch by Samuel Thibault, not forwarded upstream yet.
+Bug-Debian: http://bugs.debian.org/544307
+Forwarded: perl5-porters@perl.org
+
+Sent upstream 20100131 by Niko Tyni <ntyni@debian.org>
