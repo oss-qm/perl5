@@ -130,7 +130,11 @@ case "$optimize" in
         ppc*)
             # on ppc, it seems that gcc (at least gcc 3.3.2) isn't happy
             # with -O2 ; so downgrade to -O1.
-            optimize='-O1'
+            case "`${cc:-gcc} -v 2>&1`" in
+            *"version 3."*)
+                optimize='-O1'
+            ;;
+            esac
         ;;
         ia64*)
             # This architecture has had various problems with gcc's
