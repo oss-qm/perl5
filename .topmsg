@@ -1,2 +1,5 @@
-Subject: Don't need to downgrade optimisation on ppc/ia64 with gcc 4.x
+From: Niko Tyni <ntyni@debian.org
+Subject: Don't need to downgrade optimisation on ppc with gcc 4.x
+Forwarded: perl5-porters@perl.org
 
+Sent to p5p 20100131 by Niko Tyni <ntyni@debian.org>
