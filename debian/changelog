@@ -1,6 +1,8 @@
 perl (5.10.1-11) UNRELEASED; urgency=low
 
   * Unapply an obsoleted (and broken) Object::Accessor POD patch.
+  * Make perl-base conflict with older versions of safe-rm to unbreak
+    maintainer scripts on partial upgrades. (Closes: #566080)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 30 Jan 2010 15:24:45 +0200
 
