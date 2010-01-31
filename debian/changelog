@@ -1,6 +1,8 @@
 perl (5.10.1-11) UNRELEASED; urgency=low
 
-  * Unapply an obsoleted (and broken) Object::Accessor POD patch.
+  * Unapply obsolete Debian patches:
+    - Object::Accessor POD patch (fixed in 5.10.1)
+    - "missing /etc/hosts"       (fixed in 5.10.1)
   * Make perl-base conflict with older versions of safe-rm to unbreak
     maintainer scripts on partial upgrades. (Closes: #566080)
 

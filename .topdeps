@@ -14,7 +14,6 @@ debian/instmodsh_doc
 debian/ld_run_path
 debian/libnet_config_path
 debian/m68k_thread_stress
-debian/missing_hosts
 debian/mod_paths
 debian/module_build_man_extensions
 debian/perl_synopsis
