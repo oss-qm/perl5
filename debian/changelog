@@ -3,6 +3,7 @@ perl (5.10.1-11) UNRELEASED; urgency=low
   * Unapply obsolete Debian patches:
     - Object::Accessor POD patch (fixed in 5.10.1)
     - "missing /etc/hosts"       (fixed in 5.10.1)
+    - "arm fp non-IEEE rounding"
   * Make perl-base conflict with older versions of safe-rm to unbreak
     maintainer scripts on partial upgrades. (Closes: #566080)
   * Rework the debian/ppc_ia64_optim patch to a more minimal one only

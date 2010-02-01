@@ -1,5 +1,4 @@
 upstream
-debian/arm_fp
 debian/arm_optim
 debian/arm_thread_stress_timeout
 debian/cpan_config_path
