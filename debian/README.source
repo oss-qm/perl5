@@ -95,7 +95,7 @@ and the like can use the old way of standalone patch handling described
 above, or just hack the source and ignore debian/patches altogether.
 
 First, you need to have the 'topgit' package installed. The current version
-as of this writing is 0.7-1.
+as of this writing is 0.8-1.
 
 The TopGit procedure for applying a new patch is:
 
@@ -106,6 +106,7 @@ The TopGit procedure for applying a new patch is:
  tg depend add fixes/foo
  tg update
  git-dch # or just plain dch, YMMV
+ tg push # assuming it works
 
 The procedure for tagging a new package version is (broadly):
 
@@ -127,7 +128,9 @@ implementation):
  tg update
  sed -i '/obsolete/ d' .topdeps # until 'tg depend remove' gets implemented
  git commit -m 'retire fixes/obsolete' .topdeps
- tg delete fixes/obsolete
+ tg push # master
+ tg push fixes/obsolete # won't be pushed along with master anymore
+ tg delete fixes/obsolete # optional
 
 Credits
 -------
@@ -141,5 +144,5 @@ Previous maintainers of Debian Perl packages:
 
  -- Brendan O'Dea <bod@debian.org>  Tue,  8 Mar 2005 19:30:38 +1100
 
- -- Niko Tyni <ntyni@debian.org> Sun, 04 Jan 2009 14:58:46 +0200
+ -- Niko Tyni <ntyni@debian.org> Wed, 03 Feb 2010 14:47:51 +0200
 
