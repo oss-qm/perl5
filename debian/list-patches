@@ -30,6 +30,8 @@ while (<>) { # input is debian/patches/series
     $h{"Bug-Debian"} =~ /(\d+)/ and $h{DEBBUG} = "http://bugs.debian.org/$1";
     $h{Bug} =~ /rt\.cpan\.org.*id=(\d+)/ and $h{CPAN} = "[rt.cpan.org #$1]";
     $h{Bug} =~ /rt\.perl\.org.*id=(\d+)/ and $h{perlbug} = "[perl #$1]";
+    $h{Origin} =~ m|http://perl5\.git\.perl\.org/perl\.git/commit/([0-9a-f]{7})|i
+        and $h{Commit} = "[" . (lc $1) . "]";
     my $desc = $h{Description} || $h{Subject} || "(no description provided)";
     $desc =~ s/\\/\\\\/g; # escape backslashes
     print join(" ", grep { length }
@@ -37,6 +39,7 @@ while (<>) { # input is debian/patches/series
         $h{DEBBUG},
         $h{CPAN},
         $h{perlbug},
+        $h{Commit},
         $desc,
     ), "\n";
     close F;
