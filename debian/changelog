@@ -1,4 +1,4 @@
-perl (5.10.1-11) UNRELEASED; urgency=low
+perl (5.10.1-11) unstable; urgency=low
 
   * Unapply obsolete Debian patches:
     - Object::Accessor POD patch (fixed in 5.10.1)
@@ -10,8 +10,9 @@ perl (5.10.1-11) UNRELEASED; urgency=low
     maintainer scripts on partial upgrades. (Closes: #566080)
   * Update debian/README.source to recommend using quilt in NMUs.
   * Include upstream commit information in patchlevel.h.
+  * Upload to unstable.
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 30 Jan 2010 15:24:45 +0200
+ -- Niko Tyni <ntyni@debian.org>  Wed, 03 Feb 2010 22:38:26 +0200
 
 perl (5.10.1-10) experimental; urgency=low
 
