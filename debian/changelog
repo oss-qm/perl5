@@ -5,6 +5,7 @@ perl (5.10.1-11) UNRELEASED; urgency=low
     - "missing /etc/hosts"       (fixed in 5.10.1)
     - "arm fp non-IEEE rounding" (fixed in armel)
     - "ppc/ia64 optimization upgrade" (no-op since 5.10.0-5)
+    - "arm optimization downgrade" (fixed sometime after gcc 4.0)
   * Make perl-base conflict with older versions of safe-rm to unbreak
     maintainer scripts on partial upgrades. (Closes: #566080)
   * Update debian/README.source to recommend using quilt in NMUs.
