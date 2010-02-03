@@ -1,6 +1,7 @@
 From: Niko Tyni <ntyni@debian.org>
 Subject: Escape backslashes in .IX entries
-Closes: 521256
+Bug-Debian: http://bugs.debian.org/521256
+Origin: upstream, http://git.eyrie.org/?p=perl/podlators.git;a=commit;h=8de2177170c79800d81d480227643c1c2ce84a0a
 
 Applicable parts of podlators upstream git commit
 release/2.2.2-6-g8de2177 
