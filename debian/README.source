@@ -60,23 +60,16 @@ The Debian build process consists of the following components:
   debian/patches
     directory containg the patches applied (see above).  These are maintained
     with TopGit, but if a standalone way to add a new patch is needed 
-    (for instance when NMUing), the procedure is:
+    (for instance when NMUing), the recommended way is to use quilt(1).
+    Running './debian/rules refresh-patchlevel' afterwards will include
+    the patch in `perl -V' output.
 
-      fakeroot debian/rules clean
-      debian/rules unpatch
-
-    at this point, the directory should be identical to the upstream
-    source with the exception of the debian subdir.  Any changes are
-    made, patches applied etc., then:
-
-      (cd ..; diff -Naur --exclude=debian perl-5.10.0.orig perl-5.10.0) \
-	  >debian/patches/<new>
-      patch -Rp1 <debian/patches/<new>
-      echo "<new>" >> debian/patches/series
-      debian/rules patch
-
-    The new patch should then be edited to add a descriptive text block
-    at the top.
+      quilt new debian/myfix
+      quilt add <file>
+      [ hack <file> ]
+      echo 'patch description (Closes: #xxxxxx) | quilt header -a
+      quilt refresh
+      ./debian/rules refresh-patchlevel
 
   debian/released-versions
     contains a list of released Debian versions, used by the
