@@ -1,6 +1,7 @@
 From: Niko Tyni <ntyni@debian.org>
 Subject: Fix File::Copy::copy with pipes on GNU/kFreeBSD
 Bug-Debian: http://bugs.debian.org/537555
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/16f708c9bc0dc48713b200031295a40bed83bbfc
 
 Quoting Petr Salinger:
 The Copy tries to detect whether source and dest are the same files.
