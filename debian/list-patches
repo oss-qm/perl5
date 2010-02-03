@@ -22,7 +22,7 @@ while (<>) { # input is debian/patches/series
     while (<F>) {
         last if !/\S/;
         /^(.+?): *(.+)$/ and $h{$1} = $2;
-        /(Closes: *|Bug)#?(\d+)/ and $h{DEBBUG} ||= "http://bugs.debian.org/$2";
+        /(Closes: *|Bug)#?(\d+)/i and $h{DEBBUG} ||= "http://bugs.debian.org/$2";
         /(\[rt\.cpan\.org #\d+\])/ and $h{CPAN} ||= $1;
         /(\[perl #\d+\])/ and $h{perlbug} ||= $1;
     }
