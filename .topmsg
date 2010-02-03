@@ -2,6 +2,7 @@ From: Eugene V. Lyubimkin <jackyf@debian.org>
 Subject: Fix a DoS in Unicode processing [CVE-2009-3626]
 Bug-Debian: http://bugs.debian.org/552291
 Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=69973
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/0abd0d78a73da1c4d13b1c700526b7e5d03b32d4.
 
 Resolves segmentation fault in some tricky tainted non-UTF-8 matches.
 
