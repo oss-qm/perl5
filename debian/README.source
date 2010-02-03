@@ -67,7 +67,8 @@ The Debian build process consists of the following components:
       quilt new debian/myfix
       quilt add <file>
       [ hack <file> ]
-      echo 'patch description (Closes: #xxxxxx) | quilt header -a
+      echo 'patch description (Closes: #xxxxxx)' | quilt header -a
+      # (or even better provide a full DEP-3 compatible header)
       quilt refresh
       ./debian/rules refresh-patchlevel
 
