@@ -12,7 +12,7 @@ use warnings;
 use Config;
 
 
-plan (tests => 59);
+plan (tests => 60);
 
 $Is_MSWin32  = $^O eq 'MSWin32';
 $Is_NetWare  = $^O eq 'NetWare';
@@ -474,4 +474,10 @@ SKIP: {
     eval { my %h = qw(A B); %ENV = (PATH => (keys %h)[0]) };
     is $@, '', 'Assign a shared key to a magic hash';
     $@ and print "# $@";
+}
+
+{
+    $! = 9999;
+    is int $!, 9999, q{[perl #72850] Core dump in bleadperl from perl -e '$! = 9999; $a = $!;'};
+
 }
