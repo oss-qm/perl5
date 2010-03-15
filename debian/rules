@@ -130,9 +130,7 @@ endif
 endif
 
 	# remove some cruft
-	rm -f $(bin)/suidperl
 	rm -f $(lib)/.packlist
-	rm -f $(lib)/CORE/sperl.o
 
 	# installperl copies the symlinks as a files
 	rm -f $(lib)/CORE/libperl.so $(lib)/CORE/libperl.so.$(version)
@@ -179,9 +177,6 @@ endif
 
 	# move pod out of -base modules and into .pod files in -doc
 	./perl.static debian/splitdoc $(build)/perl-base
-
-	# provide suidperl link
-	ln -s perl $(build)/perl-suid/usr/bin/suidperl
 
 	# create symlinks to match @INC
 	ln -s $(fullversion) $(build)/perl-base/usr/lib/perl/$(version)
@@ -307,8 +302,9 @@ ifeq ($(strip),yes)
 	    ln $(debug)/usr/bin/perl \
 	        $(debug)/usr/bin/perl$(fullversion)
 endif
-	# re-create versioned link so that suidperl works
-	# this needs to be after the stripping part
+	# re-create versioned link
+	# this has to go after the stripping part if there are other links
+    # to the file (like perl-suid used to)
 	ln $(build)/perl-base/usr/bin/perl \
 	    $(build)/perl-base/usr/bin/perl$(fullversion)
 
@@ -322,17 +318,11 @@ endif
 	find $(build)/*/usr/share/doc $(build)/*/usr/share/man -type f \
 	    -print | xargs -r chmod 644
 
-	# suidperl needs to be...
-	chmod u+s $(build)/perl-suid/usr/bin/sperl$(fullversion)
-
 	# links
-	mkdir -p $(build)/perl-debug/usr/share/man/man1 \
-	    $(build)/perl-suid/usr/share/man/man1
+	mkdir -p $(build)/perl-debug/usr/share/man/man1
 
 	ln -s perl.1.gz $(build)/perl-debug/usr/share/man/man1/debugperl.1.gz
-	ln -s perl.1.gz $(build)/perl-suid/usr/share/man/man1/suidperl.1.gz
 	ln -s perl.1.gz $(build)/perl-base/usr/share/man/man1/perl$(fullversion).1.gz
-	ln -s perl.1.gz $(build)/perl-suid/usr/share/man/man1/sperl$(fullversion).1.gz
 	ln -s c2ph.1.gz $(build)/perl/usr/share/man/man1/pstruct.1.gz
 	ln -s s2p.1.gz $(build)/perl/usr/share/man/man1/psed.1.gz
 	ln -s perlbug.1.gz $(build)/perl/usr/share/man/man1/perlthanks.1.gz

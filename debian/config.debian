@@ -15,7 +15,7 @@ debugging=-g
 case "$1" in
     --static) # static perl
     	build_type=static
-	opts="-Uuseshrplib -Dd_dosuid";;
+	opts="-Uuseshrplib";;
 
     --debug) # debugperl
     	build_type=debug
@@ -24,7 +24,7 @@ case "$1" in
 
     --shared) # shared library
     	build_type=shared
-	opts="-Duseshrplib -Dlibperl=libperl.so.$fullver -Dd_dosuid";;
+	opts="-Duseshrplib -Dlibperl=libperl.so.$fullver";;
 
     --version)
 	exec echo $ver;;

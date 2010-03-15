@@ -189,15 +189,6 @@ Description: debug-enabled Perl interpreter
  than perl programs, which may be traced/debugged using the standard
  perl binary using the -d switch (see perldebug(1)).
 
-Package: perl-suid
-Priority: optional
-Architecture: any
-Depends: perl (= ${binary:Version}), ${shlibs:Depends}
-Description: runs setuid Perl scripts
- suidperl is a setuid root helper program which is invoked by perl when
- executing scripts with setuid/gid bits set on systems (like Linux) which
- don't have support setuid script execution natively in the kernel.
-
 Package: libperl5.12
 Section: libs
 Priority: optional
