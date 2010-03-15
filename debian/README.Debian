@@ -7,7 +7,7 @@ Perl Packages for Debian
   perl-doc         - Perl documentation.
   perl-debug       - Debug-enabled Perl interpreter.
   perl-suid        - Runs setuid Perl scripts.
-  libperl5.10      - Shared Perl library.
+  libperl5.12      - Shared Perl library.
   libperl-dev      - Perl library: development files.
   libcgi-fast-perl - CGI::Fast Perl module.
 

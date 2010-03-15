@@ -198,7 +198,7 @@ Description: runs setuid Perl scripts
  executing scripts with setuid/gid bits set on systems (like Linux) which
  don't have support setuid script execution natively in the kernel.
 
-Package: libperl5.10
+Package: libperl5.12
 Section: libs
 Priority: optional
 Architecture: any
@@ -215,7 +215,7 @@ Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: perl (= ${binary:Version}), libperl5.10 (= ${binary:Version})
+Depends: perl (= ${binary:Version}), libperl5.12 (= ${binary:Version})
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter and for
  programs compiled with perlcc.
