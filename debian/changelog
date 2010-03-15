@@ -1,6 +1,6 @@
 perl (5.10.1-12) UNRELEASED; urgency=low
 
-  * 
+  * Fix the location of an Archive::Tar test file.
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 16 Mar 2010 00:57:27 +0200
 
