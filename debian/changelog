@@ -1,6 +1,8 @@
 perl (5.10.1-12) UNRELEASED; urgency=low
 
   * Fix the location of an Archive::Tar test file.
+  * Update perl-base conflict versions on libscalar-list-utils-perl
+    and libxsloader-perl.
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 16 Mar 2010 00:57:27 +0200
 
