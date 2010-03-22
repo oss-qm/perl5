@@ -48,6 +48,9 @@ do
     inc_version_list="$ver${inc_version_list:+ }$inc_version_list"
     inc_version_list_init="\"$ver\",$inc_version_list_init"
 done <debian/released-versions
+if [ -n "$inc_version_list" ]; then
+    d_inc_version_list=define
+fi
 
 # set generic email addresses, host/domain names
 cf_by='Debian Project'
