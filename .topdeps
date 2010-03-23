@@ -38,3 +38,4 @@ debian/dynaloader-config
 fixes/trie-logic-match
 fixes/hppa-thread-eagain
 fixes/crash-on-undefined-destroy
+fixes/tainted-errno

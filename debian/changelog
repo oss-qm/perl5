@@ -5,6 +5,7 @@ perl (5.10.1-12) UNRELEASED; urgency=low
     and libxsloader-perl.
   * Properly include the 5.10.0 site directories on @INC as per Perl policy.
     (Closes: #575030)
+  * Fix an errno stringification bug in taint mode. (Closes: #574129) 
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 16 Mar 2010 00:57:27 +0200
 
