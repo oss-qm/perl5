@@ -1,0 +1,9 @@
+Author: David Mitchell <davem@iabyn.com>
+Author: Nicholas Clark <nick@ccl4.org>
+Subject: fix an errno stringification bug in taint mode
+Bug-Debian: http://bugs.debian.org/574129
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=61976
+Origin: http://perl5.git.perl.org/perl.git/commit/0097b436152452e403cc71b4f1a1cfd30ec0ba1a 
+Origin: http://perl5.git.perl.org/perl.git/commit/be1cf43c8dab9dd236839206d53611f7e7d2d856
+
+Hopefully fixes $! stringification problems seen with spamassassin (#574129).
