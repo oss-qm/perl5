@@ -111,9 +111,7 @@ sub dl_load_flags { 0x00 }
 
 EOT
 
-# Debian-specific shortcut for the perl-base/perl split
-# see http://bugs.debian.org/549170
-if (1 || $ENV{PERL_BUILD_EXPAND_CONFIG_VARS}) {
+if ($ENV{PERL_BUILD_EXPAND_CONFIG_VARS}) {
     print OUT "(\$dl_dlext, \$dl_so, \$dlsrc) = (",
               to_string($Config{'dlext'}), ",",
               to_string($Config{'so'}), ",",
@@ -121,8 +119,18 @@ if (1 || $ENV{PERL_BUILD_EXPAND_CONFIG_VARS}) {
 }
 else {
     print OUT <<'EOT';
+# Debian-specific change for the perl-base/perl split
+# see http://bugs.debian.org/549170
+# and http://bugs.debian.org/575308
+eval {
 ($dl_dlext, $dl_so, $dlsrc) = @Config::Config{qw(dlext so dlsrc)};
+};
+
 EOT
+    print OUT "(\$dl_dlext, \$dl_so, \$dlsrc) = (",
+              to_string($Config{'dlext'}), ",",
+              to_string($Config{'so'}), ",",
+              to_string($Config{'dlsrc'}), ") if \$\@\n;" ;
 }
 
 print OUT expand_os_specific(<<'EOT');
