@@ -3,6 +3,8 @@ perl (5.12.0~rc1-1) UNRELEASED; urgency=low
   * New upstream release candidate.
   * Update conflicts/replaces/provides entries for the
     numerous separately packaged modules.
+  * Unversion the libterm-readline-gnu-perl build conflict again due to a
+    new failure mode in lib/perl5db.t.
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 24 Mar 2010 14:36:39 +0200
 
