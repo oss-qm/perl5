@@ -1,8 +1,8 @@
 perl (5.10.1-12) UNRELEASED; urgency=low
 
   * Fix the location of an Archive::Tar test file.
-  * Update perl-base conflict versions on libscalar-list-utils-perl
-    and libxsloader-perl.
+  * Update conflict versions on libscalar-list-utils-perl, libxsloader-perl,
+    and libnet-perl.
   * Properly include the 5.10.0 site directories on @INC as per Perl policy.
     (Closes: #575030)
   * Fix an errno stringification bug in taint mode. (Closes: #574129) 

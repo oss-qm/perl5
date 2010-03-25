@@ -64,7 +64,7 @@ Depends: perl (>= ${Upstream-Version}-1)
 Conflicts: libpod-parser-perl (<< 1.37),
  libansicolor-perl (<< 1.10-1),
  libfile-temp-perl (<< 0.22),
- libnet-perl (<= 1:1.19-3),
+ libnet-perl (<= 1:1.22),
  libattribute-handlers-perl (<< 0.85),
  libcgi-pm-perl (<< 3.43),
  libi18n-langtags-perl (<< 0.35-1),
