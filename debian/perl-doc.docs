@@ -1,4 +1,3 @@
-Porting/Contract	perl
 Porting/pumpkin.pod	perl
 README			perl
 debian/changelog			perl-doc/changelog.Debian
