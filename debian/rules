@@ -227,8 +227,8 @@ endif
 	    then \
 		while read src target; \
 		do \
-		    d=`expr $$target : '\([^/][^/]*\)'`; \
-		    test -d $$doc/$$d || mkdir $$doc/$$d; \
+		    d=`echo $$target | sed 's,/[^/]*$$,,'`; \
+		    test -d $$doc/$$d || mkdir -p $$doc/$$d; \
 		    cp -p $$src $$doc/$$target; \
 		done <debian/$$p.docs; \
 	    fi; \
@@ -245,14 +245,6 @@ endif
 	    cp debian/$$p.lintian-overrides $$d/$$p; \
 	    fi; \
 	done
-
-	# move module docs to /usr/share/doc/perl
-	while read src target; \
-	do \
-	    doc=$(build)/perl-doc/usr/share/doc/perl/$$target; \
-	    test -d $$doc || mkdir $$doc; \
-	    mv $(build)/perl-modules/usr/share/perl/$(fullversion)/$$src $$doc; \
-	done <debian/perl-doc.moduledocs
 
 	# remove empty directories left after moving module docs
 	find $(build)/perl-modules/usr/share/perl/$(fullversion) \

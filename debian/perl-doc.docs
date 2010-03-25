@@ -4,3 +4,4 @@ README			perl
 debian/changelog			perl-doc/changelog.Debian
 debian/copyright			perl-doc/copyright
 debian/perl-doc.README.Debian   perl-doc/README.Debian
+cpan/libnet/Config.eg perl-doc/Net/Config.eg
