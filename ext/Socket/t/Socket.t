@@ -1,8 +1,6 @@
 #!./perl
 
 BEGIN {
-    chdir 't' if -d 't';
-    @INC = '../lib';
     require Config; import Config;
     if ($Config{'extensions'} !~ /\bSocket\b/ && 
         !(($^O eq 'VMS') && $Config{d_socket})) {
@@ -14,7 +12,7 @@ BEGIN {
 	
 use Socket qw(:all);
 
-print "1..18\n";
+print "1..21\n";
 
 $has_echo = $^O ne 'MSWin32';
 $alarmed = 0;
@@ -176,4 +174,13 @@ if ($^O eq 'linux') {
     # doesn't have abstract socket support
     print "ok 17 - skipped on this platform\n";
     print "ok 18 - skipped on this platform\n";
+}
+
+if($Config{d_inetntop} && $Config{d_inetaton}){
+    print ((inet_ntop(AF_INET, inet_pton(AF_INET, "10.20.30.40")) eq "10.20.30.40") ? "ok 19\n" : "not ok 19\n");
+    print ((inet_ntop(AF_INET, inet_aton("10.20.30.40")) eq "10.20.30.40") ? "ok 20\n" : "not ok 20\n");
+    print (lc(inet_ntop(AF_INET6, inet_pton(AF_INET6, "2001:503:BA3E::2:30")) eq "2001:503:ba3e::2:30") ? "ok 21\n" : "not ok 21\n");
+} else {
+    # no IPv6 
+    print "ok $_ - skipped on this platform\n" for 19 .. 21;
 }
