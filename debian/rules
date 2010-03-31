@@ -182,6 +182,16 @@ endif
 	ln -s $(fullversion) $(build)/perl-base/usr/lib/perl/$(version)
 	ln -s $(fullversion) $(build)/perl-base/usr/share/perl/$(version)
 
+ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
+	# Verify that perl-base stays self contained
+	# plain "use IO " and "use re" are deprecated and/or useless
+
+	./perl.static $(srcdir)/debian/check-require $(build)/perl-base \
+	  < debian/perl-base.files
+endif
+endif
+
 	# move section 1 manual pages back to perl for installed programs
 	mkdir -p $(build)/perl/usr/share/man/man1
 	find $(build)/perl/usr/bin -type f -printf "%f\n" | \
