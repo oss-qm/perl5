@@ -68,9 +68,6 @@ usr/*/perl/*/overload.pm
 usr/*/perl/*/strict.pm
 usr/*/perl/*/utf8.pm
 usr/*/perl/*/utf8_heavy.pl
-usr/*/perl/*/unicore/PVA.pl
-usr/*/perl/*/unicore/Exact.pl
-usr/*/perl/*/unicore/Canonical.pl
 usr/*/perl/*/unicore/Heavy.pl
 usr/*/perl/*/unicore/To
 usr/*/perl/*/unicore/lib
