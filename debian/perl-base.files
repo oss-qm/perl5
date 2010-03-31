@@ -28,6 +28,8 @@ usr/*/perl/*/auto/DynaLoader
 usr/*/perl/*/auto/Fcntl
 usr/*/perl/*/auto/File/Glob
 usr/lib/perl/*/auto/Hash/Util/Util.so
+usr/lib/perl/*/auto/re/re.so
+usr/lib/perl/*/auto/attributes/attributes.so
 usr/lib/perl/*/auto/IO
 usr/lib/perl/*/auto/List/Util
 usr/lib/perl/*/auto/POSIX/POSIX.so
