@@ -29,6 +29,7 @@ $| = 1;
 #  Config_heavy.pl
 #  Config
 #  unicore/heavy.pl
+#  sys/ioctl.ph
 
 sub canonicalize {
 	local $_ = shift;
@@ -42,7 +43,7 @@ sub canonicalize {
 	};
 
 	# usr/*/perl/*/auto/File/Glob/Glob.so and the like should be ignored
-	return () if m|/| && !/\.p[lm]$/;
+	return () if m|/| && !/\.p[hlm]$/;
 
 	s|usr/[^/]+/perl/[^/]+/||;
 
@@ -67,7 +68,7 @@ sub check {
 		check($1);
 	};
 	print "$_: ";
-	if (/\.pl$/) { #  require "unicore/To/Upper.pl";
+	if (/\.p[hl]$/) { #  require "unicore/To/Upper.pl";
 		require $_;
 	} else { # require Fcntl; Fcntl->import;
 		eval qq{require $_; $_->import;};

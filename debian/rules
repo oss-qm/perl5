@@ -118,11 +118,10 @@ install-stamp: build-stamp
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	# Verify that the headers are usable
-	for ph in `< $(srcdir)/debian/headers sed -e 's/\.h$$/.ph/'`; do \
-		if [ ! -f $(srcdir)/$(lib)/$$ph ]; then \
+	for ph in `< debian/headers sed -e 's/\.h$$/.ph/'`; do \
+		if [ ! -f $(lib)/$$ph ]; then \
 			echo "$$ph: missing"; else \
-		$(srcdir)/perl.static -I $(srcdir)/$(lib) -I $(srcdir)/$(share) -e \
-			"print '"$$ph": '; require '"$$ph"'; print \"ok\n\";" \
+			echo $$ph | ./perl.static debian/check-require $(tmp) \
 				|| exit 1; \
 		fi; \
 	done
