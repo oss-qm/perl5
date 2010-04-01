@@ -367,11 +367,11 @@ ifeq ($(installtype),static)
 	echo 'libperl $(version) libperl$(version) (= $${source:Version})' \
 	    >debian/shlibs.local
 
-	echo 'libperl $(version) libperl$(version) (>= $(fullversion))' \
+	echo 'libperl $(version) libperl$(version) (>= $(package_upstream_version))' \
 	    >debian/libperl$(version).shlibs
 else
 	echo 'libperl $(version)' >debian/shlibs.local
-	echo 'libperl $(version) libperl$(version) (>= $(fullversion))' \
+	echo 'libperl $(version) libperl$(version) (>= $(package_upstream_version))' \
 	    >debian/perl-base.shlibs
 endif
 
