@@ -1,6 +1,4 @@
 usr/bin/perl
-usr/lib/perl/*/B.pm
-usr/lib/perl/*/B/Deparse.pm
 usr/lib/perl/*/Config.pm
 usr/lib/perl/*/Config_heavy.pl
 usr/lib/perl/*/Config_git.pl
