@@ -20,7 +20,7 @@ Conflicts: autoconf2.13 (<< 2.13-45),
  libfile-spec-perl (<< 3.30),
  safe-rm (<< 0.8),
  libxsloader-perl (<< 0.10)
-Replaces: perl (<= 5.10.1-11), perl-modules (<< 5.10.1-1), libperl5.8 (<< 5.8.0-20),
+Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.10.1-1), libperl5.8 (<< 5.8.0-20),
  libscalar-list-utils-perl,
  libxsloader-perl 
 Provides: perl5-base, ${perlapi:Provides},
@@ -241,7 +241,7 @@ Conflicts: perl-doc (<< ${Upstream-Version}-1),
  libthreads-perl (<< 1.72),
  libthreads-shared-perl (<< 1.29),
  libtime-piece-perl (<< 1.15)
-Replaces: perl-base (<< 5.10.1-11),
+Replaces: perl-base (<< 5.10.1-12),
  perl-doc (<< 5.8.0-1),
  perl-modules (<< 5.8.1-1),
  libarchive-tar-perl (<= 1.38-2),
