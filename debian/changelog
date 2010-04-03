@@ -1,4 +1,4 @@
-perl (5.12.0~rc1-1) UNRELEASED; urgency=low
+perl (5.12.0~rc3-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
   * Update conflicts/replaces/provides entries for the
