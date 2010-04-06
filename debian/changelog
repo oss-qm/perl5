@@ -1,4 +1,4 @@
-perl (5.12.0~rc3-1) UNRELEASED; urgency=low
+perl (5.12.0~rc3-1) experimental; urgency=low
 
   * New upstream release candidate.
   * Update conflicts/replaces/provides entries for the
@@ -10,7 +10,7 @@ perl (5.12.0~rc3-1) UNRELEASED; urgency=low
   * Use 64 bit integers (-Duse64bitint) on all platforms. (Closes:
     #310995)
 
- -- Niko Tyni <ntyni@debian.org>  Wed, 31 Mar 2010 10:07:46 +0300
+ -- Niko Tyni <ntyni@debian.org>  Tue, 06 Apr 2010 20:08:41 +0300
 
 perl (5.10.1-12) UNRELEASED; urgency=low
 
