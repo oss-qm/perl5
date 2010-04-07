@@ -10,6 +10,7 @@ perl (5.10.1-12) UNRELEASED; urgency=low
     changes introduced in 5.10.1-5. (Closes: #575308)
   * Remove B and B::Deparse from perl-base, they haven't worked without
     the perl package for a long time if ever. (Closes: #576153)
+  * Upgrade to Standards-Version 3.8.4 with no changes.
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 16 Mar 2010 00:57:27 +0200
 
