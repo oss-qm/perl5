@@ -74,6 +74,13 @@ case "$arch_cpu:$build_type" in
 	ccflags="$ccflags -fno-regmove";;
 esac
 
+case "$arch_cpu" in
+	sparc)
+		;;
+	*)
+		opts="$opts -Duse64bitint";;
+esac
+
 case ",$DEB_BUILD_OPTIONS," in
     *[,\ ]noopt[,\ ]*)
 	optimize="$optimize${optimize:+ }-O0";;
@@ -102,7 +109,6 @@ eval /bin/bash Configure			\
     -Dman3dir=/usr/share/man/man3		\
     -Dsiteman1dir=/usr/local/man/man1		\
     -Dsiteman3dir=/usr/local/man/man3		\
-    -Duse64bitint                               \
     -Dman1ext=1					\
     -Dman3ext=3perl				\
     -Dpager=/usr/bin/sensible-pager		\
