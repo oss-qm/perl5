@@ -1,0 +1,10 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix CPANPLUS test failures when HOME doesn't exist
+Bug: http://rt.cpan.org/Public/Bug/Display.html?id=52988
+Bug-Debian: http://bugs.debian.org/577011
+Origin: upstream
+
+The Debian autobuilders are configured with a non-existing $ENV{HOME},
+triggering a bug in CPANPLUS that causes test failures.
+
+Fix from CPANPLUS-0.9001.
