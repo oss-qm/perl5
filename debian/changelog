@@ -1,6 +1,13 @@
 perl (5.12.0-1) UNRELEASED; urgency=low
 
   * New upstream release.
+    + POD markup in the NAME section is now suppressed by podlators,
+      fixing garbled whatis information for perlpacktut. (Closes: #304143)
+    + "runaway format" errors have been removed. (Closes: #77707)
+    + Pod::Perldoc no longer generates broken markup for the last perlfunc
+      and perlvar entries. (Closes: #558147)
+    + Data::Dumper no longer crashes on an invalid push call.
+      (Closes: #513935)
   * Move CPANPLUS::Config::System to the right source directory.
   * Fix CPANPLUS test failures when $HOME does not exist. (Closes: #577011)
   * Disable -Duse64bitint on sparc due to test failures.  (Closes: #577016)
