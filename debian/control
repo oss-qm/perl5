@@ -7,8 +7,8 @@ Standards-Version: 3.8.4
 Build-Depends: file, cpio (>= 2.6-5), libdb4.7-dev, libgdbm-dev, netbase [!hurd-i386],
  gcc (>= 4:4.2), procps | hurd, zlib1g-dev | libz-dev, libbz2-dev
 Build-Conflicts: libterm-readline-gnu-perl, libfile-sharedir-perl
-Vcs-Git: git://git.debian.org/git/perl/perl.git
-Vcs-Browser: http://git.debian.org/?p=perl/perl.git
+Vcs-Git: git://git.debian.org/git/perl/perl-5.12.git
+Vcs-Browser: http://git.debian.org/?p=perl/perl-5.12.git
 
 Package: perl-base
 Essential: yes

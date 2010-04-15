@@ -13,6 +13,7 @@ perl (5.12.0-1) UNRELEASED; urgency=low
   * Disable -Duse64bitint on sparc due to test failures.  (Closes: #577016)
   * Build-Conflict with libfile-sharedir-perl to avoid Module-Build test
     failures due to ABI incompatibilities. (Closes: #577018)
+  * Point Vcs-* fields to the experimental git repository.
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 13 Apr 2010 22:25:28 +0300
 
