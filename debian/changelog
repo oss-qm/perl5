@@ -1,4 +1,4 @@
-perl (5.12.0-1) UNRELEASED; urgency=low
+perl (5.12.0-1) experimental; urgency=low
 
   * New upstream release.
     + POD markup in the NAME section is now suppressed by podlators,
@@ -16,7 +16,7 @@ perl (5.12.0-1) UNRELEASED; urgency=low
   * Set -Dusemorebits on all architectures to support long doubles.
     + apparently fixes use64bitint test failures on sparc. (Closes: #577016)
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 13 Apr 2010 22:25:28 +0300
+ -- Niko Tyni <ntyni@debian.org>  Fri, 16 Apr 2010 23:22:01 +0300
 
 perl (5.12.0~rc3-1) experimental; urgency=low
 
