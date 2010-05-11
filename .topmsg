@@ -1,0 +1,5 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix a test failure in perl5db.t when Term::ReadLine::Gnu is installed
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/5dec12c4fe365d1f431b0a1b786bfae24693e847
+
+Fixes a build conflict with libterm-readline-gnu-perl.
