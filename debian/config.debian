@@ -74,6 +74,11 @@ case "$arch_cpu:$build_type" in
 	ccflags="$ccflags -fno-regmove";;
 esac
 
+case "$arch_cpu" in
+    sparc) # work around a numeric conversion bug in 4.4
+	opts="$opts -Dcc=gcc-4.3";;
+esac
+
 case ",$DEB_BUILD_OPTIONS," in
     *[,\ ]noopt[,\ ]*)
 	optimize="$optimize${optimize:+ }-O0";;
