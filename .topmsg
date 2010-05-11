@@ -1,3 +1,8 @@
-Description: use -Os instead of -O2 on arm/armeb to fix build failures with gcc4
-Bug-Debian: http://bugs.debian.org/333510
+From: Niko Tyni <ntyni@debian.org>
+Description: Downgrade the optimization of sv.c on arm due to a gcc-4.4 bug
+Bug-Debian: http://bugs.debian.org/580334
+
+Regression from gcc-4.3, not reported yet.
+
+ perl -e '"-2" =~ /(.+)/; @foo=(); push @foo, $_ for $1..undef; print @foo ? "ok\n" : "not ok\n"'
 
