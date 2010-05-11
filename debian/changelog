@@ -1,6 +1,10 @@
 perl (5.12.0-2) UNRELEASED; urgency=low
 
-  * 
+  * Revert -Dusemorebits but leave -Duse64bitint to aim for consistency
+    across all the Debian architectures. See the discussion at
+    http://lists.debian.org/debian-devel/2010/05/msg00078.html
+    + fixes powerpc test failures due to non-IEEE compliant long doubles.
+      (Closes: #578295)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 11 May 2010 19:28:18 +0300
 
