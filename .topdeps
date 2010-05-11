@@ -25,3 +25,4 @@ debian/cpanplus_config_path
 fixes/autodie-flock
 debian/devel-ppport-ia64-optim
 fixes/cpanplus-without-home
+debian/arm_optim
