@@ -15,6 +15,7 @@ Essential: yes
 Priority: required
 Architecture: any
 Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.14.20)
+Breaks: libmarc-charset-perl (<< 1.2)
 Conflicts: autoconf2.13 (<< 2.13-45),
  libscalar-list-utils-perl (<< 1:1.22),
  libfile-spec-perl (<< 3.31),

@@ -7,6 +7,8 @@ perl (5.12.1-1) UNRELEASED; urgency=low
     + Recommend the now separately packaged versions
     + Modify the deprecation warnings to point to the Debian packages
       instead of CPAN.
+  * Break libmarc-charset-perl (<< 1.2) because the earlier versions
+    were sensitive to Perl ABI changes like use64bitint. (Closes: #579521)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 17 May 2010 12:12:39 +0300
 
