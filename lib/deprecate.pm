@@ -7,6 +7,13 @@ our $VERSION = 0.03;
 our %Config;
 unless (%Config) { require Config; *Config = \%Config::Config; }
 
+# Debian-specific change: recommend the separate Debian packages of
+# deprecated modules where available
+
+our %DEBIAN_PACKAGES = (
+    # None for the perl 5.22 cycle
+);
+
 # This isn't a public API. It's internal to code maintained by the perl-porters
 # If you would like it to be a public API, please send a patch with
 # documentation and tests. Until then, it may change without warning.
@@ -58,9 +65,15 @@ EOM
 	if (defined $callers_bitmask
 	    && (vec($callers_bitmask, $warnings::Offsets{deprecated}, 1)
 		|| vec($callers_bitmask, $warnings::Offsets{all}, 1))) {
-	    warn <<"EOM";
+		if (my $deb = $DEBIAN_PACKAGES{$package}) {
+		    warn <<"EOM";
+$package will be removed from the Perl core distribution in the next major release. Please install the separate $deb package. It is being used at $call_file, line $call_line.
+EOM
+		} else {
+		    warn <<"EOM";
 $package will be removed from the Perl core distribution in the next major release. Please install it from CPAN. It is being used at $call_file, line $call_line.
 EOM
+		}
 	}
     }
 }
