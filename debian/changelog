@@ -1,4 +1,4 @@
-perl (5.12.1-1) UNRELEASED; urgency=low
+perl (5.12.1-1) experimental; urgency=low
 
   * New upstream release.
     + upgrade the conflict versions of updated modules.
@@ -10,7 +10,7 @@ perl (5.12.1-1) UNRELEASED; urgency=low
   * Break libmarc-charset-perl (<< 1.2) because the earlier versions
     were sensitive to Perl ABI changes like use64bitint. (Closes: #579521)
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 17 May 2010 12:12:39 +0300
+ -- Niko Tyni <ntyni@debian.org>  Mon, 17 May 2010 16:16:54 +0300
 
 perl (5.12.0-2) experimental; urgency=low
 
