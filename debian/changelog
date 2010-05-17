@@ -3,7 +3,7 @@ perl (5.12.1-1) UNRELEASED; urgency=low
   * New upstream release.
     + upgrade the conflict versions of updated modules.
   * Transition away from the deprecated core modules
-    (Shell, Switch, Pod::Plainer, Class::ISA):
+    (Shell, Switch, Pod::Plainer, Class::ISA). (Closes: #580034)
     + Recommend the now separately packaged versions
     + Modify the deprecation warnings to point to the Debian packages
       instead of CPAN.
