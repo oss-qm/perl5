@@ -7,6 +7,70 @@ our $VERSION = 0.02;
 our %Config;
 unless (%Config) { require Config; *Config = \%Config::Config; }
 
+# Debian-specific change: recommend the separate Debian packages of
+# deprecated modules where available
+
+our %DEBIAN_PACKAGES = (
+    'Archive::Extract' => 'libarchive-extract-perl',
+    'B::Lint' => 'libb-lint-perl',
+    'B::Lint::Debug' => 'libb-lint-perl',
+    'CPANPLUS::Dist::Build' => 'libcpanplus-dist-build-perl',
+    'CPANPLUS::Dist::Build::Constants' => 'libcpanplus-dist-build-perl',
+    'CPANPLUS' => 'libcpanplus-perl',
+    'CPANPLUS::Backend' => 'libcpanplus-perl',
+    'CPANPLUS::Backend::RV' => 'libcpanplus-perl',
+    'CPANPLUS::Config' => 'libcpanplus-perl',
+    'CPANPLUS::Config::HomeEnv' => 'libcpanplus-perl',
+    'CPANPLUS::Configure' => 'libcpanplus-perl',
+    'CPANPLUS::Configure::Setup' => 'libcpanplus-perl',
+    'CPANPLUS::Dist' => 'libcpanplus-perl',
+    'CPANPLUS::Dist::Autobundle' => 'libcpanplus-perl',
+    'CPANPLUS::Dist::Base' => 'libcpanplus-perl',
+    'CPANPLUS::Dist::MM' => 'libcpanplus-perl',
+    'CPANPLUS::Dist::Sample' => 'libcpanplus-perl',
+    'CPANPLUS::Error' => 'libcpanplus-perl',
+    'CPANPLUS::Internals' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Constants' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Constants::Report' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Extract' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Fetch' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Report' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Search' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Source' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Source::Memory' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Source::SQLite' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Source::SQLite::Tie' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Utils' => 'libcpanplus-perl',
+    'CPANPLUS::Internals::Utils::Autoflush' => 'libcpanplus-perl',
+    'CPANPLUS::Module' => 'libcpanplus-perl',
+    'CPANPLUS::Module::Author' => 'libcpanplus-perl',
+    'CPANPLUS::Module::Author::Fake' => 'libcpanplus-perl',
+    'CPANPLUS::Module::Checksums' => 'libcpanplus-perl',
+    'CPANPLUS::Module::Fake' => 'libcpanplus-perl',
+    'CPANPLUS::Module::Signature' => 'libcpanplus-perl',
+    'CPANPLUS::Selfupdate' => 'libcpanplus-perl',
+    'CPANPLUS::Shell' => 'libcpanplus-perl',
+    'CPANPLUS::Shell::Classic' => 'libcpanplus-perl',
+    'CPANPLUS::Shell::Default' => 'libcpanplus-perl',
+    'CPANPLUS::Shell::Default::Plugins::CustomSource' => 'libcpanplus-perl',
+    'CPANPLUS::Shell::Default::Plugins::Remote' => 'libcpanplus-perl',
+    'CPANPLUS::Shell::Default::Plugins::Source' => 'libcpanplus-perl',
+    'File::CheckTree' => 'libfile-checktree-perl',
+    'Log::Message::Simple' => 'liblog-message-simple-perl',
+    'Log::Message' => 'liblog-message-perl',
+    'Log::Message::Config' => 'liblog-message-perl',
+    'Log::Message::Handlers' => 'liblog-message-perl',
+    'Log::Message::Item' => 'liblog-message-perl',
+    'Devel::InnerPackage' => 'libmodule-pluggable-perl',
+    'Module::Pluggable' => 'libmodule-pluggable-perl',
+    'Module::Pluggable::Object' => 'libmodule-pluggable-perl',
+    'Object::Accessor' => 'libobject-accessor-perl',
+    'Pod::LaTeX' => 'libpod-latex-perl',
+    'Term::UI' => 'libterm-ui-perl',
+    'Term::UI::History' => 'libterm-ui-perl',
+    'Text::Soundex' => 'libtext-soundex-perl',
+);
+
 # This isn't a public API. It's internal to code maintained by the perl-porters
 # If you would like it to be a public API, please send a patch with
 # documentation and tests. Until then, it may change without warning.
@@ -58,9 +122,15 @@ EOM
 	if (defined $callers_bitmask
 	    && (vec($callers_bitmask, $warnings::Offsets{deprecated}, 1)
 		|| vec($callers_bitmask, $warnings::Offsets{all}, 1))) {
-	    warn <<"EOM";
+		if (my $deb = $DEBIAN_PACKAGES{$package}) {
+		    warn <<"EOM";
+$package will be removed from the Perl core distribution in the next major release. Please install the separate $deb package. It is being used at $call_file, line $call_line.
+EOM
+		} else {
+		    warn <<"EOM";
 $package will be removed from the Perl core distribution in the next major release. Please install it from CPAN. It is being used at $call_file, line $call_line.
 EOM
+		}
 	}
     }
 }
