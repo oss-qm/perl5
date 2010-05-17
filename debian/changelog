@@ -5,6 +5,8 @@ perl (5.12.1-1) UNRELEASED; urgency=low
   * Transition away from the deprecated core modules
     (Shell, Switch, Pod::Plainer, Class::ISA):
     + Recommend the now separately packaged versions
+    + Modify the deprecation warnings to point to the Debian packages
+      instead of CPAN.
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 17 May 2010 12:12:39 +0300
 
