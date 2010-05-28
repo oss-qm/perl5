@@ -42,3 +42,4 @@ fixes/safe-upgrade
 fixes/tell-crash
 fixes/format-write-crash
 fixes/arm-alignment
+fixes/fcgi-test

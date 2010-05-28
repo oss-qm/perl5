@@ -8,6 +8,7 @@ perl (5.10.1-13) UNRELEASED; urgency=low
   * Fix a format/write crash. (Closes: #579537)
   * Prevent gcc from optimizing the u32align check away, finally fixing
     MD5 on armel. Thanks to Marc Pignat.
+  * Fix a test failure in CGI/t/fast.t when FCGI is available.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 28 May 2010 12:55:36 +0300
 
