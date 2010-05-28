@@ -1,0 +1,12 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix a failure in CGI/t/fast.t when FCGI is installed
+Origin: upstream
+
+Cherry picked from CGI-3.48.
+
+The test is skipped in clean build environments because FCGI is not in
+the core.
+
+Upstream has dropped the whole test from the Perl core distribution for
+the 5.12 series because it relies on external modules. Possibly we should
+do that instead.
