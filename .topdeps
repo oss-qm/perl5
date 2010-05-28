@@ -39,3 +39,4 @@ fixes/hppa-thread-eagain
 fixes/crash-on-undefined-destroy
 fixes/tainted-errno
 fixes/safe-upgrade
+fixes/tell-crash

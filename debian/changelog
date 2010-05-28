@@ -4,6 +4,7 @@ perl (5.10.1-13) UNRELEASED; urgency=low
     and execution vulnerabilities. (Closes: #582978)
   * Add conflicts/replaces/provides for the new libswitch-perl,
     libclass-isa-perl, and libpod-plainer-perl packages. (See #580034)
+  * Fix a tell() crash on bad arguments. (Closes: #578577)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 28 May 2010 12:55:36 +0300
 
