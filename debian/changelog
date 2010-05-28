@@ -1,6 +1,7 @@
 perl (5.10.1-13) UNRELEASED; urgency=low
 
-  * 
+  * [SECURITY] CVE-2010-1974: Update to Safe-2.25, fixing code injection
+    and execution vulnerabilities. (Closes: #582978)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 28 May 2010 12:55:36 +0300
 
