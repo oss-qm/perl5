@@ -1,0 +1,9 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix a tell() crash on bad arguments.
+Bug-Debian: http://bugs.debian.org/578577
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/f03173f2c707a804ec3e9c291d2ab1adb9db4abc
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/f4817f32b1c5f1cefe556cf79f36f874b67cad16
+
+Fix a crash with things like
+ perl -e 'tell (fileno(*STDOUT))'
+
