@@ -32,6 +32,6 @@ SKIP: {
 
 	# if this is false, the package var will be empty
 	$ENV{FCGI_SOCKET_PATH} = 0;
-	is( $CGI::Fast::Ext_Request, '', 'checking no active request' );
+	is( $CGI::Fast::Ext_Request, undef, 'checking no active request' );
 
 }
