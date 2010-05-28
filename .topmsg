@@ -1,0 +1,8 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix a crash in format/write
+Bug-Debian: http://bugs.debian.org/579537
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=22977
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/421f30ed1e95009450bdc7905bf3433ee806ea4f
+
+The perly.act and perly.tab changes were generated with flex 2.5.35-6
+and bison 1:2.3.dfsg-5 from Debian Lenny to avoid unnecessary changes.
