@@ -7,7 +7,7 @@ perl (5.10.1-13) unstable; urgency=low
   * Fix a tell() crash on bad arguments. (Closes: #578577)
   * Fix a format/write crash. (Closes: #579537)
   * Prevent gcc from optimizing the u32align check away, finally fixing
-    MD5 on armel. Thanks to Marc Pignat.
+    MD5 on armel. Thanks to Marc Pignat. (Closes: #289884)
   * Fix a test failure in CGI/t/fast.t when FCGI is available.
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 30 May 2010 11:09:48 +0300
