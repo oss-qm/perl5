@@ -1,4 +1,4 @@
-perl (5.10.1-13) UNRELEASED; urgency=low
+perl (5.10.1-13) unstable; urgency=low
 
   * [SECURITY] CVE-2010-1974: Update to Safe-2.25, fixing code injection
     and execution vulnerabilities. (Closes: #582978)
@@ -10,7 +10,7 @@ perl (5.10.1-13) UNRELEASED; urgency=low
     MD5 on armel. Thanks to Marc Pignat.
   * Fix a test failure in CGI/t/fast.t when FCGI is available.
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 28 May 2010 12:55:36 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 30 May 2010 11:09:48 +0300
 
 perl (5.10.1-12) unstable; urgency=low
 
