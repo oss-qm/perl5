@@ -1,6 +1,9 @@
 perl (5.12.1-2) UNRELEASED; urgency=low
 
-  * 
+  * Merge 5.10.1-13 from unstable.
+    + includes the arm alignment fix. (Closes: #289884)
+    + remove the Provides entries for the deprecated core modules
+      and update their conflict versions.
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 01 Jun 2010 23:03:06 +0300
 
@@ -67,6 +70,20 @@ perl (5.12.0~rc3-1) experimental; urgency=low
     #310995)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 06 Apr 2010 20:08:41 +0300
+
+perl (5.10.1-13) unstable; urgency=low
+
+  * [SECURITY] CVE-2010-1974: Update to Safe-2.25, fixing code injection
+    and execution vulnerabilities. (Closes: #582978)
+  * Add conflicts/replaces/provides for the new libswitch-perl,
+    libclass-isa-perl, and libpod-plainer-perl packages. (See #580034)
+  * Fix a tell() crash on bad arguments. (Closes: #578577)
+  * Fix a format/write crash. (Closes: #579537)
+  * Prevent gcc from optimizing the u32align check away, finally fixing
+    MD5 on armel. Thanks to Marc Pignat. (Closes: #289884)
+  * Fix a test failure in CGI/t/fast.t when FCGI is available.
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 30 May 2010 11:09:48 +0300
 
 perl (5.10.1-12) unstable; urgency=low
 

@@ -27,3 +27,4 @@ debian/devel-ppport-ia64-optim
 fixes/cpanplus-without-home
 debian/arm_optim
 debian/deprecate-with-apt
+fixes/arm-alignment
