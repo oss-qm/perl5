@@ -1,4 +1,4 @@
-perl (5.12.1-2) experimental; urgency=low
+perl (5.12.1-2) UNRELEASED; urgency=low
 
   * Merge 5.10.1-13 from unstable.
     + includes the arm alignment fix. (Closes: #289884)
