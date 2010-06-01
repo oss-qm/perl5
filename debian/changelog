@@ -4,6 +4,8 @@ perl (5.12.1-2) UNRELEASED; urgency=low
     + includes the arm alignment fix. (Closes: #289884)
     + remove the Provides entries for the deprecated core modules
       and update their conflict versions.
+  * Remove the libshell-perl recommendation, its deprecation has been
+    postponed for 5.14. (See #580034)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 01 Jun 2010 23:03:06 +0300
 

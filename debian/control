@@ -63,7 +63,6 @@ Priority: standard
 Architecture: all
 Depends: perl (>= ${Upstream-Version}-1)
 Recommends: libswitch-perl,
- libshell-perl,
  libpod-plainer-perl,
  libclass-isa-perl
 Conflicts: libpod-parser-perl (<< 1.37),
