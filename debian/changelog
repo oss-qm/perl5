@@ -1,6 +1,7 @@
 perl (5.10.1-14) UNRELEASED; urgency=low
 
-  * 
+  * Don't override -DDEBIAN on GNU/Hurd, fixing @INC breakage and other
+    things. Thanks to Samuel Thibault. (Closes: #587901)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 04 Aug 2010 13:35:11 +0300
 

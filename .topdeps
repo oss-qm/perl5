@@ -43,3 +43,4 @@ fixes/tell-crash
 fixes/format-write-crash
 fixes/arm-alignment
 fixes/fcgi-test
+fixes/hurd-ccflags
