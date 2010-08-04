@@ -4,6 +4,9 @@ perl (5.10.1-14) UNRELEASED; urgency=low
     things. Thanks to Samuel Thibault. (Closes: #587901)
   * Fix builds on gcc 4.5 by passing PERL_PATCHLEVEL_H_IMPLICIT to cpp.
     Thanks to Loïc Minier and Paul Brook. (Closes: #588799)
+  * Fix builds when the name of the current directory contains regexp
+    metacharacters, particularly binNMUs with current sbuild versions.
+    Thanks to Kyle Moffett and Ansgar Burchardt. (Closes: #585678)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 04 Aug 2010 13:35:11 +0300
 
