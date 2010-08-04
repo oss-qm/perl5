@@ -2,6 +2,8 @@ perl (5.10.1-14) UNRELEASED; urgency=low
 
   * Don't override -DDEBIAN on GNU/Hurd, fixing @INC breakage and other
     things. Thanks to Samuel Thibault. (Closes: #587901)
+  * Fix builds on gcc 4.5 by passing PERL_PATCHLEVEL_H_IMPLICIT to cpp.
+    Thanks to Loïc Minier and Paul Brook. (Closes: #588799)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 04 Aug 2010 13:35:11 +0300
 
