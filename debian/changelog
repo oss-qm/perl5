@@ -1,4 +1,4 @@
-perl (5.10.1-14) UNRELEASED; urgency=low
+perl (5.10.1-14) unstable; urgency=medium
 
   * Don't override -DDEBIAN on GNU/Hurd, fixing @INC breakage and other
     things. Thanks to Samuel Thibault. (Closes: #587901)
@@ -7,8 +7,9 @@ perl (5.10.1-14) UNRELEASED; urgency=low
   * Fix builds when the name of the current directory contains regexp
     metacharacters, particularly binNMUs with current sbuild versions.
     Thanks to Kyle Moffett and Ansgar Burchardt. (Closes: #585678)
+  * Releasing with 'medium' urgency due to an RC bug fix.
 
- -- Niko Tyni <ntyni@debian.org>  Wed, 04 Aug 2010 13:35:11 +0300
+ -- Niko Tyni <ntyni@debian.org>  Wed, 04 Aug 2010 13:52:05 +0300
 
 perl (5.10.1-13) unstable; urgency=low
 
