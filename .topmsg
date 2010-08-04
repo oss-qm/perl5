@@ -2,6 +2,7 @@ From: Niko Tyni <ntyni@debian.org>
 Subject: Prevent gcc from optimizing the alignment test away on armel
 Bug-Debian: http://bugs.debian.org/289884
 Author: Marc Pignat <marc.pignat@hevs.ch>
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/f1c7503b9028d20741c9a01345ba8704998ea381
 
 As hunted down by Marc Pignat, gcc optimizations make the check for
 u32align (U32_ALIGNMENT_REQUIRED) a no-op on armel, breaking the MD5
