@@ -478,6 +478,12 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
 #	undef setservent
 #endif	/* NETWARE */
 
+/* to avoid warnings: "xyz" redefined */
+#ifdef WIN32
+#    undef  popen
+#    undef  pclose
+#endif /* WIN32 */
+
 #    undef  socketpair
 
 #    define mkdir		PerlDir_mkdir
@@ -501,6 +507,7 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
 #    define ferror		PerlSIO_ferror
 #    define clearerr		PerlSIO_clearerr
 #    define getc		PerlSIO_getc
+#    define fgets		PerlSIO_fgets
 #    define fputc		PerlSIO_fputc
 #    define fputs		PerlSIO_fputs
 #    define fflush		PerlSIO_fflush
