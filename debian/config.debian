@@ -2,7 +2,8 @@
 
 eval $(echo '#include "./patchlevel.h"
 SETver=PERL_REVISION.PERL_VERSION;
-SETsubver= PERL_SUBVERSION' | gcc -E - | sed -n '/^SET/{s///;s/ //gp;}')
+SETsubver= PERL_SUBVERSION' | gcc -E -DPERL_PATCHLEVEL_H_IMPLICIT - \
+ | sed -n '/^SET/{s///;s/ //gp;}')
 
 fullver="$ver.$subver"
 nextver="$ver."$(($subver+1))
