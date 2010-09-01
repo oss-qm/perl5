@@ -1,8 +1,8 @@
 perl (5.12.2~rc1-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
+    + includes the arm alignment fix (Closes: #289884)
   * Merge 5.10.1-13 and -14 from unstable, most notably:
-    + the arm alignment fix (Closes: #289884)
     + the GNU/Hurd @INC fix (Closes: #587901)
     + the gcc 4.5 build fix (Closes: #588799)
     + the binNMU regexp fix (Closes: #585678)
