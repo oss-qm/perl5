@@ -1,4 +1,4 @@
-perl (5.12.2~rc1-1) UNRELEASED; urgency=low
+perl (5.12.2~rc1-1) experimental; urgency=low
 
   * New upstream release candidate.
     + includes the arm alignment fix (Closes: #289884)
@@ -14,7 +14,7 @@ perl (5.12.2~rc1-1) UNRELEASED; urgency=low
   * Remove the libshell-perl recommendation, its deprecation has been
     postponed for 5.14. (See #580034)
 
- -- Niko Tyni <ntyni@debian.org>  Wed, 01 Sep 2010 10:27:01 +0300
+ -- Niko Tyni <ntyni@debian.org>  Wed, 01 Sep 2010 21:38:34 +0300
 
 perl (5.12.1-1) experimental; urgency=low
 
