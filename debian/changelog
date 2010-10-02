@@ -2,6 +2,8 @@ perl (5.10.1-15) UNRELEASED; urgency=low
 
   * Include the Text::Tabs license in debian/copyright. Thanks to "v.nix.is".
     (Closes: #596844)
+  * Downgrade the 'make' recommendation to a suggestion to avoid pulling
+    it in by default after all. (Closes: #596734) (Reopens: #293908)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 02 Oct 2010 21:15:09 +0300
 
