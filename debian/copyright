@@ -199,6 +199,16 @@ copyright and license:
   
 --------------------------------------------------------------------------
 
+The Text::Tabs module in lib/Text/Tabs.pm has the following
+copyright and license:
+
+  Copyright (C) 1996-2002,2005,2006 David Muir Sharnoff.  
+  Copyright (C) 2005 Aristotle Pagaltzis 
+  This module may be modified, used, copied, and redistributed at your own risk.
+  Publicly redistributed modified versions must use a different name.
+
+--------------------------------------------------------------------------
+
 Portions of the Debian packaging are
  Copyright 2008-2010 Niko Tyni <ntyni@debian.org>
 The other people listed in debian/changelog are most probably

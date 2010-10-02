@@ -1,6 +1,7 @@
 perl (5.10.1-15) UNRELEASED; urgency=low
 
-  * 
+  * Include the Text::Tabs license in debian/copyright. Thanks to "v.nix.is".
+    (Closes: #596844)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 02 Oct 2010 21:15:09 +0300
 
