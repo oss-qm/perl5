@@ -512,6 +512,10 @@ Perl_init_i18nl10n(pTHX_ int printwarn)
     char *p;
     const bool locwarn = (printwarn > 1 ||
                     (printwarn &&
+
+                     /* Debian specific change - see http://bugs.debian.org/508764 */
+                     (!PerlEnv_getenv("DPKG_RUNNING_VERSION")) &&
+
                      (!(p = PerlEnv_getenv("PERL_BADLANG")) || atoi(p))));
     bool done = FALSE;
     const char *system_default_locale = NULL;
