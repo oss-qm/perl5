@@ -674,7 +674,10 @@ Perl_init_i18nl10n(pTHX_ int printwarn)
 
     const bool locwarn = (printwarn > 1
                           || (printwarn
-                              && (! bad_lang_use_once
+                              &&
+                                 /* Debian specific change - see http://bugs.debian.org/508764 */
+                                 (!PerlEnv_getenv("DPKG_RUNNING_VERSION")) &&
+                                 (! bad_lang_use_once
                                   || (
                                     /* disallow with "" or "0" */
                                     *bad_lang_use_once
