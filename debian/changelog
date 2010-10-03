@@ -6,6 +6,8 @@ perl (5.10.1-15) UNRELEASED; urgency=low
     it in by default after all. (Closes: #596734) (Reopens: #293908)
   * Put the libfile-spec-perl conflict version in line with the separate
     package, which uses four digits. (Closes: #595121)
+  * Squelch useless locale warnings during package maintainer scripts.
+    (Closes: #508764)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 02 Oct 2010 21:15:09 +0300
 
