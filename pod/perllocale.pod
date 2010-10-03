@@ -1151,6 +1151,14 @@ B<NOTE>: PERL_BADLANG only gives you a way to hide the warning message.
 The message tells about some problem in your system's locale support,
 and you should investigate what the problem is.
 
+=item DPKG_RUNNING_VERSION
+
+On Debian systems, if the DPKG_RUNNING_VERSION environment variable is
+set (to any value), the locale failure warnings will be suppressed just
+like with a zero PERL_BADLANG setting. This is done to avoid floods
+of spurious warnings during system upgrades.
+See L<http://bugs.debian.org/508764>.
+
 =back
 
 The following environment variables are not specific to Perl: They are
