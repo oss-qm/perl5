@@ -1,0 +1,11 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Squelch locale warnings in Debian package maintainer scripts
+Bug-Debian: http://bugs.debian.org/508764
+
+The system locales are rather frequently out of sync with the C library
+during package upgrades, causing a huge amount of useless Perl locale
+warnings. Squelch them when running package maintainer scripts, detected
+by the DPKG_RUNNING_VERSION environment variable.
+
+Any real locale problem will show up after the system upgrade too, and
+the warning will be triggered normally again at that point.
