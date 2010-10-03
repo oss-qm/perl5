@@ -4,6 +4,8 @@ perl (5.10.1-15) UNRELEASED; urgency=low
     (Closes: #596844)
   * Downgrade the 'make' recommendation to a suggestion to avoid pulling
     it in by default after all. (Closes: #596734) (Reopens: #293908)
+  * Put the libfile-spec-perl conflict version in line with the separate
+    package, which uses four digits. (Closes: #595121)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 02 Oct 2010 21:15:09 +0300
 

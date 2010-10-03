@@ -17,7 +17,7 @@ Architecture: any
 Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.14.20)
 Conflicts: autoconf2.13 (<< 2.13-45),
  libscalar-list-utils-perl (<< 1:1.21),
- libfile-spec-perl (<< 3.30),
+ libfile-spec-perl (<< 3.3000),
  safe-rm (<< 0.8),
  libxsloader-perl (<< 0.10)
 Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.10.1-1), libperl5.8 (<< 5.8.0-20),
@@ -93,7 +93,7 @@ Conflicts: libpod-parser-perl (<< 1.37),
  libparent-perl (<< 0.221),
  libautodie-perl (<< 2.06.01),
  libthread-queue-perl (<< 2.11),
- libfile-spec-perl (<< 3.30),
+ libfile-spec-perl (<< 3.3000),
  libtime-local-perl (<< 1.1901),
  libpod-plainer-perl (<< 0.01),
  libclass-isa-perl (<< 0.33),
