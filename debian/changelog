@@ -1,4 +1,4 @@
-perl (5.10.1-15) UNRELEASED; urgency=low
+perl (5.10.1-15) unstable; urgency=low
 
   * Include the Text::Tabs license in debian/copyright. Thanks to "v.nix.is".
     (Closes: #596844)
@@ -9,7 +9,7 @@ perl (5.10.1-15) UNRELEASED; urgency=low
   * Squelch useless locale warnings during package maintainer scripts.
     (Closes: #508764)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 02 Oct 2010 21:15:09 +0300
+ -- Niko Tyni <ntyni@debian.org>  Wed, 06 Oct 2010 21:45:00 +0300
 
 perl (5.10.1-14) unstable; urgency=medium
 
