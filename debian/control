@@ -280,8 +280,9 @@ Provides: data-dumper, perl5,
  libthreads-perl,
  libthreads-shared-perl,
  libtime-piece-perl
-Recommends: netbase, make
-Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl
+Recommends: netbase
+Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
+ make
 Description: Larry Wall's Practical Extraction and Report Language
  An interpreted scripting language, known among some as "Unix's Swiss
  Army Chainsaw".

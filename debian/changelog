@@ -1,6 +1,12 @@
 perl (5.12.2-2) UNRELEASED; urgency=low
 
-  * 
+  * Merge 5.10.1-15 from unstable:
+    + Include the Text::Tabs license in debian/copyright. Thanks to "v.nix.is".
+      (Closes: #596844)
+    + Downgrade the 'make' recommendation to a suggestion to avoid pulling
+      it in by default after all. (Closes: #596734) (Reopens: #293908)
+    + Squelch useless locale warnings during package maintainer scripts.
+      (Closes: #508764)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Oct 2010 14:12:10 +0300
 
@@ -91,6 +97,19 @@ perl (5.12.0~rc3-1) experimental; urgency=low
     #310995)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 06 Apr 2010 20:08:41 +0300
+
+perl (5.10.1-15) unstable; urgency=low
+
+  * Include the Text::Tabs license in debian/copyright. Thanks to "v.nix.is".
+    (Closes: #596844)
+  * Downgrade the 'make' recommendation to a suggestion to avoid pulling
+    it in by default after all. (Closes: #596734) (Reopens: #293908)
+  * Put the libfile-spec-perl conflict version in line with the separate
+    package, which uses four digits. (Closes: #595121)
+  * Squelch useless locale warnings during package maintainer scripts.
+    (Closes: #508764)
+
+ -- Niko Tyni <ntyni@debian.org>  Wed, 06 Oct 2010 21:45:00 +0300
 
 perl (5.10.1-14) unstable; urgency=medium
 

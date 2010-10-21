@@ -28,3 +28,4 @@ fixes/cpanplus-without-home
 debian/arm_optim
 debian/deprecate-with-apt
 fixes/hurd-ccflags
+debian/squelch-locale-warnings
