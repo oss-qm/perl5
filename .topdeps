@@ -15,7 +15,6 @@ debian/m68k_thread_stress
 debian/mod_paths
 debian/module_build_man_extensions
 debian/prune_libs
-debian/use_gdbm
 fixes/net_smtp_docs
 fixes/processPL
 debian/perlivp

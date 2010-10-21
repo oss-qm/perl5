@@ -7,6 +7,7 @@ perl (5.12.2-2) UNRELEASED; urgency=low
       it in by default after all. (Closes: #596734) (Reopens: #293908)
     + Squelch useless locale warnings during package maintainer scripts.
       (Closes: #508764)
+  * Unapply the debian/use_gdbm patch, obsolete since 5.8.4.
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Oct 2010 14:12:10 +0300
 
