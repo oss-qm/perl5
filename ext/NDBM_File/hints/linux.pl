@@ -2,4 +2,7 @@
 # Prefer gdbm to avoid the broken ndbm in some distributions
 # (no null key support)
 # Jonathan Stowe <gellyfish@gellyfish.com>
-$self->{LIBS} = ['-lgdbm_compat'];
+use Config;
+use ExtUtils::Liblist;
+($self->{LIBS}) = ExtUtils::Liblist->ext('-lgdbm -lgdbm_compat')
+	if $Config{libs} =~ /(?:^|\s)-lgdbm(?:\s|$)/;
