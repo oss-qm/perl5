@@ -1,0 +1,10 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix sprintf not to ignore LC_NUMERIC with constants
+Bug-Debian: http://bugs.debian.org/601549
+Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=78632
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/b3fd61496ebc585b1115807e3195f17714662a09
+
+Don't fold constants in sprintf() if locales are used
+    
+An upstream regression in 5.10.1 made sprintf() ignore LC_NUMERIC for
+numeric constants.
