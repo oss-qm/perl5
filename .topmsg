@@ -1,0 +1,16 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: LC_NUMERIC documentation fixes
+Bug-Debian: http://bugs.debian.org/379329
+Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=78452
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/903eb63f7d8d47a38971a8e9af7201b9927882cf
+
+LC_NUMERIC documentation updates fixing two errors:
+
+    - the early parts of perllocale.pod still say printf() uses LC_NUMERIC
+      with just 'use locale' when actually a POSIX::setlocale() call is
+      also needed
+    
+    - format() hasn't used LC_NUMERIC unconditionally since 5.005_03
+      (commit 097ee67dff1c60f201bc09435bc6eaeeafcd8123).
+
+Test cases from the upstream commit dropped for the sake of simplicity.
