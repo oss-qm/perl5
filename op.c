@@ -2466,6 +2466,7 @@ Perl_fold_constants(pTHX_ register OP *o)
     case OP_SLE:
     case OP_SGE:
     case OP_SCMP:
+    case OP_SPRINTF:
 	/* XXX what about the numeric ops? */
 	if (PL_hints & HINT_LOCALE)
 	    goto nope;
