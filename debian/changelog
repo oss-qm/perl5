@@ -1,6 +1,6 @@
 perl (5.10.1-16) UNRELEASED; urgency=low
 
-  * 
+  * Improve LC_NUMERIC documentation. (Closes: #379329)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 31 Oct 2010 14:05:08 +0200
 

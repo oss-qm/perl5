@@ -45,3 +45,4 @@ fixes/arm-alignment
 fixes/fcgi-test
 fixes/hurd-ccflags
 debian/squelch-locale-warnings
+fixes/lc-numeric-docs
