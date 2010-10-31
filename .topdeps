@@ -47,3 +47,4 @@ fixes/hurd-ccflags
 debian/squelch-locale-warnings
 fixes/lc-numeric-docs
 fixes/lc-numeric-sprintf
+fixes/concat-stack-corruption
