@@ -12,6 +12,8 @@ perl (5.12.2-2) UNRELEASED; urgency=low
     + Fix stack pointer corruption in pp_concat() with "use encoding".
       (Closes: #596105)
   * Unapply the debian/use_gdbm patch, obsolete since 5.8.4.
+  * Fix h2ph header generation with GCC 4.5. Upstream patch by Robin Barker.
+    (Closes: #599933)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 21 Oct 2010 14:12:10 +0300
 
