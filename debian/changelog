@@ -1,11 +1,11 @@
-perl (5.10.1-16) UNRELEASED; urgency=low
+perl (5.10.1-16) unstable; urgency=low
 
   * Improve LC_NUMERIC documentation. (Closes: #379329)
   * Fix sprintf not to ignore LC_NUMERIC with constants. (Closes: #601549)
   * Fix stack pointer corruption in pp_concat() with "use encoding".
     (Closes: #596105)
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 31 Oct 2010 14:05:08 +0200
+ -- Niko Tyni <ntyni@debian.org>  Tue, 02 Nov 2010 10:17:28 +0200
 
 perl (5.10.1-15) unstable; urgency=low
 
