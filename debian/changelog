@@ -1,4 +1,4 @@
-perl (5.12.2-2) UNRELEASED; urgency=low
+perl (5.12.2-2) experimental; urgency=low
 
   * Merge 5.10.1-15 and -16 from unstable:
     + Include the Text::Tabs license in debian/copyright. Thanks to "v.nix.is".
@@ -15,7 +15,7 @@ perl (5.12.2-2) UNRELEASED; urgency=low
   * Fix h2ph header generation with GCC 4.5. Upstream patch by Robin Barker.
     (Closes: #599933)
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 21 Oct 2010 14:12:10 +0300
+ -- Niko Tyni <ntyni@debian.org>  Tue, 02 Nov 2010 11:34:32 +0200
 
 perl (5.12.2-1) experimental; urgency=low
 
