@@ -1,3 +1,10 @@
+perl (5.10.1-17) UNRELEASED; urgency=low
+
+  * Add Conflicts, Replaces, Provides for libencode-perl which is
+    being packaged separately. (Closes: #608385)
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 04 Jan 2011 22:15:06 +0000
+
 perl (5.10.1-16) unstable; urgency=low
 
   * Improve LC_NUMERIC documentation. (Closes: #379329)
