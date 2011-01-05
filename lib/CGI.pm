@@ -1382,7 +1382,14 @@ END_OF_FUNC
 sub multipart_init {
     my($self,@p) = self_or_default(@_);
     my($boundary,@other) = rearrange_header([BOUNDARY],@p);
-    $boundary = $boundary || '------- =_aaaaaaaaaa0';
+    if (!$boundary) {
+        $boundary = '------- =_';
+        my @chrs = ('0'..'9', 'A'..'Z', 'a'..'z');
+        for (1..17) {
+            $boundary .= $chrs[rand(scalar @chrs)];
+        }
+    }
+
     $self->{'separator'} = "$CRLF--$boundary$CRLF";
     $self->{'final_separator'} = "$CRLF--$boundary--$CRLF";
     $type = SERVER_PUSH($boundary);
@@ -1467,6 +1474,23 @@ sub header {
                             'EXPIRES','NPH','CHARSET',
                             'ATTACHMENT','P3P'],@p);
 
+    # CR escaping for values, per RFC 822
+    for my $header ($type,$status,$cookie,$target,$expires,$nph,$charset,$attachment,$p3p,@other) {
+        if (defined $header) {
+            # From RFC 822:
+            # Unfolding  is  accomplished  by regarding   CRLF   immediately
+            # followed  by  a  LWSP-char  as equivalent to the LWSP-char.
+            $header =~ s/$CRLF(\s)/$1/g;
+
+            # All other uses of newlines are invalid input. 
+            if ($header =~ m/$CRLF|\015|\012/) {
+                # shorten very long values in the diagnostic
+                $header = substr($header,0,72).'...' if (length $header > 72);
+                die "Invalid header value contains a newline not followed by whitespace: $header";
+            }
+        } 
+   }
+
     $nph     ||= $NPH;
 
     $type ||= 'text/html' unless defined($type);
@@ -1482,7 +1506,7 @@ sub header {
     # need to fix it up a little.
     for (@other) {
         # Don't use \s because of perl bug 21951
-        next unless my($header,$value) = /([^ \r\n\t=]+)=\"?(.+?)\"?$/;
+        next unless my($header,$value) = /([^ \r\n\t=]+)=\"?(.+?)\"?$/s;
         ($_ = $header) =~ s/^(\w)(.*)/"\u$1\L$2" . ': '.$self->unescapeHTML($value)/e;
     }
 
@@ -5132,6 +5156,18 @@ For example:
 In either case, the outgoing header will be formatted as:
 
   P3P: policyref="/w3c/p3p.xml" cp="CAO DSP LAW CURa"
+
+Note that if a header value contains a carriage return, a leading space will be
+added to each new line that doesn't already have one as specified by RFC2616
+section 4.2.  For example:
+
+    print header( -ingredients => "ham\neggs\nbacon" );
+
+will generate
+
+    Ingredients: ham
+     eggs
+     bacon
 
 =head2 GENERATING A REDIRECTION HEADER
 
