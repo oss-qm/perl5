@@ -1,6 +1,8 @@
 perl (5.10.1-17) UNRELEASED; urgency=low
 
-  * 
+  * [SECURITY] CVE-2010-2761 CVE-2010-4410 CVE-2010-4411:
+    fix CGI.pm MIME boundary and multiline header vulnerabilities.
+    (Closes: #606995)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 05 Jan 2011 22:05:23 +0200
 

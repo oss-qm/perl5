@@ -48,3 +48,4 @@ debian/squelch-locale-warnings
 fixes/lc-numeric-docs
 fixes/lc-numeric-sprintf
 fixes/concat-stack-corruption
+fixes/cgi-multiline-header
