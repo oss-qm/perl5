@@ -1,0 +1,9 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: [CVE-2010-2761 CVE-2010-4410 CVE-2010-4411] CGI.pm MIME boundary and multiline header vulnerabilities
+Origin: upstream
+Bug-Debian: http://bugs.debian.org/606995
+
+CVE-2010-2761 hardcoded MIME boundary, fixed in CGI.pm-3.50
+CVE-2010-4410 CRLF injection vulnerability, fixed in CGI.pm-3.50
+CVE-2010-4411 double CR/LF injection vulnerability, fixed in CGI.pm-3.51
+
