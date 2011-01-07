@@ -3,4 +3,5 @@ Bug-Debian: http://bugs.debian.org/290336
 
 - ignore missing directories,
 - follow symlinks (/usr/share/perl/5.8 -> 5.8.4).
-
+- filter "." out when running "enc2xs -C", it's unnecessary and causes
+  issues with follow => 1 (see #603686 and [rt.cpan.org #64585])
