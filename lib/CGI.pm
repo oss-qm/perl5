@@ -5157,18 +5157,6 @@ In either case, the outgoing header will be formatted as:
 
   P3P: policyref="/w3c/p3p.xml" cp="CAO DSP LAW CURa"
 
-Note that if a header value contains a carriage return, a leading space will be
-added to each new line that doesn't already have one as specified by RFC2616
-section 4.2.  For example:
-
-    print header( -ingredients => "ham\neggs\nbacon" );
-
-will generate
-
-    Ingredients: ham
-     eggs
-     bacon
-
 =head2 GENERATING A REDIRECTION HEADER
 
    print redirect('http://somewhere.else/in/movie/land');
