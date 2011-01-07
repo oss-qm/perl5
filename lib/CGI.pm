@@ -1506,7 +1506,7 @@ sub header {
     # need to fix it up a little.
     for (@other) {
         # Don't use \s because of perl bug 21951
-        next unless my($header,$value) = /([^ \r\n\t=]+)=\"?(.+?)\"?$/s;
+        next unless my($header,$value) = /([^ \r\n\t=]+)=\"?(.+?)\"?$/;
         ($_ = $header) =~ s/^(\w)(.*)/"\u$1\L$2" . ': '.$self->unescapeHTML($value)/e;
     }
 
