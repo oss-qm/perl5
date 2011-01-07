@@ -2,7 +2,7 @@ Source: perl
 Section: perl
 Priority: standard
 Maintainer: Niko Tyni <ntyni@debian.org>
-Uploaders: Eugene V. Lyubimkin <jackyf@debian.org>
+Uploaders: Eugene V. Lyubimkin <jackyf@debian.org>, Dominic Hargreaves <dom@earth.li>
 Standards-Version: 3.8.4
 Build-Depends: file, cpio (>= 2.6-5), libdb4.7-dev, libgdbm-dev, netbase [!hurd-i386],
  gcc (>= 4:4.2), procps | hurd, zlib1g-dev | libz-dev, libbz2-dev
@@ -249,7 +249,8 @@ Conflicts: perl-doc (<< ${Upstream-Version}-1),
  libio-compress-perl (<< 2.020),
  libthreads-perl (<< 1.72),
  libthreads-shared-perl (<< 1.29),
- libtime-piece-perl (<< 1.15)
+ libtime-piece-perl (<< 1.15),
+ libencode-perl (<< 2.35)
 Replaces: perl-base (<< 5.10.1-12),
  perl-doc (<< 5.8.0-1),
  perl-modules (<< 5.8.1-1),
@@ -270,7 +271,8 @@ Replaces: perl-base (<< 5.10.1-12),
  libio-compress-perl,
  libthreads-perl,
  libthreads-shared-perl,
- libmodule-corelist-perl (<< 2.14-2)
+ libmodule-corelist-perl (<< 2.14-2),
+ libencode-perl
 Provides: data-dumper, perl5,
  libdigest-md5-perl,
  libmime-base64-perl,
@@ -287,7 +289,8 @@ Provides: data-dumper, perl5,
  libio-compress-perl,
  libthreads-perl,
  libthreads-shared-perl,
- libtime-piece-perl
+ libtime-piece-perl,
+ libencode-perl
 Recommends: netbase
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
  make
