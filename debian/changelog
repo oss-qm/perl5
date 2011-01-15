@@ -1,3 +1,13 @@
+perl (5.10.0-19lenny3) stable; urgency=low
+
+  * [SECURITY] CVE-2010-2761 CVE-2010-4410 CVE-2010-4411:
+    fix CGI.pm MIME boundary and multiline header vulnerabilities.
+    (Closes: #606995)
+  * [SECURITY] CVE-2010-1168: Update to Safe-2.25, fixing code injection
+    and execution vulnerabilities. (Closes: #582978)
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 15 Jan 2011 08:13:26 +0200
+
 perl (5.10.0-19lenny2) stable; urgency=low
 
   * Fix a typo in the replaces/conflicts/provides: libcpan-plus-perl
