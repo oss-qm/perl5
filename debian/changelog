@@ -9,6 +9,8 @@ perl (5.12.3-1) UNRELEASED; urgency=low
     + [SECURITY] CVE-2010-2761 CVE-2010-4410 CVE-2010-4411:
       fixes CGI.pm MIME boundary and multiline header vulnerabilities.
       (Closes: #606995)
+    + Update the conflict versions for libmodule-corelist-perl,
+      libmodule-build-perl, and libcgi-pm-perl.
   * Don't traverse the current directory with "enc2xs -C". (Closes: #603686)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 29 Jan 2011 08:53:10 +0200
