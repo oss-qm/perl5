@@ -12,6 +12,9 @@ perl (5.12.3-1) UNRELEASED; urgency=low
     + Update the conflict versions for libmodule-corelist-perl,
       libmodule-build-perl, and libcgi-pm-perl.
   * Don't traverse the current directory with "enc2xs -C". (Closes: #603686)
+  * Use versioned breaks instead of versioned conflicts, as suggested by
+    lintian. The sole exception is safe-rm, whose older versions we never
+    want unpacked at the same time because they break maintainer scripts.
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 29 Jan 2011 08:53:10 +0200
 

@@ -15,12 +15,12 @@ Essential: yes
 Priority: required
 Architecture: any
 Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.14.20)
-Breaks: libmarc-charset-perl (<< 1.2)
-Conflicts: autoconf2.13 (<< 2.13-45),
+Conflicts: safe-rm (<< 0.8)
+Breaks: autoconf2.13 (<< 2.13-45),
  libscalar-list-utils-perl (<< 1:1.22),
  libfile-spec-perl (<< 3.3101),
- safe-rm (<< 0.8),
- libxsloader-perl (<< 0.10)
+ libxsloader-perl (<< 0.10),
+ libmarc-charset-perl (<< 1.2)
 Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.10.1-1), libperl5.8 (<< 5.8.0-20),
  libscalar-list-utils-perl,
  libxsloader-perl 
@@ -65,7 +65,7 @@ Depends: perl (>= ${Upstream-Version}-1)
 Recommends: libswitch-perl,
  libpod-plainer-perl,
  libclass-isa-perl
-Conflicts: libpod-parser-perl (<< 1.37),
+Breaks: libpod-parser-perl (<< 1.37),
  libansicolor-perl (<< 2.02),
  libfile-temp-perl (<< 0.22),
  libnet-perl (<= 1:1.22),
@@ -225,7 +225,7 @@ Package: perl
 Priority: standard
 Architecture: any
 Depends: perl-base (= ${binary:Version}), perl-modules (>= ${source:Version}), ${shlibs:Depends}
-Conflicts: perl-doc (<< ${Upstream-Version}-1),
+Breaks: perl-doc (<< ${Upstream-Version}-1),
  libdigest-md5-perl (<< 2.39),
  libmime-base64-perl (<< 3.08),
  libtime-hires-perl (<< 1.9719),
