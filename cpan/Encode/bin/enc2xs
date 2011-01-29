@@ -1005,7 +1005,7 @@ sub make_configlocal_pm {
 	    $LocalMod{$enc} ||= $mod;
 	}
     };
-    File::Find::find({wanted => $wanted, follow => 1}, grep -d, @INC);
+    File::Find::find({wanted => $wanted, follow => 1}, grep -d && !/^\./, @INC);
     $_ModLines = "";
     for my $enc ( sort keys %LocalMod ) {
         $_ModLines .=
