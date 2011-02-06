@@ -1,4 +1,4 @@
-perl (5.12.3-1) UNRELEASED; urgency=low
+perl (5.12.3-1) experimental; urgency=low
 
   [ Dominic Hargreaves ]
   * Add Conflicts, Replaces, Provides for libencode-perl which is
@@ -16,7 +16,7 @@ perl (5.12.3-1) UNRELEASED; urgency=low
     lintian. The sole exception is safe-rm, whose older versions we never
     want unpacked at the same time because they break maintainer scripts.
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 29 Jan 2011 08:53:10 +0200
+ -- Niko Tyni <ntyni@debian.org>  Sun, 06 Feb 2011 11:31:38 +0200
 
 perl (5.12.2-2) experimental; urgency=low
 
