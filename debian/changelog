@@ -1,3 +1,9 @@
+perl (5.12.3-2) experimental; urgency=low
+
+  * Fix inconsistent mix of literal tabs and spaces in debian/perl.postinst
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 26 Feb 2011 18:20:17 +0000
+
 perl (5.12.3-1) experimental; urgency=low
 
   [ Dominic Hargreaves ]
