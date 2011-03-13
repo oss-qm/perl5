@@ -1,0 +1,7 @@
+Author: Robin Barker <rmbarker@cpan.org>
+Subject: h2ph fix for gcc 4.5
+Bug-Debian: http://bugs.debian.org/599933
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/8d66b3f930dc6d88b524d103e304308ae73a46e7 
+
+Fix h2ph and test. Needed to build with GCC 4.5.
+
