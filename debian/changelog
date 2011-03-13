@@ -11,8 +11,11 @@ perl (5.10.1-18~test.1) UNRELEASED; urgency=low
     executed
   * Add Conflicts, Replaces, Provides for libfile-path-perl which is
     packaged separately (Closes: #617985)
+  * Include the full text of the license statements for BSD-style
+    licenses in debian/copyright, rather than the deprecated practice of
+    referring to an external copy
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 21:39:10 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 22:11:56 +0000
 
 perl (5.10.1-17) unstable; urgency=medium
 
