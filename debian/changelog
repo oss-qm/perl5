@@ -6,8 +6,11 @@ perl (5.10.1-18) UNRELEASED; urgency=low
     topgit in debian/README.source
   * Fix h2ph header generation with GCC 4.5. Upstream patch by Robin Barker.
     (Closes: #599933)
+  * Override Lintian error wrong-path-for-interpreter for
+    ./usr/share/perl/5.10.1/Class/ISA.pm which is not expected to be
+    executed
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 14:31:55 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 15:45:47 +0000
 
 perl (5.10.1-17) unstable; urgency=medium
 

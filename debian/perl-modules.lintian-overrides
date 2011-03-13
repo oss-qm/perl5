@@ -1,0 +1,2 @@
+# interpreter not used in perl module
+wrong-path-for-interpreter ./usr/share/perl/5.10.1/Class/ISA.pm
