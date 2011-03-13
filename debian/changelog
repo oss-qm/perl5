@@ -4,8 +4,10 @@ perl (5.10.1-18) UNRELEASED; urgency=low
     being packaged separately. (Closes: #608385)
   * Include information about preparing the repository for use with
     topgit in debian/README.source
+  * Fix h2ph header generation with GCC 4.5. Upstream patch by Robin Barker.
+    (Closes: #599933)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 14:26:26 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 14:31:55 +0000
 
 perl (5.10.1-17) unstable; urgency=medium
 
