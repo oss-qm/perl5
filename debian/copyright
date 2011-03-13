@@ -249,12 +249,14 @@ copyright and license:
 
 Portions of the Debian packaging are
  Copyright 2008-2010 Niko Tyni <ntyni@debian.org>
+ Copyright 2011 Dominic Hargreaves <dom@earth.li>
 The other people listed in debian/changelog are most probably
 copyright holders too, but they have not included explicit copyright
 or licensing information.
 
-The portions by Niko Tyni may be redistributed and/or modified under
-the same terms as Perl itself. It is assumed that other contributors
-have placed their contributions under a compatible license.
+The portions by Niko Tyni and Dominic Hargreaves may be redistributed
+and/or modified under the same terms as Perl itself. It is assumed that
+other contributors have placed their contributions under a compatible
+license.
 
 --------------------------------------------------------------------------
