@@ -1,4 +1,4 @@
-perl (5.10.1-18) UNRELEASED; urgency=low
+perl (5.10.1-18~test.1) UNRELEASED; urgency=low
 
   * Add Conflicts, Replaces, Provides for libencode-perl which is
     being packaged separately. (Closes: #608385)
@@ -9,8 +9,10 @@ perl (5.10.1-18) UNRELEASED; urgency=low
   * Override Lintian error wrong-path-for-interpreter for
     ./usr/share/perl/5.10.1/Class/ISA.pm which is not expected to be
     executed
+  * Add Conflicts, Replaces, Provides for libfile-path-perl which is
+    packaged separately (Closes: #617985)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 15:45:47 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Mar 2011 21:39:10 +0000
 
 perl (5.10.1-17) unstable; urgency=medium
 
