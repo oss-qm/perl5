@@ -12,8 +12,10 @@ perl (5.12.3-2~test.1) experimental; urgency=low
     + Include the full text of the license statements for BSD-style
       licenses in debian/copyright, rather than the deprecated practice of
       referring to an external copy
+  * Don't include full path for md5sum in perl-modules maintainer scripts
+    (thanks, Lintian)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 20 Mar 2011 18:20:30 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 20 Mar 2011 19:57:58 +0000
 
 perl (5.12.3-1) experimental; urgency=low
 
