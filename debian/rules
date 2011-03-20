@@ -89,6 +89,9 @@ clean:
 	    patchlevel.bak build-stamp install-stamp t/auto debian/shlibs.local \
 	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
 	    debian/substvars debian/files debian/list.tmp $(tmp) $(build)
+	# TODO: send better fix upstream
+	rm -f cpan/DB_File/DB_File.pm.bak cpan/DB_File/t/db-btree.t.bak \
+	    cpan/DB_File/t/db-hash.t.bak cpan/DB_File/t/db-recno.t.bak
 
 install-stamp: build-stamp
 	$(checkdir)
