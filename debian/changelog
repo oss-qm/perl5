@@ -4,7 +4,7 @@ perl (5.12.3-2~test.1) experimental; urgency=low
   * Activate the 'perl-major-upgrade' trigger on major version upgrades
     to notify other packages that might need to be restarted, or take some
     other action (Closes: #230308)
-  * Include changes from 5.10.1-18:
+  * Merge 5.10.1-17 and 18 from unstable:
     + Include information about preparing the repository for use with
       topgit in debian/README.source
     + Add Conflicts, Replaces, Provides for libfile-path-perl which is
@@ -15,7 +15,7 @@ perl (5.12.3-2~test.1) experimental; urgency=low
   * Don't include full path for md5sum in perl-modules maintainer scripts
     (thanks, Lintian)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 20 Mar 2011 19:57:58 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 20 Mar 2011 20:54:01 +0000
 
 perl (5.12.3-1) experimental; urgency=low
 
@@ -143,6 +143,33 @@ perl (5.12.0~rc3-1) experimental; urgency=low
     #310995)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 06 Apr 2010 20:08:41 +0300
+
+perl (5.10.1-18) unstable; urgency=low
+
+  * Add Conflicts, Replaces, Provides for libencode-perl which is
+    being packaged separately. (Closes: #608385)
+  * Include information about preparing the repository for use with
+    topgit in debian/README.source
+  * Fix h2ph header generation with GCC 4.5. Upstream patch by Robin Barker.
+    (Closes: #599933)
+  * Override Lintian error wrong-path-for-interpreter for
+    ./usr/share/perl/5.10.1/Class/ISA.pm which is not expected to be
+    executed
+  * Add Conflicts, Replaces, Provides for libfile-path-perl which is
+    packaged separately (Closes: #617985)
+  * Include the full text of the license statements for BSD-style
+    licenses in debian/copyright, rather than the deprecated practice of
+    referring to an external copy
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 15 Mar 2011 20:59:04 +0000
+
+perl (5.10.1-17) unstable; urgency=medium
+
+  * [SECURITY] CVE-2010-2761 CVE-2010-4410 CVE-2010-4411:
+    fix CGI.pm MIME boundary and multiline header vulnerabilities.
+    (Closes: #606995)
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 07 Jan 2011 13:57:42 +0200
 
 perl (5.10.1-16) unstable; urgency=low
 
