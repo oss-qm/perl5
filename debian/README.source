@@ -98,6 +98,11 @@ above, or just hack the source and ignore debian/patches altogether.
 First, you need to have the 'topgit' package installed. The current version
 as of this writing is 0.8-1.
 
+After cloning the perl repository in the normal way, you need to prepare
+your repository for use with topgit by running:
+
+ tg remote --populate origin
+ 
 The TopGit procedure for applying a new patch is:
 
  tg create fixes/foo upstream # s|fixes|debian| for Debian-specific changes
