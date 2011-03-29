@@ -1,3 +1,9 @@
+perl (5.10.1-19) UNRELEASED; urgency=low
+
+  * Remove Eugene from Uploaders as requested
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Mar 2011 22:05:48 +0100
+
 perl (5.10.1-18) unstable; urgency=low
 
   * Add Conflicts, Replaces, Provides for libencode-perl which is

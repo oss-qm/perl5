@@ -2,7 +2,7 @@ Source: perl
 Section: perl
 Priority: standard
 Maintainer: Niko Tyni <ntyni@debian.org>
-Uploaders: Eugene V. Lyubimkin <jackyf@debian.org>, Dominic Hargreaves <dom@earth.li>
+Uploaders: Dominic Hargreaves <dom@earth.li>
 Standards-Version: 3.8.4
 Build-Depends: file, cpio (>= 2.6-5), libdb4.7-dev, libgdbm-dev, netbase [!hurd-i386],
  gcc (>= 4:4.2), procps | hurd, zlib1g-dev | libz-dev, libbz2-dev
