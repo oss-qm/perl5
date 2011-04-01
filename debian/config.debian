@@ -10,6 +10,7 @@ nextver="$ver."$(($subver+1))
 ccflags=-DDEBIAN
 arch_cpu=${DEB_BUILD_ARCH_CPU:-$(dpkg-architecture -qDEB_BUILD_ARCH_CPU)}
 gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
+multiarch_dir=${DEB_HOST_MULTIARCH:-$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null)}
 optimize=-O2
 debugging=-g
 
@@ -80,6 +81,10 @@ case ",$DEB_BUILD_OPTIONS," in
 	optimize="$optimize${optimize:+ }-O0";;
 esac
 
+if [ -n "$multiarch_dir" ]; then
+	extra_path="\"-Dplibpth=/lib/$multiarch_dir /usr/lib/$multiarch_dir\""
+fi
+
 # post-configure tweaks
 cp debian/config.over .
 
@@ -113,4 +118,5 @@ eval /bin/bash Configure			\
     -Uusenm					\
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
+    $extra_path					\
     $opts -des

@@ -1,8 +1,11 @@
-perl (5.10.1-19) UNRELEASED; urgency=low
+perl (5.10.1-19) unstable; urgency=low
 
   * Remove Eugene from Uploaders as requested
+  * debian/config.debian: pass multiarch paths to the build (if
+    available) so that we're able to find libraries needed to build.
+    Thanks to Steve Langasek. (Closes: #620189)
 
- -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Mar 2011 22:05:48 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 01 Apr 2011 09:09:17 +0100
 
 perl (5.10.1-18) unstable; urgency=low
 
