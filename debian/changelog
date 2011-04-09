@@ -11,6 +11,8 @@ perl (5.12.3-3) UNRELEASED; urgency=low
       thanks to Steve Langasek. (Closes: #620189)
   * debian/config.debian: never use <libutil.h>, even if libbsd-dev is
     installed. Inspired by a similar Ubuntu change.
+  * Add Conflicts, Replaces, Provides for libunicode-collate-perl which is
+    now also packaged separately. (Closes: #599486)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Mar 2011 22:09:54 +0100
 

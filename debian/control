@@ -103,6 +103,7 @@ Breaks: libpod-parser-perl (<< 1.37),
  libclass-isa-perl (<< 0.36),
  libswitch-perl (<< 2.16),
  podlators-perl (<< 2.3.1),
+ libunicode-collate-perl (<< 0.52.01),
  libfile-path-perl (<< 2.09)
 Replaces: libpod-parser-perl,
  libansicolor-perl,
@@ -142,6 +143,7 @@ Replaces: libpod-parser-perl,
  libclass-isa-perl,
  libswitch-perl,
  podlators-perl,
+ libunicode-collate-perl,
  libfile-path-perl
 Provides: libpod-parser-perl,
  libansicolor-perl,
@@ -178,6 +180,7 @@ Provides: libpod-parser-perl,
  libfile-spec-perl,
  libtime-local-perl,
  podlators-perl,
+ libunicode-collate-perl,
  libfile-path-perl
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
