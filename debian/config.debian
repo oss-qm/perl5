@@ -122,6 +122,7 @@ eval /bin/bash Configure			\
     -Ud_ualarm					\
     -Uusesfio					\
     -Uusenm					\
+    -Ui_libutil					\
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
     $extra_path					\

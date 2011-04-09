@@ -9,6 +9,8 @@ perl (5.12.3-3) UNRELEASED; urgency=low
     + debian/config.debian: pass multiarch paths to the build (if
       available) so that we're able to find libraries needed to build.
       thanks to Steve Langasek. (Closes: #620189)
+  * debian/config.debian: never use <libutil.h>, even if libbsd-dev is
+    installed. Inspired by a similar Ubuntu change.
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Mar 2011 22:09:54 +0100
 
