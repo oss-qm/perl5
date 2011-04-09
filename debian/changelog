@@ -5,6 +5,10 @@ perl (5.12.3-3) UNRELEASED; urgency=low
 
   [ Niko Tyni ]
   * Move to libdb5.1. (Closes: #621383)
+  * Merged from 5.10.1-19:
+    + debian/config.debian: pass multiarch paths to the build (if
+      available) so that we're able to find libraries needed to build.
+      thanks to Steve Langasek. (Closes: #620189)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Mar 2011 22:09:54 +0100
 
