@@ -1,6 +1,10 @@
 perl (5.12.3-3) UNRELEASED; urgency=low
 
+  [ Dominic Hargreaves ]
   *  Remove Eugene from Uploaders as requested
+
+  [ Niko Tyni ]
+  * Move to libdb5.1. (Closes: #621383)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Mar 2011 22:09:54 +0100
 
