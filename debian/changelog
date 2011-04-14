@@ -14,7 +14,10 @@ perl (5.12.3-3) experimental; urgency=low
   * Add Conflicts, Replaces, Provides for libunicode-collate-perl which is
     now also packaged separately. (Closes: #599486)
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 14 Apr 2011 18:58:53 +0100
+  [ Dominic Hargreaves ]
+  * Update Standards-Version to 3.9.2 (no changes)
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 14 Apr 2011 18:59:52 +0100
 
 perl (5.12.3-2) experimental; urgency=low
 
