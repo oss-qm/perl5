@@ -1,3 +1,11 @@
+perl (5.12.3-4) UNRELEASED; urgency=low
+
+  * Revert gcc-4.3 on sparc workaround for #577016 which turned out to
+    be a kernel bug, now fixed (#581571). gcc-4.3 is no longer available
+    in sid.
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 14 Apr 2011 22:47:26 +0100
+
 perl (5.12.3-3) experimental; urgency=low
 
   [ Dominic Hargreaves ]
