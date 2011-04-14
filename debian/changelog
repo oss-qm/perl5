@@ -1,4 +1,4 @@
-perl (5.12.3-3) UNRELEASED; urgency=low
+perl (5.12.3-3) experimental; urgency=low
 
   [ Dominic Hargreaves ]
   *  Remove Eugene from Uploaders as requested
@@ -14,7 +14,7 @@ perl (5.12.3-3) UNRELEASED; urgency=low
   * Add Conflicts, Replaces, Provides for libunicode-collate-perl which is
     now also packaged separately. (Closes: #599486)
 
- -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Mar 2011 22:09:54 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 14 Apr 2011 18:58:53 +0100
 
 perl (5.12.3-2) experimental; urgency=low
 
