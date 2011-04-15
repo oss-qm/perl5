@@ -1,3 +1,10 @@
+perl (5.10.1-20) UNRELEASED; urgency=low
+
+  * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
+    (Closes: #622817)
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 15 Apr 2011 22:03:44 +0300
+
 perl (5.10.1-19) unstable; urgency=low
 
   * Remove Eugene from Uploaders as requested
