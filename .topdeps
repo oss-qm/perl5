@@ -49,3 +49,4 @@ fixes/lc-numeric-docs
 fixes/lc-numeric-sprintf
 fixes/concat-stack-corruption
 fixes/cgi-multiline-header
+fixes/casing-taint-cve-2011-1487
