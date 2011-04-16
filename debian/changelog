@@ -1,3 +1,10 @@
+perl (5.10.0-19lenny4) oldstable-security; urgency=low
+
+  * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
+    (Closes: #622817)
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 16 Apr 2011 09:05:09 +0300
+
 perl (5.10.0-19lenny3) stable; urgency=low
 
   * [SECURITY] CVE-2010-2761 CVE-2010-4410 CVE-2010-4411:

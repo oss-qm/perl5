@@ -42,6 +42,7 @@ debian/patches/40_compress_raw_zlib_cve_2009_1391
 debian/patches/41_map_memleak.diff
 debian/patches/42_cgi_cve_2010_4411
 debian/patches/43_safe_update_cve_2010_1168
+debian/patches/44_casing_taint_cve_2011_1487
 debian/patches/50_debian_use_gdbm
 debian/patches/51_debian_ld_run_path
 debian/patches/52_debian_extutils_hacks

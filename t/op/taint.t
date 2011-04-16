@@ -17,7 +17,7 @@ use Config;
 use File::Spec::Functions;
 
 BEGIN { require './test.pl'; }
-plan tests => 267;
+plan tests => 271;
 
 $| = 1;
 
@@ -1252,6 +1252,19 @@ foreach my $ord (78, 163, 256) {
     is($line, 'A1');
     $line =~ /(A\S*)/;
     ok(!tainted($1), "\\S match with chr $ord");
+}
+
+{
+    # [perl #87336] lc/uc(first) failing to taint the returned string
+    my $source = "foo$TAINT";
+    my $dest = lc $source;
+    test tainted $dest, "lc(tainted) taints its return value";
+    $dest = lcfirst $source;
+    test tainted $dest, "lcfirst(tainted) taints its return value";
+    $dest = uc $source;
+    test tainted $dest, "uc(tainted) taints its return value";
+    $dest = ucfirst $source;
+    test tainted $dest, "ucfirst(tainted) taints its return value";
 }
 
 # This may bomb out with the alarm signal so keep it last
