@@ -1,9 +1,9 @@
-perl (5.10.1-17squeeze1) UNRELEASED; urgency=low
+perl (5.10.1-17squeeze1) stable-security; urgency=low
 
   * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
     (Closes: #622817)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 15 Apr 2011 22:39:51 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 16 Apr 2011 09:02:05 +0300
 
 perl (5.10.1-17) unstable; urgency=medium
 
