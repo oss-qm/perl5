@@ -2,6 +2,7 @@ From: Niko Tyni <ntyni@debian.org>
 Bug-Debian: http://bugs.debian.org/622817
 Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=87336
 Origin: upstream, http://perl5.git.perl.org/perl.git/commitdiff/539689e74a3bcb04d29e4cd9396de91a81045b99
+Subject: fix unwanted taint laundering in lc(), uc() et al.
 
 Upstream patch ported to 5.12 by Marcela Mašláňová <mmaslano@redhat.com>
 
