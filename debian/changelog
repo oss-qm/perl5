@@ -2,6 +2,8 @@ perl (5.10.1-20) UNRELEASED; urgency=low
 
   * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
     (Closes: #622817)
+  * Make the package fail to build instead of silently dropping the
+    DB_File module if -ldb doesn't work. (See #622916)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 15 Apr 2011 22:03:44 +0300
 
