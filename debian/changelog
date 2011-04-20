@@ -1,11 +1,17 @@
 perl (5.10.1-20) UNRELEASED; urgency=low
 
+  [ Niko Tyni ]
   * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
     (Closes: #622817)
   * Make the package fail to build instead of silently dropping the
     DB_File module if -ldb doesn't work. (See #622916)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 15 Apr 2011 22:03:44 +0300
+  [ Dominic Hargreaves ]
+  * debian/config.debian: never use <libutil.h>, even if libbsd-dev is
+    installed. Inspired by a similar Ubuntu change and merged from
+    perl 5.12.3-3.
+
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 20 Apr 2011 18:46:46 +0100
 
 perl (5.10.1-19) unstable; urgency=low
 
