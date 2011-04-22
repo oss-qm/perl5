@@ -52,6 +52,12 @@ if [ -n "$inc_version_list" ]; then
     d_inc_version_list=define
 fi
 
+# we always want the Berkeley DB support
+if [ "$i_db" != "$define" ]; then
+       echo "debian/config.over: Berkeley DB support not enabled, aborting!" 1>
+       exit 1
+fi
+
 # set generic email addresses, host/domain names
 cf_by='Debian Project'
 cf_email=perl@packages.debian.org
