@@ -22,7 +22,6 @@ usr/*/perl/*/Scalar/Util.pm
 usr/*/perl/*/Socket.pm
 usr/*/perl/*/XSLoader.pm
 usr/*/perl/*/auto/Cwd
-usr/*/perl/*/auto/DynaLoader
 usr/*/perl/*/auto/Fcntl
 usr/*/perl/*/auto/File/Glob
 usr/lib/perl/*/auto/Hash/Util/Util.so
