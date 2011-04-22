@@ -32,3 +32,4 @@ fixes/lc-numeric-docs
 fixes/lc-numeric-sprintf
 fixes/concat-stack-corruption
 fixes/h2ph-gcc-4.5
+fixes/casing-taint-cve-2011-1487
