@@ -4,13 +4,13 @@ perl (5.12.3-4) UNRELEASED; urgency=low
     be a kernel bug, now fixed (#581571). gcc-4.3 is no longer available
     in sid.
   * Build-depend on unversioned libdb-dev (see #621383)
-  * Merged from 5.10.1-20:
+  * Merge 5.10.1-20 from unstable:
     + [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
       (Closes: #622817)
     + Make the package fail to build instead of silently dropping the
       DB_File module if -ldb doesn't work. (See #622916)
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Apr 2011 11:54:26 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Apr 2011 11:56:22 +0100
 
 perl (5.12.3-3) experimental; urgency=low
 
@@ -180,6 +180,21 @@ perl (5.12.0~rc3-1) experimental; urgency=low
     #310995)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 06 Apr 2010 20:08:41 +0300
+
+perl (5.10.1-20) unstable; urgency=medium
+
+  [ Niko Tyni ]
+  * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
+    (Closes: #622817)
+  * Make the package fail to build instead of silently dropping the
+    DB_File module if -ldb doesn't work. (See #622916)
+
+  [ Dominic Hargreaves ]
+  * debian/config.debian: never use <libutil.h>, even if libbsd-dev is
+    installed. Inspired by a similar Ubuntu change and merged from
+    perl 5.12.3-3.
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Apr 2011 10:29:41 +0100
 
 perl (5.10.1-19) unstable; urgency=low
 
