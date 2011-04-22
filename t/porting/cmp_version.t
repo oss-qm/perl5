@@ -25,7 +25,8 @@ use File::Spec::Functions qw(rel2abs abs2rel catfile catdir curdir);
 use Getopt::Std;
 use Maintainers;
 
-if (! -d '.git' ) {
+# Debian change: skip as we're probably in a different git repository
+if (1 || ! -d '.git' ) {
     print "1..0 # SKIP: not being run from a git checkout\n";
     exit 0;
 }
