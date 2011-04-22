@@ -1,4 +1,4 @@
-perl (5.10.1-20) UNRELEASED; urgency=low
+perl (5.10.1-20) unstable; urgency=medium
 
   [ Niko Tyni ]
   * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
@@ -11,7 +11,7 @@ perl (5.10.1-20) UNRELEASED; urgency=low
     installed. Inspired by a similar Ubuntu change and merged from
     perl 5.12.3-3.
 
- -- Dominic Hargreaves <dom@earth.li>  Wed, 20 Apr 2011 18:46:46 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Apr 2011 10:29:41 +0100
 
 perl (5.10.1-19) unstable; urgency=low
 
