@@ -59,7 +59,8 @@ SKIP: {
 
 SKIP: {
     chdir "..";
-    skip("not under git control", 3) unless -d '.git';
+    # Debian change: skip as we're probably in a different git repository
+    skip("not under git control", 3) unless 0 && -d '.git';
     chomp(my @repo= grep { !/\.gitignore$/ } `git ls-files`);
     skip("git ls-files didnt work",3)
         if !@repo;
