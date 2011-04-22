@@ -158,38 +158,7 @@ sub skip_all_without_config {
 }
 
 sub find_git_or_skip {
-    my ($source_dir, $reason);
-    if (-d '.git') {
-	$source_dir = '.';
-    } elsif (-l 'MANIFEST' && -l 'AUTHORS') {
-	my $where = readlink 'MANIFEST';
-	die "Can't readling MANIFEST: $!" unless defined $where;
-	die "Confusing symlink target for MANIFEST, '$where'"
-	    unless $where =~ s!/MANIFEST\z!!;
-	if (-d "$where/.git") {
-	    # Looks like we are in a symlink tree
-	    if (exists $ENV{GIT_DIR}) {
-		diag("Found source tree at $where, but \$ENV{GIT_DIR} is $ENV{GIT_DIR}. Not changing it");
-	    } else {
-		note("Found source tree at $where, setting \$ENV{GIT_DIR}");
-		$ENV{GIT_DIR} = "$where/.git";
-	    }
-	    $source_dir = $where;
-	}
-    }
-    if ($source_dir) {
-	my $version_string = `git --version`;
-	if (defined $version_string
-	      && $version_string =~ /\Agit version (\d+\.\d+\.\d+)(.*)/) {
-	    return $source_dir if eval "v$1 ge v1.5.0";
-	    # If you have earlier than 1.5.0 and it works, change this test
-	    $reason = "in git checkout, but git version '$1$2' too old";
-	} else {
-	    $reason = "in git checkout, but cannot run git";
-	}
-    } else {
-	$reason = 'not being run from a git checkout';
-    }
+    my $reason = 'Debian: we are probably in a different git repository';
     skip_all($reason) if $_[0] && $_[0] eq 'all';
     skip($reason, @_);
 }
