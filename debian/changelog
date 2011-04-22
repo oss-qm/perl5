@@ -175,6 +175,15 @@ perl (5.12.0~rc3-1) experimental; urgency=low
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 06 Apr 2010 20:08:41 +0300
 
+perl (5.10.1-19) unstable; urgency=low
+
+  * Remove Eugene from Uploaders as requested
+  * debian/config.debian: pass multiarch paths to the build (if
+    available) so that we're able to find libraries needed to build.
+    Thanks to Steve Langasek. (Closes: #620189)
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 01 Apr 2011 09:09:17 +0100
+
 perl (5.10.1-18) unstable; urgency=low
 
   * Add Conflicts, Replaces, Provides for libencode-perl which is
