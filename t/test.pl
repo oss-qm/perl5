@@ -174,7 +174,7 @@ sub skip_all_without_unicode_tables { # (but only under miniperl)
 
 sub find_git_or_skip {
     my ($source_dir, $reason);
-    if (-d '.git') {
+    if (-d '.git' && ! -d 'debian') {
 	$source_dir = '.';
     } elsif (-l 'MANIFEST' && -l 'AUTHORS') {
 	my $where = readlink 'MANIFEST';
