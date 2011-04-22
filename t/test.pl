@@ -153,6 +153,8 @@ sub skip_all_without_config {
 }
 
 sub find_git_or_skip {
+    # Debian change: skip as we're probably in a different git repository
+    skip_all("Debian change; we're probably in a different git repository");
     my ($found_dir, $reason);
     if (-d '.git') {
 	$found_dir = 1;
