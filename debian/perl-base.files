@@ -72,3 +72,4 @@ usr/*/perl/*/unicore/lib
 usr/*/perl/*/vars.pm
 usr/*/perl/*/warnings.pm
 usr/*/perl/*/warnings/register.pm
+usr/*/perl/*/feature.pm

@@ -63,6 +63,8 @@ sub check {
 	return if $seen{$_}++;
 	# "use IO" and "use re" are deprecated and/or useless
 	return if $_ eq 'IO' || $_ eq 're';
+	# "use feature" dies without an argument
+	return if $_ eq 'feature';
 	if (m|([^/]+)_heavy\.pl|) {
 		# bytes_heavy.pl needs bytes.pm loaded first
 		check($1);
