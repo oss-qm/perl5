@@ -4,8 +4,11 @@ perl (5.12.3-4) UNRELEASED; urgency=low
     be a kernel bug, now fixed (#581571). gcc-4.3 is no longer available
     in sid.
   * Build-depend on unversioned libdb-dev (see #621383)
+  * Merged from 5.10.1-20:
+    + [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
+      (Closes: #622817)
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Apr 2011 11:35:26 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Apr 2011 11:50:51 +0100
 
 perl (5.12.3-3) experimental; urgency=low
 
