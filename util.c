@@ -25,6 +25,10 @@
 #define PERL_IN_UTIL_C
 #include "perl.h"
 
+#ifdef USE_PERLIO
+#include "perliol.h" /* For PerlIOUnix_refcnt */
+#endif
+
 #ifndef PERL_MICRO
 #include <signal.h>
 #ifndef SIG_ERR
@@ -70,12 +74,18 @@ S_write_no_mem(pTHX)
     NORETURN_FUNCTION_END;
 }
 
+#if defined (DEBUGGING) || defined(PERL_IMPLICIT_SYS) || defined (PERL_TRACK_MEMPOOL)
+#  define ALWAYS_NEED_THX
+#endif
+
 /* paranoid version of system's malloc() */
 
 Malloc_t
 Perl_safesysmalloc(MEM_SIZE size)
 {
+#ifdef ALWAYS_NEED_THX
     dTHX;
+#endif
     Malloc_t ptr;
 #ifdef HAS_64K_LIMIT
 	if (size > 0xffff) {
@@ -93,7 +103,6 @@ Perl_safesysmalloc(MEM_SIZE size)
 #endif
     ptr = (Malloc_t)PerlMem_malloc(size?size:1);	/* malloc(0) is NASTY on our system */
     PERL_ALLOC_CHECK(ptr);
-    DEBUG_m(PerlIO_printf(Perl_debug_log, "0x%"UVxf": (%05ld) malloc %ld bytes\n",PTR2UV(ptr),(long)PL_an++,(long)size));
     if (ptr != NULL) {
 #ifdef PERL_TRACK_MEMPOOL
 	struct perl_memory_debug_header *const header
@@ -116,12 +125,18 @@ Perl_safesysmalloc(MEM_SIZE size)
 #  endif
         ptr = (Malloc_t)((char*)ptr+sTHX);
 #endif
+	DEBUG_m(PerlIO_printf(Perl_debug_log, "0x%"UVxf": (%05ld) malloc %ld bytes\n",PTR2UV(ptr),(long)PL_an++,(long)size));
 	return ptr;
 }
-    else if (PL_nomemok)
-	return NULL;
     else {
-	return write_no_mem();
+#ifndef ALWAYS_NEED_THX
+	dTHX;
+#endif
+	if (PL_nomemok)
+	    return NULL;
+	else {
+	    return write_no_mem();
+	}
     }
     /*NOTREACHED*/
 }
@@ -131,7 +146,9 @@ Perl_safesysmalloc(MEM_SIZE size)
 Malloc_t
 Perl_safesysrealloc(Malloc_t where,MEM_SIZE size)
 {
+#ifdef ALWAYS_NEED_THX
     dTHX;
+#endif
     Malloc_t ptr;
 #if !defined(STANDARD_C) && !defined(HAS_REALLOC_PROTOTYPE) && !defined(PERL_MICRO)
     Malloc_t PerlMem_realloc();
@@ -213,10 +230,15 @@ Perl_safesysrealloc(Malloc_t where,MEM_SIZE size)
     if (ptr != NULL) {
 	return ptr;
     }
-    else if (PL_nomemok)
-	return NULL;
     else {
-	return write_no_mem();
+#ifndef ALWAYS_NEED_THX
+	dTHX;
+#endif
+	if (PL_nomemok)
+	    return NULL;
+	else {
+	    return write_no_mem();
+	}
     }
     /*NOTREACHED*/
 }
@@ -226,7 +248,7 @@ Perl_safesysrealloc(Malloc_t where,MEM_SIZE size)
 Free_t
 Perl_safesysfree(Malloc_t where)
 {
-#if defined(PERL_IMPLICIT_SYS) || defined(PERL_TRACK_MEMPOOL)
+#ifdef ALWAYS_NEED_THX
     dTHX;
 #else
     dVAR;
@@ -268,7 +290,9 @@ Perl_safesysfree(Malloc_t where)
 Malloc_t
 Perl_safesyscalloc(MEM_SIZE count, MEM_SIZE size)
 {
+#ifdef ALWAYS_NEED_THX
     dTHX;
+#endif
     Malloc_t ptr;
     MEM_SIZE total_size = 0;
 
@@ -330,9 +354,14 @@ Perl_safesyscalloc(MEM_SIZE count, MEM_SIZE size)
 #endif
 	return ptr;
     }
-    else if (PL_nomemok)
-	return NULL;
-    return write_no_mem();
+    else {
+#ifndef ALWAYS_NEED_THX
+	dTHX;
+#endif
+	if (PL_nomemok)
+	    return NULL;
+	return write_no_mem();
+    }
 }
 
 /* These must be defined when not using Perl's malloc for binary
@@ -878,37 +907,79 @@ Perl_screaminstr(pTHX_ SV *bigstr, SV *littlestr, I32 start_shift, I32 end_shift
     return NULL;
 }
 
+/*
+=for apidoc foldEQ
+
+Returns true if the leading len bytes of the strings s1 and s2 are the same
+case-insensitively; false otherwise.  Uppercase and lowercase ASCII range bytes
+match themselves and their opposite case counterparts.  Non-cased and non-ASCII
+range bytes match only themselves.
+
+=cut
+*/
+
+
 I32
-Perl_ibcmp(const char *s1, const char *s2, register I32 len)
+Perl_foldEQ(const char *s1, const char *s2, register I32 len)
 {
     register const U8 *a = (const U8 *)s1;
     register const U8 *b = (const U8 *)s2;
 
-    PERL_ARGS_ASSERT_IBCMP;
+    PERL_ARGS_ASSERT_FOLDEQ;
 
     while (len--) {
 	if (*a != *b && *a != PL_fold[*b])
-	    return 1;
+	    return 0;
 	a++,b++;
     }
-    return 0;
+    return 1;
+}
+I32
+Perl_foldEQ_latin1(const char *s1, const char *s2, register I32 len)
+{
+    /* Compare non-utf8 using Unicode (Latin1) semantics.  Does not work on
+     * MICRO_SIGN, LATIN_SMALL_LETTER_SHARP_S, nor
+     * LATIN_SMALL_LETTER_Y_WITH_DIAERESIS, and does not check for these.  Nor
+     * does it check that the strings each have at least 'len' characters */
+
+    register const U8 *a = (const U8 *)s1;
+    register const U8 *b = (const U8 *)s2;
+
+    PERL_ARGS_ASSERT_FOLDEQ_LATIN1;
+
+    while (len--) {
+	if (*a != *b && *a != PL_fold_latin1[*b]) {
+	    return 0;
+	}
+	a++, b++;
+    }
+    return 1;
 }
 
+/*
+=for apidoc foldEQ_locale
+
+Returns true if the leading len bytes of the strings s1 and s2 are the same
+case-insensitively in the current locale; false otherwise.
+
+=cut
+*/
+
 I32
-Perl_ibcmp_locale(const char *s1, const char *s2, register I32 len)
+Perl_foldEQ_locale(const char *s1, const char *s2, register I32 len)
 {
     dVAR;
     register const U8 *a = (const U8 *)s1;
     register const U8 *b = (const U8 *)s2;
 
-    PERL_ARGS_ASSERT_IBCMP_LOCALE;
+    PERL_ARGS_ASSERT_FOLDEQ_LOCALE;
 
     while (len--) {
 	if (*a != *b && *a != PL_fold_locale[*b])
-	    return 1;
+	    return 0;
 	a++,b++;
     }
-    return 0;
+    return 1;
 }
 
 /* copy a string to a safe spot */
@@ -1041,6 +1112,25 @@ Perl_savesvpv(pTHX_ SV *sv)
     return (char *) CopyD(pv,newaddr,len,char);
 }
 
+/*
+=for apidoc savesharedsvpv
+
+A version of C<savesharedpv()> which allocates the duplicate string in
+memory which is shared between threads.
+
+=cut
+*/
+
+char *
+Perl_savesharedsvpv(pTHX_ SV *sv)
+{
+    STRLEN len;
+    const char * const pv = SvPV_const(sv, len);
+
+    PERL_ARGS_ASSERT_SAVESHAREDSVPV;
+
+    return savesharedpvn(pv, len);
+}
 
 /* the SV for Perl_form() and mess() is not kept in an arena */
 
@@ -1051,7 +1141,7 @@ S_mess_alloc(pTHX)
     SV *sv;
     XPVMG *any;
 
-    if (!PL_dirty)
+    if (PL_phase != PERL_PHASE_DESTRUCT)
 	return newSVpvs_flags("", SVs_TEMP);
 
     if (PL_mess_sv)
@@ -1124,6 +1214,21 @@ Perl_vform(pTHX_ const char *pat, va_list *args)
     return SvPVX(sv);
 }
 
+/*
+=for apidoc Am|SV *|mess|const char *pat|...
+
+Take a sprintf-style format pattern and argument list.  These are used to
+generate a string message.  If the message does not end with a newline,
+then it will be extended with some indication of the current location
+in the code, as described for L</mess_sv>.
+
+Normally, the resulting message is returned in a new mortal SV.
+During global destruction a single SV may be shared between uses of
+this function.
+
+=cut
+*/
+
 #if defined(PERL_IMPLICIT_CONTEXT)
 SV *
 Perl_mess_nocontext(const char *pat, ...)
@@ -1186,15 +1291,57 @@ S_closest_cop(pTHX_ const COP *cop, const OP *o)
     return NULL;
 }
 
+/*
+=for apidoc Am|SV *|mess_sv|SV *basemsg|bool consume
+
+Expands a message, intended for the user, to include an indication of
+the current location in the code, if the message does not already appear
+to be complete.
+
+C<basemsg> is the initial message or object.  If it is a reference, it
+will be used as-is and will be the result of this function.  Otherwise it
+is used as a string, and if it already ends with a newline, it is taken
+to be complete, and the result of this function will be the same string.
+If the message does not end with a newline, then a segment such as C<at
+foo.pl line 37> will be appended, and possibly other clauses indicating
+the current state of execution.  The resulting message will end with a
+dot and a newline.
+
+Normally, the resulting message is returned in a new mortal SV.
+During global destruction a single SV may be shared between uses of this
+function.  If C<consume> is true, then the function is permitted (but not
+required) to modify and return C<basemsg> instead of allocating a new SV.
+
+=cut
+*/
+
 SV *
-Perl_vmess(pTHX_ const char *pat, va_list *args)
+Perl_mess_sv(pTHX_ SV *basemsg, bool consume)
 {
     dVAR;
-    SV * const sv = mess_alloc();
+    SV *sv;
 
-    PERL_ARGS_ASSERT_VMESS;
+    PERL_ARGS_ASSERT_MESS_SV;
 
-    sv_vsetpvfn(sv, pat, strlen(pat), args, NULL, 0, NULL);
+    if (SvROK(basemsg)) {
+	if (consume) {
+	    sv = basemsg;
+	}
+	else {
+	    sv = mess_alloc();
+	    sv_setsv(sv, basemsg);
+	}
+	return sv;
+    }
+
+    if (SvPOK(basemsg) && consume) {
+	sv = basemsg;
+    }
+    else {
+	sv = mess_alloc();
+	sv_copypv(sv, basemsg);
+    }
+
     if (!SvCUR(sv) || *(SvEND(sv) - 1) != '\n') {
 	/*
 	 * Try and find the file and line for PL_op.  This will usually be
@@ -1221,11 +1368,39 @@ Perl_vmess(pTHX_ const char *pat, va_list *args)
 			   line_mode ? "line" : "chunk",
 			   (IV)IoLINES(GvIOp(PL_last_in_gv)));
 	}
-	if (PL_dirty)
+	if (PL_phase == PERL_PHASE_DESTRUCT)
 	    sv_catpvs(sv, " during global destruction");
 	sv_catpvs(sv, ".\n");
     }
     return sv;
+}
+
+/*
+=for apidoc Am|SV *|vmess|const char *pat|va_list *args
+
+C<pat> and C<args> are a sprintf-style format pattern and encapsulated
+argument list.  These are used to generate a string message.  If the
+message does not end with a newline, then it will be extended with
+some indication of the current location in the code, as described for
+L</mess_sv>.
+
+Normally, the resulting message is returned in a new mortal SV.
+During global destruction a single SV may be shared between uses of
+this function.
+
+=cut
+*/
+
+SV *
+Perl_vmess(pTHX_ const char *pat, va_list *args)
+{
+    dVAR;
+    SV * const sv = mess_alloc();
+
+    PERL_ARGS_ASSERT_VMESS;
+
+    sv_vsetpvfn(sv, pat, strlen(pat), args, NULL, 0, NULL);
+    return mess_sv(sv, 1);
 }
 
 void
@@ -1240,38 +1415,16 @@ Perl_write_to_stderr(pTHX_ SV* msv)
     if (PL_stderrgv && SvREFCNT(PL_stderrgv) 
 	&& (io = GvIO(PL_stderrgv))
 	&& (mg = SvTIED_mg((const SV *)io, PERL_MAGIC_tiedscalar))) 
-    {
-	dSP;
-	ENTER;
-	SAVETMPS;
-
-	save_re_context();
-	SAVESPTR(PL_stderrgv);
-	PL_stderrgv = NULL;
-
-	PUSHSTACKi(PERLSI_MAGIC);
-
-	PUSHMARK(SP);
-	EXTEND(SP,2);
-	PUSHs(SvTIED_obj(MUTABLE_SV(io), mg));
-	PUSHs(msv);
-	PUTBACK;
-	call_method("PRINT", G_SCALAR);
-
-	POPSTACK;
-	FREETMPS;
-	LEAVE;
-    }
+	Perl_magic_methcall(aTHX_ MUTABLE_SV(io), mg, "PRINT",
+			    G_SCALAR | G_DISCARD | G_WRITING_TO_STDERR, 1, msv);
     else {
 #ifdef USE_SFIO
 	/* SFIO can really mess with your errno */
 	dSAVED_ERRNO;
 #endif
 	PerlIO * const serr = Perl_error_log;
-	STRLEN msglen;
-	const char* message = SvPVx_const(msv, msglen);
 
-	PERL_WRITE_MSG_TO_CONSOLE(serr, message, msglen);
+	do_print(msv, serr);
 	(void)PerlIO_flush(serr);
 #ifdef USE_SFIO
 	RESTORE_ERRNO;
@@ -1279,10 +1432,26 @@ Perl_write_to_stderr(pTHX_ SV* msv)
     }
 }
 
-/* Common code used by vcroak, vdie, vwarn and vwarner  */
+/*
+=head1 Warning and Dieing
+*/
+
+/* Common code used in dieing and warning */
+
+STATIC SV *
+S_with_queued_errors(pTHX_ SV *ex)
+{
+    PERL_ARGS_ASSERT_WITH_QUEUED_ERRORS;
+    if (PL_errors && SvCUR(PL_errors) && !SvROK(ex)) {
+	sv_catsv(PL_errors, ex);
+	ex = sv_mortalcopy(PL_errors);
+	SvCUR_set(PL_errors, 0);
+    }
+    return ex;
+}
 
 STATIC bool
-S_vdie_common(pTHX_ SV *message, bool warn)
+S_invoke_exception_hook(pTHX_ SV *ex, bool warn)
 {
     dVAR;
     HV *stash;
@@ -1292,7 +1461,8 @@ S_vdie_common(pTHX_ SV *message, bool warn)
     /* sv_2cv might call Perl_croak() or Perl_warner() */
     SV * const oldhook = *hook;
 
-    assert(oldhook);
+    if (!oldhook)
+	return FALSE;
 
     ENTER;
     SAVESPTR(*hook);
@@ -1301,7 +1471,7 @@ S_vdie_common(pTHX_ SV *message, bool warn)
     LEAVE;
     if (cv && !CvDEPTH(cv) && (CvROOT(cv) || CvXSUB(cv))) {
 	dSP;
-	SV *msg;
+	SV *exarg;
 
 	ENTER;
 	save_re_context();
@@ -1309,18 +1479,13 @@ S_vdie_common(pTHX_ SV *message, bool warn)
 	    SAVESPTR(*hook);
 	    *hook = NULL;
 	}
-	if (warn || message) {
-	    msg = newSVsv(message);
-	    SvREADONLY_on(msg);
-	    SAVEFREESV(msg);
-	}
-	else {
-	    msg = ERRSV;
-	}
+	exarg = newSVsv(ex);
+	SvREADONLY_on(exarg);
+	SAVEFREESV(exarg);
 
 	PUSHSTACKi(warn ? PERLSI_WARNHOOK : PERLSI_DIEHOOK);
 	PUSHMARK(SP);
-	XPUSHs(msg);
+	XPUSHs(exarg);
 	PUTBACK;
 	call_sv(MUTABLE_SV(cv), G_DISCARD);
 	POPSTACK;
@@ -1330,80 +1495,146 @@ S_vdie_common(pTHX_ SV *message, bool warn)
     return FALSE;
 }
 
-STATIC SV *
-S_vdie_croak_common(pTHX_ const char* pat, va_list* args)
+/*
+=for apidoc Am|OP *|die_sv|SV *baseex
+
+Behaves the same as L</croak_sv>, except for the return type.
+It should be used only where the C<OP *> return type is required.
+The function never actually returns.
+
+=cut
+*/
+
+OP *
+Perl_die_sv(pTHX_ SV *baseex)
 {
-    dVAR;
-    SV *message;
-
-    if (pat) {
-	SV * const msv = vmess(pat, args);
-	if (PL_errors && SvCUR(PL_errors)) {
-	    sv_catsv(PL_errors, msv);
-	    message = sv_mortalcopy(PL_errors);
-	    SvCUR_set(PL_errors, 0);
-	}
-	else
-	    message = msv;
-    }
-    else {
-	message = NULL;
-    }
-
-    if (PL_diehook) {
-	S_vdie_common(aTHX_ message, FALSE);
-    }
-    return message;
-}
-
-static OP *
-S_vdie(pTHX_ const char* pat, va_list *args)
-{
-    dVAR;
-    SV *message;
-
-    message = vdie_croak_common(pat, args);
-
-    die_where(message);
+    PERL_ARGS_ASSERT_DIE_SV;
+    croak_sv(baseex);
     /* NOTREACHED */
     return NULL;
 }
+
+/*
+=for apidoc Am|OP *|die|const char *pat|...
+
+Behaves the same as L</croak>, except for the return type.
+It should be used only where the C<OP *> return type is required.
+The function never actually returns.
+
+=cut
+*/
 
 #if defined(PERL_IMPLICIT_CONTEXT)
 OP *
 Perl_die_nocontext(const char* pat, ...)
 {
     dTHX;
-    OP *o;
     va_list args;
     va_start(args, pat);
-    o = vdie(pat, &args);
+    vcroak(pat, &args);
+    /* NOTREACHED */
     va_end(args);
-    return o;
+    return NULL;
 }
 #endif /* PERL_IMPLICIT_CONTEXT */
 
 OP *
 Perl_die(pTHX_ const char* pat, ...)
 {
-    OP *o;
     va_list args;
     va_start(args, pat);
-    o = vdie(pat, &args);
+    vcroak(pat, &args);
+    /* NOTREACHED */
     va_end(args);
-    return o;
+    return NULL;
 }
+
+/*
+=for apidoc Am|void|croak_sv|SV *baseex
+
+This is an XS interface to Perl's C<die> function.
+
+C<baseex> is the error message or object.  If it is a reference, it
+will be used as-is.  Otherwise it is used as a string, and if it does
+not end with a newline then it will be extended with some indication of
+the current location in the code, as described for L</mess_sv>.
+
+The error message or object will be used as an exception, by default
+returning control to the nearest enclosing C<eval>, but subject to
+modification by a C<$SIG{__DIE__}> handler.  In any case, the C<croak_sv>
+function never returns normally.
+
+To die with a simple string message, the L</croak> function may be
+more convenient.
+
+=cut
+*/
+
+void
+Perl_croak_sv(pTHX_ SV *baseex)
+{
+    SV *ex = with_queued_errors(mess_sv(baseex, 0));
+    PERL_ARGS_ASSERT_CROAK_SV;
+    invoke_exception_hook(ex, FALSE);
+    die_unwind(ex);
+}
+
+/*
+=for apidoc Am|void|vcroak|const char *pat|va_list *args
+
+This is an XS interface to Perl's C<die> function.
+
+C<pat> and C<args> are a sprintf-style format pattern and encapsulated
+argument list.  These are used to generate a string message.  If the
+message does not end with a newline, then it will be extended with
+some indication of the current location in the code, as described for
+L</mess_sv>.
+
+The error message will be used as an exception, by default
+returning control to the nearest enclosing C<eval>, but subject to
+modification by a C<$SIG{__DIE__}> handler.  In any case, the C<croak>
+function never returns normally.
+
+For historical reasons, if C<pat> is null then the contents of C<ERRSV>
+(C<$@>) will be used as an error message or object instead of building an
+error message from arguments.  If you want to throw a non-string object,
+or build an error message in an SV yourself, it is preferable to use
+the L</croak_sv> function, which does not involve clobbering C<ERRSV>.
+
+=cut
+*/
 
 void
 Perl_vcroak(pTHX_ const char* pat, va_list *args)
 {
-    dVAR;
-    SV *msv;
-
-    msv = S_vdie_croak_common(aTHX_ pat, args);
-
-    die_where(msv);
+    SV *ex = with_queued_errors(pat ? vmess(pat, args) : mess_sv(ERRSV, 0));
+    invoke_exception_hook(ex, FALSE);
+    die_unwind(ex);
 }
+
+/*
+=for apidoc Am|void|croak|const char *pat|...
+
+This is an XS interface to Perl's C<die> function.
+
+Take a sprintf-style format pattern and argument list.  These are used to
+generate a string message.  If the message does not end with a newline,
+then it will be extended with some indication of the current location
+in the code, as described for L</mess_sv>.
+
+The error message will be used as an exception, by default
+returning control to the nearest enclosing C<eval>, but subject to
+modification by a C<$SIG{__DIE__}> handler.  In any case, the C<croak>
+function never returns normally.
+
+For historical reasons, if C<pat> is null then the contents of C<ERRSV>
+(C<$@>) will be used as an error message or object instead of building an
+error message from arguments.  If you want to throw a non-string object,
+or build an error message in an SV yourself, it is preferable to use
+the L</croak_sv> function, which does not involve clobbering C<ERRSV>.
+
+=cut
+*/
 
 #if defined(PERL_IMPLICIT_CONTEXT)
 void
@@ -1418,26 +1649,6 @@ Perl_croak_nocontext(const char *pat, ...)
 }
 #endif /* PERL_IMPLICIT_CONTEXT */
 
-/*
-=head1 Warning and Dieing
-
-=for apidoc croak
-
-This is the XSUB-writer's interface to Perl's C<die> function.
-Normally call this function the same way you call the C C<printf>
-function.  Calling C<croak> returns control directly to Perl,
-sidestepping the normal C order of execution. See C<warn>.
-
-If you want to throw an exception object, assign the object to
-C<$@> and then pass C<NULL> to croak():
-
-   errsv = get_sv("@", GV_ADD);
-   sv_setsv(errsv, exception_object);
-   croak(NULL);
-
-=cut
-*/
-
 void
 Perl_croak(pTHX_ const char *pat, ...)
 {
@@ -1448,21 +1659,95 @@ Perl_croak(pTHX_ const char *pat, ...)
     va_end(args);
 }
 
+/*
+=for apidoc Am|void|croak_no_modify
+
+Exactly equivalent to C<Perl_croak(aTHX_ "%s", PL_no_modify)>, but generates
+terser object code than using C<Perl_croak>. Less code used on exception code
+paths reduces CPU cache pressure.
+
+=cut
+*/
+
+void
+Perl_croak_no_modify(pTHX)
+{
+    Perl_croak(aTHX_ "%s", PL_no_modify);
+}
+
+/*
+=for apidoc Am|void|warn_sv|SV *baseex
+
+This is an XS interface to Perl's C<warn> function.
+
+C<baseex> is the error message or object.  If it is a reference, it
+will be used as-is.  Otherwise it is used as a string, and if it does
+not end with a newline then it will be extended with some indication of
+the current location in the code, as described for L</mess_sv>.
+
+The error message or object will by default be written to standard error,
+but this is subject to modification by a C<$SIG{__WARN__}> handler.
+
+To warn with a simple string message, the L</warn> function may be
+more convenient.
+
+=cut
+*/
+
+void
+Perl_warn_sv(pTHX_ SV *baseex)
+{
+    SV *ex = mess_sv(baseex, 0);
+    PERL_ARGS_ASSERT_WARN_SV;
+    if (!invoke_exception_hook(ex, TRUE))
+	write_to_stderr(ex);
+}
+
+/*
+=for apidoc Am|void|vwarn|const char *pat|va_list *args
+
+This is an XS interface to Perl's C<warn> function.
+
+C<pat> and C<args> are a sprintf-style format pattern and encapsulated
+argument list.  These are used to generate a string message.  If the
+message does not end with a newline, then it will be extended with
+some indication of the current location in the code, as described for
+L</mess_sv>.
+
+The error message or object will by default be written to standard error,
+but this is subject to modification by a C<$SIG{__WARN__}> handler.
+
+Unlike with L</vcroak>, C<pat> is not permitted to be null.
+
+=cut
+*/
+
 void
 Perl_vwarn(pTHX_ const char* pat, va_list *args)
 {
-    dVAR;
-    SV * const msv = vmess(pat, args);
-
+    SV *ex = vmess(pat, args);
     PERL_ARGS_ASSERT_VWARN;
-
-    if (PL_warnhook) {
-	if (vdie_common(msv, TRUE))
-	    return;
-    }
-
-    write_to_stderr(msv);
+    if (!invoke_exception_hook(ex, TRUE))
+	write_to_stderr(ex);
 }
+
+/*
+=for apidoc Am|void|warn|const char *pat|...
+
+This is an XS interface to Perl's C<warn> function.
+
+Take a sprintf-style format pattern and argument list.  These are used to
+generate a string message.  If the message does not end with a newline,
+then it will be extended with some indication of the current location
+in the code, as described for L</mess_sv>.
+
+The error message or object will by default be written to standard error,
+but this is subject to modification by a C<$SIG{__WARN__}> handler.
+
+Unlike with L</croak>, C<pat> is not permitted to be null.
+
+=cut
+*/
 
 #if defined(PERL_IMPLICIT_CONTEXT)
 void
@@ -1476,15 +1761,6 @@ Perl_warn_nocontext(const char *pat, ...)
     va_end(args);
 }
 #endif /* PERL_IMPLICIT_CONTEXT */
-
-/*
-=for apidoc warn
-
-This is the XSUB-writer's interface to Perl's C<warn> function.  Call this
-function the same way you call the C C<printf> function.  See C<croak>.
-
-=cut
-*/
 
 void
 Perl_warn(pTHX_ const char *pat, ...)
@@ -1553,11 +1829,8 @@ Perl_vwarner(pTHX_ U32  err, const char* pat, va_list* args)
     if (PL_warnhook == PERL_WARNHOOK_FATAL || ckDEAD(err)) {
 	SV * const msv = vmess(pat, args);
 
-	if (PL_diehook) {
-	    assert(msv);
-	    S_vdie_common(aTHX_ msv, FALSE);
-	}
-	die_where(msv);
+	invoke_exception_hook(msv, FALSE);
+	die_unwind(msv);
     }
     else {
 	Perl_vwarn(aTHX_ pat, args);
@@ -2849,11 +3122,20 @@ Perl_my_pclose(pTHX_ PerlIO *ptr)
     int status;
     SV **svp;
     Pid_t pid;
-    Pid_t pid2;
+    Pid_t pid2 = 0;
     bool close_failed;
     dSAVEDERRNO;
+    const int fd = PerlIO_fileno(ptr);
 
-    svp = av_fetch(PL_fdpid,PerlIO_fileno(ptr),TRUE);
+#ifdef USE_PERLIO
+    /* Find out whether the refcount is low enough for us to wait for the
+       child proc without blocking. */
+    const bool should_wait = PerlIOUnix_refcnt(fd) == 1;
+#else
+    const bool should_wait = 1;
+#endif
+
+    svp = av_fetch(PL_fdpid,fd,TRUE);
     pid = (SvTYPE(*svp) == SVt_IV) ? SvIVX(*svp) : -1;
     SvREFCNT_dec(*svp);
     *svp = &PL_sv_undef;
@@ -2872,7 +3154,7 @@ Perl_my_pclose(pTHX_ PerlIO *ptr)
     rsignal_save(SIGINT,  (Sighandler_t) SIG_IGN, &istat);
     rsignal_save(SIGQUIT, (Sighandler_t) SIG_IGN, &qstat);
 #endif
-    do {
+    if (should_wait) do {
 	pid2 = wait4pid(pid, &status, 0);
     } while (pid2 == -1 && errno == EINTR);
 #ifndef PERL_MICRO
@@ -2884,7 +3166,11 @@ Perl_my_pclose(pTHX_ PerlIO *ptr)
 	RESTORE_ERRNO;
 	return -1;
     }
-    return(pid2 < 0 ? pid2 : status == 0 ? 0 : (errno = 0, status));
+    return(
+      should_wait
+       ? pid2 < 0 ? pid2 : status == 0 ? 0 : (errno = 0, status)
+       : 0
+    );
 }
 #else
 #if defined(__LIBCATAMOUNT__)
@@ -3575,113 +3861,76 @@ Perl_my_fflush_all(pTHX)
 }
 
 void
-Perl_report_evil_fh(pTHX_ const GV *gv, const IO *io, I32 op)
+Perl_report_wrongway_fh(pTHX_ const GV *gv, const char have)
 {
-    const char * const name = gv && isGV(gv) ? GvENAME(gv) : NULL;
+    if (ckWARN(WARN_IO)) {
+	const char * const name
+	    = gv && (isGV(gv) || isGV_with_GP(gv)) ? GvENAME(gv) : NULL;
+	const char * const direction = have == '>' ? "out" : "in";
 
-    if (op == OP_phoney_OUTPUT_ONLY || op == OP_phoney_INPUT_ONLY) {
-	if (ckWARN(WARN_IO)) {
-	    const char * const direction =
-		(const char *)((op == OP_phoney_INPUT_ONLY) ? "in" : "out");
-	    if (name && *name)
-		Perl_warner(aTHX_ packWARN(WARN_IO),
-			    "Filehandle %s opened only for %sput",
-			    name, direction);
-	    else
-		Perl_warner(aTHX_ packWARN(WARN_IO),
-			    "Filehandle opened only for %sput", direction);
-	}
+	if (name && *name)
+	    Perl_warner(aTHX_ packWARN(WARN_IO),
+			"Filehandle %s opened only for %sput",
+			name, direction);
+	else
+	    Perl_warner(aTHX_ packWARN(WARN_IO),
+			"Filehandle opened only for %sput", direction);
+    }
+}
+
+void
+Perl_report_evil_fh(pTHX_ const GV *gv)
+{
+    const IO *io = gv ? GvIO(gv) : NULL;
+    const PERL_BITFIELD16 op = PL_op->op_type;
+    const char *vile;
+    I32 warn_type;
+
+    if (io && IoTYPE(io) == IoTYPE_CLOSED) {
+	vile = "closed";
+	warn_type = WARN_CLOSED;
     }
     else {
-        const char *vile;
-	I32   warn_type;
+	vile = "unopened";
+	warn_type = WARN_UNOPENED;
+    }
 
-	if (gv && io && IoTYPE(io) == IoTYPE_CLOSED) {
-	    vile = "closed";
-	    warn_type = WARN_CLOSED;
+    if (ckWARN(warn_type)) {
+	const char * const name
+	    = gv && (isGV(gv) || isGV_with_GP(gv)) ? GvENAME(gv) : NULL;
+	const char * const pars =
+	    (const char *)(OP_IS_FILETEST(op) ? "" : "()");
+	const char * const func =
+	    (const char *)
+	    (op == OP_READLINE   ? "readline"  :	/* "<HANDLE>" not nice */
+	     op == OP_LEAVEWRITE ? "write" :		/* "write exit" not nice */
+	     PL_op_desc[op]);
+	const char * const type =
+	    (const char *)
+	    (OP_IS_SOCKET(op) || (io && IoTYPE(io) == IoTYPE_SOCKET)
+	     ? "socket" : "filehandle");
+	if (name && *name) {
+	    Perl_warner(aTHX_ packWARN(warn_type),
+			"%s%s on %s %s %s", func, pars, vile, type, name);
+	    if (io && IoDIRP(io) && !(IoFLAGS(io) & IOf_FAKE_DIRP))
+		Perl_warner(
+			    aTHX_ packWARN(warn_type),
+			    "\t(Are you trying to call %s%s on dirhandle %s?)\n",
+			    func, pars, name
+			    );
 	}
 	else {
-	    vile = "unopened";
-	    warn_type = WARN_UNOPENED;
-	}
-
-	if (ckWARN(warn_type)) {
-	    const char * const pars =
-		(const char *)(OP_IS_FILETEST(op) ? "" : "()");
-	    const char * const func =
-		(const char *)
-		(op == OP_READLINE   ? "readline"  :	/* "<HANDLE>" not nice */
-		 op == OP_LEAVEWRITE ? "write" :		/* "write exit" not nice */
-		 op < 0              ? "" :              /* handle phoney cases */
-		 PL_op_desc[op]);
-	    const char * const type =
-		(const char *)
-		(OP_IS_SOCKET(op) ||
-		 (gv && io && IoTYPE(io) == IoTYPE_SOCKET) ?
-		 "socket" : "filehandle");
-	    if (name && *name) {
-		Perl_warner(aTHX_ packWARN(warn_type),
-			    "%s%s on %s %s %s", func, pars, vile, type, name);
-		if (io && IoDIRP(io) && !(IoFLAGS(io) & IOf_FAKE_DIRP))
-		    Perl_warner(
-			aTHX_ packWARN(warn_type),
-			"\t(Are you trying to call %s%s on dirhandle %s?)\n",
-			func, pars, name
-		    );
-	    }
-	    else {
-		Perl_warner(aTHX_ packWARN(warn_type),
-			    "%s%s on %s %s", func, pars, vile, type);
-		if (gv && io && IoDIRP(io) && !(IoFLAGS(io) & IOf_FAKE_DIRP))
-		    Perl_warner(
-			aTHX_ packWARN(warn_type),
-			"\t(Are you trying to call %s%s on dirhandle?)\n",
-			func, pars
-		    );
-	    }
+	    Perl_warner(aTHX_ packWARN(warn_type),
+			"%s%s on %s %s", func, pars, vile, type);
+	    if (io && IoDIRP(io) && !(IoFLAGS(io) & IOf_FAKE_DIRP))
+		Perl_warner(
+			    aTHX_ packWARN(warn_type),
+			    "\t(Are you trying to call %s%s on dirhandle?)\n",
+			    func, pars
+			    );
 	}
     }
 }
-
-#ifdef EBCDIC
-/* in ASCII order, not that it matters */
-static const char controllablechars[] = "?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_";
-
-int
-Perl_ebcdic_control(pTHX_ int ch)
-{
-    if (ch > 'a') {
-	const char *ctlp;
-
-	if (islower(ch))
-	    ch = toupper(ch);
-
-	if ((ctlp = strchr(controllablechars, ch)) == 0) {
-	    Perl_die(aTHX_ "unrecognised control character '%c'\n", ch);
-	}
-
-	if (ctlp == controllablechars)
-	    return('\177'); /* DEL */
-	else
-	    return((unsigned char)(ctlp - controllablechars - 1));
-    } else { /* Want uncontrol */
-	if (ch == '\177' || ch == -1)
-	    return('?');
-	else if (ch == '\157')
-	    return('\177');
-	else if (ch == '\174')
-	    return('\000');
-	else if (ch == '^')    /* '\137' in 1047, '\260' in 819 */
-	    return('\036');
-	else if (ch == '\155')
-	    return('\037');
-	else if (0 < ch && ch < (sizeof(controllablechars) - 1))
-	    return(controllablechars[ch+1]);
-	else
-	    Perl_die(aTHX_ "invalid control request: '\\%03o'\n", ch & 0xFF);
-    }
-}
-#endif
 
 /* To workaround core dumps from the uninitialised tm_zone we get the
  * system to give us a reasonable struct to copy.  This fix means that
@@ -3803,7 +4052,7 @@ Perl_mini_mktime(pTHX_ struct tm *ptm)
  * outside the scope for this routine.  Since we convert back based on the
  * same rules we used to build the yearday, you'll only get strange results
  * for input which needed normalising, or for the 'odd' century years which
- * were leap years in the Julian calander but not in the Gregorian one.
+ * were leap years in the Julian calendar but not in the Gregorian one.
  * I can live with that.
  *
  * This algorithm also fails to handle years before A.D. 1 gracefully, but
@@ -3982,7 +4231,7 @@ Perl_my_strftime(pTHX_ const char *fmt, int sec, int min, int hour, int mday, in
     const int fmtlen = strlen(fmt);
     int bufsize = fmtlen + buflen;
 
-    Newx(buf, bufsize, char);
+    Renew(buf, bufsize, char);
     while (buf) {
       buflen = strftime(buf, bufsize, fmt, &mytm);
       if (buflen > 0 && buflen < bufsize)
@@ -4185,6 +4434,11 @@ Perl_getcwd_sv(pTHX_ register SV *sv)
 /*
 =for apidoc prescan_version
 
+Validate that a given string can be parsed as a version object, but doesn't
+actually perform the parsing.  Can use either strict or lax validation rules.
+Can optionally set a number of hint variables to save the parsing code
+some time when tokenizing.
+
 =cut
 */
 const char *
@@ -4300,7 +4554,7 @@ dotted_decimal_version:
 	    saw_decimal++;
 	    d++;
 	}
-	else if (!*d || *d == ';' || isSPACE(*d) || *d == '}') {
+	else if (!*d || *d == ';' || isSPACE(*d) || *d == '{' || *d == '}') {
 	    if ( d == s ) {
 		/* found nothing */
 		BADVERSION(s,errstr,"Invalid version format (version required)");
@@ -4331,7 +4585,7 @@ dotted_decimal_version:
 
 	/* scan the fractional part after the decimal point*/
 
-	if (!isDIGIT(*d) && (strict || ! (!*d || *d == ';' || isSPACE(*d) || *d == '}') )) {
+	if (!isDIGIT(*d) && (strict || ! (!*d || *d == ';' || isSPACE(*d) || *d == '{' || *d == '}') )) {
 		/* strict or lax-but-not-the-end */
 		BADVERSION(s,errstr,"Invalid version format (fractional part required)");
 	}
@@ -4369,7 +4623,7 @@ version_prescan_finish:
     while (isSPACE(*d))
 	d++;
 
-    if (!isDIGIT(*d) && (! (!*d || *d == ';' || *d == '}') )) {
+    if (!isDIGIT(*d) && (! (!*d || *d == ';' || *d == '{' || *d == '}') )) {
 	/* trailing non-numeric data */
 	BADVERSION(s,errstr,"Invalid version format (non-numeric data)");
     }
@@ -4718,29 +4972,35 @@ Perl_upg_version(pTHX_ SV *ver, bool qv)
 #ifndef SvVOK
 #  if PERL_VERSION > 5
 	/* This will only be executed for 5.6.0 - 5.8.0 inclusive */
-	if ( len >= 3 && !instr(version,".") && !instr(version,"_")
-	    && !(*version == 'u' && strEQ(version, "undef"))
-	    && (*version < '0' || *version > '9') ) {
+	if ( len >= 3 && !instr(version,".") && !instr(version,"_")) {
 	    /* may be a v-string */
-	    SV * const nsv = sv_newmortal();
-	    const char *nver;
-	    const char *pos;
-	    int saw_decimal = 0;
-	    sv_setpvf(nsv,"v%vd",ver);
-	    pos = nver = savepv(SvPV_nolen(nsv));
+	    char *testv = (char *)version;
+	    STRLEN tlen = len;
+	    for (tlen=0; tlen < len; tlen++, testv++) {
+		/* if one of the characters is non-text assume v-string */
+		if (testv[0] < ' ') {
+		    SV * const nsv = sv_newmortal();
+		    const char *nver;
+		    const char *pos;
+		    int saw_decimal = 0;
+		    sv_setpvf(nsv,"v%vd",ver);
+		    pos = nver = savepv(SvPV_nolen(nsv));
 
-	    /* scan the resulting formatted string */
-	    pos++; /* skip the leading 'v' */
-	    while ( *pos == '.' || isDIGIT(*pos) ) {
-		if ( *pos == '.' )
-		    saw_decimal++ ;
-		pos++;
-	    }
+		    /* scan the resulting formatted string */
+		    pos++; /* skip the leading 'v' */
+		    while ( *pos == '.' || isDIGIT(*pos) ) {
+			if ( *pos == '.' )
+			    saw_decimal++ ;
+			pos++;
+		    }
 
-	    /* is definitely a v-string */
-	    if ( saw_decimal >= 2 ) {
-		Safefree(version);
-		version = nver;
+		    /* is definitely a v-string */
+		    if ( saw_decimal >= 2 ) {	
+			Safefree(version);
+			version = nver;
+		    }
+		    break;
+		}
 	    }
 	}
 #  endif
@@ -4759,27 +5019,30 @@ Perl_upg_version(pTHX_ SV *ver, bool qv)
 /*
 =for apidoc vverify
 
-Validates that the SV contains a valid version object.
+Validates that the SV contains valid internal structure for a version object.
+It may be passed either the version object (RV) or the hash itself (HV).  If
+the structure is valid, it returns the HV.  If the structure is invalid,
+it returns NULL.
 
-    bool vverify(SV *vobj);
+    SV *hv = vverify(sv);
 
 Note that it only confirms the bare minimum structure (so as not to get
 confused by derived classes which may contain additional hash entries):
 
 =over 4
 
-=item * The SV contains a [reference to a] hash
+=item * The SV is an HV or a reference to an HV
 
 =item * The hash contains a "version" key
 
-=item * The "version" key has [a reference to] an AV as its value
+=item * The "version" key has a reference to an AV as its value
 
 =back
 
 =cut
 */
 
-bool
+SV *
 Perl_vverify(pTHX_ SV *vs)
 {
     SV *sv;
@@ -4794,9 +5057,9 @@ Perl_vverify(pTHX_ SV *vs)
 	 && hv_exists(MUTABLE_HV(vs), "version", 7)
 	 && (sv = SvRV(*hv_fetchs(MUTABLE_HV(vs), "version", FALSE)))
 	 && SvTYPE(sv) == SVt_PVAV )
-	return TRUE;
+	return vs;
     else
-	return FALSE;
+	return NULL;
 }
 
 /*
@@ -4809,6 +5072,8 @@ point representation.  Call like:
 
 NOTE: you can pass either the object directly or the SV
 contained within the RV.
+
+The SV returned has a refcount of 1.
 
 =cut
 */
@@ -4824,10 +5089,9 @@ Perl_vnumify(pTHX_ SV *vs)
 
     PERL_ARGS_ASSERT_VNUMIFY;
 
-    if ( SvROK(vs) )
-	vs = SvRV(vs);
-
-    if ( !vverify(vs) )
+    /* extract the HV from the object */
+    vs = vverify(vs);
+    if ( ! vs )
 	Perl_croak(aTHX_ "Invalid version object");
 
     /* see if various flags exist */
@@ -4890,6 +5154,8 @@ representation.  Call like:
 NOTE: you can pass either the object directly or the SV
 contained within the RV.
 
+The SV returned has a refcount of 1.
+
 =cut
 */
 
@@ -4903,10 +5169,9 @@ Perl_vnormal(pTHX_ SV *vs)
 
     PERL_ARGS_ASSERT_VNORMAL;
 
-    if ( SvROK(vs) )
-	vs = SvRV(vs);
-
-    if ( !vverify(vs) )
+    /* extract the HV from the object */
+    vs = vverify(vs);
+    if ( ! vs )
 	Perl_croak(aTHX_ "Invalid version object");
 
     if ( hv_exists(MUTABLE_HV(vs), "alpha", 5 ) )
@@ -4948,7 +5213,9 @@ Perl_vnormal(pTHX_ SV *vs)
 In order to maintain maximum compatibility with earlier versions
 of Perl, this function will return either the floating point
 notation or the multiple dotted notation, depending on whether
-the original version contained 1 or more dots, respectively
+the original version contained 1 or more dots, respectively.
+
+The SV returned has a refcount of 1.
 
 =cut
 */
@@ -4958,10 +5225,9 @@ Perl_vstringify(pTHX_ SV *vs)
 {
     PERL_ARGS_ASSERT_VSTRINGIFY;
 
-    if ( SvROK(vs) )
-	vs = SvRV(vs);
-
-    if ( !vverify(vs) )
+    /* extract the HV from the object */
+    vs = vverify(vs);
+    if ( ! vs )
 	Perl_croak(aTHX_ "Invalid version object");
 
     if (hv_exists(MUTABLE_HV(vs), "original",  sizeof("original") - 1)) {
@@ -5001,15 +5267,10 @@ Perl_vcmp(pTHX_ SV *lhv, SV *rhv)
 
     PERL_ARGS_ASSERT_VCMP;
 
-    if ( SvROK(lhv) )
-	lhv = SvRV(lhv);
-    if ( SvROK(rhv) )
-	rhv = SvRV(rhv);
-
-    if ( !vverify(lhv) )
-	Perl_croak(aTHX_ "Invalid version object");
-
-    if ( !vverify(rhv) )
+    /* extract the HVs from the objects */
+    lhv = vverify(lhv);
+    rhv = vverify(rhv);
+    if ( ! ( lhv && rhv ) )
 	Perl_croak(aTHX_ "Invalid version object");
 
     /* get the left hand term */
@@ -5389,8 +5650,11 @@ Perl_parse_unicode_opts(pTHX_ const char **popt)
 	    opt = (U32) atoi(p);
 	    while (isDIGIT(*p))
 		p++;
-	    if (*p && *p != '\n' && *p != '\r')
+	    if (*p && *p != '\n' && *p != '\r') {
+	     if(isSPACE(*p)) goto the_end_of_the_opts_parser;
+	     else
 		 Perl_croak(aTHX_ "Unknown Unicode option letter '%c'", *p);
+	    }
        }
        else {
 	    for (; *p; p++) {
@@ -5416,15 +5680,20 @@ Perl_parse_unicode_opts(pTHX_ const char **popt)
 		 case PERL_UNICODE_UTF8CACHEASSERT:
 		      opt |= PERL_UNICODE_UTF8CACHEASSERT_FLAG; break;
 		 default:
-		      if (*p != '\n' && *p != '\r')
+		      if (*p != '\n' && *p != '\r') {
+			if(isSPACE(*p)) goto the_end_of_the_opts_parser;
+			else
 			  Perl_croak(aTHX_
 				     "Unknown Unicode option letter '%c'", *p);
+		      }
 		 }
 	    }
        }
   }
   else
        opt = PERL_UNICODE_DEFAULT_FLAGS;
+
+  the_end_of_the_opts_parser:
 
   if (opt & ~PERL_UNICODE_ALL_FLAGS)
        Perl_croak(aTHX_ "Unknown Unicode option value %"UVuf,
@@ -5786,7 +6055,7 @@ S_mem_log_common(enum mem_log_type mlt, const UV n,
     mem_log_common   (alty, num, tysz, tynm, sv, oal, nal, flnm, ln, fnnm)
 #else
 /* this is suboptimal, but bug compatible.  User is providing their
-   own implemenation, but is getting these functions anyway, and they
+   own implementation, but is getting these functions anyway, and they
    do nothing. But _NOIMPL users should be able to cope or fix */
 # define \
     mem_log_common_if(alty, num, tysz, tynm, u, oal, nal, flnm, ln, fnnm) \
@@ -5895,8 +6164,14 @@ Perl_my_snprintf(char *buffer, const Size_t len, const char *format, ...)
     retval = vsprintf(buffer, format, ap);
 #endif
     va_end(ap);
-    /* vsnprintf() shows failure with >= len, vsprintf() with < 0 */
-    if (retval < 0 || (len > 0 && (Size_t)retval >= len))
+    /* vsprintf() shows failure with < 0 */
+    if (retval < 0
+#ifdef HAS_VSNPRINTF
+    /* vsnprintf() shows failure with >= len */
+        ||
+        (len > 0 && (Size_t)retval >= len) 
+#endif
+    )
 	Perl_croak(aTHX_ "panic: my_snprintf buffer overflow");
     return retval;
 }
@@ -5935,8 +6210,14 @@ Perl_my_vsnprintf(char *buffer, const Size_t len, const char *format, va_list ap
     retval = vsprintf(buffer, format, ap);
 # endif
 #endif /* #ifdef NEED_VA_COPY */
-    /* vsnprintf() shows failure with >= len, vsprintf() with < 0 */
-    if (retval < 0 || (len > 0 && (Size_t)retval >= len))
+    /* vsprintf() shows failure with < 0 */
+    if (retval < 0
+#ifdef HAS_VSNPRINTF
+    /* vsnprintf() shows failure with >= len */
+        ||
+        (len > 0 && (Size_t)retval >= len) 
+#endif
+    )
 	Perl_croak(aTHX_ "panic: my_vsnprintf buffer overflow");
     return retval;
 }
@@ -6114,6 +6395,84 @@ Perl_my_cxt_init(pTHX_ const char *my_cxt_key, size_t size)
 #endif /* #ifndef PERL_GLOBAL_STRUCT_PRIVATE */
 #endif /* PERL_IMPLICIT_CONTEXT */
 
+void
+Perl_xs_version_bootcheck(pTHX_ U32 items, U32 ax, const char *xs_p,
+			  STRLEN xs_len)
+{
+    SV *sv;
+    const char *vn = NULL;
+    SV *const module = PL_stack_base[ax];
+
+    PERL_ARGS_ASSERT_XS_VERSION_BOOTCHECK;
+
+    if (items >= 2)	 /* version supplied as bootstrap arg */
+	sv = PL_stack_base[ax + 1];
+    else {
+	/* XXX GV_ADDWARN */
+	vn = "XS_VERSION";
+	sv = get_sv(Perl_form(aTHX_ "%"SVf"::%s", module, vn), 0);
+	if (!sv || !SvOK(sv)) {
+	    vn = "VERSION";
+	    sv = get_sv(Perl_form(aTHX_ "%"SVf"::%s", module, vn), 0);
+	}
+    }
+    if (sv) {
+	SV *xssv = Perl_newSVpvn_flags(aTHX_ xs_p, xs_len, SVs_TEMP);
+	SV *pmsv = sv_derived_from(sv, "version")
+	    ? sv : sv_2mortal(new_version(sv));
+	xssv = upg_version(xssv, 0);
+	if ( vcmp(pmsv,xssv) ) {
+	    SV *string = vstringify(xssv);
+	    SV *xpt = Perl_newSVpvf(aTHX_ "%"SVf" object version %"SVf
+				    " does not match ", module, string);
+
+	    SvREFCNT_dec(string);
+	    string = vstringify(pmsv);
+
+	    if (vn) {
+		Perl_sv_catpvf(aTHX_ xpt, "$%"SVf"::%s %"SVf, module, vn,
+			       string);
+	    } else {
+		Perl_sv_catpvf(aTHX_ xpt, "bootstrap parameter %"SVf, string);
+	    }
+	    SvREFCNT_dec(string);
+
+	    Perl_sv_2mortal(aTHX_ xpt);
+	    Perl_croak_sv(aTHX_ xpt);
+	}
+    }
+}
+
+void
+Perl_xs_apiversion_bootcheck(pTHX_ SV *module, const char *api_p,
+			     STRLEN api_len)
+{
+    SV *xpt = NULL;
+    SV *compver = Perl_newSVpvn_flags(aTHX_ api_p, api_len, SVs_TEMP);
+    SV *runver;
+
+    PERL_ARGS_ASSERT_XS_APIVERSION_BOOTCHECK;
+
+    /* This might croak  */
+    compver = upg_version(compver, 0);
+    /* This should never croak */
+    runver = new_version(PL_apiversion);
+    if (vcmp(compver, runver)) {
+	SV *compver_string = vstringify(compver);
+	SV *runver_string = vstringify(runver);
+	xpt = Perl_newSVpvf(aTHX_ "Perl API version %"SVf
+			    " of %"SVf" does not match %"SVf,
+			    compver_string, module, runver_string);
+	Perl_sv_2mortal(aTHX_ xpt);
+
+	SvREFCNT_dec(compver_string);
+	SvREFCNT_dec(runver_string);
+    }
+    SvREFCNT_dec(runver);
+    if (xpt)
+	Perl_croak_sv(aTHX_ xpt);
+}
+
 #ifndef HAS_STRLCAT
 Size_t
 Perl_my_strlcat(char *dst, const char *src, Size_t size)
@@ -6158,21 +6517,28 @@ Perl_get_db_sub(pTHX_ SV **svp, CV *cv)
 {
     dVAR;
     SV * const dbsv = GvSVn(PL_DBsub);
+    const bool save_taint = PL_tainted;
+
     /* We do not care about using sv to call CV;
      * it's for informational purposes only.
      */
 
     PERL_ARGS_ASSERT_GET_DB_SUB;
 
+    PL_tainted = FALSE;
     save_item(dbsv);
     if (!PERLDB_SUB_NN) {
-	GV * const gv = CvGV(cv);
+	GV *gv = CvGV(cv);
 
 	if ( svp && ((CvFLAGS(cv) & (CVf_ANON | CVf_CLONED))
 	     || strEQ(GvNAME(gv), "END")
 	     || ((GvCV(gv) != cv) && /* Could be imported, and old sub redefined. */
 		 !( (SvTYPE(*svp) == SVt_PVGV)
-		    && (GvCV((const GV *)*svp) == cv) )))) {
+		    && (GvCV((const GV *)*svp) == cv)
+		    && (gv = (GV *)*svp) 
+		  )
+		)
+	)) {
 	    /* Use GV from the stack as a fallback. */
 	    /* GV is potentially non-unique, or contain different CV. */
 	    SV * const tmp = newRV(MUTABLE_SV(cv));
@@ -6190,6 +6556,7 @@ Perl_get_db_sub(pTHX_ SV **svp, CV *cv)
 	(void)SvIOK_on(dbsv);
 	SvIV_set(dbsv, PTR2IV(cv));	/* Do it the quickest way  */
     }
+    TAINT_IF(save_taint);
 }
 
 int
