@@ -663,19 +663,19 @@ PerlStdIOGetPtr(struct IPerlStdIO* piPerl, FILE* pf)
 }
 
 char*
-PerlStdIOGets(struct IPerlStdIO* piPerl, FILE* pf, char* s, int n)
+PerlStdIOGets(struct IPerlStdIO* piPerl, char* s, int n, FILE* pf)
 {
     return win32_fgets(s, n, pf);
 }
 
 int
-PerlStdIOPutc(struct IPerlStdIO* piPerl, FILE* pf, int c)
+PerlStdIOPutc(struct IPerlStdIO* piPerl, int c, FILE* pf)
 {
     return win32_fputc(c, pf);
 }
 
 int
-PerlStdIOPuts(struct IPerlStdIO* piPerl, FILE* pf, const char *s)
+PerlStdIOPuts(struct IPerlStdIO* piPerl, const char *s, FILE* pf)
 {
     return win32_fputs(s, pf);
 }
@@ -1727,11 +1727,6 @@ win32_start_child(LPVOID arg)
     w32_pseudo_id = id;
 #else
     w32_pseudo_id = GetCurrentThreadId();
-    if (IsWin95()) {
-	int pid = (int)w32_pseudo_id;
-	if (pid < 0)
-	    w32_pseudo_id = -pid;
-    }
 #endif
     if (tmpgv = gv_fetchpv("$", TRUE, SVt_PV)) {
 	SV *sv = GvSV(tmpgv);
@@ -1880,13 +1875,9 @@ PerlProcFork(struct IPerlProc* piPerl)
 	errno = EAGAIN;
 	return -1;
     }
-    if (IsWin95()) {
-	int pid = (int)id;
-	if (pid < 0)
-	    id = -pid;
-    }
     w32_pseudo_child_handles[w32_num_pseudo_children] = handle;
     w32_pseudo_child_pids[w32_num_pseudo_children] = id;
+    w32_pseudo_child_sigterm[w32_num_pseudo_children] = 0;
     ++w32_num_pseudo_children;
 #  endif
     return -(int)id;
