@@ -6,6 +6,35 @@ HISTORY - public release history for Data::Dumper
 
 =over 8
 
+=item 2.130 (date here)
+
+C<Dumpxs> can now handle malformed UTF-8.
+
+=item 2.129 (Oct 20 2010)
+
+C<Dumpxs> no longer crashes with globs returned by C<*$io_ref>
+[perl #72332].
+
+=item 2.128 (Sep 10 2010)
+
+Promote previous release to stable version with the correct version.
+
+=item 2.127 (Sep 10 2010)
+
+Promote previous release to stable version.
+
+=item 2.126_01 (Sep  6 2010)
+
+Port core perl changes e3ec2293dc, fe642606b19.
+Fixes core perl RT #74170 (handle the stack changing in the
+custom sort functions) and adds a test.
+
+=item 2.126 (Apr 15 2010)
+
+Fix Data::Dumper's Fix Terse(1) + Indent(2):
+perl-RT #73604: When $Data::Dumper::Terse is true, the indentation is thrown
+off. It appears to be acting as if the $VAR1 = is still there.
+
 =item 2.125 (Aug  8 2009)
 
 CPAN distribution fixes (meta information for META.yml).
@@ -77,7 +106,7 @@ Minor release to fix Makefile.PL not accepting MakeMaker args.
 
 =item 2.08  (7 December 1997)
 
-Glob dumps don't output superflous 'undef' anymore.
+Glob dumps don't output superfluous 'undef' anymore.
 
 Fixes from Gisle Aas <gisle@aas.no> to make Dumper() work with
 overloaded strings in recent perls, and his new testsuite.
