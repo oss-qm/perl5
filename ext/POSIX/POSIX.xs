@@ -219,124 +219,155 @@ char *tzname[] = { "" , "" };
 #ifdef WIN32
    /* Perl on Windows assigns WSAGetLastError() return values to errno
     * (in win32/win32sck.c).  Therefore we need to map these values
-    * back to standard symbolic names, as long as the same name isn't
-    * already defined by errno.h itself.  The Errno.pm module does
-    * a similar mapping.
+    * back to standard symbolic names, but only for those names having
+    * no existing value or an existing value >= 100. (VC++ 2010 defines
+    * a group of names with values >= 100 in its errno.h which we *do*
+    * need to redefine.) The Errno.pm module does a similar mapping.
     */
-#  ifndef EWOULDBLOCK
-#    define EWOULDBLOCK WSAEWOULDBLOCK
+#  ifdef EWOULDBLOCK
+#    undef EWOULDBLOCK
 #  endif
-#  ifndef EINPROGRESS
-#    define EINPROGRESS WSAEINPROGRESS
+#  define EWOULDBLOCK WSAEWOULDBLOCK
+#  ifdef EINPROGRESS
+#    undef EINPROGRESS
 #  endif
-#  ifndef EALREADY
-#    define EALREADY WSAEALREADY
+#  define EINPROGRESS WSAEINPROGRESS
+#  ifdef EALREADY
+#    undef EALREADY
 #  endif
-#  ifndef ENOTSOCK
-#    define ENOTSOCK WSAENOTSOCK
+#  define EALREADY WSAEALREADY
+#  ifdef ENOTSOCK
+#    undef ENOTSOCK
 #  endif
-#  ifndef EDESTADDRREQ
-#    define EDESTADDRREQ WSAEDESTADDRREQ
+#  define ENOTSOCK WSAENOTSOCK
+#  ifdef EDESTADDRREQ
+#    undef EDESTADDRREQ
 #  endif
-#  ifndef EMSGSIZE
-#    define EMSGSIZE WSAEMSGSIZE
+#  define EDESTADDRREQ WSAEDESTADDRREQ
+#  ifdef EMSGSIZE
+#    undef EMSGSIZE
 #  endif
-#  ifndef EPROTOTYPE
-#    define EPROTOTYPE WSAEPROTOTYPE
+#  define EMSGSIZE WSAEMSGSIZE
+#  ifdef EPROTOTYPE
+#    undef EPROTOTYPE
 #  endif
-#  ifndef ENOPROTOOPT
-#    define ENOPROTOOPT WSAENOPROTOOPT
+#  define EPROTOTYPE WSAEPROTOTYPE
+#  ifdef ENOPROTOOPT
+#    undef ENOPROTOOPT
 #  endif
-#  ifndef EPROTONOSUPPORT
-#    define EPROTONOSUPPORT WSAEPROTONOSUPPORT
+#  define ENOPROTOOPT WSAENOPROTOOPT
+#  ifdef EPROTONOSUPPORT
+#    undef EPROTONOSUPPORT
 #  endif
-#  ifndef ESOCKTNOSUPPORT
-#    define ESOCKTNOSUPPORT WSAESOCKTNOSUPPORT
+#  define EPROTONOSUPPORT WSAEPROTONOSUPPORT
+#  ifdef ESOCKTNOSUPPORT
+#    undef ESOCKTNOSUPPORT
 #  endif
-#  ifndef EOPNOTSUPP
-#    define EOPNOTSUPP WSAEOPNOTSUPP
+#  define ESOCKTNOSUPPORT WSAESOCKTNOSUPPORT
+#  ifdef EOPNOTSUPP
+#    undef EOPNOTSUPP
 #  endif
-#  ifndef EPFNOSUPPORT
-#    define EPFNOSUPPORT WSAEPFNOSUPPORT
+#  define EOPNOTSUPP WSAEOPNOTSUPP
+#  ifdef EPFNOSUPPORT
+#    undef EPFNOSUPPORT
 #  endif
-#  ifndef EAFNOSUPPORT
-#    define EAFNOSUPPORT WSAEAFNOSUPPORT
+#  define EPFNOSUPPORT WSAEPFNOSUPPORT
+#  ifdef EAFNOSUPPORT
+#    undef EAFNOSUPPORT
 #  endif
-#  ifndef EADDRINUSE
-#    define EADDRINUSE WSAEADDRINUSE
+#  define EAFNOSUPPORT WSAEAFNOSUPPORT
+#  ifdef EADDRINUSE
+#    undef EADDRINUSE
 #  endif
-#  ifndef EADDRNOTAVAIL
-#    define EADDRNOTAVAIL WSAEADDRNOTAVAIL
+#  define EADDRINUSE WSAEADDRINUSE
+#  ifdef EADDRNOTAVAIL
+#    undef EADDRNOTAVAIL
 #  endif
-#  ifndef ENETDOWN
-#    define ENETDOWN WSAENETDOWN
+#  define EADDRNOTAVAIL WSAEADDRNOTAVAIL
+#  ifdef ENETDOWN
+#    undef ENETDOWN
 #  endif
-#  ifndef ENETUNREACH
-#    define ENETUNREACH WSAENETUNREACH
+#  define ENETDOWN WSAENETDOWN
+#  ifdef ENETUNREACH
+#    undef ENETUNREACH
 #  endif
-#  ifndef ENETRESET
-#    define ENETRESET WSAENETRESET
+#  define ENETUNREACH WSAENETUNREACH
+#  ifdef ENETRESET
+#    undef ENETRESET
 #  endif
-#  ifndef ECONNABORTED
-#    define ECONNABORTED WSAECONNABORTED
+#  define ENETRESET WSAENETRESET
+#  ifdef ECONNABORTED
+#    undef ECONNABORTED
 #  endif
-#  ifndef ECONNRESET
-#    define ECONNRESET WSAECONNRESET
+#  define ECONNABORTED WSAECONNABORTED
+#  ifdef ECONNRESET
+#    undef ECONNRESET
 #  endif
-#  ifndef ENOBUFS
-#    define ENOBUFS WSAENOBUFS
+#  define ECONNRESET WSAECONNRESET
+#  ifdef ENOBUFS
+#    undef ENOBUFS
 #  endif
-#  ifndef EISCONN
-#    define EISCONN WSAEISCONN
+#  define ENOBUFS WSAENOBUFS
+#  ifdef EISCONN
+#    undef EISCONN
 #  endif
-#  ifndef ENOTCONN
-#    define ENOTCONN WSAENOTCONN
+#  define EISCONN WSAEISCONN
+#  ifdef ENOTCONN
+#    undef ENOTCONN
 #  endif
-#  ifndef ESHUTDOWN
-#    define ESHUTDOWN WSAESHUTDOWN
+#  define ENOTCONN WSAENOTCONN
+#  ifdef ESHUTDOWN
+#    undef ESHUTDOWN
 #  endif
-#  ifndef ETOOMANYREFS
-#    define ETOOMANYREFS WSAETOOMANYREFS
+#  define ESHUTDOWN WSAESHUTDOWN
+#  ifdef ETOOMANYREFS
+#    undef ETOOMANYREFS
 #  endif
-#  ifndef ETIMEDOUT
-#    define ETIMEDOUT WSAETIMEDOUT
+#  define ETOOMANYREFS WSAETOOMANYREFS
+#  ifdef ETIMEDOUT
+#    undef ETIMEDOUT
 #  endif
-#  ifndef ECONNREFUSED
-#    define ECONNREFUSED WSAECONNREFUSED
+#  define ETIMEDOUT WSAETIMEDOUT
+#  ifdef ECONNREFUSED
+#    undef ECONNREFUSED
 #  endif
-#  ifndef ELOOP
-#    define ELOOP WSAELOOP
+#  define ECONNREFUSED WSAECONNREFUSED
+#  ifdef ELOOP
+#    undef ELOOP
 #  endif
-#  ifndef ENAMETOOLONG
-#    define ENAMETOOLONG WSAENAMETOOLONG
+#  define ELOOP WSAELOOP
+#  ifdef EHOSTDOWN
+#    undef EHOSTDOWN
 #  endif
-#  ifndef EHOSTDOWN
-#    define EHOSTDOWN WSAEHOSTDOWN
+#  define EHOSTDOWN WSAEHOSTDOWN
+#  ifdef EHOSTUNREACH
+#    undef EHOSTUNREACH
 #  endif
-#  ifndef EHOSTUNREACH
-#    define EHOSTUNREACH WSAEHOSTUNREACH
+#  define EHOSTUNREACH WSAEHOSTUNREACH
+#  ifdef EPROCLIM
+#    undef EPROCLIM
 #  endif
-#  ifndef ENOTEMPTY
-#    define ENOTEMPTY WSAENOTEMPTY
+#  define EPROCLIM WSAEPROCLIM
+#  ifdef EUSERS
+#    undef EUSERS
 #  endif
-#  ifndef EPROCLIM
-#    define EPROCLIM WSAEPROCLIM
+#  define EUSERS WSAEUSERS
+#  ifdef EDQUOT
+#    undef EDQUOT
 #  endif
-#  ifndef EUSERS
-#    define EUSERS WSAEUSERS
+#  define EDQUOT WSAEDQUOT
+#  ifdef ESTALE
+#    undef ESTALE
 #  endif
-#  ifndef EDQUOT
-#    define EDQUOT WSAEDQUOT
+#  define ESTALE WSAESTALE
+#  ifdef EREMOTE
+#    undef EREMOTE
 #  endif
-#  ifndef ESTALE
-#    define ESTALE WSAESTALE
+#  define EREMOTE WSAEREMOTE
+#  ifdef EDISCON
+#    undef EDISCON
 #  endif
-#  ifndef EREMOTE
-#    define EREMOTE WSAEREMOTE
-#  endif
-#  ifndef EDISCON
-#    define EDISCON WSAEDISCON
-#  endif
+#  define EDISCON WSAEDISCON
 #endif
 
 typedef int SysRet;
@@ -586,7 +617,7 @@ restore_sigmask(pTHX_ SV *osset_sv)
  *
  * Note that we don't free() the malloc()ed memory unless and until we call
  * malloc() again ourselves because the CRT putenv() function simply puts its
- * pointer argument into the environ[] arrary (it doesn't make a copy of it)
+ * pointer argument into the environ[] array (it doesn't make a copy of it)
  * so this memory must otherwise be leaked.
  */
 
@@ -936,7 +967,7 @@ WEXITSTATUS(status)
 #endif
 	    break;
 	default:
-	    Perl_croak(aTHX_ "Illegal alias %d for POSIX::W*", ix);
+	    Perl_croak(aTHX_ "Illegal alias %d for POSIX::W*", (int)ix);
 	}
     OUTPUT:
 	RETVAL
@@ -1118,65 +1149,65 @@ localeconv()
 	if ((lcbuf = localeconv())) {
 	    /* the strings */
 	    if (lcbuf->decimal_point && *lcbuf->decimal_point)
-		hv_store(RETVAL, "decimal_point", 13,
+		(void) hv_store(RETVAL, "decimal_point", 13,
 		    newSVpv(lcbuf->decimal_point, 0), 0);
 	    if (lcbuf->thousands_sep && *lcbuf->thousands_sep)
-		hv_store(RETVAL, "thousands_sep", 13,
+		(void) hv_store(RETVAL, "thousands_sep", 13,
 		    newSVpv(lcbuf->thousands_sep, 0), 0);
 #ifndef NO_LOCALECONV_GROUPING
 	    if (lcbuf->grouping && *lcbuf->grouping)
-		hv_store(RETVAL, "grouping", 8,
+		(void) hv_store(RETVAL, "grouping", 8,
 		    newSVpv(lcbuf->grouping, 0), 0);
 #endif
 	    if (lcbuf->int_curr_symbol && *lcbuf->int_curr_symbol)
-		hv_store(RETVAL, "int_curr_symbol", 15,
+		(void) hv_store(RETVAL, "int_curr_symbol", 15,
 		    newSVpv(lcbuf->int_curr_symbol, 0), 0);
 	    if (lcbuf->currency_symbol && *lcbuf->currency_symbol)
-		hv_store(RETVAL, "currency_symbol", 15,
+		(void) hv_store(RETVAL, "currency_symbol", 15,
 		    newSVpv(lcbuf->currency_symbol, 0), 0);
 	    if (lcbuf->mon_decimal_point && *lcbuf->mon_decimal_point)
-		hv_store(RETVAL, "mon_decimal_point", 17,
+		(void) hv_store(RETVAL, "mon_decimal_point", 17,
 		    newSVpv(lcbuf->mon_decimal_point, 0), 0);
 #ifndef NO_LOCALECONV_MON_THOUSANDS_SEP
 	    if (lcbuf->mon_thousands_sep && *lcbuf->mon_thousands_sep)
-		hv_store(RETVAL, "mon_thousands_sep", 17,
+		(void) hv_store(RETVAL, "mon_thousands_sep", 17,
 		    newSVpv(lcbuf->mon_thousands_sep, 0), 0);
 #endif
 #ifndef NO_LOCALECONV_MON_GROUPING
 	    if (lcbuf->mon_grouping && *lcbuf->mon_grouping)
-		hv_store(RETVAL, "mon_grouping", 12,
+		(void) hv_store(RETVAL, "mon_grouping", 12,
 		    newSVpv(lcbuf->mon_grouping, 0), 0);
 #endif
 	    if (lcbuf->positive_sign && *lcbuf->positive_sign)
-		hv_store(RETVAL, "positive_sign", 13,
+		(void) hv_store(RETVAL, "positive_sign", 13,
 		    newSVpv(lcbuf->positive_sign, 0), 0);
 	    if (lcbuf->negative_sign && *lcbuf->negative_sign)
-		hv_store(RETVAL, "negative_sign", 13,
+		(void) hv_store(RETVAL, "negative_sign", 13,
 		    newSVpv(lcbuf->negative_sign, 0), 0);
 	    /* the integers */
 	    if (lcbuf->int_frac_digits != CHAR_MAX)
-		hv_store(RETVAL, "int_frac_digits", 15,
+		(void) hv_store(RETVAL, "int_frac_digits", 15,
 		    newSViv(lcbuf->int_frac_digits), 0);
 	    if (lcbuf->frac_digits != CHAR_MAX)
-		hv_store(RETVAL, "frac_digits", 11,
+		(void) hv_store(RETVAL, "frac_digits", 11,
 		    newSViv(lcbuf->frac_digits), 0);
 	    if (lcbuf->p_cs_precedes != CHAR_MAX)
-		hv_store(RETVAL, "p_cs_precedes", 13,
+		(void) hv_store(RETVAL, "p_cs_precedes", 13,
 		    newSViv(lcbuf->p_cs_precedes), 0);
 	    if (lcbuf->p_sep_by_space != CHAR_MAX)
-		hv_store(RETVAL, "p_sep_by_space", 14,
+		(void) hv_store(RETVAL, "p_sep_by_space", 14,
 		    newSViv(lcbuf->p_sep_by_space), 0);
 	    if (lcbuf->n_cs_precedes != CHAR_MAX)
-		hv_store(RETVAL, "n_cs_precedes", 13,
+		(void) hv_store(RETVAL, "n_cs_precedes", 13,
 		    newSViv(lcbuf->n_cs_precedes), 0);
 	    if (lcbuf->n_sep_by_space != CHAR_MAX)
-		hv_store(RETVAL, "n_sep_by_space", 14,
+		(void) hv_store(RETVAL, "n_sep_by_space", 14,
 		    newSViv(lcbuf->n_sep_by_space), 0);
 	    if (lcbuf->p_sign_posn != CHAR_MAX)
-		hv_store(RETVAL, "p_sign_posn", 11,
+		(void) hv_store(RETVAL, "p_sign_posn", 11,
 		    newSViv(lcbuf->p_sign_posn), 0);
 	    if (lcbuf->n_sign_posn != CHAR_MAX)
-		hv_store(RETVAL, "n_sign_posn", 11,
+		(void) hv_store(RETVAL, "n_sign_posn", 11,
 		    newSViv(lcbuf->n_sign_posn), 0);
 	}
 #else
@@ -1471,7 +1502,7 @@ sigaction(sig, optaction, oldaction = 0)
 		   right settings, including appropriate interpretation
 		   of DEFAULT and IGNORE.  However, why are we doing
 		   this when we're about to do it again just below?  XXX */
-		mg_set(*sigsvp);
+		SvSETMAGIC(*sigsvp);
 
 		/* And here again we duplicate -- DEFAULT/IGNORE checking. */
 		if(SvPOK(*svp)) {
