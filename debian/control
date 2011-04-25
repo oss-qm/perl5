@@ -7,8 +7,8 @@ Standards-Version: 3.9.2
 Build-Depends: file, cpio (>= 2.6-5), libdb-dev, libgdbm-dev, netbase [!hurd-i386],
  gcc (>= 4:4.2), procps | hurd, zlib1g-dev | libz-dev, libbz2-dev
 Build-Conflicts: libterm-readline-gnu-perl (<< 1.17), libfile-sharedir-perl
-Vcs-Git: git://git.debian.org/git/perl/perl-5.12.git
-Vcs-Browser: http://git.debian.org/?p=perl/perl-5.12.git
+Vcs-Git: git://git.debian.org/git/perl/perl-5.14.git
+Vcs-Browser: http://git.debian.org/?p=perl/perl-5.14.git
 
 Package: perl-base
 Essential: yes
@@ -205,7 +205,7 @@ Description: debug-enabled Perl interpreter
  than perl programs, which may be traced/debugged using the standard
  perl binary using the -d switch (see perldebug(1)).
 
-Package: libperl5.12
+Package: libperl5.14
 Section: libs
 Priority: optional
 Architecture: any
@@ -222,7 +222,7 @@ Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: perl (= ${binary:Version}), libperl5.12 (= ${binary:Version})
+Depends: perl (= ${binary:Version}), libperl5.14 (= ${binary:Version})
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter and for
  programs compiled with perlcc.
