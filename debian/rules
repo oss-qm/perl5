@@ -412,6 +412,8 @@ binary: binary-indep binary-arch
 # maintainer targets
 new-build: $(patches) refresh-patchlevel
 	test -d .git # only for the git repository
+	# check the versioned Breaks and the Provides lists
+	-prove -Idist/Module-CoreList/lib debian/check-control
 	git checkout refs/heads/master # detach from 'master'
 	git rm .top*
 	git add debian/patches
