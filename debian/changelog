@@ -1,6 +1,10 @@
 perl (5.14.0~rc1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
+    + update the Breaks versions for most of the bundled modules.
+    + no longer Breaks/Replaces/Provides libswitch-perl, libclass-isa-perl,
+      and libpod-plainer-perl as the corresponding modules have been removed
+      from the Perl core distribution.
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 25 Apr 2011 14:59:36 +0300
 
