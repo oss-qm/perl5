@@ -28,10 +28,10 @@ Copyright:
 
 ----------------------------------------------------------------------
 
-The zlib library in ext/Compress-Raw-Zlib/zlib-src has the following
+The zlib library in cpan/Compress-Raw-Zlib/zlib-src has the following
 copyright and license:
 
-  Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
+  Copyright (C) 1995-2010 Jean-loup Gailly and Mark Adler
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -52,7 +52,7 @@ copyright and license:
 ----------------------------------------------------------------------
 
 The Unicode database files in lib/unicore/*.txt are 
-Copyright (c) 1991-2006 Unicode, Inc.
+Copyright (c) 1991-2010 Unicode, Inc.
 
 Their license information is given as
  For terms of use, see http://www.unicode.org/terms_of_use.html
@@ -116,7 +116,7 @@ The corresponding license is as follows:
 
 ----------------------------------------------------------------------
 
-The file cpan/Cwd/Cwd.pm has the following copyright and license:
+The file dist/Cwd/Cwd.pm has the following copyright and license:
 
   Copyright (c) 2004 by the Perl 5 Porters.  All rights reserved.
 
@@ -129,7 +129,10 @@ The file cpan/Cwd/Cwd.pm has the following copyright and license:
   the distribution - please see the source code in F<Cwd.xs> for the
   details.
 
-The file referenced above, cpan/Cwd/Cwd.xs, has the following copyright:
+but, as discussed in
+ http://rt.cpan.org/Public/Bug/Display.html?id=64116 
+the last paragraph is outdated. The copyright of the file referenced above,
+dist/Cwd/Cwd.xs, is now:
 
  * Copyright (c) 2003 Constantin S. Svintsoff <kostik@iclub.nsu.ru>
  *
@@ -194,11 +197,11 @@ following copyright:
 
 ----------------------------------------------------------------------
 
-The bzip2 library in ext/Compress-Raw-Bzip2/bzip2-src has the following
+The bzip2 library in cpan/Compress-Raw-Bzip2/bzip2-src has the following
 copyright and license:
 
   This program, "bzip2", the associated library "libbzip2", and all
-  documentation, are copyright (C) 1996-2007 Julian R Seward.  All
+  documentation, are copyright (C) 1996-2010 Julian R Seward.  All
   rights reserved.
   
   Redistribution and use in source and binary forms, with or without
@@ -237,7 +240,7 @@ copyright and license:
   
 --------------------------------------------------------------------------
 
-The Text::Tabs module in lib/Text/Tabs.pm has the following
+The Text::Tabs module in cpan/Text-Tabs/ has the following
 copyright and license:
 
   Copyright (C) 1996-2002,2005,2006 David Muir Sharnoff.  
