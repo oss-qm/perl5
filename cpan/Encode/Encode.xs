@@ -1,5 +1,5 @@
 /*
- $Id: Encode.xs,v 2.18 2009/11/26 09:23:59 dankogai Exp dankogai $
+ $Id: Encode.xs,v 2.20 2010/12/31 22:48:48 dankogai Exp dankogai $
  */
 
 #define PERL_NO_GET_CONTEXT
@@ -29,7 +29,12 @@
 UNIMPLEMENTED(_encoded_utf8_to_bytes, I32)
 UNIMPLEMENTED(_encoded_bytes_to_utf8, I32)
 
-#define UTF8_ALLOW_STRICT 0
+#ifdef UTF8_DISALLOW_ILLEGAL_INTERCHANGE
+#   define UTF8_ALLOW_STRICT UTF8_DISALLOW_ILLEGAL_INTERCHANGE
+#else
+#   define UTF8_ALLOW_STRICT 0
+#endif
+
 #define UTF8_ALLOW_NONSTRICT (UTF8_ALLOW_ANY &                    \
                               ~(UTF8_ALLOW_CONTINUATION |         \
                                 UTF8_ALLOW_NON_CONTINUATION |     \
@@ -432,7 +437,7 @@ PREINIT:
 CODE:
 {
     dSP; ENTER; SAVETMPS;
-    if (src == &PL_sv_undef) src = newSV(0);
+    if (src == &PL_sv_undef || SvROK(src)) src = sv_2mortal(newSV(0));
     s = (U8 *) SvPV(src, slen);
     e = (U8 *) SvEND(src);
     dst = newSV(slen>0?slen:1); /* newSV() abhors 0 -- inaba */
@@ -496,7 +501,7 @@ PREINIT:
 CODE:
 {
     check = SvROK(check_sv) ? ENCODE_PERLQQ|ENCODE_LEAVE_SRC : SvIV(check_sv);
-    if (src == &PL_sv_undef) src = newSV(0);
+    if (src == &PL_sv_undef || SvROK(src)) src = sv_2mortal(newSV(0));
     s = (U8 *) SvPV(src, slen);
     e = (U8 *) SvEND(src);
     dst = newSV(slen>0?slen:1); /* newSV() abhors 0 -- inaba */
