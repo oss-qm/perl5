@@ -313,7 +313,11 @@ for file do
     regexec) ;;
     run) ;;
     scope) ;;
-    sv) ;;
+    sv)
+	case $archname in
+	arm-*|armeb-*)
+	    optimize=-O0;;
+	esac;;
     taint) ;;
     toke) ;;
     universal) ;;
