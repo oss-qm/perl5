@@ -31,11 +31,11 @@ BEGIN {
     ### and friends get picked up
     $old_env_path = $ENV{PATH};
     if ( $ENV{PERL_CORE} ) {
-      $ENV{'PATH'}  = join $Config{'path_sep'},
+      $ENV{'PATH'}  = join $Config{'path_sep'}, 
                     grep { defined } "$FindBin::Bin/../../../utils", $ENV{'PATH'};
     }
     else {
-      $ENV{'PATH'}  = join $Config{'path_sep'},
+      $ENV{'PATH'}  = join $Config{'path_sep'}, 
                     grep { defined } "$FindBin::Bin/../bin", $ENV{'PATH'};
     }
 
@@ -165,7 +165,7 @@ sub gimme_conf {
     ### cpanp-run-perl installed the same amount of 'uplevels'
     ### as the /tmp/foo prefix, we'll pull in the wrong script
     ### by accident.
-    ### Since we set the path to cpanp-run-perl explicitily
+    ### Since we set the path to cpanp-run-perl explicitly
     ### at the top of this script, it's best to update the config
     ### ourselves with a path lookup, rather than rely on its
     ### heuristics. Thanks to David Wheeler, Josh Jore and Vincent
