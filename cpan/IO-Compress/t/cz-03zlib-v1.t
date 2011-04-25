@@ -47,8 +47,12 @@ EOM
 my $len   = length $hello ;
 
 # Check zlib_version and ZLIB_VERSION are the same.
-is zlib_version, ZLIB_VERSION, 
-    "ZLIB_VERSION matches zlib_version" ;
+SKIP: {
+    skip "TEST_SKIP_VERSION_CHECK is set", 1 
+        if $ENV{TEST_SKIP_VERSION_CHECK};
+    is Compress::Zlib::zlib_version, ZLIB_VERSION,
+        "ZLIB_VERSION matches Compress::Zlib::zlib_version" ;
+}
 
 # generate a long random string
 my $contents = '' ;
@@ -490,7 +494,7 @@ EOM
     ok ! defined $ungzip ;
     cmp_ok $gzerrno, "==", Z_DATA_ERROR ;
 
-    # corrupt header - reserverd bits used
+    # corrupt header - reserved bits used
     $bad = $keep ;
     substr($bad, 3, 1) = "\xFF" ;
     $ungzip = memGunzip(\$bad) ;
