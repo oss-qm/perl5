@@ -5,6 +5,18 @@ perl (5.14.0~rc1) UNRELEASED; urgency=low
     + no longer Breaks/Replaces/Provides libswitch-perl, libclass-isa-perl,
       and libpod-plainer-perl as the corresponding modules have been removed
       from the Perl core distribution.
+    + add Breaks/Replaces/Provides for
+      * libcpan-meta-perl
+      * libmath-complex-perl
+      * libextutils-command-perl
+      * libmodule-metadata-perl
+      * libjson-pp-perl
+      * libperl-ostype-perl
+      * libversion-requirements-perl
+      * libcpan-meta-yaml-perl
+      * libdigest-perl
+      * libextutils-install-perl
+      * libhttp-tiny-perl
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 25 Apr 2011 14:59:36 +0300
 
