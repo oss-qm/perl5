@@ -5,12 +5,12 @@ BEGIN {
     chdir 't' if -d 't';
     @INC = '../lib';
     require './test.pl';
-    plan( tests => 80 );
+    plan( tests => 81 );
 }
 
 my @c;
 
-print "# Tests with caller(0)\n";
+BEGIN { print "# Tests with caller(0)\n"; }
 
 @c = caller(0);
 ok( (!@c), "caller(0) in main program" );
@@ -31,8 +31,14 @@ ok( $c[4], "hasargs true with anon sub" );
 sub foo { @c = caller(0) }
 my $fooref = delete $::{foo};
 $fooref -> ();
-is( $c[3], "(unknown)", "unknown subroutine name" );
-ok( $c[4], "hasargs true with unknown sub" );
+is( $c[3], "main::__ANON__", "deleted subroutine name" );
+ok( $c[4], "hasargs true with deleted sub" );
+
+BEGIN {
+ require strict;
+ is +(caller 0)[1], __FILE__,
+  "[perl #68712] filenames after require in a BEGIN block"
+}
 
 print "# Tests with caller(1)\n";
 
@@ -60,8 +66,8 @@ ok( $c[4], "hasargs true with anon sub" );
 sub foo2 { f() }
 my $fooref2 = delete $::{foo2};
 $fooref2 -> ();
-is( $c[3], "(unknown)", "unknown subroutine name" );
-ok( $c[4], "hasargs true with unknown sub" );
+is( $c[3], "main::__ANON__", "deleted subroutine name" );
+ok( $c[4], "hasargs true with deleted sub" );
 
 # See if caller() returns the correct warning mask
 
@@ -102,8 +108,11 @@ sub testwarn {
 	$registered = $default;
 	vec($registered, $warnings::LAST_BIT/2, 2) = 1;
     }
-    BEGIN { check_bits( ${^WARNING_BITS}, "\0" x 12, 'all bits off via "no warnings"' ) }
-    testwarn("\0" x 12, 'no bits');
+
+    # The repetition number must be set to the value of $BYTES in
+    # lib/warnings.pm
+    BEGIN { check_bits( ${^WARNING_BITS}, "\0" x 13, 'all bits off via "no warnings"' ) }
+    testwarn("\0" x 13, 'no bits');
 
     use warnings;
     BEGIN { check_bits( ${^WARNING_BITS}, $default,
