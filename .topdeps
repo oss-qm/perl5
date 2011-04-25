@@ -1,6 +1,5 @@
 upstream
 debian/arm_thread_stress_timeout
-debian/cpan_config_path
 debian/cpan_definstalldirs
 debian/db_file_ver
 debian/doc_info
@@ -21,16 +20,9 @@ debian/perlivp
 debian/disable-zlib-bundling
 debian/cpanplus_definstalldirs
 debian/cpanplus_config_path
-fixes/autodie-flock
 debian/devel-ppport-ia64-optim
-fixes/cpanplus-without-home
 debian/arm_optim
 debian/deprecate-with-apt
 fixes/hurd-ccflags
 debian/squelch-locale-warnings
-fixes/lc-numeric-docs
-fixes/lc-numeric-sprintf
-fixes/concat-stack-corruption
-fixes/h2ph-gcc-4.5
-fixes/casing-taint-cve-2011-1487
 debian/skip-upstream-git-tests
