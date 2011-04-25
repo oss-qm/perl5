@@ -33,21 +33,15 @@ my %abs = (
 	   '../cpan/AutoLoader' => 1,
 	   '../cpan/CPAN' => 1,
 	   '../cpan/Class-ISA' => 1,
-	   '../cpan/Cwd' => 1,
 	   '../cpan/Devel-PPPort' => 1,
 	   '../cpan/Encode' => 1,
-	   '../cpan/ExtUtils-Command' => 1,
 	   '../cpan/ExtUtils-Constant' => 1,
 	   '../cpan/ExtUtils-MakeMaker' => 1,
-	   '../cpan/ExtUtils-Manifest' => 1,
-	   '../cpan/ExtUtils-ParseXS' => 1,
 	   '../cpan/File-Fetch' => 1,
 	   '../cpan/IPC-Cmd' => 1,
 	   '../cpan/IPC-SysV' => 1,
 	   '../cpan/Locale-Codes' => 1,
 	   '../cpan/Log-Message' => 1,
-	   '../cpan/Math-BigInt' => 1,
-	   '../cpan/Math-BigRat' => 1,
 	   '../cpan/Math-Complex' => 1,
 	   '../cpan/Module-Build' => 1,
 	   '../cpan/Module-Load' => 1,
@@ -59,11 +53,14 @@ my %abs = (
 	   '../cpan/Term-UI' => 1,
 	   '../cpan/Test-Simple' => 1,
 	   '../cpan/Tie-File' => 1,
-	   '../cpan/bignum' => 1,
 	   '../cpan/podlators' => 1,
+	   '../dist/Cwd' => 1,
+	   '../dist/ExtUtils-Command' => 1,
 	   '../dist/ExtUtils-Install' => 1,
+	   '../dist/ExtUtils-Manifest' => 1,
+	   '../dist/ExtUtils-ParseXS' => 1,
 	  );
-	      
+
 my %temp_no_core =
     ('../cpan/B-Debug' => 1,
      '../cpan/Compress-Raw-Bzip2' => 1,
@@ -71,10 +68,7 @@ my %temp_no_core =
      '../cpan/Devel-PPPort' => 1,
      '../cpan/Getopt-Long' => 1,
      '../cpan/IO-Compress' => 1,
-     '../cpan/Math-BigInt' => 1,
-     '../cpan/Math-BigRat' => 1,
      '../cpan/MIME-Base64' => 1,
-     '../cpan/NEXT' => 1,
      '../cpan/parent' => 1,
      '../cpan/Parse-CPAN-Meta' => 1,
      '../cpan/Pod-Simple' => 1,
@@ -85,19 +79,6 @@ my %temp_no_core =
      '../cpan/Unicode-Collate' => 1,
      '../cpan/Unicode-Normalize' => 1,
     );
-
-if ($::do_nothing) {
-    return 1;
-}
-
-# Location to put the Valgrind log.
-my $Valgrind_Log = 'current.valgrind';
-
-$| = 1;
-
-# for testing TEST only
-#BEGIN { require '../lib/strict.pm'; "strict"->import() };
-#BEGIN { require '../lib/warnings.pm'; "warnings"->import() };
 
 # delete env vars that may influence the results
 # but allow override via *_TEST env var if wanted
@@ -112,6 +93,19 @@ for my $envname (qw(PERL5LIB PERLLIB PERL5OPT)) {
 	delete $ENV{$envname};
     }
 }
+
+if ($::do_nothing) {
+    return 1;
+}
+
+# Location to put the Valgrind log.
+our $Valgrind_Log;
+
+$| = 1;
+
+# for testing TEST only
+#BEGIN { require '../lib/strict.pm'; "strict"->import() };
+#BEGIN { require '../lib/warnings.pm'; "warnings"->import() };
 
 # remove empty elements due to insertion of empty symbols via "''p1'" syntax
 @ARGV = grep($_,@ARGV) if $^O eq 'VMS';
@@ -130,7 +124,6 @@ our $show_elapsed_time = $ENV{HARNESS_TIMER} || 0;
 	$::with_utf8 = 1 if $1 eq 'utf8';
 	$::with_utf16 = 1 if $1 eq 'utf16';
 	$::taintwarn = 1 if $1 eq 'taintwarn';
-	$ENV{PERL_CORE_MINITEST} = 1 if $1 eq 'minitest';
 	if ($1 =~ /^deparse(,.+)?$/) {
 	    $::deparse = 1;
 	    $::deparse_opts = $1;
@@ -252,6 +245,8 @@ sub _scan_test {
 		    $testswitch = $testswitch . ',NC';
 		}
 	    }
+	} elsif ($test =~ m!^\.\./lib!) {
+	    $testswitch = '-I.. -MTestInit=U1'; # -T will remove . from @INC
 	} else {
 	    $testswitch = '-I.. -MTestInit';  # -T will remove . from @INC
 	}
@@ -296,13 +291,17 @@ sub _cmd {
         my $redir = $^O eq 'VMS' ? '2>&1' : '';
 
         if ($ENV{PERL_VALGRIND}) {
+            my $perl_supp = $options->{return_dir} ? "$options->{return_dir}/perl.supp" : "perl.supp";
             my $valgrind = $ENV{VALGRIND} // 'valgrind';
             my $vg_opts = $ENV{VG_OPTS}
-              //  "--suppressions=perl.supp --leak-check=yes "
+              //  "--suppressions=$perl_supp --leak-check=yes "
                 . "--leak-resolution=high --show-reachable=yes "
-                  . "--num-callers=50";
+                  . "--num-callers=50 --track-origins=yes";
             $perl = "$valgrind --log-fd=3 $vg_opts $perl";
             $redir = "3>$Valgrind_Log";
+            if ($options->{run_dir}) {
+                $Valgrind_Log = "$options->{run_dir}/$Valgrind_Log";
+            }
         }
 
         my $args = "$options->{testswitch} $options->{switch} $options->{utf8}";
@@ -396,7 +395,7 @@ sub _tests_from_manifest {
 		my $extension = $2;
 		if (!$::core || $t =~ m!^lib/[a-z]!) {
 		    if (defined $extension) {
-			$extension =~ s!/t$!!;
+			$extension =~ s!/t(:?/\S+)*$!!;
 			# XXX Do I want to warn that I'm skipping these?
 			next if $skip{$extension};
 			my $flat_extension = $extension;
@@ -549,6 +548,7 @@ EOT
 	    $te = '';
 	}
 
+        (local $Valgrind_Log = "$test.valgrind-current") =~ s/^.*\///;
 	my $results = _run_test($test, $type);
 
 	my $failure;
