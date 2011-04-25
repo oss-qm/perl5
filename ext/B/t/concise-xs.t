@@ -20,7 +20,7 @@ and the stash is scanned for the function-names in that package.
 Each value in %$testpkgs is a hash-of-lists (HoL) whose keys are
 implementation-types and values are lists of function-names of that type.
 
-To keep these HoLs smaller and more managable, they may carry an
+To keep these HoLs smaller and more manageable, they may carry an
 additional 'dflt' => $impl_Type, which means that unnamed functions
 are expected to be of that default implementation type.  Those unnamed
 functions are known from the scan of the package stash.
@@ -38,7 +38,7 @@ If a function is implemented differently on different platforms, the
 test for that function will fail on one of those platforms.  These
 specific functions can be skipped by a 'skip' => [ @list ] to the HoL
 mentioned previously.  See usage for skip in B's HoL, which avoids
-testing a function which doesnt exist on non-threaded builds.
+testing a function which doesn't exist on non-threaded builds.
 
 =head1 OPTIONS AND ARGUMENTS
 
@@ -164,7 +164,8 @@ my $testpkgs = {
 		     OPpSORT_REVERSE OPpREVERSE_INPLACE OPpTARGET_MY
 		     OPpTRANS_COMPLEMENT OPpTRANS_DELETE OPpTRANS_SQUASH
 		     PMf_CONTINUE PMf_EVAL PMf_EXTENDED PMf_FOLD PMf_GLOBAL
-		     PMf_KEEP PMf_MULTILINE PMf_ONCE PMf_SINGLELINE
+		     PMf_KEEP PMf_NONDESTRUCT
+		     PMf_MULTILINE PMf_ONCE PMf_SINGLELINE
 		     POSTFIX SVf_FAKE SVf_IOK SVf_NOK SVf_POK SVf_ROK
 		     SVpad_OUR SVs_RMG SVs_SMG SWAP_CHILDREN OPpPAD_STATE
 		     /, $] > 5.009 ? ('RXf_SKIPWHITE') : ('PMf_SKIPWHITE'),
@@ -212,12 +213,13 @@ my $testpkgs = {
 			     register_domain recv protocol peername
 			     new listen import getsockopt croak
 			     connected connect configure confess close
-			     carp bind atmark accept
+			     carp bind atmark accept sockaddr_in6
 			     /, $] > 5.009 ? ('blocking') : () ],
 
 		    XS => [qw/ unpack_sockaddr_un unpack_sockaddr_in
 			   sockatmark sockaddr_family pack_sockaddr_un
 			   pack_sockaddr_in inet_ntoa inet_aton
+			   unpack_sockaddr_in6 pack_sockaddr_in6
 			   /],
             # skip inet_ntop and inet_pton as they're not exported by default
 		},

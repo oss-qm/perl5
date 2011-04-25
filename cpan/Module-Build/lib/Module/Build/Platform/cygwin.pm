@@ -2,7 +2,7 @@ package Module::Build::Platform::cygwin;
 
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.360301'; # patched in bleadperl
+$VERSION = '0.3800';
 $VERSION = eval $VERSION;
 use Module::Build::Platform::Unix;
 
@@ -14,9 +14,9 @@ sub manpage_separator {
 }
 
 # Copied from ExtUtils::MM_Cygwin::maybe_command()
-# If our path begins with F</cygdrive/> then we use M::B::Platform::Windows
+# If our path begins with F</cygdrive/> then we use the Windows version
 # to determine if it may be a command.  Otherwise we use the tests
-# from M::B::Platform::Unix.
+# from C<ExtUtils::MM_Unix>.
 
 sub _maybe_command {
     my ($self, $file) = @_;
