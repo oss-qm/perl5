@@ -565,47 +565,11 @@ EOT
 EXPECT
 ok
 ########
-# This test is here instead of lib/locale.t because
-# the bug depends on in the internal state of the locale
-# settings and pragma/locale messes up that state pretty badly.
-# We need a "fresh run".
-BEGIN {
-    eval { require POSIX };
-    if ($@) {
-	exit(0); # running minitest?
-    }
-}
-use Config;
-my $have_setlocale = $Config{d_setlocale} eq 'define';
-$have_setlocale = 0 if $@;
-# Visual C's CRT goes silly on strings of the form "en_US.ISO8859-1"
-# and mingw32 uses said silly CRT
-$have_setlocale = 0 if (($^O eq 'MSWin32' || $^O eq 'NetWare') && $Config{cc} =~ /^(cl|gcc)/i);
-exit(0) unless $have_setlocale;
-my @locales;
-if (-x "/usr/bin/locale" && open(LOCALES, "/usr/bin/locale -a 2>/dev/null|")) {
-    while(<LOCALES>) {
-        chomp;
-        push(@locales, $_);
-    }
-    close(LOCALES);
-}
-exit(0) unless @locales;
-for (@locales) {
-    use POSIX qw(locale_h);
-    use locale;
-    setlocale(LC_NUMERIC, $_) or next;
-    my $s = sprintf "%g %g", 3.1, 3.1;
-    next if $s eq '3.1 3.1' || $s =~ /^(3.+1) \1$/;
-    print "$_ $s\n";
-}
-EXPECT
-########
 # [ID 20001202.002] and change #8066 added 'at -e line 1';
 # reversed again as a result of [perl #17763]
 die qr(x)
 EXPECT
-(?-xism:x)
+(?^:x)
 ########
 # 20001210.003 mjd@plover.com
 format REMITOUT_TOP =
@@ -791,7 +755,7 @@ if ($name =~ /(\p{IsUpper}) (\p{IsUpper})/){
 }
 EXPECT
 It's good! >A< >B<
-######## [perl #8760] strangness with utf8 and warn
+######## [perl #8760] strangeness with utf8 and warn
 $_="foo";utf8::upgrade($_);/bar/i,warn$_;
 EXPECT
 foo at - line 1.
@@ -840,20 +804,43 @@ print glob(q(./"TEST"));
 EXPECT
 ./"TEST"
 ./"TEST"
-######## "Segfault using HTML::Entities", Richard Jolly <richardjolly@mac.com>, <A3C7D27E-C9F4-11D8-B294-003065AE00B6@mac.com> in perl-unicode@perl.org
--lw
-# SKIP: use Config; $ENV{PERL_CORE_MINITEST} or " $Config::Config{'extensions'} " !~ m[ Encode ] # Perl configured without Encode module
-BEGIN {
-  eval 'require Encode';
-  if ($@) { exit 0 } # running minitest?
-}
-# Test case cut down by jhi
-$SIG{__WARN__} = sub { $@ = shift };
-use Encode;
-my $t = ord('A') == 193 ? "\xEA" : "\xE9";
-Encode::_utf8_on($t);
-$t =~ s/([^a])//ge;
-$@ =~ s/ at .*/ at/;
-print $@
+######## "#75146: 27e904532594b7fb (fix for #23810) introduces a #regression"
+use strict;
+
+unshift @INC, sub {
+    my ($self, $fn) = @_;
+
+    (my $pkg = $fn) =~ s{/}{::}g;
+    $pkg =~ s{.pm$}{};
+
+    if ($pkg eq 'Credit') {
+        my $code = <<'EOC';
+package Credit;
+
+use NonsenseAndBalderdash;
+
+1;
+EOC
+        eval $code;
+        die "\$@ is $@";
+    }
+
+    #print STDERR "Generator: not one of mine, ignoring\n";
+    return undef;
+};
+
+# create load-on-demand new() constructors
+{
+    package Credit;
+    sub new {
+        eval "use Credit";
+    }
+};
+
+eval {
+    my $credit = new Credit;
+};
+
+print "If you get here, you didn't crash\n";
 EXPECT
-Malformed UTF-8 character (unexpected end of string) in substitution (s///) at
+If you get here, you didn't crash
