@@ -142,7 +142,7 @@ Perl_grok_bin(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
     NV value_nv = 0;
 
     const UV max_div_2 = UV_MAX / 2;
-    const bool allow_underscores = (bool)(*flags & PERL_SCAN_ALLOW_UNDERSCORES);
+    const bool allow_underscores = cBOOL(*flags & PERL_SCAN_ALLOW_UNDERSCORES);
     bool overflowed = FALSE;
     char bit;
 
@@ -153,11 +153,11 @@ Perl_grok_bin(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
            for compatibility silently suffer "b" and "0b" as valid binary
            numbers. */
         if (len >= 1) {
-            if (s[0] == 'b') {
+            if (s[0] == 'b' || s[0] == 'B') {
                 s++;
                 len--;
             }
-            else if (len >= 2 && s[0] == '0' && s[1] == 'b') {
+            else if (len >= 2 && s[0] == '0' && (s[1] == 'b' || s[1] == 'B')) {
                 s+=2;
                 len-=2;
             }
@@ -259,7 +259,7 @@ Perl_grok_hex(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
     UV value = 0;
     NV value_nv = 0;
     const UV max_div_16 = UV_MAX / 16;
-    const bool allow_underscores = (bool)(*flags & PERL_SCAN_ALLOW_UNDERSCORES);
+    const bool allow_underscores = cBOOL(*flags & PERL_SCAN_ALLOW_UNDERSCORES);
     bool overflowed = FALSE;
 
     PERL_ARGS_ASSERT_GROK_HEX;
@@ -269,11 +269,11 @@ Perl_grok_hex(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
            for compatibility silently suffer "x" and "0x" as valid hex numbers.
         */
         if (len >= 1) {
-            if (s[0] == 'x') {
+            if (s[0] == 'x' || s[0] == 'X') {
                 s++;
                 len--;
             }
-            else if (len >= 2 && s[0] == '0' && s[1] == 'x') {
+            else if (len >= 2 && s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) {
                 s+=2;
                 len-=2;
             }
@@ -349,7 +349,7 @@ On entry I<start> and I<*len> give the string to scan, I<*flags> gives
 conversion flags, and I<result> should be NULL or a pointer to an NV.
 The scan stops at the end of the string, or the first invalid character.
 Unless C<PERL_SCAN_SILENT_ILLDIGIT> is set in I<*flags>, encountering an
-invalid character will also trigger a warning.
+8 or 9 will also trigger a warning.
 On return I<*len> is set to the length of the scanned string,
 and I<*flags> gives output flags.
 
@@ -373,7 +373,7 @@ Perl_grok_oct(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
     UV value = 0;
     NV value_nv = 0;
     const UV max_div_8 = UV_MAX / 8;
-    const bool allow_underscores = (bool)(*flags & PERL_SCAN_ALLOW_UNDERSCORES);
+    const bool allow_underscores = cBOOL(*flags & PERL_SCAN_ALLOW_UNDERSCORES);
     bool overflowed = FALSE;
 
     PERL_ARGS_ASSERT_GROK_OCT;
@@ -887,7 +887,14 @@ Perl_my_atof2(pTHX_ const char* orig, NV* value)
  * both the first and last digit, since neither can hold all values from
  * 0..9; but for calculating the value we must examine those two digits.
  */
-#define MAX_SIG_DIGITS (NV_DIG+2)
+#ifdef MAX_SIG_DIG_PLUS
+    /* It is not necessarily the case that adding 2 to NV_DIG gets all the
+       possible digits in a NV, especially if NVs are not IEEE compliant
+       (e.g., long doubles on IRIX) - Allen <allens@cpan.org> */
+# define MAX_SIG_DIGITS (NV_DIG+MAX_SIG_DIG_PLUS)
+#else
+# define MAX_SIG_DIGITS (NV_DIG+2)
+#endif
 
 /* the max number we can accumulate in a UV, and still safely do 10*N+9 */
 #define MAX_ACCUMULATE ( (UV) ((UV_MAX - 9)/10))

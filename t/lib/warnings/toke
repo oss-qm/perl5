@@ -140,13 +140,19 @@ Use of comma-less variable list is deprecated at - line 4.
 Use of comma-less variable list is deprecated at - line 4.
 ########
 # toke.c
+$a =~ m/$foo/sand $bar;
+$a =~ s/$foo/fool/sand $bar;
 $a = <<;
 
 no warnings 'deprecated' ;
+$a =~ m/$foo/sand $bar;
+$a =~ s/$foo/fool/sand $bar;
 $a = <<;
 
 EXPECT
-Use of bare << to mean <<"" is deprecated at - line 2.
+Having no space between pattern and following word is deprecated at - line 2.
+Having no space between pattern and following word is deprecated at - line 3.
+Use of bare << to mean <<"" is deprecated at - line 4.
 ########
 # toke.c
 use warnings 'syntax' ;
@@ -733,10 +739,10 @@ dump() better written as CORE::dump() at - line 4.
 # toke.c
 use warnings 'misc';
 use subs qw/dump/;
-sub dump { print "no warning for overriden dump\n"; }
+sub dump { print "no warning for overridden dump\n"; }
 dump;
 EXPECT
-no warning for overriden dump
+no warning for overridden dump
 ########
 # toke.c
 use warnings 'ambiguous';
@@ -903,60 +909,66 @@ Possible unintended interpolation of $\ in regex at - line 3.
 Possible unintended interpolation of $\ in regex at - line 5.
 ########
 # toke.c
-use feature 'state';
-# This one is fine as an empty attribute list
-my $holy_Einstein : = '';
-# This one is deprecated
-my $krunch := 4;
-our $FWISK_FWISK_FWIZZACH_FWACH_ZACHITTY_ZICH_SHAZZATZ_FWISK := '';
-state $thump := 'Trumpets';
-# Lather rinse repeat in my usual obsessive style
-my @holy_perfect_pitch : = ();
-my @zok := ();
-our @GUKGUK := ();
-# state @widget_mark := ();
-my %holy_seditives : = ();
-my %bang := ();
-our %GIGAZING := ();
-# state %hex := ();
-no warnings 'deprecated';
-my $holy_giveaways : = '';
-my $eee_yow := [];
-our $TWOYYOYYOING_THUK_UGH := 1 == 1;
-state $octothorn := 'Tinky Winky';
-my @holy_Taj_Mahal : = ();
-my @touche := ();
-our @PLAK_DAK_THUK_FRIT := ();
-# state @hash_mark := ();
-my %holy_priceless_collection_of_Etruscan_snoods : = ();
-my %wham_eth := ();
-our %THWUK := ();
-# state %octalthorpe := ();
-use warnings;
-my $holy_sewer_pipe : = '';
-my $thunk := undef;
-our $BLIT := time;
-state $crunch := 'Laa Laa';
-my @glurpp := ();
-my @holy_harem : = ();
-our @FABADAP := ();
-# state @square := ();
-my %holy_pin_cushions : = ();
-my %swoosh := ();
-our %RRRRR := ();
-# state %scratchmark := ();
+use warnings 'syntax' ;
+my $a = "\o";
+my $a = "\o{";
+my $a = "\o{}";
+no warnings 'syntax' ;
+my $a = "\o";
+my $a = "\o{";
+my $a = "\o{}";
 EXPECT
-Use of := for an empty attribute list is deprecated at - line 6.
-Use of := for an empty attribute list is deprecated at - line 7.
-Use of := for an empty attribute list is deprecated at - line 8.
-Use of := for an empty attribute list is deprecated at - line 11.
-Use of := for an empty attribute list is deprecated at - line 12.
-Use of := for an empty attribute list is deprecated at - line 15.
-Use of := for an empty attribute list is deprecated at - line 16.
-Use of := for an empty attribute list is deprecated at - line 33.
-Use of := for an empty attribute list is deprecated at - line 34.
-Use of := for an empty attribute list is deprecated at - line 35.
-Use of := for an empty attribute list is deprecated at - line 36.
-Use of := for an empty attribute list is deprecated at - line 38.
-Use of := for an empty attribute list is deprecated at - line 41.
-Use of := for an empty attribute list is deprecated at - line 42.
+Missing braces on \o{} at - line 3, within string
+Missing right brace on \o{ at - line 4, within string
+Number with no digits at - line 5, within string
+BEGIN not safe after errors--compilation aborted at - line 6.
+########
+# toke.c
+use warnings 'digit' ;
+my $a = "\o{1238456}";
+no warnings 'digit' ;
+my $a = "\o{1238456}";
+EXPECT
+Non-octal character '8'.  Resolved as "\o{123}" at - line 3.
+########
+# toke.c
+use warnings;
+my $a = "foo";
+print $a =~ ?f? ? "yes\n" : "no\n" foreach 0..2;
+EXPECT
+Use of ?PATTERN? without explicit operator is deprecated at - line 4.
+yes
+no
+no
+########
+# toke.c
+use warnings;
+my $a = "\c{ack}";
+$a = "\c,";
+$a = "\c`";
+no warnings 'syntax';
+$a = "\c{ack}";
+$a = "\c,";
+$a = "\c`";
+no warnings 'deprecated';
+EXPECT
+"\c{" is deprecated and is more clearly written as ";" at - line 3.
+"\c," is more clearly written simply as "l" at - line 4.
+"\c`" is more clearly written simply as "\ " at - line 5.
+"\c{" is deprecated and is more clearly written as ";" at - line 7.
+########
+# toke.c
+use warnings 'syntax' ;
+my $a = qr/foo/du;
+$a = qr/foo/lai;
+$a = qr/foo/lil;
+$a = qr/foo/aia;
+$a = qr/foo/aaia;
+no warnings 'syntax' ;
+my $a = qr/foo/du;
+EXPECT
+Regexp modifiers "/d" and "/u" are mutually exclusive at - line 3, near "= "
+Regexp modifiers "/l" and "/a" are mutually exclusive at - line 4, near "= "
+Regexp modifier "/l" may not appear twice at - line 5, near "= "
+Regexp modifier "/a" may appear a maximum of twice at - line 7, near "= "
+BEGIN not safe after errors--compilation aborted at - line 8.

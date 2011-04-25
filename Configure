@@ -28,9 +28,7 @@
 # See Porting/pumpkin.pod for more information on metaconfig.
 #
 
-# $Id: Head.U 6 2006-08-25 22:21:46Z rmanfredi $
-#
-# Generated on Wed Jun 23 16:03:55 CEST 2010 [metaconfig 3.5 PL0]
+# Generated on Mon Feb 14 23:00:18 CET 2011 [metaconfig 3.5 PL0]
 # (with additional metaconfig patches by perlbug@perl.org)
 
 cat >c1$$ <<EOF
@@ -628,6 +626,8 @@ d_pause=''
 d_pipe=''
 d_poll=''
 d_portable=''
+d_prctl=''
+d_prctl_set_name=''
 d_procselfexe=''
 procselfexe=''
 d_old_pthread_create_joinable=''
@@ -729,6 +729,8 @@ d_msg_peek=''
 d_msg_proxy=''
 d_oldsock=''
 d_scm_rights=''
+d_sin6_scope_id=''
+d_sockaddr_sa_len=''
 d_socket=''
 d_sockpair=''
 sockethdr=''
@@ -746,6 +748,8 @@ d_sresuproto=''
 d_statblks=''
 d_statfs_f_flags=''
 d_statfs_s=''
+d_static_inline=''
+perl_static_inline=''
 d_fstatvfs=''
 d_statvfs=''
 d_stdio_cnt_lval=''
@@ -1304,10 +1308,24 @@ fi
 
 groupstype=''
 i_whoami=''
+archname=''
+: Possible local include directories to search.
+: Set locincpth to "" in a hint file to defeat local include searches.
+locincpth="/usr/local/include /opt/local/include /usr/gnu/include"
+locincpth="$locincpth /opt/gnu/include /usr/GNU/include /opt/GNU/include"
+:
+: no include file wanted by default
+inclwanted=''
+
+: Enable -DEBUGGING and -DDEBUGGING from the command line
+EBUGGING=''
+DEBUGGING=''
+
+: set usethreads on the Configure command line to enable threads.
+usereentrant='undef'
 : Trailing extension.  Override this in a hint file, if needed.
 : Extra object files, if any, needed on this platform.
 archobjs=''
-archname=''
 libnames=''
 : change the next line if compiling for Xenix/286 on Xenix/386
 xlibpth='/usr/lib/386 /lib/386'
@@ -1331,22 +1349,8 @@ plibpth=''
 libswanted=''
 : some systems want to use only the non-versioned libso:s
 ignore_versioned_solibs=''
-: set usethreads on the Configure command line to enable threads.
-usereentrant='undef'
 : full support for void wanted by default
 defvoidused=15
-
-: Possible local include directories to search.
-: Set locincpth to "" in a hint file to defeat local include searches.
-locincpth="/usr/local/include /opt/local/include /usr/gnu/include"
-locincpth="$locincpth /opt/gnu/include /usr/GNU/include /opt/GNU/include"
-:
-: no include file wanted by default
-inclwanted=''
-
-: Enable -DEBUGGING and -DDEBUGGING from the command line
-EBUGGING=''
-DEBUGGING=old
 
 ccname=''
 ccversion=''
@@ -2248,7 +2252,7 @@ in the default answer, as if the default line was a set of arguments given to a
 script shell.  This means you may also use $* to repeat the whole default line,
 so you do not have to re-type everything to add something to the default.
 
-Everytime there is a substitution, you will have to confirm.  If there is an
+Every time there is a substitution, you will have to confirm.  If there is an
 error (e.g. an unmatched backtick), the default answer will remain unchanged
 and you will be prompted again.
 
@@ -2368,6 +2372,7 @@ make
 more
 nm
 nroff
+perl
 pg
 test
 uname
@@ -4156,11 +4161,6 @@ else
 	api_subversion=0
 	perl_patchlevel=0
 	$echo "(You do not have patchlevel.h.  Eek.)"
-fi
-if $test -r $rsrc/.patch ; then
-	if $test "X$perl_patchlevel" = "X" || $test "`cat $rsrc/.patch`" -gt "$perl_patchlevel" ; then
-		perl_patchlevel=`cat $rsrc/.patch`
-	fi
 fi
 : Define a handy string here to avoid duplication in myconfig.SH and configpm.
 version_patchlevel_string="version $patchlevel subversion $subversion"
@@ -7669,7 +7669,7 @@ $echo $n ".$c"
 $grep fprintf libc.tmp > libc.ptf
 xscan='eval "<libc.ptf $com >libc.list"; $echo $n ".$c" >&4'
 xrun='eval "<libc.tmp $com >libc.list"; echo "done." >&4'
-xxx='[ADTSIW]'
+xxx='[ADTSIWi]'
 if com="$sed -n -e 's/__IO//' -e 's/^.* $xxx  *//p'";\
 	eval $xscan;\
 	$contains '^fprintf$' libc.list >/dev/null 2>&1; then
@@ -8325,7 +8325,7 @@ if "$useshrplib"; then
 	solaris)
 		xxx="-R $shrpdir"
 		;;
-	freebsd|netbsd|openbsd|interix|dragonfly)
+	freebsd|mirbsd|netbsd|openbsd|interix|dragonfly)
 		xxx="-Wl,-R$shrpdir"
 		;;
 	bsdos|linux|irix*|dec_osf|gnu*)
@@ -9896,7 +9896,7 @@ done
 
 case "$d_longdbl$uselongdouble" in
 "$define$define")
-    : again, add prefered functions to our list first
+    : again, add preferred functions to our list first
     xxx_ld_list=""
     for xxx_convert in $gconvert_ld_preference; do
         case $xxx_convert in
@@ -10057,7 +10057,7 @@ eval $inlibc
 set pthread.h i_pthread
 eval $inhdr
 
-: define a fucntion to check prototypes
+: define a function to check prototypes
 $cat > protochk <<EOSH
 $startsh
 cc="$cc"
@@ -11348,6 +11348,41 @@ fi
 set socketpair d_sockpair
 eval $inlibc
 
+
+echo " "
+echo "Checking the availability sa_len in the sock struct ..." >&4
+$cat >try.c <<EOF
+#include <sys/types.h>
+#include <sys/socket.h>
+int main() {
+struct sockaddr sa;
+return (sa.sa_len);
+}
+EOF
+val="$undef"
+set try; if eval $compile; then
+	val="$define"
+fi
+set d_sockaddr_sa_len; eval $setvar
+$rm_try
+
+echo " "
+echo "Checking the availability sin6_scope_id in struct sockaddr_in6 ..." >&4
+$cat >try.c <<EOF
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main() {
+struct sockaddr_in6 sin6;
+return (sin6.sin6_scope_id);
+}
+EOF
+val="$undef"
+set try; if eval $compile; then
+	val="$define"
+fi
+set d_sin6_scope_id; eval $setvar
+$rm_try
 
 echo " "
 echo "Checking the availability of certain socket constants..." >&4
@@ -16048,6 +16083,31 @@ eval $inlibc
 set poll d_poll
 eval $inlibc
 
+: see if prctl exists
+set prctl d_prctl
+eval $inlibc
+
+: see if prctl supports PR_SET_NAME
+d_prctl_set_name=$undef
+case $d_prctl in
+    $define)
+	$cat >try.c <<EOM
+#include <sys/prctl.h>
+
+int main (int argc, char *argv[])
+{
+    return (prctl (PR_SET_NAME, "Test"));
+    } /* main */
+EOM
+	set try
+	if eval $compile_ok && $run ./try; then
+	    echo "Your prctl (PR_SET_NAME, ...) works"
+	    d_prctl_set_name=$define
+	    fi
+	$rm_try
+	;;
+    esac
+
 : see if readlink exists
 set readlink d_readlink
 eval $inlibc
@@ -17846,6 +17906,112 @@ case "$d_statfs_f_flags" in
 *)              echo "No, it doesn't." ;;
 esac
 
+: see what flavor, if any, of static inline is supported
+echo " "
+echo "Checking to see if your system supports static inline..."
+$cat > try.c <<'EOCP'
+#include <stdlib.h>
+extern int f_via_a(int x);
+extern int f_via_b(int x);
+int main(int argc, char **argv)
+{
+    int y;
+
+    y = f_via_a(0);
+#ifdef USE_B
+    y = f_via_b(0);
+#endif
+    if (y == 42) {
+        return EXIT_SUCCESS;
+    }
+    else {
+        return EXIT_FAILURE;
+    }
+}
+EOCP
+$cat > a.c <<'EOCP'
+static INLINE int f(int x) {
+    int y;
+    y = x + 42;
+    return y;
+}
+
+int f_via_a(int x)
+{
+    return f(x);
+}
+EOCP
+$cat > b.c <<'EOCP'
+extern int f(int x);
+
+int f_via_b(int x)
+{
+    return f(x);
+}
+EOCP
+
+# Respect a hint (or previous) value for perl_static_inline, if there is one.
+case "$perl_static_inline" in
+'')	# Check the various possibilities, and break out on success.
+	# For gcc, prefer __inline__, which will still permit 
+	# cflags.SH to add in -ansi.
+	case "$gccversion" in
+		'') xxx="inline __inline__ __inline _inline";;
+		*)  xxx="__inline__ inline __inline _inline";;
+	esac
+	for inline in $xxx; do
+		set try -DINLINE=$inline a.c
+		if eval $compile && $run ./try; then
+			# Now make sure there is no external linkage of static
+			# functions
+			set try -DINLINE=$inline -DUSE_B a.c b.c
+			if eval $compile && $run ./try; then
+				$echo "Your compiler supports static $inline, " >&4
+				$echo "but it also creates an external definition," >&4
+				$echo "so I won't use it." >&4
+				val=$undef
+			else
+				$echo "Your compiler supports static $inline." >&4
+				val=$define
+				perl_static_inline="static $inline";
+				break;
+			fi
+		else
+			$echo "Your compiler does NOT support static $inline." >&4
+			val="$undef"
+		fi
+	done
+	;;
+*inline*) # Some variant of inline exists.
+	echo "Keeping your $hint value of $perl_static_inline."
+	val=$define
+	;;
+static)  # No inline capabilities
+	echo "Keeping your $hint value of $perl_static_inline."
+	val=$undef
+	;;
+*)  # Unrecognized previous value -- blindly trust the supplied
+	# value and hope it makes sense.  Use old value for
+	# d_static_inline, if there is one.
+	echo "Keeping your $hint value of $perl_static_inline."
+	case "$d_static_inline" in
+		'') val=$define ;;
+		*)  val=$d_static_inline ;;
+	esac
+	;;
+esac
+# Fallback to plain 'static' if nothing worked.
+case "$perl_static_inline" in
+'')
+	perl_static_inline="static"
+	val=$undef
+	;;
+esac
+set d_static_inline
+eval $setvar
+$rm -f a.[co] b.[co]
+$rm_try
+
 : Check stream access
 $cat >&4 <<EOM
 Checking how to access stdio streams by file descriptor number...
@@ -18556,7 +18722,7 @@ EOM
 	;;
 esac
 
-: Checking 32bit aligndness
+: Checking 32bit alignedness
 $cat <<EOM
 
 Checking to see whether you can access character data unalignedly...
@@ -18834,39 +19000,9 @@ esac
 : set the base revision
 baserev=5.0
 
-: check for length of character
-echo " "
-case "$charsize" in
-'')
-	echo "Checking to see how big your characters are (hey, you never know)..." >&4
-	$cat >try.c <<EOCP
-#include <stdio.h>
-#$i_stdlib I_STDLIB
-#ifdef I_STDLIB
-#include <stdlib.h>
-#endif
-int main()
-{
-    printf("%d\n", (int)sizeof(char));
-    exit(0);
-}
-EOCP
-	set try
-	if eval $compile_ok; then
-		dflt=`$run ./try`
-	else
-		dflt='1'
-		echo "(I can't seem to compile the test program.  Guessing...)"
-	fi
-	;;
-*)
-	dflt="$charsize"
-	;;
-esac
-rp="What is the size of a character (in bytes)?"
-. ./myread
-charsize="$ans"
-$rm_try
+: length of character in bytes. Is always 1, otherwise it isnt C
+: This used to be a test using sizeof
+charsize=1
 
 : Check for the number of bits in a character
 case "$charbits" in
@@ -21945,13 +22081,6 @@ for xxx in $known_extensions ; do
 		$define) avail_ext="$avail_ext $xxx" ;;
 		esac
 		;;
-	XS/APItest/KeywordRPN|xs/apitest/keywordrpn)
-		# This is just for testing.  Skip it unless we have dynamic loading.
-
-		case "$usedl" in
-		$define) avail_ext="$avail_ext $xxx" ;;
-		esac
-		;;
 	XS/Typemap|xs/typemap)
 		# This is just for testing.  Skip it unless we have dynamic loading.
 		case "$usedl" in
@@ -21970,7 +22099,7 @@ avail_ext="$*"
 case "$onlyextensions" in
 '') ;;
 *)  keepextensions=''
-    echo "You have requested that only certains extensions be included..." >&4
+    echo "You have requested that only certain extensions be included..." >&4
     for i in $onlyextensions; do
         case " $avail_ext " in
         *" $i "*)
@@ -22140,7 +22269,7 @@ esac
 # the appropriate Makefile.PL.
 case " $static_ext " in
 	*" Encode "*) # Add the subextensions of Encode
-	cd "$rsrc/ext"
+	cd "$rsrc/cpan"
 	for xxx in `ls Encode/*/Makefile.PL|awk -F/ '{print $2}'`; do
 		static_ext="$static_ext Encode/$xxx"
 	done
@@ -22614,6 +22743,8 @@ d_phostname='$d_phostname'
 d_pipe='$d_pipe'
 d_poll='$d_poll'
 d_portable='$d_portable'
+d_prctl='$d_prctl'
+d_prctl_set_name='$d_prctl_set_name'
 d_printf_format_null='$d_printf_format_null'
 d_procselfexe='$d_procselfexe'
 d_pseudofork='$d_pseudofork'
@@ -22699,8 +22830,10 @@ d_sigaction='$d_sigaction'
 d_signbit='$d_signbit'
 d_sigprocmask='$d_sigprocmask'
 d_sigsetjmp='$d_sigsetjmp'
+d_sin6_scope_id='$d_sin6_scope_id'
 d_sitearch='$d_sitearch'
 d_snprintf='$d_snprintf'
+d_sockaddr_sa_len='$d_sockaddr_sa_len'
 d_sockatmark='$d_sockatmark'
 d_sockatmarkproto='$d_sockatmarkproto'
 d_socket='$d_socket'
@@ -22716,6 +22849,7 @@ d_sresuproto='$d_sresuproto'
 d_statblks='$d_statblks'
 d_statfs_f_flags='$d_statfs_f_flags'
 d_statfs_s='$d_statfs_s'
+d_static_inline='$d_static_inline'
 d_statvfs='$d_statvfs'
 d_stdio_cnt_lval='$d_stdio_cnt_lval'
 d_stdio_ptr_lval='$d_stdio_ptr_lval'
@@ -23112,6 +23246,7 @@ path_sep='$path_sep'
 perl5='$perl5'
 perl='$perl'
 perl_patchlevel='$perl_patchlevel'
+perl_static_inline='$perl_static_inline'
 perladmin='$perladmin'
 perllibs='$perllibs'
 perlpath='$perlpath'
