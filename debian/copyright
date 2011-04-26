@@ -42,41 +42,6 @@ Comment:
 
 ----------------------------------------------------------------------
 
-The C parts of File::Glob in ext/File-Glob/bsd_glob.[ch] have the
-following copyright:
-
- * Copyright (c) 1989, 1993
- *  The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Guido van Rossum.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
-
-----------------------------------------------------------------------
-
 Files: cpan/Archive-Extract/*
 License: GPL-1+ or Artistic
  This library is free software; you may redistribute and/or modify it
@@ -1163,6 +1128,25 @@ Files:
  dist/I18N-Collate/*
  dist/if/*
  dist/Safe/*
+ ext/Fcntl/*
+ ext/FileCache/*
+ ext/GDBM_File/*
+ ext/IPC-Open2/*
+ ext/IPC-Open3/*
+ ext/NDBM_File/*
+ ext/ODBM_File/*
+ ext/Opcode/*
+ ext/PerlIO-encoding/*
+ ext/PerlIO-scalar/*
+ ext/PerlIO-via/*
+ ext/POSIX/*
+ ext/re/*
+ ext/Socket/*
+ ext/Sys-Hostname/*
+ ext/Tie-Hash-NamedCapture/*
+ ext/Tie-Memoize/*
+ ext/VMS-DCLsym/*
+ ext/VMS-Stdio/*
 License: GPL-1+ or Artistic
  There is no copyright or license information in these distributions.
  It is assumed that they are licensed under the same terms as Perl itself.
@@ -1407,6 +1391,214 @@ License: GPL-1+ or Artistic
 Files: dist/XSLoader/*
 Copyright:
  Copyright (C) 1990-2007 by Larry Wall and others.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself.
+
+----------------------------------------------------------------------
+
+Files: ext/attributes/*
+Copyright:
+ Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+ by Larry Wall and others
+License: GPL-1+ or Artistic
+ You may distribute under the terms of either the GNU General Public
+ License or the Artistic License, as specified in the README file.
+
+----------------------------------------------------------------------
+
+Files: ext/B/*
+Copyright:
+ Copyright (c) 1996, 1997, 1998 Malcolm Beattie
+License: GPL-1+ or Artistic
+ You may distribute under the terms of either the GNU General Public
+ License or the Artistic License, as specified in the README file.
+
+Files: ext/B/B/Concise.pm
+Copyright:
+ Copyright (C) 2000-2003 Stephen McCamant. All rights reserved.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute and/or modify it
+ under the same terms as Perl itself.
+
+----------------------------------------------------------------------
+
+Files: ext/Devel-Peek/*
+Copyright:
+ Copyright (c) 1995-98 Ilya Zakharevich. All rights reserved.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it and/or
+ modify it under the same terms as Perl itself.
+
+----------------------------------------------------------------------
+
+Files: ext/DynaLoader/*
+License: GPL-1+ or Artistic
+ There is no license information included that clearly applies to the
+ whole of this distribution. It is assumed that it is licensed under
+ the same terms as Perl itself.
+
+Files: ext/DynaLoader/dl_aix.xs
+Copyright:
+ This is an unpublished work copyright (c) 1992 Helios Software GmbH
+ 3000 Hannover 1, Germany
+
+Files: ext/DynaLoader/dl_dld.xs
+Copyright:
+ based upon the file "dl.c", which is Copyright (c) 1994, Larry Wall
+License: GPL-1+ or Artistic
+ You may distribute under the terms of either the GNU General Public
+ License or the Artistic License, as specified in the README file.
+
+Files: ext/DynaLoader/dl_symbian.xs
+Copyright: 2004, Nokia
+License: GPL-1+ or Artistic
+ The license in the file is specified as
+ .
+  License:     Artistic/GPL
+
+----------------------------------------------------------------------
+
+Files: ext/Errno/*
+Copyright:
+ Copyright (c) 1997-8 Graham Barr. All rights reserved.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself.
+
+----------------------------------------------------------------------
+
+Files: ext/File-Glob/*
+License: Artistic
+ The Perl interface was written by Nathan Torkington <gnat@frii.com>,
+ and is released under the artistic license.  Further modifications
+ were made by Greg Bacon <gbacon@cs.uah.edu>, Gurusamy Sarathy
+ <gsar@activestate.com>, and Thomas Wegner <wegner_thomas@yahoo.com>.
+
+Files:
+ ext/File-Glob/bsd_glob.c
+ ext/File-Glob/bsd_glob.h
+Copyright:
+ Copyright (c) 1989, 1993
+ The Regents of the University of California.  All rights reserved.
+ .
+ This code is derived from software contributed to Berkeley by
+ Guido van Rossum.
+License: BSD-3-clause
+ See the end of this file for the full text of this license.
+
+----------------------------------------------------------------------
+
+Files: ext/Hash-Util/*
+License: GPL-1+ or Artistic
+ There is no license information in this distribution.
+ It is assumed that it is licensed under the same terms as Perl itself.
+
+Files: ext/Hash-Util/lib/Hash/Util.pm
+Copyright:
+ hv_store() is from Array::RefElem, Copyright 2000 Gisle Aas.
+Comment:
+ The copyright and license information of Array::RefElem, as fetched from
+ <http://cpansearch.perl.org/src/GAAS/Array-RefElem-1.00/README>, is as
+ follows:
+ .
+  Copyright 2000 Gisle Aas <gisle@aas.no>
+ .
+  This library is free software; you can redistribute it and/or
+  modify it under the same terms as Perl itself.
+
+----------------------------------------------------------------------
+
+Files: ext/Hash-Util-FieldHash/*
+Copyright:
+ Copyright (C) 2006-2007 by (Anno Siegel)
+License: GPL-1+ or Artistic
+ This library is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself, either Perl version 5.8.7 or,
+ at your option, any later version of Perl 5 you may have available.
+
+----------------------------------------------------------------------
+
+Files: ext/I18N-Langinfo/*
+Copyright:
+ Copyright 2001 by Jarkko Hietaniemi
+License: GPL-1+ or Artistic
+ This library is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself.
+
+----------------------------------------------------------------------
+
+Files: ext/mro/*
+Copyright:
+ Copyright (c) 2007 Brandon L Black
+ Copyright (c) 2008,2009 Larry Wall and others
+License: GPL-1+ or Artistic
+ You may distribute under the terms of either the GNU General Public
+ License or the Artistic License, as specified in the README file.
+
+----------------------------------------------------------------------
+
+Files: ext/Pod-Html/*
+License: Artistic
+ This program is distributed under the Artistic License.
+
+----------------------------------------------------------------------
+
+Files: ext/SDBM_File/*
+License: GPL-1+ or Artistic
+ There is no copyright or license information in this distribution.
+ It is assumed that it is licensed under the same terms as Perl itself.
+
+Files: ext/SDBM_File/sdbm/*
+Copyright: none
+License: public-domain
+ From ext/SDBM_File/sdbm/README:
+ .
+  The entire sdbm  library package, as authored by me, Ozan S.  Yigit,
+  is  hereby placed in the public domain. As such, the author is not
+  responsible for the  consequences  of  use  of this  software, no
+  matter how awful, even if they arise from defects in it. There is no
+  expressed or implied warranty for the sdbm library.
+ .
+  Since the sdbm library package is in the public domain, this   original
+  release  or  any  additional  public-domain releases of the modified
+  original cannot possibly (by definition) be withheld from you. Also
+  by definition, You (singular) have all the rights to this code
+  (including  the  right to sell without permission, the right to
+  hoard[3]  and  the right  to  do  other  icky  things as you see fit)
+  but those rights are also granted to everyone else.
+ .
+  Please note that all  previous  distributions  of  this software
+  contained  a  copyright  (which is now dropped) to protect its origins
+  and its  current  public  domain  status against any possible claims
+  and/or challenges.
+
+----------------------------------------------------------------------
+
+Files: ext/Win32CORE/*
+Copyright:
+ Copyright (C) 2007 by Larry Wall and others
+License: GPL-1+ or Artistic
+ You may distribute under the terms of either the GNU General Public
+ License or the Artistic License, as specified in the README file.
+
+----------------------------------------------------------------------
+
+Files: ext/XS-APItest/*
+Copyright:
+ Copyright (C) 2002,2004 Tim Jenness, Christian Soeller, Hugo van der Sanden.
+ All Rights Reserved.
+ .
+ Copyright (C) 2009 Andrew Main (Zefram) <zefram@fysh.org>
+License: GPL-1+ or Artistic
+ This library is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself.
+
+----------------------------------------------------------------------
+
+Files: ext/XS-Typemap/*
+Copyright:
+ Copyright (C) 2001 Tim Jenness All Rights Reserved.
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -1825,6 +2017,33 @@ License: BSD-3-clause-GENERIC
  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+----------------------------------------------------------------------
+
+License: BSD-3-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. Neither the name of the University nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
