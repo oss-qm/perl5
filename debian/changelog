@@ -1,4 +1,4 @@
-perl (5.14.0~rc1) UNRELEASED; urgency=low
+perl (5.14.0~rc1-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
     + update the Breaks versions for most of the bundled modules.
