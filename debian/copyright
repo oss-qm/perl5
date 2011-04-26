@@ -64,7 +64,9 @@ The corresponding license is as follows:
 
    Unicode Data Files include all data files under the directories
    http://www.unicode.org/Public/, http://www.unicode.org/reports/,
-   and http://www.unicode.org/cldr/data/ . Unicode Software includes any
+   and http://www.unicode.org/cldr/data/ . Unicode Data Files
+   do not include PDF online code charts under the directory
+   http://www.unicode.org/Public/. Software includes any
    source code published in the Unicode Standard or under the directories
    http://www.unicode.org/Public/, http://www.unicode.org/reports/,
    and http://www.unicode.org/cldr/data/.
@@ -78,7 +80,7 @@ The corresponding license is as follows:
 
       COPYRIGHT AND PERMISSION NOTICE
 
-      Copyright © 1991-2008 Unicode, Inc. All rights
+      Copyright © 1991-2011 Unicode, Inc. All rights
       reserved. Distributed under the Terms of Use in
       http://www.unicode.org/copyright.html.
 
