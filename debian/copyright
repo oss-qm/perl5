@@ -33,6 +33,10 @@ Comment:
  It is assumed that all the other files are part of Perl and share the
  above copyright and license information unless explicitly specified
  differently. Only the exceptions have been detailed below.
+ .
+ As a small portion of the files are indeed licensed differently from
+ the above, all the other licenses have been collected and/or duplicated
+ at the end of this file to facilitate review.
 
 Files: perlio.c
 Copyright:
@@ -247,7 +251,7 @@ License: GPL-1+ or Artistic
 
 Files: x2p/s2p.PL
 Copyright:
-License: s2p
+License: S2P
  This program is free and open software. You may use, modify,
  distribute, and sell this program (and any modified variants) in any
  way you wish, provided you do not restrict others from doing the same.
@@ -1579,27 +1583,10 @@ License: GPL-1+ or Artistic
 
 Files: ext/SDBM_File/sdbm/*
 Copyright: none
-License: public-domain
- From ext/SDBM_File/sdbm/README:
+License: SDBM-PUBLIC-DOMAIN
+ The entire sdbm  library package is  placed in the public domain.
  .
-  The entire sdbm  library package, as authored by me, Ozan S.  Yigit,
-  is  hereby placed in the public domain. As such, the author is not
-  responsible for the  consequences  of  use  of this  software, no
-  matter how awful, even if they arise from defects in it. There is no
-  expressed or implied warranty for the sdbm library.
- .
-  Since the sdbm library package is in the public domain, this   original
-  release  or  any  additional  public-domain releases of the modified
-  original cannot possibly (by definition) be withheld from you. Also
-  by definition, You (singular) have all the rights to this code
-  (including  the  right to sell without permission, the right to
-  hoard[3]  and  the right  to  do  other  icky  things as you see fit)
-  but those rights are also granted to everyone else.
- .
-  Please note that all  previous  distributions  of  this software
-  contained  a  copyright  (which is now dropped) to protect its origins
-  and its  current  public  domain  status against any possible claims
-  and/or challenges.
+ See the end of this file for the full notice from ext/SDBM_File/sdbm/README.
 
 Files: ext/Win32CORE/*
 Copyright:
@@ -2232,4 +2219,48 @@ License: PERLDOCS
  Permission is granted to copy and distribute translations of this
  documentation into another language, under the above conditions for
  modified versions.
+
+License: TEXT-TABS
+ This module may be modified, used, copied, and redistributed at your own risk.
+ Publicly redistributed modified versions must use a different name.
+
+License: TEXT-SOUNDEX
+ Freedom to use these sources for whatever you want, as long as credit
+ is given where credit is due, is hereby granted. You may make modifications
+ where you see fit but leave this copyright somewhere visible. As well, try
+ to initial any changes you make so that if I like the changes I can
+ incorporate them into later versions.
+ .
+ - Mark Mielke <mark@mielke.cc>
+
+License: S2P
+ This program is free and open software. You may use, modify,
+ distribute, and sell this program (and any modified variants) in any
+ way you wish, provided you do not restrict others from doing the same.
+
+License: DONT-CHANGE-THE-GPL
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+License: SDBM-PUBLIC-DOMAIN
+ From ext/SDBM_File/sdbm/README:
+ .
+  The entire sdbm  library package, as authored by me, Ozan S.  Yigit,
+  is  hereby placed in the public domain. As such, the author is not
+  responsible for the  consequences  of  use  of this  software, no
+  matter how awful, even if they arise from defects in it. There is no
+  expressed or implied warranty for the sdbm library.
+ .
+  Since the sdbm library package is in the public domain, this   original
+  release  or  any  additional  public-domain releases of the modified
+  original cannot possibly (by definition) be withheld from you. Also
+  by definition, You (singular) have all the rights to this code
+  (including  the  right to sell without permission, the right to
+  hoard[3]  and  the right  to  do  other  icky  things as you see fit)
+  but those rights are also granted to everyone else.
+ .
+  Please note that all  previous  distributions  of  this software
+  contained  a  copyright  (which is now dropped) to protect its origins
+  and its  current  public  domain  status against any possible claims
+  and/or challenges.
 
