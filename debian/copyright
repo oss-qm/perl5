@@ -1605,6 +1605,149 @@ License: GPL-1+ or Artistic
 
 ----------------------------------------------------------------------
 
+Files: pod/perlboot.pod
+Copyright:
+ Copyright (c) 1999, 2000 by Randal L. Schwartz and Stonehenge
+ Consulting Services, Inc.
+ .
+ Copyright (c) 2009 by Michael F. Witten.
+License: GPL-1+ or Artistic
+ Permission is hereby granted to distribute this document intact with
+ the Perl distribution, and in accordance with the licenses of the Perl
+ distribution; derived documents must include this copyright notice
+ intact.
+
+Files:
+ pod/perldebtut.pod
+ pod/perlperf.pod
+Copyright:
+ Richard Foley <richard.foley@rfi.net> Copyright (c) 2000
+
+Files: pod/perlembed.pod
+Copyright:
+ Copyright (C) 1995, 1996, 1997, 1998 Doug MacEachern and Jon Orwant.  All
+ Rights Reserved.
+License: PERLDOCS
+ See the end of this file for the full text of this license.
+
+Files:
+ pod/perlfaq*.pod
+ pod/perlopentut.pod
+ pod/perltooc.pod
+Copyright:
+ Copyright (c) 1997-2010 Tom Christiansen, Nathan Torkington, and
+ other authors as noted. All rights reserved.
+License: GPL-1+ or Artistic
+ This documentation is free; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
+ .
+ Irrespective of its distribution, all code examples here are in the public
+ domain. You are permitted and encouraged to use this code and any
+ derivatives thereof in your own programs for fun or for profit as you
+ see fit. A simple comment in the code giving credit to the FAQ would
+ be courteous but is not required.
+
+Files: pod/perlfaq.pod
+Copyright:
+ Tom Christiansen wrote the original version of this document.
+ brian d foy <bdfoy@cpan.org> wrote this version. See the
+ individual perlfaq documents for additional copyright information.
+License: GPL-1+ or Artistic
+ This document is available under the same terms as Perl itself. Code
+ examples in all the perlfaq documents are in the public domain. Use
+ them as you see fit (and at your own risk with no warranty from anyone).
+
+Files:
+ pod/perlfilter.pod
+ pod/perlthrtut.pod
+Copyright:
+ copyright 1998 The Perl Journal
+License: GPL-1+ or Artistic
+ This document may be distributed under the same terms as Perl itself.
+
+Files: pod/perlglossary.pod
+Copyright:
+ Based on the Glossary of Programming Perl, Third Edition,
+ by Larry Wall, Tom Christiansen & Jon Orwant.
+ Copyright (c) 2000, 1996, 1991 O'Reilly Media, Inc.
+License: GPL-1+ or Artistic
+ This document may be distributed under the same terms as Perl itself.
+
+Files: pod/perlmodinstall.pod
+Copyright:
+ Copyright (C) 1998, 2002, 2003 Jon Orwant.  All Rights Reserved.
+License: PERLDOCS
+ See the end of this file for the full text of this license.
+
+Files:
+ pod/perlopentut.pod
+ pod/perltooc.pod
+ pod/perltoot.pod
+Copyright:
+ Copyright 1997-1999 Tom Christiansen.
+License: GPL-1+ or Artistic
+ This documentation is free; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
+ .
+ Irrespective of its distribution, all code examples in these files are
+ hereby placed into the public domain.  You are permitted and
+ encouraged to use this code in your own programs for fun or for profit
+ as you see fit.  A simple comment in the code giving credit would be
+ courteous but is not required.
+
+Files: pod/perlpodstyle.pod
+Copyright:
+ Copyright 1999, 2000, 2001, 2004, 2006, 2008, 2010 Russ Allbery
+ <rra@stanford.edu>.
+License: GPL-1+ or Artistic
+ This documentation is free software; you may redistribute it and/or modify
+ it under the same terms as Perl itself.
+
+Files: pod/perlreapi.pod
+Copyright:
+ Copyright 2006 Yves Orton and 2007 Ævar Arnfjörð Bjarmason.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it and/or modify it under
+ the same terms as Perl itself.
+
+Files: pod/perlreftut.pod
+Copyright:
+ Copyright 1998 The Perl Journal.
+License: GPL-1+ or Artistic
+ This documentation is free; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
+ .
+ Irrespective of its distribution, all code examples in these files are
+ hereby placed into the public domain.  You are permitted and
+ encouraged to use this code in your own programs for fun or for profit
+ as you see fit.  A simple comment in the code giving credit would be
+ courteous but is not required.
+
+Files:
+ pod/perlrequick.pod
+ pod/perlretut.pod
+Copyright:
+ Copyright (c) 2000 Mark Kvale
+ All rights reserved.
+License: GPL-1+ or Artistic
+ This document may be distributed under the same terms as Perl itself.
+
+Files: pod/perluniintro.pod
+Copyright:
+ Copyright 2001-2011 Jarkko Hietaniemi <jhi@iki.fi>
+License: GPL-1+ or Artistic
+ This document may be distributed under the same terms as Perl itself.
+
+Files: pod/perlgpl.pod
+Copyright:
+  Copyright (C) 1989 Free Software Foundation, Inc.
+                 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
+License: DONT-CHANGE-THE-GPL
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+----------------------------------------------------------------------
+
 Portions of the Debian packaging are
  Copyright 2011 Dominic Hargreaves <dom@earth.li>
  Copyright 2008-2011 Niko Tyni <ntyni@debian.org>
@@ -2051,5 +2194,24 @@ License: BSD-3-clause
  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  SUCH DAMAGE.
+
+----------------------------------------------------------------------
+
+License: PERLDOCS
+ Permission is granted to make and distribute verbatim copies of this
+ documentation provided the copyright notice and this permission notice are
+ preserved on all copies.
+ .
+ Permission is granted to copy and distribute modified versions of this
+ documentation under the conditions for verbatim copying, provided also
+ that they are marked clearly as modified versions, that the authors'
+ names and title are unchanged (though subtitles and additional
+ authors' names may be added), and that the entire resulting derived
+ work is distributed under the terms of a permission notice identical
+ to this one.
+ .
+ Permission is granted to copy and distribute translations of this
+ documentation into another language, under the above conditions for
+ modified versions.
 
 ----------------------------------------------------------------------
