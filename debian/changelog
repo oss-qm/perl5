@@ -3,6 +3,7 @@ perl (5.12.3-5) UNRELEASED; urgency=low
   * Add new debian/check-control script written by Niko, backported
     from 5.14 tree. This is used by maintainer targets in debian/rules
     to check Provides/Replaces/Breaks against bundled modules.
+  * Apply upstream fix for Module::Corelist version number
   * Correct various Breaks version numbers and add Breaks, Replaces,
     Provides for new or missing dual-lived modules:
     - libmath-complex-perl
@@ -10,7 +11,7 @@ perl (5.12.3-5) UNRELEASED; urgency=low
     - libdigest-perl
     - libextutils-install-perl
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 28 Apr 2011 18:25:38 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 28 Apr 2011 22:02:46 +0100
 
 perl (5.12.3-4) experimental; urgency=low
 
