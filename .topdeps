@@ -26,3 +26,4 @@ debian/deprecate-with-apt
 fixes/hurd-ccflags
 debian/squelch-locale-warnings
 debian/skip-upstream-git-tests
+fixes/extutils-cbuilder-cflags

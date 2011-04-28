@@ -17,6 +17,9 @@ perl (5.14.0~rc1-1) UNRELEASED; urgency=low
       * libdigest-perl
       * libextutils-install-perl
       * libhttp-tiny-perl
+  * debian/patches/fixes/extutils-cbuilder-cflags: [perl #89478]
+    Make ExtUtils::CBuilder append CFLAGS and LDFLAGS from the environment
+    to their Config.pm counterparts instead of overriding them. 
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 25 Apr 2011 14:59:36 +0300
 
