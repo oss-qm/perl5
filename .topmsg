@@ -1,0 +1,11 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Append CFLAGS and LDFLAGS to their Config.pm counterparts in EU::CBuilder
+Bug: http://rt.perl.org/rt3//Public/Bug/Display.html?id=89478
+
+Since ExtUtils::CBuilder 0.27_04 (bleadperl commit 06e8058f27e4),
+CFLAGS and LDFLAGS from the environment have overridden the Config.pm
+ccflags and ldflags settings. This can cause binary incompatibilities
+between the core Perl and extensions built with EU::CBuilder.
+
+Append to the Config.pm values rather than overriding them.
+
