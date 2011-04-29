@@ -412,13 +412,13 @@ binary: binary-indep binary-arch
 # maintainer targets
 new-build: $(patches) refresh-patchlevel
 	test -d .git # only for the git repository
-	# check the versioned Breaks and the Provides lists
-	-prove -Idist/Module-CoreList/lib debian/check-control
 	git checkout refs/heads/master # detach from 'master'
 	git rm .top*
 	git add debian/patches
 	git add $(patches) patchlevel.h
 	git commit -m 'export all the patches'
+	# check the versioned Breaks and the Provides lists
+	-prove -Idist/Module-CoreList/lib debian/check-control
 
 $(patches):
 	test -d .git # patch export only works in the TopGit repository
