@@ -1320,7 +1320,7 @@ foreach my $ord (78, 163, 256) {
 
 
 {
-    # lc/uc(first) failing to taint the returned string
+    # [perl #87336] lc/uc(first) failing to taint the returned string
     my $source = "foo$TAINT";
     my $dest = lc $source;
     test tainted $dest, "lc(tainted) taints its return value";
