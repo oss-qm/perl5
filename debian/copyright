@@ -159,7 +159,7 @@ The file referenced above, cpan/Cwd/Cwd.xs, has the following copyright:
 
 ----------------------------------------------------------------------
 
-The C parts of File::Glob in ext/File-Glob/bsd_glob.[ch] hav the
+The C parts of File::Glob in ext/File-Glob/bsd_glob.[ch] have the
 following copyright:
 
  * Copyright (c) 1989, 1993
