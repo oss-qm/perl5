@@ -46,7 +46,8 @@ SKIP: {
 
     unless (defined $home) {
       my @info = eval { getpwuid $> };
-      skip "No home directory for tilde-expansion tests", 15 if $@;
+      skip "No home directory for tilde-expansion tests", 15 if $@
+        or !defined $info[7];
       $home = $info[7];
     }
 
