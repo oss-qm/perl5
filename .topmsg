@@ -1,3 +1,4 @@
 From: Dominic Hargreaves <dom@earth.li>
+Bug: https://rt.cpan.org/Public/Bug/Display.html?id=67893
 Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=624850
 Subject: Fix failing tilde test when run under a UID without a passwd entry
