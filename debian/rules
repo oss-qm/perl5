@@ -417,7 +417,7 @@ new-build: $(patches) refresh-patchlevel
 	git rm .top*
 	git add debian/patches
 	git add $(patches) patchlevel.h
-	git commit -m 'export all the patches'
+	git commit -m 'export all the patches for $(package_version)'
 	# check the syntax of debian/copyright
 	if which config-edit >/dev/null 2>&1; then \
 	   config-edit -application dpkg-copyright -ui none || true; fi
