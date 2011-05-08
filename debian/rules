@@ -418,6 +418,10 @@ new-build: $(patches) refresh-patchlevel
 	git add debian/patches
 	git add $(patches) patchlevel.h
 	git commit -m 'export all the patches'
+	# check the syntax of debian/copyright
+	if which config-edit >/dev/null 2>&1; then \
+	   config-edit -application dpkg-copyright -ui none || true; fi
+	# check the versioned Breaks and the Provides lists
 	-prove -Idist/Module-CoreList/lib debian/check-control
 
 $(patches):
