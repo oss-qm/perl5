@@ -27,3 +27,4 @@ fixes/hurd-ccflags
 debian/squelch-locale-warnings
 debian/skip-upstream-git-tests
 fixes/extutils-cbuilder-cflags
+fixes/module-build-home-directory
