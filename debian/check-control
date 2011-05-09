@@ -281,7 +281,7 @@ sub get_perl_version {
 	# if cwd is a perl source directory, we check the corelist information
 	# for that. Otherwise, fall back to the running perl version
 	my $perl_version = qx'dpkg-parsechangelog | \
-		sed -ne "s/-[^-]\+$//; s/^Version: *\([0-9]\+:\)*//p"';
+		sed -ne "s/-[^-]\+$//; s/~.*//; s/^Version: *\([0-9]\+:\)*//p"';
 	chomp $perl_version;
 	$perl_version = version->parse($perl_version || $])->numify;
 	diag("testing for $perl_version");
