@@ -8,6 +8,8 @@ Comment:
  Upstream Authors:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
+ .
+ Last checked against: Perl 5.14.0~rc1
 
 Files: *
 Copyright:
