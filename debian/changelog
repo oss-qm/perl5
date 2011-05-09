@@ -2,8 +2,10 @@ perl (5.12.3-7) UNRELEASED; urgency=low
 
   * Fix failing tilde test when run under a UID without a passwd entry
     (Closes: #624850)
+  * Adjust debian/check-control to work with strict version checks
+    and release candidates
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 02 May 2011 10:41:34 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 09 May 2011 19:08:32 +0100
 
 perl (5.12.3-6) unstable; urgency=low
 
