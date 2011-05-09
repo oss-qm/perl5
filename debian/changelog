@@ -23,6 +23,27 @@ perl (5.14.0~rc1-1) UNRELEASED; urgency=low
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 25 Apr 2011 14:59:36 +0300
 
+perl (5.12.3-6) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 01 May 2011 17:40:10 +0100
+
+perl (5.12.3-5) experimental; urgency=low
+
+  * Add new debian/check-control script written by Niko, backported
+    from 5.14 tree. This is used by maintainer targets in debian/rules
+    to check Provides/Replaces/Breaks against bundled modules.
+  * Apply upstream fix for Module::Corelist version number
+  * Correct various Breaks version numbers and add Breaks, Replaces,
+    Provides for new or missing dual-lived modules:
+    - libmath-complex-perl
+    - libextutils-command-perl
+    - libdigest-perl
+    - libextutils-install-perl
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Apr 2011 20:47:53 +0100
+
 perl (5.12.3-4) experimental; urgency=low
 
   * Revert gcc-4.3 on sparc workaround for #577016 which turned out to
