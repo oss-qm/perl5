@@ -260,7 +260,8 @@ Breaks: perl-doc (<< ${Upstream-Version}-1),
  libthreads-perl (<< 1.75),
  libthreads-shared-perl (<< 1.32),
  libtime-piece-perl (<< 1.15.01),
- libencode-perl (<< 2.39)
+ libencode-perl (<< 2.39),
+ mrtg (<< 2.16.3-3.1)
 Replaces: perl-base (<< 5.10.1-12),
  perl-doc (<< 5.8.0-1),
  perl-modules (<< 5.8.1-1),
