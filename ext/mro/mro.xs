@@ -1,3 +1,5 @@
+#define PERL_NO_GET_CONTEXT
+
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -37,7 +39,8 @@ S_mro_get_linear_isa_c3(pTHX_ HV* stash, U32 level)
 
     assert(HvAUX(stash));
 
-    stashhek = HvNAME_HEK(stash);
+    stashhek = HvENAME_HEK(stash);
+    if (!stashhek) stashhek = HvNAME_HEK(stash);
     if (!stashhek)
       Perl_croak(aTHX_ "Can't linearize anonymous symbol table");
 
@@ -94,7 +97,7 @@ S_mro_get_linear_isa_c3(pTHX_ HV* stash, U32 level)
 		if(items == 0 && AvFILLp(seqs) == -1) {
 		    /* Only one parent class. For this case, the C3
 		       linearisation is this class followed by the parent's
-		       inearisation, so don't bother with the expensive
+		       linearisation, so don't bother with the expensive
 		       calculation.  */
 		    SV **svp;
 		    I32 subrv_items = AvFILLp(isa_lin) + 1;
