@@ -138,6 +138,9 @@ static const char * const local_patches[] = {
 #endif
 	,"RC2"
 	PERL_GIT_UNPUSHED_COMMITS    	/* do not remove this line */
+#ifdef DEBIAN
+#include "patchlevel-debian.h"
+#endif
 	,NULL
 };
 
