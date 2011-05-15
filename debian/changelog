@@ -25,8 +25,10 @@ perl (5.14.0-1) UNRELEASED; urgency=low
 
   [ Dominic Hargreaves ]
   * New upstream release
+  * Fix failing tilde test when run under a UID without a passwd entry
+    (Closes: #624850)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 15 May 2011 16:56:22 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 15 May 2011 17:16:20 +0100
 
 perl (5.12.3-6) unstable; urgency=low
 
