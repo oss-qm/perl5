@@ -131,6 +131,7 @@ static const char * const local_patches[] = {
 	,"uncommitted-changes"
 #endif
 	PERL_GIT_UNPUSHED_COMMITS    	/* do not remove this line */
+#include "patchlevel-debian.h"
 	,NULL
 };
 
