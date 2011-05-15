@@ -1,5 +1,6 @@
-perl (5.14.0~rc1-1) UNRELEASED; urgency=low
+perl (5.14.0-1) UNRELEASED; urgency=low
 
+  [ Niko Tyni ]
   * New upstream release candidate.
     + update the Breaks versions for most of the bundled modules.
     + no longer Breaks/Replaces/Provides libswitch-perl, libclass-isa-perl,
@@ -22,7 +23,10 @@ perl (5.14.0~rc1-1) UNRELEASED; urgency=low
     to their Config.pm counterparts instead of overriding them. 
   * Totally rework debian/copyright.
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 25 Apr 2011 14:59:36 +0300
+  [ Dominic Hargreaves ]
+  * New upstream release
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 15 May 2011 16:56:22 +0100
 
 perl (5.12.3-6) unstable; urgency=low
 
