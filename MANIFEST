@@ -3824,6 +3824,7 @@ pad.c				Scratchpad functions
 pad.h				Scratchpad headers
 parser.h			parser object header
 patchlevel.h			The current patch level of perl
+patchlevel-debian.h			List of patches applied via the Debian packaging
 perlapi.c			Perl API functions
 perlapi.h			Perl API function declarations
 perl.c				main()

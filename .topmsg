@@ -1,0 +1,6 @@
+Subject: List packaged patches in patchlevel.h
+Origin: vendor
+Bug-Debian: http://bugs.debian.org/567489
+
+The list of packaged patches is in patchlevel-debian.h, which is generated
+from the debian/patches/ directory when building the package.
