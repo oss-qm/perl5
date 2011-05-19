@@ -5,8 +5,12 @@ perl (5.12.3-7) unstable; urgency=low
   * Adjust debian/check-control to work with strict version checks
     and release candidates
   * Add Breaks: mrtg (<< 2.16.3-3.1) (see #625695)
+  * Add Breaks, Replaces, Provides for new dual-lived modules
+    libshell-perl, libdevel-dprof-perl
+  * Add Replaces, Provides for new deprecation module
+    libperl4-corelibs-perl
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 19 May 2011 19:00:19 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 19 May 2011 19:16:22 +0100
 
 perl (5.12.3-6) unstable; urgency=low
 

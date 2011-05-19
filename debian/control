@@ -108,7 +108,8 @@ Breaks: libpod-parser-perl (<< 1.37),
  libmath-complex-perl (<< 1.56),
  libextutils-command-perl (<< 1.16),
  libdigest-perl (<< 1.16),
- libextutils-install-perl (<< 1.55)
+ libextutils-install-perl (<< 1.55),
+ libshell-perl (<< 0.72.01),
 Replaces: libpod-parser-perl,
  libansicolor-perl,
  libfile-temp-perl,
@@ -152,7 +153,9 @@ Replaces: libpod-parser-perl,
  libmath-complex-perl,
  libextutils-command-perl,
  libdigest-perl,
- libextutils-install-perl
+ libextutils-install-perl,
+ libshell-perl,
+ libperl4-corelibs-perl
 Provides: libpod-parser-perl,
  libansicolor-perl,
  libfile-temp-perl,
@@ -193,7 +196,9 @@ Provides: libpod-parser-perl,
  libmath-complex-perl,
  libextutils-command-perl,
  libdigest-perl,
- libextutils-install-perl
+ libextutils-install-perl,
+ libshell-perl,
+ libperl4-corelibs-perl
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
  required if the `perl' package is installed.
@@ -261,6 +266,7 @@ Breaks: perl-doc (<< ${Upstream-Version}-1),
  libthreads-shared-perl (<< 1.32),
  libtime-piece-perl (<< 1.15.01),
  libencode-perl (<< 2.39),
+ libdevel-dprof-perl (<< 20080331.00),
  mrtg (<< 2.16.3-3.1)
 Replaces: perl-base (<< 5.10.1-12),
  perl-doc (<< 5.8.0-1),
@@ -283,7 +289,8 @@ Replaces: perl-base (<< 5.10.1-12),
  libthreads-perl,
  libthreads-shared-perl,
  libmodule-corelist-perl (<< 2.14-2),
- libencode-perl
+ libencode-perl,
+ libdevel-dprof-perl
 Provides: data-dumper, perl5,
  libdigest-md5-perl,
  libmime-base64-perl,
@@ -301,7 +308,8 @@ Provides: data-dumper, perl5,
  libthreads-perl,
  libthreads-shared-perl,
  libtime-piece-perl,
- libencode-perl
+ libencode-perl,
+ libdevel-dprof-perl
 Recommends: netbase
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
  make
