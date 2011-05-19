@@ -1,4 +1,4 @@
-perl (5.14.0-1) UNRELEASED; urgency=low
+perl (5.14.0-1) experimental; urgency=low
 
   [ Niko Tyni ]
   * New upstream release candidate.
@@ -28,7 +28,7 @@ perl (5.14.0-1) UNRELEASED; urgency=low
   * Add Recommends for deprecated modules libdevel-dprof-perl,
     libperl4-corelibs-perl, libshell-perl
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 19 May 2011 22:16:55 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 19 May 2011 22:25:33 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 
