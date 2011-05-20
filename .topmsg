@@ -9,7 +9,8 @@ deprecated from the Perl core in 5.12.0.
 Class::ISA, Switch, Pod::Plainer were removed from the Perl core in
 5.14.0.
 
-Shell and Devel::DProf were deprecated from the Perl core in 5.14.0.
+Shell and Devel::DProf, and Perl 4 libraries, were deprecated from the
+Perl core in 5.14.0.
 
 To get a clean transition, perl/perl-modules is going to recommend the
 separate Debian packages of these for one release cycle so that they will be
