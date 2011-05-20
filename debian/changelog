@@ -28,7 +28,7 @@ perl (5.14.0-1) experimental; urgency=low
   * Add Recommends for deprecated modules libdevel-dprof-perl,
     libperl4-corelibs-perl, libshell-perl
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 19 May 2011 22:25:33 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 20 May 2011 18:07:12 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 
