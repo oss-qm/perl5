@@ -11,10 +11,8 @@ unless (%Config) { require Config; *Config = \%Config::Config; }
 # deprecated modules where available
 
 my %DEBIAN_PACKAGES = (
-    "Class::ISA"	=> "libclass-isa-perl",
-    "Pod::Plainer"	=> "libpod-plainer-perl",
-    "Switch"		=> "libswitch-perl",
     "Shell"		=> "libshell-perl",
+    "Devel::DProf"	=> "libdevel-dprof-perl"
 );
 
 # This isn't a public API. It's internal to code maintained by the perl-porters
