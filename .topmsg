@@ -1,0 +1,9 @@
+Author: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Add support for Abstract namespace sockets.
+Bug-Debian: http://bugs.debian.org/490660
+Bug-Debian: http://bugs.debian.org/329291
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/99f13d4c3419e967e95c5ac6a3af61e9bb0fd3c0
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/89904c08923161afd23c629d5c2c7472a09c16bb
+
+trivially backported for 5.10.1 by Niko Tyni <ntyni@debian.org>
+
