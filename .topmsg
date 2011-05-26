@@ -1,0 +1,10 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Upgrade Safe.pm to 2.25, fixing CVE-2010-1974
+Bug-Debian: http://bugs.debian.org/582978
+Origin: upstream
+
+Upgrade Safe.pm to 2.25, fixing CVE-2010-1974, as recommended in
+
+ http://blogs.perl.org/users/rafael_garcia-suarez/2010/03/new-safepm-fixes-security-hole.html
+
+Although 2.27 is available, its changes are more intrusive.
