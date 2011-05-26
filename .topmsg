@@ -1,0 +1,6 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix \G crash on first match
+Bug-Debian: http://bugs.debian.org/545234
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=69056
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/c584a96ef5d541fd119f21c2c77f6ffe2b2c0370
+
