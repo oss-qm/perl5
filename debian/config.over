@@ -48,6 +48,15 @@ do
     inc_version_list="$ver${inc_version_list:+ }$inc_version_list"
     inc_version_list_init="\"$ver\",$inc_version_list_init"
 done <debian/released-versions
+if [ -n "$inc_version_list" ]; then
+    d_inc_version_list=define
+fi
+
+# we always want the Berkeley DB support
+if [ "$i_db" != "$define" ]; then
+    echo "debian/config.over: Berkeley DB support not enabled, aborting!" 1>&2
+    exit 1
+fi
 
 # set generic email addresses, host/domain names
 cf_by='Debian Project'

@@ -116,7 +116,7 @@ The corresponding license is as follows:
 
 ----------------------------------------------------------------------
 
-The file lib/Cwd.pm has the following copyright and license:
+The file cpan/Cwd/Cwd.pm has the following copyright and license:
 
   Copyright (c) 2004 by the Perl 5 Porters.  All rights reserved.
 
@@ -129,30 +129,68 @@ The file lib/Cwd.pm has the following copyright and license:
   the distribution - please see the source code in F<Cwd.xs> for the
   details.
 
-The file referenced above, ext/Cwd/Cwd.xs, has the following copyright:
+The file referenced above, cpan/Cwd/Cwd.xs, has the following copyright:
 
- * Copyright (c) 1994
- *      The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2003 Constantin S. Svintsoff <kostik@iclub.nsu.ru>
  *
- * This code is derived from software contributed to Berkeley by
- * Jan-Simon Pendry.
-
-and is licensed with the standard 3-clause BSD license. On Debian GNU/Linux
-systems, this license can be found in `/usr/share/common-licenses/BSD'.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The names of the authors may not be used to endorse or promote
+ *    products derived from this software without specific prior written
+ *    permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
 
 ----------------------------------------------------------------------
 
-The C parts of File::Glob in ext/File-Glob/bsd_glob.[ch] hav the
+The C parts of File::Glob in ext/File-Glob/bsd_glob.[ch] have the
 following copyright:
 
  * Copyright (c) 1989, 1993
- *      The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Guido van Rossum.
-
-and are licensed with the standard 3-clause BSD license. On Debian GNU/Linux
-systems, this license can be found in `/usr/share/common-licenses/BSD'.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
 
 ----------------------------------------------------------------------
 
@@ -197,4 +235,28 @@ copyright and license:
   Julian Seward, jseward@bzip.org
   bzip2/libbzip2 version 1.0.5 of 10 December 2007
   
+--------------------------------------------------------------------------
+
+The Text::Tabs module in lib/Text/Tabs.pm has the following
+copyright and license:
+
+  Copyright (C) 1996-2002,2005,2006 David Muir Sharnoff.  
+  Copyright (C) 2005 Aristotle Pagaltzis 
+  This module may be modified, used, copied, and redistributed at your own risk.
+  Publicly redistributed modified versions must use a different name.
+
+--------------------------------------------------------------------------
+
+Portions of the Debian packaging are
+ Copyright 2008-2010 Niko Tyni <ntyni@debian.org>
+ Copyright 2011 Dominic Hargreaves <dom@earth.li>
+The other people listed in debian/changelog are most probably
+copyright holders too, but they have not included explicit copyright
+or licensing information.
+
+The portions by Niko Tyni and Dominic Hargreaves may be redistributed
+and/or modified under the same terms as Perl itself. It is assumed that
+other contributors have placed their contributions under a compatible
+license.
+
 --------------------------------------------------------------------------

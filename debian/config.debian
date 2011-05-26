@@ -2,20 +2,22 @@
 
 eval $(echo '#include "./patchlevel.h"
 SETver=PERL_REVISION.PERL_VERSION;
-SETsubver= PERL_SUBVERSION' | gcc -E - | sed -n '/^SET/{s///;s/ //gp;}')
+SETsubver= PERL_SUBVERSION' | gcc -E -DPERL_PATCHLEVEL_H_IMPLICIT - \
+ | sed -n '/^SET/{s///;s/ //gp;}')
 
 fullver="$ver.$subver"
 nextver="$ver."$(($subver+1))
 ccflags=-DDEBIAN
 arch_cpu=${DEB_BUILD_ARCH_CPU:-$(dpkg-architecture -qDEB_BUILD_ARCH_CPU)}
 gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
+multiarch_dir=${DEB_HOST_MULTIARCH:-$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null)}
 optimize=-O2
 debugging=-g
 
 case "$1" in
     --static) # static perl
     	build_type=static
-	opts="-Uuseshrplib -Dd_dosuid";;
+	opts="-Uuseshrplib";;
 
     --debug) # debugperl
     	build_type=debug
@@ -24,7 +26,7 @@ case "$1" in
 
     --shared) # shared library
     	build_type=shared
-	opts="-Duseshrplib -Dlibperl=libperl.so.$fullver -Dd_dosuid";;
+	opts="-Duseshrplib -Dlibperl=libperl.so.$fullver";;
 
     --version)
 	exec echo $ver;;
@@ -79,6 +81,10 @@ case ",$DEB_BUILD_OPTIONS," in
 	optimize="$optimize${optimize:+ }-O0";;
 esac
 
+if [ -n "$multiarch_dir" ]; then
+	extra_path="\"-Dplibpth=/lib/$multiarch_dir /usr/lib/$multiarch_dir\""
+fi
+
 # post-configure tweaks
 cp debian/config.over .
 
@@ -102,6 +108,7 @@ eval /bin/bash Configure			\
     -Dman3dir=/usr/share/man/man3		\
     -Dsiteman1dir=/usr/local/man/man1		\
     -Dsiteman3dir=/usr/local/man/man3		\
+    -Duse64bitint                               \
     -Dman1ext=1					\
     -Dman3ext=3perl				\
     -Dpager=/usr/bin/sensible-pager		\
@@ -110,6 +117,8 @@ eval /bin/bash Configure			\
     -Ud_ualarm					\
     -Uusesfio					\
     -Uusenm					\
+    -Ui_libutil					\
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
+    $extra_path					\
     $opts -des
