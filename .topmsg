@@ -1,0 +1,10 @@
+From: Niko Tyni <ntyni@debian.org>
+Subject: Fix a NULL pointer dereference when looking for a DESTROY method
+Bug-Debian: http://bugs.debian.org/564074
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=71952
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/1f15e670edb515b744e9021b4a42a7955da83093
+ 
+The empty DESTROY method optimization introduced by upstream commit
+fbb3ee5af3d would crash the interpreter if a DESTROY method was declared
+but not actually defined.
+
