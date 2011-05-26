@@ -1,0 +1,5 @@
+Subject: Math::BigInt::CalcEmu documentation grammar fix
+Bug-Debian: http://bugs.debian.org/443733
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/384f06ae49854089e0cf13ffe34560627ea86f8a
+
+This is fixed in blead by change 33129 but was skipped for maint-5.10.
