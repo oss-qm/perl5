@@ -1,0 +1,4 @@
+Subject: Explicitly link against -lgdbm_compat in ODBM_File/NDBM_File. 
+
+Explicitly link against -lgdbm_compat.
+
