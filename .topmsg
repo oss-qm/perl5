@@ -1,0 +1,7 @@
+Subject: Rearrange perl.pod
+Bug-Debian: http://bugs.debian.org/278323
+
+The TOC in perl.pod should probably not be in the synopsis.
+
+Note the debian/ prefix rather than fixes/ since upstream doesn't agree.
+
