@@ -418,7 +418,7 @@ new-build: $(patches) refresh-patchlevel
 	git add $(patches) patchlevel.h
 	git commit -m 'export all the patches'
 	# check the versioned Breaks and the Provides lists
-	-prove -Idist/Module-CoreList/lib debian/t/*.t
+	-prove debian/t/*.t
 
 $(patches):
 	test -d .git # patch export only works in the TopGit repository
