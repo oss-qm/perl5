@@ -2,7 +2,8 @@ perl (5.14.0-2) UNRELEASED; urgency=low
 
   * Move debian/check-control to debian/t/ to anticipate new package
     maintainer tests in the future.
-  * Generate patchlevel.h at build time.
+  * Switch to git-dpm for managing debian/patches
+    + generate the patchlevel information from debian/patches at build time.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 27 May 2011 15:13:05 +0300
 
