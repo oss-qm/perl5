@@ -1,4 +1,6 @@
 Subject: Postpone LD_LIBRARY_PATH evaluation to the binary targets.
+Author: Brendan O'Dea <bod@debian.org>
+Date: Fri Mar 18 22:22:25 2005 +1100
 
 Modify the setting of LD_LIBRARY_PATH to append pre-existing values at the
 time the rule is evaluated rather than when the Makefile is created.

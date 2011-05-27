@@ -1,5 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Squelch locale warnings in Debian package maintainer scripts
+Author: Niko Tyni <ntyni@debian.org>
+Date: Sun Oct 3 21:36:17 2010 +0300
+
 Bug-Debian: http://bugs.debian.org/508764
 
 The system locales are rather frequently out of sync with the C library

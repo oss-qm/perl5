@@ -1,6 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
-From: Dominic Hargreaves <dom@earth.li>
 Subject: Point users to Debian packages of deprecated core modules
+Author: Dominic Hargreaves <dom@earth.li>
+Date: Mon May 17 13:23:07 2010 +0300
+
 Bug-Debian: http://bugs.debian.org/580034
 
 Class::ISA, Switch, Pod::Plainer, and (partially) Shell were

@@ -1,5 +1,6 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Skip tests specific to the upstream Git repository
+Author: Niko Tyni <ntyni@debian.org>
+Date: Fri Apr 22 11:15:32 2011 +0300
 
 These tests fail if run from a different git repository than
 upstream. This complicates things needlessly for downstream packagers.

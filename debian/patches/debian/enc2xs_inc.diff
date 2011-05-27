@@ -1,4 +1,7 @@
 Subject: Tweak enc2xs to follow symlinks and ignore missing @INC directories.
+Author: Brendan O'Dea <bod@debian.org>
+Date: Tue Mar 8 19:30:38 2005 +1100
+
 Bug-Debian: http://bugs.debian.org/290336
 
 - ignore missing directories,

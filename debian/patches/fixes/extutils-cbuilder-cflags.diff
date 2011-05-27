@@ -1,5 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Append CFLAGS and LDFLAGS to their Config.pm counterparts in EU::CBuilder
+Author: Niko Tyni <ntyni@debian.org>
+Date: Thu Apr 28 09:18:54 2011 +0300
+
 Bug: http://rt.perl.org/rt3//Public/Bug/Display.html?id=89478
 
 Since ExtUtils::CBuilder 0.27_04 (bleadperl commit 06e8058f27e4),
