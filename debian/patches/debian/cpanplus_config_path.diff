@@ -1,14 +1,16 @@
+From 8fd41c297052dd00d2b604aa6b0f26d6b266dc6b Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Mon, 6 Jul 2009 22:17:53 +0300
 Subject: Save local versions of CPANPLUS::Config::System into /etc/perl.
-Author: Niko Tyni <ntyni@debian.org>
-Date: Mon Jul 6 22:17:53 2009 +0300
 
 This is a configuration file and needs to go in /etc by policy.
 Besides, /usr may not even be writable.
-    
+
 This mirrors the Debian setup of CPAN.pm in debian/cpan_config_path.
 
 See #533707.
 
+Patch-Name: debian/cpanplus_config_path.diff
 ---
  cpan/CPANPLUS/lib/CPANPLUS/Configure.pm           |    1 +
  cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm |    3 +++
@@ -41,4 +43,5 @@ index 443d5a4..f7085a8 100644
                                      require File::Basename;
                                      my $dir = File::Basename::dirname(
 -- 
-tg: (33e157d..) debian/cpanplus_config_path (depends on: upstream)
+1.7.5.1
+

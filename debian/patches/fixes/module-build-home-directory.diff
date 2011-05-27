@@ -1,10 +1,12 @@
+From 6fba9989760e09e7709ee06b73d11894e08283c0 Mon Sep 17 00:00:00 2001
+From: Dominic Hargreaves <dom@earth.li>
+Date: Mon, 2 May 2011 10:35:04 +0100
 Subject: Fix failing tilde test when run under a UID without a passwd entry
-Author: Dominic Hargreaves <dom@earth.li>
-Date: Mon May 2 10:35:04 2011 +0100
 
 Bug: https://rt.cpan.org/Public/Bug/Display.html?id=67893
 Bug-Debian: http://bugs.debian.org/624850
 
+Patch-Name: fixes/module-build-home-directory.diff
 ---
  cpan/Module-Build/t/tilde.t |    6 ++++--
  1 files changed, 4 insertions(+), 2 deletions(-)
@@ -34,4 +36,5 @@ index fac821b..04f0210 100644
  
      my $expected = "$home/fooxzy";
 -- 
-tg: (33e157d..) fixes/module-build-home-directory (depends on: upstream)
+1.7.5.1
+

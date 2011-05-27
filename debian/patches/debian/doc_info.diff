@@ -1,10 +1,13 @@
-Subject: Replace generic man(1) instructions with Debian-specific information.
-Author: Brendan O'Dea <bod@debian.org>
-Date: Fri Mar 18 22:22:25 2005 +1100
+From cc4b7ffb5739054c736834931f85bef8266606dc Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 18 Mar 2005 22:22:25 +1100
+Subject: Replace generic man(1) instructions with Debian-specific
+ information.
 
 Indicate that the user needs to install the perl-doc package.
 
 
+Patch-Name: debian/doc_info.diff
 ---
  pod/perl.pod |   12 ++++++++++--
  1 files changed, 10 insertions(+), 2 deletions(-)
@@ -33,4 +36,5 @@ index 95bb507..a22b1e8 100644
  In general, if something strange has gone wrong with your program and you're
  not sure where you should look for help, try the B<-w> switch first.  It will
 -- 
-tg: (33e157d..) debian/doc_info (depends on: upstream)
+1.7.5.1
+

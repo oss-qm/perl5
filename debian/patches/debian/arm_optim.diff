@@ -1,6 +1,7 @@
+From 464c651d49989c154c81bf869b4f3388d096d789 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 16 Dec 2005 01:32:14 +1100
 Subject: Downgrade the optimization of sv.c on arm due to a gcc-4.4 bug
-Author: Brendan O'Dea <bod@debian.org>
-Date: Fri Dec 16 01:32:14 2005 +1100
 
 Bug-Debian: http://bugs.debian.org/580334
 
@@ -9,6 +10,7 @@ Regression from gcc-4.3, not reported yet.
  perl -e '"-2" =~ /(.+)/; @foo=(); push @foo, $_ for $1..undef; print @foo ? "ok\n" : "not ok\n"'
 
 
+Patch-Name: debian/arm_optim.diff
 ---
  cflags.SH |    6 +++++-
  1 files changed, 5 insertions(+), 1 deletions(-)
@@ -31,4 +33,5 @@ index f57cf2f..54574b2 100755
      toke) ;;
      universal) ;;
 -- 
-tg: (33e157d..) debian/arm_optim (depends on: upstream)
+1.7.5.1
+

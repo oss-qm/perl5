@@ -1,6 +1,7 @@
+From 8883f8287a1e30b5c560f984e90c039710e2d59c Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Thu, 20 Sep 2007 19:47:14 +1000
 Subject: Always use PERLRUNINST when building perl modules.
-Author: Brendan O'Dea <bod@debian.org>
-Date: Thu Sep 20 19:47:14 2007 +1000
 
 Bug-Debian: http://bugs.debian.org/357264
 Bug: http://rt.cpan.org/Public/Bug/Display.html?id=17224
@@ -10,15 +11,16 @@ building perl modules:  Some PDL demos expect blib to be implicitly
 searched.
 
 
+Patch-Name: fixes/processPL.diff
 ---
  cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm |    5 +----
  1 files changed, 1 insertions(+), 4 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 6964eea..18d3288 100644
+index c308c49..810d83a 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -3049,14 +3049,11 @@ sub processPL {
+@@ -3025,14 +3025,11 @@ sub processPL {
  	    # pm_to_blib depends on then it can't depend on pm_to_blib
  	    # else we have a dependency loop.
  	    my $pm_dep;
@@ -33,7 +35,7 @@ index 6964eea..18d3288 100644
  	    }
  
              $m .= <<MAKE_FRAG;
-@@ -3065,7 +3062,7 @@ all :: $target
+@@ -3041,7 +3038,7 @@ all :: $target
  	\$(NOECHO) \$(NOOP)
  
  $target :: $plfile $pm_dep
@@ -43,4 +45,5 @@ index 6964eea..18d3288 100644
  
  	}
 -- 
-tg: (33e157d..) fixes/processPL (depends on: upstream)
+1.7.5.1
+

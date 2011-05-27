@@ -1,18 +1,20 @@
+From b2dac44d52c488130ddf83b2479c3654650c288d Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Mon, 8 Sep 2008 20:48:14 +0300
 Subject: Disable some threads tests on m68k for now due to missing TLS.
-Author: Niko Tyni <ntyni@debian.org>
-Date: Mon Sep 8 20:48:14 2008 +0300
 
 Bug-Debian: http://bugs.debian.org/495826
 Bug-Debian: http://bugs.debian.org/517938
 
 
+Patch-Name: debian/m68k_thread_stress.diff
 ---
  dist/threads-shared/t/stress.t    |    4 ++++
  dist/threads-shared/t/waithires.t |    6 ++++++
  2 files changed, 10 insertions(+), 0 deletions(-)
 
 diff --git a/dist/threads-shared/t/stress.t b/dist/threads-shared/t/stress.t
-index adfd1ed..8573f1a 100644
+index 652a3e6..2f1b576 100644
 --- a/dist/threads-shared/t/stress.t
 +++ b/dist/threads-shared/t/stress.t
 @@ -11,6 +11,10 @@ BEGIN {
@@ -44,4 +46,5 @@ index 3c3e852..349c5b4 100644
  
  use ExtUtils::testlib;
 -- 
-tg: (33e157d..) debian/m68k_thread_stress (depends on: upstream)
+1.7.5.1
+

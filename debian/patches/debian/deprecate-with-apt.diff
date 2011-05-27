@@ -1,6 +1,7 @@
+From 7187e5795269403df99c0a87eee4947d87040fd7 Mon Sep 17 00:00:00 2001
+From: Dominic Hargreaves <dom@earth.li>
+Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules
-Author: Dominic Hargreaves <dom@earth.li>
-Date: Mon May 17 13:23:07 2010 +0300
 
 Bug-Debian: http://bugs.debian.org/580034
 
@@ -21,6 +22,7 @@ However, on systems configured to ignore recommendations the deprecation
 warnings will still be useful, so modify them slightly to point to the
 separate packages instead.
 
+Patch-Name: debian/deprecate-with-apt.diff
 ---
  lib/abbrev.pl     |    2 +-
  lib/assert.pl     |    2 +-
@@ -403,4 +405,5 @@ index fc2d16a..1a8aef4 100644
  ;# The validate routine takes a single multiline string consisting of
  ;# lines containing a filename plus a file test to try on it.  (The
 -- 
-tg: (33e157d..) debian/deprecate-with-apt (depends on: upstream)
+1.7.5.1
+

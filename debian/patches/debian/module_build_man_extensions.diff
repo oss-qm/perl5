@@ -1,9 +1,12 @@
-Subject: Adjust Module::Build manual page extensions for the Debian Perl policy
-Author: Niko Tyni <ntyni@debian.org>
-Date: Thu May 8 14:32:33 2008 +0300
+From 99afb5c07066ccac8035c3f0df3e48812b5e03ac Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Thu, 8 May 2008 14:32:33 +0300
+Subject: Adjust Module::Build manual page extensions for the Debian Perl
+ policy
 
 Bug-Debian: http://bugs.debian.org/479460
 
+Patch-Name: debian/module_build_man_extensions.diff
 ---
  cpan/Module-Build/lib/Module/Build/Base.pm |    4 ++--
  1 files changed, 2 insertions(+), 2 deletions(-)
@@ -31,4 +34,5 @@ index fba916a..82df4cc 100644
  	          $self->config( 'man3ext' );
      my $outfile = File::Spec->catfile( $mandir, $manpage);
 -- 
-tg: (33e157d..) debian/module_build_man_extensions (depends on: upstream)
+1.7.5.1
+

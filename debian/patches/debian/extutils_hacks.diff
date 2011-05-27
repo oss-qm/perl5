@@ -1,6 +1,7 @@
+From 2ac8aea9a4ace59f3eac785826bbbfacc1f7bf9a Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Various debian-specific ExtUtils changes
-Author: Brendan O'Dea <bod@debian.org>
-Date: Tue Mar 8 19:30:38 2005 +1100
 
  * Respect umask during installation, and set as appropriate for each of
    perl, vendor and site (policy requires group writable site dirs).
@@ -16,6 +17,7 @@ Date: Tue Mar 8 19:30:38 2005 +1100
  * Change install target dependencies to facilitate parallel makes.
 
 
+Patch-Name: debian/extutils_hacks.diff
 ---
  cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm  |   12 +++---
  cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm |   44 +++++-----------------
@@ -312,4 +314,5 @@ index 9710630..86f13b5 100644
  
  ExtUtils::Embed exports the following functions:
 -- 
-tg: (33e157d..) debian/extutils_hacks (depends on: upstream)
+1.7.5.1
+

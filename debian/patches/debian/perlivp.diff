@@ -1,6 +1,7 @@
+From f981abf8cc1eb10cc9b0fb07b5a813a4a4dd7e4e Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Fri, 9 Jan 2009 18:54:47 +0200
 Subject: Make perlivp skip include directories in /usr/local
-Author: Niko Tyni <ntyni@debian.org>
-Date: Fri Jan 9 18:54:47 2009 +0200
 
 Bug-Debian: http://bugs.debian.org/510895
 
@@ -21,6 +22,7 @@ On Sat, Jan 10, 2009 at 12:37:18AM +1100, Brendan O'Dea wrote:
 
 Signed-off-by: Niko Tyni <ntyni@debian.org>
 
+Patch-Name: debian/perlivp.diff
 ---
  utils/perlivp.PL |    1 +
  1 files changed, 1 insertions(+), 0 deletions(-)
@@ -38,4 +40,5 @@ index 6fcb670..1401cac 100644
          print "## Perl \@INC directory `$_' exists.\n" if $opt{'v'};
          $INC_there++;
 -- 
-tg: (33e157d..) debian/perlivp (depends on: upstream)
+1.7.5.1
+

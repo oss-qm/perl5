@@ -1,6 +1,7 @@
+From 7a59975269cb6021150f06a9be3ea9c5d51bf74d Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts
-Author: Niko Tyni <ntyni@debian.org>
-Date: Sun Oct 3 21:36:17 2010 +0300
 
 Bug-Debian: http://bugs.debian.org/508764
 
@@ -12,6 +13,7 @@ by the DPKG_RUNNING_VERSION environment variable.
 Any real locale problem will show up after the system upgrade too, and
 the warning will be triggered normally again at that point.
 
+Patch-Name: debian/squelch-locale-warnings.diff
 ---
  locale.c           |    4 ++++
  pod/perllocale.pod |    8 ++++++++
@@ -52,4 +54,5 @@ index 8926d8b..6c55889 100644
  
  The following environment variables are not specific to Perl: They are
 -- 
-tg: (33e157d..) debian/squelch-locale-warnings (depends on: upstream)
+1.7.5.1
+

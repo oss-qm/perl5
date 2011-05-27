@@ -1,8 +1,9 @@
+From 5714772952641615fabc618be2cdaaa5adbe003c Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Debian policy doesn't install .packlist files for core or vendor.
-Author: Brendan O'Dea <bod@debian.org>
-Date: Tue Mar 8 19:30:38 2005 +1100
 
-
+Patch-Name: debian/instmodsh_doc.diff
 ---
  cpan/ExtUtils-MakeMaker/bin/instmodsh |    4 +++-
  1 files changed, 3 insertions(+), 1 deletions(-)
@@ -25,4 +26,5 @@ index 5874aa6..6a2f03e 100644
  
  ExtUtils::Installed
 -- 
-tg: (33e157d..) debian/instmodsh_doc (depends on: upstream)
+1.7.5.1
+

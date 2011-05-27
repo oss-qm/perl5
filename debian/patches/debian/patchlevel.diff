@@ -1,6 +1,7 @@
+From b735807743a9bbf747fe573fcf436c3308a3f1c9 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sun, 15 May 2011 19:35:58 +0300
 Subject: List packaged patches in patchlevel.h
-Author: Niko Tyni <ntyni@debian.org>
-Date: Sun May 15 19:35:58 2011 +0300
 
 Origin: vendor
 Bug-Debian: http://bugs.debian.org/567489
@@ -8,6 +9,7 @@ Bug-Debian: http://bugs.debian.org/567489
 The list of packaged patches is in patchlevel-debian.h, which is generated
 from the debian/patches/ directory when building the package.
 
+Patch-Name: debian/patchlevel.diff
 ---
  MANIFEST     |    1 +
  patchlevel.h |    1 +
@@ -38,4 +40,5 @@ index 9c0646b..5cede1c 100644
  };
  
 -- 
-tg: (33e157d..) debian/patchlevel (depends on: upstream)
+1.7.5.1
+

@@ -1,6 +1,7 @@
+From 017da9a48ddd424b1b2029e5f773665d902b3252 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.
-Author: Brendan O'Dea <bod@debian.org>
-Date: Fri Mar 18 22:22:25 2005 +1100
 
 Bug-Debian: http://bugs.debian.org/128355
 
@@ -8,6 +9,7 @@ We want to keep the dependencies on perl-base as small as possible,
 and some of the original list may be present on buildds (see Bug#128355).
 
 
+Patch-Name: debian/prune_libs.diff
 ---
  Configure |    5 ++---
  1 files changed, 2 insertions(+), 3 deletions(-)
@@ -36,4 +38,5 @@ index d9911f9..f59f75c 100755
  	    perllibs="$*"
  	    ;;
 -- 
-tg: (33e157d..) debian/prune_libs (depends on: upstream)
+1.7.5.1
+

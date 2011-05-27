@@ -1,12 +1,14 @@
+From 8eb732e217f0e2da746cc268770fec0485c5dcb4 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Fri, 22 Apr 2011 11:15:32 +0300
 Subject: Skip tests specific to the upstream Git repository
-Author: Niko Tyni <ntyni@debian.org>
-Date: Fri Apr 22 11:15:32 2011 +0300
 
 These tests fail if run from a different git repository than
 upstream. This complicates things needlessly for downstream packagers.
 
 Skip the tests altogether even if the .git directory exists.
 
+Patch-Name: debian/skip-upstream-git-tests.diff
 ---
  t/porting/authors.t     |    3 ++-
  t/porting/cmp_version.t |    3 ++-
@@ -56,4 +58,5 @@ index 48dd3ac..b08126b 100644
      skip("git ls-files didnt work",3)
          if !@repo;
 -- 
-tg: (33e157d..) debian/skip-upstream-git-tests (depends on: upstream)
+1.7.5.1
+
