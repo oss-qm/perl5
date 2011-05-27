@@ -144,7 +144,7 @@ SKIP: {
     ### lying around. This addresses bug #29716: 20_CPANPLUS-Dist-MM.t 
     ### fails (and leaves test files installed) when EUMM options 
     ### include INSTALL_BASE
-    {   local $ENV{'PERL5_MM_OPT'};
+    {   local $ENV{'PERL5_MM_OPT'}; local $ENV{'PERL_MM_OPT'};
     
         ### add the new dir to the configuration too, so eu::installed tests
         ### work as they should
@@ -268,7 +268,7 @@ SKIP: {
     ok( $dist->write_makefile_pl( force => 0 ),
                                 "   Makefile.PL written" );
     like( CPANPLUS::Error->stack_as_string, qr/Already created/,
-                                "   Prior existance noted" );
+                                "   Prior existence noted" );
 
     ### ok, unlink the makefile.pl, now really write one
     1 while unlink $makefile;

@@ -27,9 +27,13 @@ BEGIN {
 }
 
 {
-    # Check zlib_version and ZLIB_VERSION are the same.
-    is Compress::Zlib::zlib_version, ZLIB_VERSION,
-        "ZLIB_VERSION matches Compress::Zlib::zlib_version" ;
+    SKIP: {
+        skip "TEST_SKIP_VERSION_CHECK is set", 1 
+            if $ENV{TEST_SKIP_VERSION_CHECK};
+        # Check zlib_version and ZLIB_VERSION are the same.
+        is Compress::Zlib::zlib_version, ZLIB_VERSION,
+            "ZLIB_VERSION matches Compress::Zlib::zlib_version" ;
+    }
 }
  
 {
@@ -245,7 +249,7 @@ EOM
 }
 
 {
-    title "a text file which is not termined by an EOL";
+    title "a text file which is not terminated by an EOL";
     
     my $lex = new LexFile my $name ;
     
