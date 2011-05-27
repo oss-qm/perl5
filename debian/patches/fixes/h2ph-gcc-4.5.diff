@@ -1,13 +1,15 @@
+From 63c4308dcc2dc807e40eec3df220eca671249f6d Mon Sep 17 00:00:00 2001
+From: Robin Barker <rmbarker@cpan.org>
+Date: Thu, 22 Apr 2010 11:51:20 +0100
 Subject: h2ph fix for gcc 4.5
-Author: Robin Barker <rmbarker@cpan.org>
-Date: Thu Apr 22 11:51:20 2010 +0100
 
 Bug-Debian: http://bugs.debian.org/599933
-Origin: upstream, http://perl5.git.perl.org/perl.git/commit/8d66b3f930dc6d88b524d103e304308ae73a46e7 
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/8d66b3f930dc6d88b524d103e304308ae73a46e7
 
 Fix h2ph and test. Needed to build with GCC 4.5.
 
 
+Patch-Name: fixes/h2ph-gcc-4.5.diff
 ---
  lib/h2ph.t    |   12 ++++++++++--
  utils/h2ph.PL |   28 +++++++++++++++++++++++-----
@@ -105,4 +107,5 @@ index 8f56db4..1255807 100644
  		print PREAMBLE
  		    "unless (defined &$_) { sub $_() { \"",
 -- 
-tg: (a508b62..) fixes/h2ph-gcc-4.5 (depends on: upstream)
+1.7.5.1
+

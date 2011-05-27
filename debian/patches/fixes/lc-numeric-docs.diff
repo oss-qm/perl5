@@ -1,6 +1,7 @@
+From 015ba973edc68ff9b37249b16843c435e9342bc2 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Tue, 19 Oct 2010 21:55:14 +0300
 Subject: LC_NUMERIC documentation fixes
-Author: Niko Tyni <ntyni@debian.org>
-Date: Tue Oct 19 21:55:14 2010 +0300
 
 Bug-Debian: http://bugs.debian.org/379329
 Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=78452
@@ -11,12 +12,13 @@ LC_NUMERIC documentation updates fixing two errors:
     - the early parts of perllocale.pod still say printf() uses LC_NUMERIC
       with just 'use locale' when actually a POSIX::setlocale() call is
       also needed
-    
+
     - format() hasn't used LC_NUMERIC unconditionally since 5.005_03
       (commit 097ee67dff1c60f201bc09435bc6eaeeafcd8123).
 
 Test cases from the upstream commit dropped for the sake of simplicity.
 
+Patch-Name: fixes/lc-numeric-docs.diff
 ---
  pod/perlform.pod   |   20 ++++++++------------
  pod/perllocale.pod |   15 ++++++---------
@@ -61,7 +63,7 @@ index 3cfa1b7..df0f0a1 100644
  Within strings that are to be displayed in a fixed length text field,
  each control character is substituted by a space. (But remember the
 diff --git a/pod/perllocale.pod b/pod/perllocale.pod
-index 0dbabe7..0bec423 100644
+index 60b7bab..e0c1333 100644
 --- a/pod/perllocale.pod
 +++ b/pod/perllocale.pod
 @@ -115,8 +115,7 @@ ucfirst(), and lcfirst()) use C<LC_CTYPE>
@@ -74,7 +76,7 @@ index 0dbabe7..0bec423 100644
  
  =item *
  
-@@ -967,13 +966,11 @@ system's implementation of the locale system than by Perl.
+@@ -975,13 +974,11 @@ system's implementation of the locale system than by Perl.
  
  =head2 write() and LC_NUMERIC
  
@@ -94,4 +96,5 @@ index 0dbabe7..0bec423 100644
  =head2 Freely available locale definitions
  
 -- 
-tg: (a508b62..) fixes/lc-numeric-docs (depends on: upstream)
+1.7.5.1
+

@@ -1,6 +1,7 @@
+From a265c82e0964856e06fdf5bf7d4e34d593ab22e8 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Tweak enc2xs to follow symlinks and ignore missing @INC directories.
-Author: Brendan O'Dea <bod@debian.org>
-Date: Tue Mar 8 19:30:38 2005 +1100
 
 Bug-Debian: http://bugs.debian.org/290336
 
@@ -9,6 +10,7 @@ Bug-Debian: http://bugs.debian.org/290336
 - filter "." out when running "enc2xs -C", it's unnecessary and causes
   issues with follow => 1 (see #603686 and [rt.cpan.org #64585])
 
+Patch-Name: debian/enc2xs_inc.diff
 ---
  cpan/Encode/bin/enc2xs |    8 ++++----
  1 files changed, 4 insertions(+), 4 deletions(-)
@@ -50,4 +52,5 @@ index 773c0a0..bc1ae1b 100644
      for my $enc ( sort keys %LocalMod ) {
          $_ModLines .=
 -- 
-tg: (a508b62..) debian/enc2xs_inc (depends on: upstream)
+1.7.5.1
+

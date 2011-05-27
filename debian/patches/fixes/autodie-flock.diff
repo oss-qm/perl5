@@ -1,15 +1,19 @@
-Subject: Allow for flock returning EAGAIN instead of EWOULDBLOCK on linux/parisc
-Author: Niko Tyni <ntyni@debian.org>
-Date: Sun Aug 30 13:58:35 2009 +0300
+From 71e2a1fd0e355dcdada75448248c11d0aec3b3dd Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sun, 30 Aug 2009 13:58:35 +0300
+Subject: Allow for flock returning EAGAIN instead of EWOULDBLOCK on
+ linux/parisc
 
 Bug-Debian: http://bugs.debian.org/543731
 Origin: upstream, http://github.com/pfenwick/autodie/commit/037738e11a6097734b0e1dabdd77b92e5fe35219
 
 
+Patch-Name: fixes/autodie-flock.diff
 ---
  cpan/autodie/lib/Fatal.pm |   14 +++++++++++++-
  cpan/autodie/t/flock.t    |   12 ++++++++++--
  2 files changed, 23 insertions(+), 3 deletions(-)
+ mode change 100644 => 100755 cpan/autodie/lib/Fatal.pm
 
 diff --git a/cpan/autodie/lib/Fatal.pm b/cpan/autodie/lib/Fatal.pm
 old mode 100644
@@ -97,4 +101,5 @@ index a7550ba..6421a56 100755
  is($@, "", "Non-blocking flock should not fail on EWOULDBLOCK");
  
 -- 
-tg: (a508b62..) fixes/autodie-flock (depends on: upstream)
+1.7.5.1
+

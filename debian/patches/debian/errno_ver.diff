@@ -1,6 +1,8 @@
-Subject: Remove Errno version check due to upgrade problems with long-running processes.
-Author: Brendan O'Dea <bod@debian.org>
-Date: Fri Dec 16 01:32:14 2005 +1100
+From f9500826e97f2a3183197232d29148a41af6ec49 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 16 Dec 2005 01:32:14 +1100
+Subject: Remove Errno version check due to upgrade problems with long-running
+ processes.
 
 Bug-Debian: http://bugs.debian.org/343351
 
@@ -9,6 +11,7 @@ processes embedding perl when upgrading to a newer version,
 compatible, but built on a different machine.
 
 
+Patch-Name: debian/errno_ver.diff
 ---
  ext/Errno/Errno_pm.PL |    5 -----
  1 files changed, 0 insertions(+), 5 deletions(-)
@@ -32,4 +35,5 @@ index 124b8fc..b554cd4 100644
  \$VERSION = eval \$VERSION;
  \@ISA = qw(Exporter);
 -- 
-tg: (a508b62..) debian/errno_ver (depends on: upstream)
+1.7.5.1
+

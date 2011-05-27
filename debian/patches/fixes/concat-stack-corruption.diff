@@ -1,6 +1,7 @@
+From 8c026d1bffb17cb6a216ea89023f3aefad36808f Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Thu, 28 Oct 2010 23:52:17 +0300
 Subject: Fix stack pointer corruption in pp_concat() with 'use encoding'
-Author: Niko Tyni <ntyni@debian.org>
-Date: Thu Oct 28 23:52:17 2010 +0300
 
 Bug-Debian: http://bugs.debian.org/596105
 Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=78674
@@ -10,6 +11,7 @@ If the stack is reallocated during pp_concat() and 'use encoding' in
 effect, the stack pointer gets corrupted, causing memory allocation bugs
 and the like.
 
+Patch-Name: fixes/concat-stack-corruption.diff
 ---
  pp_hot.c |    3 +++
  1 files changed, 3 insertions(+), 0 deletions(-)
@@ -36,4 +38,5 @@ index ee699ef..c5ed14e 100644
      sv_catpvn_nomg(TARG, rpv, rlen);
  
 -- 
-tg: (a508b62..) fixes/concat-stack-corruption (depends on: upstream)
+1.7.5.1
+

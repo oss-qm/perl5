@@ -1,6 +1,7 @@
+From 92fa930811c03a4a71f26caa329c027bbc04da93 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Postpone LD_LIBRARY_PATH evaluation to the binary targets.
-Author: Brendan O'Dea <bod@debian.org>
-Date: Fri Mar 18 22:22:25 2005 +1100
 
 Modify the setting of LD_LIBRARY_PATH to append pre-existing values at the
 time the rule is evaluated rather than when the Makefile is created.
@@ -10,6 +11,7 @@ since fakeroot (which now sets LD_LIBRARY_PATH) is not used for the "build"
 rule where the Makefile is created, but is for the clean/binary* targets.
 
 
+Patch-Name: debian/fakeroot.diff
 ---
  Makefile.SH |    9 ++-------
  1 files changed, 2 insertions(+), 7 deletions(-)
@@ -42,4 +44,5 @@ index fc13b2b..d420229 100755
  	    case "$osname" in
  	    os2)
 -- 
-tg: (a508b62..) debian/fakeroot (depends on: upstream)
+1.7.5.1
+

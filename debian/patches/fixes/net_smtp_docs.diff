@@ -1,11 +1,13 @@
+From 0a8d7504d8d227bdab2ddbd9f7dede8576d67add Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Thu, 20 Sep 2007 19:47:14 +1000
 Subject: Document the Net::SMTP 'Port' option
-Author: Brendan O'Dea <bod@debian.org>
-Date: Thu Sep 20 19:47:14 2007 +1000
 
 Bug-Debian: http://bugs.debian.org/100195
 Bug: http://rt.cpan.org/Public/Bug/Display.html?id=36038
 
 
+Patch-Name: fixes/net_smtp_docs.diff
 ---
  cpan/libnet/Net/SMTP.pm |    1 +
  1 files changed, 1 insertions(+), 0 deletions(-)
@@ -23,4 +25,5 @@ index a28496d..07b2498 100644
  Example:
  
 -- 
-tg: (a508b62..) fixes/net_smtp_docs (depends on: upstream)
+1.7.5.1
+

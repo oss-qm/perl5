@@ -1,9 +1,12 @@
-Subject: Correct the version of Module::CoreList that was released with v5.12.3
-Author: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>	
-Date: Thu Apr 28 22:01:32 2011 +0100
+From d8c3255d9010948f822e5c7106de9930fa726fa4 Mon Sep 17 00:00:00 2001
+From: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
+Date: Thu, 28 Apr 2011 22:01:32 +0100
+Subject: Correct the version of Module::CoreList that was released with
+ v5.12.3
 
 Origin: http://perl5.git.perl.org/perl.git/commit/a0a0e5450c8a47684a1d0a4c7cb597974ad56ab1
 
+Patch-Name: fixes/correct-module-corelist-version.diff
 ---
  dist/Module-CoreList/lib/Module/CoreList.pm |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
@@ -22,4 +25,5 @@ index d507e88..db14c54 100644
  	'Module::Load::Conditional'=> '0.38',
  	'Module::Loaded'        => '0.06',
 -- 
-tg: (a508b62..) fixes/correct-module-corelist-version (depends on: upstream)
+1.7.5.1
+

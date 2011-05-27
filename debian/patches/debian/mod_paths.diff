@@ -1,6 +1,7 @@
+From c3d7b488b764c1e43ed444759a73d284c1945466 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
-Author: Brendan O'Dea <bod@debian.org>
-Date: Fri Mar 18 22:22:25 2005 +1100
 
 Our order is:
 
@@ -16,6 +17,7 @@ The rationale being that an admin (via site), or module packager
 version than is included in core.
 
 
+Patch-Name: debian/mod_paths.diff
 ---
  perl.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  1 files changed, 58 insertions(+), 0 deletions(-)
@@ -97,4 +99,5 @@ index 05cea40..023d6a0 100644
      S_incpush_use_sep(aTHX_ STR_WITH_LEN(PERL_OTHERLIBDIRS),
  		      INCPUSH_ADD_OLD_VERS|INCPUSH_ADD_ARCHONLY_SUB_DIRS
 -- 
-tg: (a508b62..) debian/mod_paths (depends on: upstream)
+1.7.5.1
+

@@ -1,6 +1,7 @@
+From 9377d7e9521650c222dce5c55625b4e923af7600 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Tue, 29 Sep 2009 22:26:22 +0300
 Subject: Work around an ICE on ia64
-Author: Niko Tyni <ntyni@debian.org>
-Date: Tue Sep 29 22:26:22 2009 +0300
 
 Bug-Debian: http://bugs.debian.org/548943
 
@@ -9,6 +10,7 @@ Temporarily work around an internal compiler error in Devel::PPPort
 on ia64+gcc-4.3.
 
 
+Patch-Name: debian/devel-ppport-ia64-optim.diff
 ---
  cpan/Devel-PPPort/Makefile.PL |    7 +++++++
  1 files changed, 7 insertions(+), 0 deletions(-)
@@ -32,4 +34,5 @@ index 67eebc1..f1ef7a2 100644
      $PL_FILES{'apicheck_c.PL'} = 'apicheck.c';
      push @C_FILES, qw{ apicheck.c };
 -- 
-tg: (a508b62..) debian/devel-ppport-ia64-optim (depends on: upstream)
+1.7.5.1
+

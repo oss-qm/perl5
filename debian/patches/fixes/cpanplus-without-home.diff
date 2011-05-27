@@ -1,6 +1,7 @@
+From 9d08c5f8aeada5715a30bac1227f1c6fc071622a Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Fri, 9 Apr 2010 11:18:35 +0300
 Subject: Fix CPANPLUS test failures when HOME doesn't exist
-Author: Niko Tyni <ntyni@debian.org>
-Date: Fri Apr 9 11:18:35 2010 +0300
 
 Bug: http://rt.cpan.org/Public/Bug/Display.html?id=52988
 Bug-Debian: http://bugs.debian.org/577011
@@ -11,6 +12,7 @@ triggering a bug in CPANPLUS that causes test failures.
 
 Fix from CPANPLUS-0.9001.
 
+Patch-Name: fixes/cpanplus-without-home.diff
 ---
  cpan/CPANPLUS/lib/CPANPLUS/Internals/Utils.pm |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
@@ -29,4 +31,5 @@ index 27d2abc..8475c36 100644
  use Params::Check               qw[check];
  use Module::Load::Conditional   qw[can_load];
 -- 
-tg: (a508b62..) fixes/cpanplus-without-home (depends on: upstream)
+1.7.5.1
+
