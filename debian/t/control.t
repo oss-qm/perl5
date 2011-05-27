@@ -43,6 +43,9 @@ my %ok = (
 	"libmath-bigint-perl" => {
 		"1.89" => "1.89",
 	},
+	"libautodie-perl" => {
+		"2.1001" => "2.10.01",
+	},
 );
 
 # list special cases where a Breaks entry doesn't need to imply
