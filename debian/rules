@@ -22,6 +22,7 @@ share       = $(tmp)/usr/share/perl/$(version)
 build	    = debian/build
 debug       = $(build)/perl-debug/usr/lib/debug
 patches     = debian/patches/series
+patchlevel  = patchlevel-debian.h
 
 checkdir    = test -d debian
 checkroot   = test `id -u` -eq 0
@@ -35,8 +36,6 @@ package_version = $(shell dpkg-parsechangelog | sed -n 's/^Version: *//p')
 
 # this gets prepended to the patch names in patchlevel.h
 patchprefix = DEBPKG:
-# the name of the file in debian/patches that modifies patchlevel.h
-patchlevelpatch = patchlevel
 
 # control file substitutions
 subst_upstream = -VUpstream-Version=$(package_upstream_version)
@@ -51,13 +50,19 @@ export BZIP2_LIB=/usr/lib
 build: build-stamp
 install: install-stamp
 
-build-stamp: perl.static perl.debug libperl.so.$(fullversion)
+build-stamp: $(patchlevel) perl.static perl.debug libperl.so.$(fullversion)
 	touch $@
+
+$(patchlevel): $(patches)
+	$(checkdir)
+	test -f $<	# maintainer sanity check
+	debian/gen-patchlevel -p $(patchprefix) -v $(package_version) $< > $@
 
 perl.static:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
 	[ ! -f Makefile ] || $(MAKE) distclean
+	[ -f $(patchlevel) ] || touch $(patchlevel)
 	$(SHELL) debian/config.debian --static
 	$(MAKE) perl $(test_target)
 	mv libperl.a libperl-static
@@ -67,6 +72,7 @@ perl.debug:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
 	[ ! -f Makefile ] || $(MAKE) distclean
+	[ -f $(patchlevel) ] || touch $(patchlevel)
 	$(SHELL) debian/config.debian --debug
 	$(MAKE) perl
 	mv perl perl.debug
@@ -74,6 +80,7 @@ perl.debug:
 libperl.so.$(fullversion):
 	$(checkdir)
 	[ ! -f Makefile ] || $(MAKE) distclean
+	[ -f $(patchlevel) ] || touch $(patchlevel)
 	$(SHELL) debian/config.debian --shared
 	$(MAKE) SHRPLDFLAGS='$$(LDDLFLAGS) -Wl,-soname,libperl.so.$(version)' $@
 	ln -s libperl.so.$(fullversion) libperl.so.$(version)
@@ -86,7 +93,7 @@ clean:
 	test -f $(patches)	# maintainer sanity check
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -rf config.over perl.static perl.debug libperl-static libperl.so* \
-	    patchlevel.bak build-stamp install-stamp t/auto debian/shlibs.local \
+	    $(patchlevel) build-stamp install-stamp t/auto debian/shlibs.local \
 	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
 	    debian/substvars debian/files debian/list.tmp $(tmp) $(build)
 	# <https://rt.cpan.org/Public/Bug/Display.html?id=68214>
@@ -410,13 +417,12 @@ endif
 binary: binary-indep binary-arch
 
 # maintainer targets
-new-build: $(patches) refresh-patchlevel
+new-build: $(patches)
 	test -d .git # only for the git repository
 	# check the versioned Breaks and the Provides lists
 	git checkout refs/heads/master # detach from 'master'
 	git rm .top*
 	git add debian/patches
-	git add $(patches) patchlevel.h
 	git commit -m 'export all the patches for $(package_version)'
 	# run package maintainer tests
 	-prove debian/t/*.t
@@ -428,16 +434,6 @@ $(patches):
 	rm debian/patches/master.diff
 	sed -i '/master.diff/ d' $(patches)
 
-refresh-patchlevel: $(patches)
-	sed -i '/$(patchprefix)/d' patchlevel.h
-	grep -q $(patchlevelpatch) $(patches) || echo '$(patchlevelpatch) -p1' >> $(patches)
-	sed s/VERSION/$(package_version)/ debian/$(patchlevelpatch).head > debian/patches/$(patchlevelpatch)
-	perl debian/list-patches $(patchprefix) < $(patches) | \
-	  xargs -d\\n -r perl -x patchlevel.h
-	diff --unified=0 patchlevel.bak patchlevel.h | \
-	  filterdiff --remove-timestamps --addprefix perl/ >> debian/patches/$(patchlevelpatch)
-	$(RM) patchlevel.bak
-
 .NOTPARALLEL:
 
-.PHONY: build clean binary-indep binary-arch binary install patch unpatch new-build refresh-patchlevel
+.PHONY: build clean binary-indep binary-arch binary install patch unpatch new-build
