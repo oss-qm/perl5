@@ -1,4 +1,7 @@
 Subject: Remove Errno version check due to upgrade problems with long-running processes.
+Author: Brendan O'Dea <bod@debian.org>
+Date: Fri Dec 16 01:32:14 2005 +1100
+
 Bug-Debian: http://bugs.debian.org/343351
 
 Remove version check which can cause problems for long running

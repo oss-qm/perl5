@@ -1,4 +1,7 @@
 Subject: List packaged patches in patchlevel.h
+Author: Niko Tyni <ntyni@debian.org>
+Date: Sun May 15 19:35:58 2011 +0300
+
 Origin: vendor
 Bug-Debian: http://bugs.debian.org/567489
 

@@ -1,5 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
-Description: Downgrade the optimization of sv.c on arm due to a gcc-4.4 bug
+Subject: Downgrade the optimization of sv.c on arm due to a gcc-4.4 bug
+Author: Brendan O'Dea <bod@debian.org>
+Date: Fri Dec 16 01:32:14 2005 +1100
+
 Bug-Debian: http://bugs.debian.org/580334
 
 Regression from gcc-4.3, not reported yet.

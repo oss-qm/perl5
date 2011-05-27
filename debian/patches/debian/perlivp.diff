@@ -1,6 +1,9 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Make perlivp skip include directories in /usr/local
-Closes: 510895
+Author: Niko Tyni <ntyni@debian.org>
+Date: Fri Jan 9 18:54:47 2009 +0200
+
+Bug-Debian: http://bugs.debian.org/510895
+
 
 On Sat, Jan 10, 2009 at 12:37:18AM +1100, Brendan O'Dea wrote:
 > On Wed, Jan 7, 2009 at 12:21 AM, Niko Tyni <ntyni@debian.org> wrote:

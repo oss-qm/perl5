@@ -1,5 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Fix CPANPLUS test failures when HOME doesn't exist
+Author: Niko Tyni <ntyni@debian.org>
+Date: Fri Apr 9 11:18:35 2010 +0300
+
 Bug: http://rt.cpan.org/Public/Bug/Display.html?id=52988
 Bug-Debian: http://bugs.debian.org/577011
 Origin: upstream

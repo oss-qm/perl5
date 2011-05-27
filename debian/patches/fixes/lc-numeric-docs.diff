@@ -1,5 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: LC_NUMERIC documentation fixes
+Author: Niko Tyni <ntyni@debian.org>
+Date: Tue Oct 19 21:55:14 2010 +0300
+
 Bug-Debian: http://bugs.debian.org/379329
 Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=78452
 Origin: upstream, http://perl5.git.perl.org/perl.git/commit/903eb63f7d8d47a38971a8e9af7201b9927882cf

@@ -1,6 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Save local versions of CPANPLUS::Config::System into /etc/perl.
-    
+Author: Niko Tyni <ntyni@debian.org>
+Date: Mon Jul 6 22:17:53 2009 +0300
+
 This is a configuration file and needs to go in /etc by policy.
 Besides, /usr may not even be writable.
     

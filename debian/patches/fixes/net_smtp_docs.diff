@@ -1,4 +1,7 @@
 Subject: Document the Net::SMTP 'Port' option
+Author: Brendan O'Dea <bod@debian.org>
+Date: Thu Sep 20 19:47:14 2007 +1000
+
 Bug-Debian: http://bugs.debian.org/100195
 Bug: http://rt.cpan.org/Public/Bug/Display.html?id=36038
 

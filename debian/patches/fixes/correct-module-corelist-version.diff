@@ -1,5 +1,7 @@
+Subject: Correct the version of Module::CoreList that was released with v5.12.3
 Author: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>	
-Description: Correct the version of Module::CoreList that was released with v5.12.3
+Date: Thu Apr 28 22:01:32 2011 +0100
+
 Origin: http://perl5.git.perl.org/perl.git/commit/a0a0e5450c8a47684a1d0a4c7cb597974ad56ab1
 
 ---

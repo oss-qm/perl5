@@ -1,5 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Fix stack pointer corruption in pp_concat() with 'use encoding'
+Author: Niko Tyni <ntyni@debian.org>
+Date: Thu Oct 28 23:52:17 2010 +0300
+
 Bug-Debian: http://bugs.debian.org/596105
 Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=78674
 Origin: upstream, http://perl5.git.perl.org/perl.git/commit/e3393f51d48d8b790e26324eb0336fac9689fa46

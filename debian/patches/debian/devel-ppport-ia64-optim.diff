@@ -1,6 +1,9 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Work around an ICE on ia64
-Closes: 548943
+Author: Niko Tyni <ntyni@debian.org>
+Date: Tue Sep 29 22:26:22 2009 +0300
+
+Bug-Debian: http://bugs.debian.org/548943
+
 
 Temporarily work around an internal compiler error in Devel::PPPort
 on ia64+gcc-4.3.

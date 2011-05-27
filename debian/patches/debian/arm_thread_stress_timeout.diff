@@ -1,4 +1,7 @@
 Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts
+Author: Niko Tyni <ntyni@debian.org>
+Date: Sat Nov 1 15:10:16 2008 +0200
+
 Bug-Debian: http://bugs.debian.org/501970
 
 

@@ -1,4 +1,6 @@
 Subject: Set location of CPAN::Config to /etc/perl as /usr may not be writable.
+Author: Brendan O'Dea <bod@debian.org>
+Date: Tue Mar 8 19:30:38 2005 +1100
 
 
 ---

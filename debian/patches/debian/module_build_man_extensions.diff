@@ -1,4 +1,7 @@
 Subject: Adjust Module::Build manual page extensions for the Debian Perl policy
+Author: Niko Tyni <ntyni@debian.org>
+Date: Thu May 8 14:32:33 2008 +0300
+
 Bug-Debian: http://bugs.debian.org/479460
 
 ---

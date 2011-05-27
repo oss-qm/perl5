@@ -1,4 +1,6 @@
 Subject: Provide a sensible INSTALLDIRS default for modules installed from CPAN.
+Author: Brendan O'Dea <bod@debian.org>
+Date: Tue Mar 8 19:30:38 2005 +1100
 
 Some modules which are included in core set INSTALLDIRS => 'perl'
 explicitly in Makefile.PL or Build.PL.  This makes sense for the normal @INC

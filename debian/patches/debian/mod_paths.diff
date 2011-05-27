@@ -1,4 +1,6 @@
 Subject: Tweak @INC ordering for Debian
+Author: Brendan O'Dea <bod@debian.org>
+Date: Fri Mar 18 22:22:25 2005 +1100
 
 Our order is:
 

@@ -1,5 +1,7 @@
-From: Niko Tyni <ntyni@debian.org>
 Subject: Fix sprintf not to ignore LC_NUMERIC with constants
+Author: Niko Tyni <ntyni@debian.org>
+Date: Wed Oct 27 10:56:24 2010 +0300
+
 Bug-Debian: http://bugs.debian.org/601549
 Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=78632
 Origin: upstream, http://perl5.git.perl.org/perl.git/commit/b3fd61496ebc585b1115807e3195f17714662a09
