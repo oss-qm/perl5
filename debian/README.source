@@ -108,6 +108,22 @@ which is not supposed to be pushed to the shared repository.
 
 See the git-dpm(1) manual page for more information.
 
+Package maintainer tests
+------------------------
+
+There are package maintainer tests in the debian/t/ directory that
+are supposed to pass at all times. It is recommended that you add
+a git pre-commit hook (.git/hooks/pre-commit) that runs the tests
+before releasing, for instance:
+
+#!/bin/sh
+
+if git diff --cached debian/changelog | grep -q '^-.*UNRELEASED' && \
+   git diff --cached debian/changelog | grep -q '^\+.*unstable'
+then
+    prove debian/t/*.t
+fi
+
 Credits
 -------
 
