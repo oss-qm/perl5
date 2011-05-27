@@ -418,15 +418,7 @@ new-build: $(patches) refresh-patchlevel
 	git add debian/patches
 	git add $(patches) patchlevel.h
 	git commit -m 'export all the patches for $(package_version)'
-	# check the syntax of debian/copyright
-	if which config-edit >/dev/null 2>&1; then \
-	   config-edit -application dpkg-copyright -ui none || true; fi
-	# is the copyright information up to date with the upstream version?
-	@if [ "$(package_upstream_version)" != \
-         "`sed 's/^ Last checked against: Perl //p; d' < debian/copyright`" ]; \
-       then echo "NOT OK: debian/copyright not checked for $(package_upstream_version)"; \
-       else echo "OK: debian/copyright last checked for $(package_upstream_version)"; fi
-	# check the versioned Breaks and the Provides lists
+	# run package maintainer tests
 	-prove debian/t/*.t
 
 $(patches):
