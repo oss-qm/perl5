@@ -1,0 +1,38 @@
+Subject: List packaged patches in patchlevel.h
+Origin: vendor
+Bug-Debian: http://bugs.debian.org/567489
+
+The list of packaged patches is in patchlevel-debian.h, which is generated
+from the debian/patches/ directory when building the package.
+
+---
+ MANIFEST     |    1 +
+ patchlevel.h |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/MANIFEST b/MANIFEST
+index 5855917..83fa6e9 100644
+--- a/MANIFEST
++++ b/MANIFEST
+@@ -4257,6 +4257,7 @@ pad.c				Scratchpad functions
+ pad.h				Scratchpad headers
+ parser.h			parser object header
+ patchlevel.h			The current patch level of perl
++patchlevel-debian.h			List of patches applied via the Debian packaging
+ perlapi.c			Perl API functions
+ perlapi.h			Perl API function declarations
+ perl.c				main()
+diff --git a/patchlevel.h b/patchlevel.h
+index 9c0646b..5cede1c 100644
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -137,6 +137,7 @@ static const char * const local_patches[] = {
+ 	,"uncommitted-changes"
+ #endif
+ 	PERL_GIT_UNPUSHED_COMMITS    	/* do not remove this line */
++#include "patchlevel-debian.h"
+ 	,NULL
+ };
+ 
+-- 
+tg: (33e157d..) debian/patchlevel (depends on: upstream)
