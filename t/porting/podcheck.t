@@ -41,6 +41,7 @@ while (<$m>) {
     my ($file, $separator) = /^(\S+)(\s+)/;
 	next if $file =~ /^cpan\//;
 	next unless ($file =~ /\.(?:pm|pod|pl)$/);
+	next if $file eq 'autodoc.pl';
     push @files, $file;
 };
 @files = sort @files; # so we get consistent results
@@ -64,13 +65,3 @@ plan (tests => scalar @files);
 
 pod_ok $_
     for @files;
-
-__DATA__
-lib/
-ext/
-pod/
-AUTHORS
-Changes
-INSTALL
-README*
-*.pod
