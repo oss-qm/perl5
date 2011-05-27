@@ -59,10 +59,10 @@ The Debian build process consists of the following components:
 
   debian/patches
     directory containg the patches applied (see above).  These are maintained
-    with TopGit, but if a standalone way to add a new patch is needed 
+    with git-dpm, but if a standalone way to add a new patch is needed 
     (for instance when NMUing), the recommended way is to use quilt(1).
-    Running './debian/rules refresh-patchlevel' afterwards will include
-    the patch in `perl -V' output.
+    Using DEP-3 compatible headers for the patch will improve its description
+    in `perl -V' output.
 
       quilt new debian/myfix
       quilt add <file>
@@ -70,7 +70,6 @@ The Debian build process consists of the following components:
       echo 'patch description (Closes: #xxxxxx)' | quilt header -a
       # (or even better provide a full DEP-3 compatible header)
       quilt refresh
-      ./debian/rules refresh-patchlevel
 
   debian/released-versions
     contains a list of released Debian versions, used by the
@@ -87,56 +86,27 @@ The Debian build process consists of the following components:
     used to split packages; see the comments/code in the install-stamp
     target of debian/rules.
 
-Managing debian/patches with TopGit
------------------------------------
+Managing debian/patches with git-dpm 
+------------------------------------
 
 This section is targeted at the Debian package maintainers, working with
 the Git repository pointed by the Vcs-Git field in debian/control.  NMUers
 and the like can use the old way of standalone patch handling described
 above, or just hack the source and ignore debian/patches altogether.
 
-First, you need to have the 'topgit' package installed. The current version
-as of this writing is 0.8-1.
+First, you need to have the 'git-dpm' package installed. The current version
+as of this writing is 0.7.1-1.
 
-After cloning the perl repository in the normal way, you need to prepare
-your repository for use with topgit by running:
+Any upstream modifications need to be done on a special 'patched' branch
+that is created with 'git-dpm checkout-patched'. Every commit on this branch
+corresponds to one patch in debian/patches. The commits can be handled
+with normal git tools like 'git rebase -i'.
 
- tg remote --populate origin
- 
-The TopGit procedure for applying a new patch is:
+When everything is ready, 'git-dpm update-patches' will merge the work into
+the master branch with the debian/ directory and remove the 'patched' branch,
+which is not supposed to be pushed to the shared repository.
 
- tg create fixes/foo upstream # s|fixes|debian| for Debian-specific changes
- <edit .topmsg, include a meaningful Subject for 'tg summary'>
- <hack the source and commit away>
- git checkout master
- tg depend add fixes/foo
- tg update
- git-dch # or just plain dch, YMMV
- tg push # assuming it works
-
-The procedure for tagging a new package version is (broadly):
-
- dch -r
- ./debian/rules new-build
- git tag -m 'Debian release x' debian/x
- git push --tags
-
-Note that this will create a 'detached' tag: we don't need a long-lived
-build branch as debian/patches is regenerated every time.
- 
-Retiring a source fix (for instance because upstream used a different
-implementation):
-
- git checkout fixes/obsolete
- tg patch | patch -Rp1 # generate a 'revert commit'
- git commit -m 'Revert to upstream fix' # please elaborate
- git checkout master
- tg update
- sed -i '/obsolete/ d' .topdeps # until 'tg depend remove' gets implemented
- git commit -m 'retire fixes/obsolete' .topdeps
- tg push # master
- tg push fixes/obsolete # won't be pushed along with master anymore
- tg delete fixes/obsolete # optional
+See the git-dpm(1) manual page for more information.
 
 Credits
 -------
