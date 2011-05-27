@@ -11,10 +11,9 @@ BEGIN {
         print "1..0 # Skip -- need perlio to walk the optree\n";
         exit 0;
     }
-    # require q(test.pl); # now done by OptreeCheck
 }
 use OptreeCheck;
-plan tests => 9;
+plan tests => 18;
 
 
 =head1 f_map.t
@@ -185,7 +184,7 @@ checkOptree(note   => q{},
 # p      <2> sassign vKS/2
 # q      <0> unstack s
 #            goto r
-# t  <2> leaveloop K/2
+# t  <2> leaveloop KP/2
 # u  <2> leaveloop K/2
 # v  <1> leavesub[1 ref] K/REFC,1
 EOT_EOT
@@ -218,7 +217,7 @@ EOT_EOT
 # p      <2> sassign vKS/2
 # q      <0> unstack s
 #            goto r
-# t  <2> leaveloop K/2
+# t  <2> leaveloop KP/2
 # u  <2> leaveloop K/2
 # v  <1> leavesub[1 ref] K/REFC,1
 EONT_EONT
