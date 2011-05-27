@@ -1,6 +1,7 @@
 perl (5.12.3-8) UNRELEASED; urgency=low
 
-  * 
+  * Move debian/check-control to debian/t/ to anticipate new package
+    maintainer tests in the future.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 27 May 2011 07:31:40 +0300
 
