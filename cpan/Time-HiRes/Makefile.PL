@@ -118,15 +118,7 @@ __EOD__
 	my $ccflags = $Config{'ccflags'} . ' ' . "-I$COREincdir";
 
 	if ($^O eq 'VMS') {
-	    if ($ENV{PERL_CORE}) {
-		# Fragile if the extensions change hierarchy within
-		# the Perl core but this should do for now.
-                $cccmd = "$Config{'cc'} /include=([---]) $tmp.c";
-	    } else {
-		my $perl_core = $Config{'installarchlib'};
-		$perl_core =~ s/\]$/.CORE]/;
-                $cccmd = "$Config{'cc'} /include=(perl_root:[000000],$perl_core) $tmp.c";
-	    }
+            $cccmd = "$Config{'cc'} /include=($COREincdir) $tmp.c";
         }
 
         if ($args{silent} || !$VERBOSE) {
@@ -832,7 +824,7 @@ sub doConstants {
 }
 
 sub main {
-    if (-f "Makefile" and -f "xdefine" && !(@ARGV  && $ARGV[0] eq '--configure')) {
+    if (-f "xdefine" && !(@ARGV  && $ARGV[0] eq '--configure')) {
 	print qq[$0: The "xdefine" exists, skipping the configure step.\n];
 	print qq[("$^X $0 --configure" to force the configure step)\n];
     } else {
