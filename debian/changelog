@@ -1,7 +1,6 @@
 perl (5.14.0-2) UNRELEASED; urgency=low
 
-  * Move debian/check-control to debian/t/ to anticipate new package
-    maintainer tests in the future.
+  * Move all package maintainer tests to debian/t/
   * Switch to git-dpm for managing debian/patches
     + generate the patchlevel information from debian/patches at build time.
 
