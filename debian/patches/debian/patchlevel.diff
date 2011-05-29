@@ -1,4 +1,4 @@
-From b735807743a9bbf747fe573fcf436c3308a3f1c9 Mon Sep 17 00:00:00 2001
+From 252150d427fc8de2f578ea9a10f9b3203d585373 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 15 May 2011 19:35:58 +0300
 Subject: List packaged patches in patchlevel.h
@@ -16,17 +16,17 @@ Patch-Name: debian/patchlevel.diff
  2 files changed, 2 insertions(+), 0 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
-index 5855917..83fa6e9 100644
+index 5855917..291be04 100644
 --- a/MANIFEST
 +++ b/MANIFEST
-@@ -4257,6 +4257,7 @@ pad.c				Scratchpad functions
+@@ -4256,6 +4256,7 @@ overload.h			generated overload name table (implementation)
+ pad.c				Scratchpad functions
  pad.h				Scratchpad headers
  parser.h			parser object header
- patchlevel.h			The current patch level of perl
 +patchlevel-debian.h			List of patches applied via the Debian packaging
+ patchlevel.h			The current patch level of perl
  perlapi.c			Perl API functions
  perlapi.h			Perl API function declarations
- perl.c				main()
 diff --git a/patchlevel.h b/patchlevel.h
 index 9c0646b..5cede1c 100644
 --- a/patchlevel.h
