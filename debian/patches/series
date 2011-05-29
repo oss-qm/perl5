@@ -35,3 +35,5 @@ fixes/casing-taint-cve-2011-1487.diff
 fixes/correct-module-corelist-version.diff
 fixes/module-build-home-directory.diff
 debian/patchlevel.diff
+fixes/h2ph-multiarch.diff
+fixes/odbm-multiarch.diff

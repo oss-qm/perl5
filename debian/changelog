@@ -4,6 +4,9 @@ perl (5.12.3-8) UNRELEASED; urgency=low
     maintainer tests in the future.
   * Switch to git-dpm for managing debian/patches
     + generate the patchlevel information from debian/patches at build time.
+  * Multiarch related fixes:
+    + h2ph now correctly gets the header directories from gcc (Closes: #625808)
+    + ODBM_File hints find libgdbm_compat again (Closes: #625634)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 27 May 2011 07:31:40 +0300
 
