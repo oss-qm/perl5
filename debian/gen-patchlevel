@@ -34,6 +34,7 @@ fi
 
 while read patch strip
 do
+    patchname=$(echo $patch | sed 's/\.diff$//')
     < $patchdir/$patch sed -n -e '
 
     # massage the patch headers
@@ -52,7 +53,7 @@ do
         s|\\|\\\\|g; s|"|\\"|g;
 
         # add a prefix
-        s|^|\t,"'"$prefix$patch"' - |;
+        s|^|\t,"'"$prefix$patchname"' - |;
         # newlines away
         s/\n/ /g; s/  */ /g;
         # add a suffix
