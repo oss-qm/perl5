@@ -118,7 +118,8 @@ before releasing, for instance:
 
 #!/bin/sh
 
-if git diff --cached debian/changelog | grep -q '^-.*UNRELEASED' && \
+if [ -e debian/changelog ] && \
+   git diff --cached debian/changelog | grep -q '^-.*UNRELEASED' && \
    git diff --cached debian/changelog | grep -q '^\+.*unstable'
 then
     prove debian/t/*.t
