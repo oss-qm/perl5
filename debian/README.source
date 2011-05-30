@@ -95,7 +95,8 @@ and the like can use the old way of standalone patch handling described
 above, or just hack the source and ignore debian/patches altogether.
 
 First, you need to have the 'git-dpm' package installed. The current version
-as of this writing is 0.7.1-1.
+as of this writing is 0.7.1-1, and the minimum version required to handle
+the perl repository is 0.5.0-1.
 
 Any upstream modifications need to be done on a special 'patched' branch
 that is created with 'git-dpm checkout-patched'. Every commit on this branch
