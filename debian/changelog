@@ -13,6 +13,8 @@ perl (5.14.0-2) UNRELEASED; urgency=low
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool
     (Closes: #628512)
+  * Note removal of perl-suid in README.Debian and suggest alternatives
+    (Closes: #628042)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 04 Jun 2011 22:31:47 +0100
 

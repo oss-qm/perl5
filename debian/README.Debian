@@ -22,6 +22,14 @@ libfcgi-perl.
 See the 'README.source' file in the perl source package for information
 on building the package.
 
+perl-suid removed
+=================
+
+suidperl was removed upstream with 5.12, so the perl-suid package which
+used to be distributed in Debian has been removed too. Possible alternatives
+include using a simple setuid C wrapper to execute a perl script from a
+hard-coded location, or using a more general tool like sudo.
+
 Credits
 -------
 
