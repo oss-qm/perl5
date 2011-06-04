@@ -52,5 +52,5 @@ index 773c0a0..bc1ae1b 100644
      for my $enc ( sort keys %LocalMod ) {
          $_ModLines .=
 -- 
-1.7.5.1
+1.7.2.5
 

@@ -1,0 +1,42 @@
+From 41077a77352a2234728e78e3826306428d8d3fb8 Mon Sep 17 00:00:00 2001
+From: Jim Cromie <jim.cromie@gmail.com>
+Date: Tue, 31 May 2011 22:15:11 -0600
+Subject: regexp.h: work around -Werror compile failure of XS in linux perf tool
+
+Bug-Debian: http://bugs.debian.org/628512
+Origin: http://perl5.git.perl.org/perl.git/commit/0984e55ea51a3030ba112fb0dd331061c5b0acf5
+
+The linux perf tool has an XS component, but when built using system
+perl 5.14.0, its compilation errors out on the switch statement in
+regexp.h: get_regex_charset_name(), which lacks a default case.  Add
+one, copying the end-of-function return "?".
+
+Preserve the end-of-function return "?", to avoid a hypothetical
+compiler bug which misses the default case, and infers a void return
+for a function thats declared otherwize.
+
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+
+Patch-Name: fixes/regexp_h_compile_failure.diff
+---
+ regexp.h |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/regexp.h b/regexp.h
+index c4fa609..5776a90 100644
+--- a/regexp.h
++++ b/regexp.h
+@@ -323,8 +323,9 @@ get_regex_charset_name(const U32 flags, STRLEN* const lenp)
+ 	case REGEX_ASCII_MORE_RESTRICTED_CHARSET:
+ 	    *lenp = 2;
+ 	    return ASCII_MORE_RESTRICT_PAT_MODS;
++        default:
++	    return "?";	    /* Unknown */
+     }
+-
+     return "?";	    /* Unknown */
+ }
+ 
+-- 
+1.7.2.5
+

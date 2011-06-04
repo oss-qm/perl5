@@ -405,5 +405,5 @@ index fc2d16a..1a8aef4 100644
  ;# The validate routine takes a single multiline string consisting of
  ;# lines containing a filename plus a file test to try on it.  (The
 -- 
-1.7.5.1
+1.7.2.5
 

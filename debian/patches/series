@@ -30,3 +30,4 @@ fixes/module-build-home-directory.diff
 debian/patchlevel.diff
 fixes/h2ph-multiarch.diff
 fixes/odbm-multiarch.diff
+fixes/regexp_h_compile_failure.diff

@@ -1,8 +1,7 @@
 From 35c630a541fa87bebdee27414774bb419217bcfe Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Apr 2011 09:18:54 +0300
-Subject: Append CFLAGS and LDFLAGS to their Config.pm counterparts in
- EU::CBuilder
+Subject: Append CFLAGS and LDFLAGS to their Config.pm counterparts in EU::CBuilder
 
 Bug: http://rt.perl.org/rt3//Public/Bug/Display.html?id=89478
 
@@ -84,5 +83,5 @@ index db0ef98..49819a1 100644
  
  for ($source_file, $object_file, $lib_file) {
 -- 
-1.7.5.1
+1.7.2.5
 

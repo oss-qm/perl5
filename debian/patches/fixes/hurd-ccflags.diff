@@ -27,5 +27,5 @@ index 2cfce54..c1ba2db 100644
  # The following routines are only available as stubs in GNU libc.
  # XXX remove this once metaconf detects the GNU libc stubs.
 -- 
-1.7.5.1
+1.7.2.5
 
