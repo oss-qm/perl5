@@ -97,6 +97,11 @@ above, or just hack the source and ignore debian/patches altogether.
 First, you need to have the 'git-dpm' package installed. The current version
 as of this writing is 0.7.1-1.
 
+Until Debian bug #629242 is fixed, you should configure git to not add
+signatures to patches, to avoid unnecessary churn:
+
+    git config  --add format.signature '' 
+
 Any upstream modifications need to be done on a special 'patched' branch
 that is created with 'git-dpm checkout-patched'. Every commit on this branch
 corresponds to one patch in debian/patches. The commits can be handled
