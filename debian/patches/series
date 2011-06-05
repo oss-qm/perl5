@@ -23,7 +23,6 @@ debian/cpanplus_config_path.diff
 fixes/autodie-flock.diff
 debian/devel-ppport-ia64-optim.diff
 fixes/cpanplus-without-home.diff
-debian/arm_optim.diff
 debian/deprecate-with-apt.diff
 fixes/hurd-ccflags.diff
 debian/squelch-locale-warnings.diff

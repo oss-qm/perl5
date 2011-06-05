@@ -15,8 +15,9 @@ perl (5.12.3-8) UNRELEASED; urgency=low
   * Lengthen time-out in t/re/re.t; fixes FTBFS on sh4 (Closes: #626125)
   * Add note about git format-patch signatures to git-dpm section of
     README.source
+  * Revert obsolete patch debian/arm_optim.diff
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 05 Jun 2011 15:57:59 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 05 Jun 2011 16:46:35 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 
