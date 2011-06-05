@@ -31,6 +31,3 @@ index f8ca492..204bba0 100644
 +foreach (split / /, $Config{libpth}) {
 +    $self->{LIBS}->[0] .= ' -lgdbm_compat' if -e $_.'/libgdbm_compat.so';
  }
--- 
-1.7.5.1
-

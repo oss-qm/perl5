@@ -39,6 +39,3 @@ index 9783261..156146f 100644
      if ($^O eq 'MacOS') {
          next if $_ eq ':'; # skip -d test here
          next if $_ eq 'Dev:Pseudo:'; # why is this in @INC?
--- 
-1.7.5.1
-

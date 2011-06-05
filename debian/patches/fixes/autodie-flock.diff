@@ -1,8 +1,7 @@
 From 71e2a1fd0e355dcdada75448248c11d0aec3b3dd Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 30 Aug 2009 13:58:35 +0300
-Subject: Allow for flock returning EAGAIN instead of EWOULDBLOCK on
- linux/parisc
+Subject: Allow for flock returning EAGAIN instead of EWOULDBLOCK on linux/parisc
 
 Bug-Debian: http://bugs.debian.org/543731
 Origin: upstream, http://github.com/pfenwick/autodie/commit/037738e11a6097734b0e1dabdd77b92e5fe35219
@@ -100,6 +99,3 @@ index a7550ba..6421a56 100755
  ok(!$return, "flocking a file twice should fail");
  is($@, "", "Non-blocking flock should not fail on EWOULDBLOCK");
  
--- 
-1.7.5.1
-

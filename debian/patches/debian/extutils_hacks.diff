@@ -313,6 +313,3 @@ index 24ae909..12d421d 100644
  =head1 @EXPORT
  
  ExtUtils::Embed exports the following functions:
--- 
-1.7.5.1
-

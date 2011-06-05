@@ -22,6 +22,3 @@ index b807e97..6c955d7 100644
      foreach my $thislib (split ' ', $potential_libs) {
  
  	# Handle possible linker path arguments.
--- 
-1.7.5.1
-

@@ -12,8 +12,9 @@ perl (5.12.3-8) UNRELEASED; urgency=low
   [ Dominic Hargreaves ]
   * Note removal of perl-suid in README.Debian and suggest alternatives
     (Closes: #628042)
+  * Lengthen time-out in t/re/re.t; fixes FTBFS on sh4 (Closes: #626125)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 04 Jun 2011 22:45:30 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 05 Jun 2011 15:29:46 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 

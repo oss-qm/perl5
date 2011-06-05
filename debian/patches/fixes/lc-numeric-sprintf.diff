@@ -29,6 +29,3 @@ index e94f158..3c6badb 100644
  	/* XXX what about the numeric ops? */
  	if (PL_hints & HINT_LOCALE)
  	    goto nope;
--- 
-1.7.5.1
-

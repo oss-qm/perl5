@@ -30,6 +30,3 @@ index 27d2abc..8475c36 100644
  use File::Copy;
  use Params::Check               qw[check];
  use Module::Load::Conditional   qw[can_load];
--- 
-1.7.5.1
-

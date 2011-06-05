@@ -42,6 +42,3 @@ index 1a38200..6ee0d82 100644
                                      require CPANPLUS::Internals;
                                      require File::Basename;
                                      my $dir = File::Basename::dirname(
--- 
-1.7.5.1
-

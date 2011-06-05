@@ -1,8 +1,7 @@
 From 0573d8fa88edbe033bc265a73f9064659cd67898 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
-Subject: Provide a sensible INSTALLDIRS default for modules installed from
- CPAN.
+Subject: Provide a sensible INSTALLDIRS default for modules installed from CPAN.
 
 Some modules which are included in core set INSTALLDIRS => 'perl'
 explicitly in Makefile.PL or Build.PL.  This makes sense for the normal @INC
@@ -36,6 +35,3 @@ index 53ffbf1..53976ff 100644
      my_dflt_prompt(mbuild_arg => "", $matcher);
  
      if (exists $CPAN::HandleConfig::keys{mbuild_install_build_command}
--- 
-1.7.5.1
-
