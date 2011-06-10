@@ -16,6 +16,8 @@ perl (5.14.1-1) UNRELEASED; urgency=low
     - debian/arm_optim.diff
     - debian/devel-ppport-ia64-optim.diff
     - fixes/processPL.diff (Closes: #626094) 
+  * Support the 'build-arch' and 'build-indep' debian/rules targets
+    as synonyms for 'build'.
 
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool

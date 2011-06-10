@@ -50,6 +50,9 @@ export BZIP2_LIB=/usr/lib
 build: build-stamp
 install: install-stamp
 
+build-arch: build
+build-indep: build
+
 build-stamp: $(patchlevel) perl.static perl.debug libperl.so.$(fullversion)
 	touch $@
 
@@ -418,4 +421,4 @@ binary: binary-indep binary-arch
 
 .NOTPARALLEL:
 
-.PHONY: build clean binary-indep binary-arch binary install
+.PHONY: build clean binary-indep binary-arch binary install build-arch build-indep
