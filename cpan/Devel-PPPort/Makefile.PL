@@ -75,13 +75,6 @@ sub configure
     push @moreopts, INSTALLDIRS => ($] >= 5.007003 ? 'perl' : 'site');
   }
 
-
-  # temporary Debian hack, see http://bugs.debian.org/548943
-  require Config;
-  if ($Config::Config{archname} =~ /^ia64/) {
-    push @moreopts, OPTIMIZE => '-g -O0';
-  }
-
   if ($opt{'apicheck'}) {
     $PL_FILES{'apicheck_c.PL'} = 'apicheck.c';
     push @C_FILES, qw{ apicheck.c };

@@ -1,4 +1,4 @@
-From 523d5bfe8af41f176124dffe5084b1ad286c23fb Mon Sep 17 00:00:00 2001
+From 6f637f44a33d632766d01946d804a862cd9c8dd9 Mon Sep 17 00:00:00 2001
 From: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 Date: Sun, 5 Jun 2011 15:28:58 +0100
 Subject: Update lengthen time-out time for t/re/re.t.
