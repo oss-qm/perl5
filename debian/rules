@@ -315,7 +315,7 @@ ifeq ($(strip),yes)
 endif
 	# re-create versioned link
 	# this has to go after the stripping part if there are other links
-    # to the file (like perl-suid used to)
+	# to the file (like perl-suid used to)
 	ln $(build)/perl-base/usr/bin/perl \
 	    $(build)/perl-base/usr/bin/perl$(fullversion)
 
@@ -418,4 +418,4 @@ binary: binary-indep binary-arch
 
 .NOTPARALLEL:
 
-.PHONY: build clean binary-indep binary-arch binary install patch unpatch new-build
+.PHONY: build clean binary-indep binary-arch binary install
