@@ -18,8 +18,9 @@ perl (5.12.3-8) UNRELEASED; urgency=low
   * Revert obsolete patches:
     - debian/arm_optim.diff
     - debian/devel-ppport-ia64-optim.diff
+    - fixes/processPL.diff 
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 10 Jun 2011 17:47:24 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 10 Jun 2011 17:49:53 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 

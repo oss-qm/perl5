@@ -15,7 +15,6 @@ debian/mod_paths.diff
 debian/module_build_man_extensions.diff
 debian/prune_libs.diff
 fixes/net_smtp_docs.diff
-fixes/processPL.diff
 debian/perlivp.diff
 debian/disable-zlib-bundling.diff
 debian/cpanplus_definstalldirs.diff

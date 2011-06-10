@@ -1,10 +1,9 @@
-From 5717313796475cc58c2a086d6940b8601721f17c Mon Sep 17 00:00:00 2001
+From 066ca0b66438f9e0b9f387d938def8e96948a00e Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 6 Jul 2009 21:58:41 +0300
 Subject: Configure CPANPLUS to use the site directories by default.
 
 Bug-Debian: http://bugs.debian.org/533707
-
 
 The core modules usually default to INSTALLDIRS=perl (ExtUtils::MakeMaker)
 or installdirs=core (Module::Build), so we need to explicitly ask for
