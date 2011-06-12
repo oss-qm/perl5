@@ -8,6 +8,8 @@ perl (5.12.3-8~revertprocesspl) UNRELEASED; urgency=low
   * Multiarch related fixes:
     + h2ph now correctly gets the header directories from gcc (Closes: #625808)
     + ODBM_File hints find libgdbm_compat again (Closes: #625634)
+  * Support the 'build-arch' and 'build-indep' debian/rules targets
+    as synonyms for 'build'.
 
   [ Dominic Hargreaves ]
   * Note removal of perl-suid in README.Debian and suggest alternatives
