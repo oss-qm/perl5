@@ -1,15 +1,15 @@
-From e8184c2ffb6482db0a8de511208851a78aa8ba8b Mon Sep 17 00:00:00 2001
+From 2da196d180194df5215b61745bd84d0a8a1c0e79 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Don't install .packlist or perllocal.pod for perl or vendor
 
 Patch-Name: debian/no_packlist_perllocal.diff
 ---
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm |   29 ++--------------------
- 1 files changed, 3 insertions(+), 26 deletions(-)
+ cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm |   31 +++--------------------
+ 1 files changed, 4 insertions(+), 27 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 568de65..5559647 100644
+index 568de65..82c4e48 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -2047,8 +2047,6 @@ doc__install : doc_site_install
@@ -30,7 +30,7 @@ index 568de65..5559647 100644
  		$(INST_LIB) $(DESTINSTALLVENDORLIB) \
  		$(INST_ARCHLIB) $(DESTINSTALLVENDORARCH) \
  		$(INST_BIN) $(DESTINSTALLVENDORBIN) \
-@@ -2084,18 +2080,9 @@ pure_vendor_install :: all
+@@ -2084,37 +2080,19 @@ pure_vendor_install :: all
  		$(INST_MAN3DIR) $(DESTINSTALLVENDORMAN3DIR)
  
  doc_perl_install :: all
@@ -46,11 +46,12 @@ index 568de65..5559647 100644
  
  doc_site_install :: all
 -	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod
+-	-$(NOECHO) umask 02; $(MKPATH) $(DESTINSTALLARCHLIB)
 +	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLSITEARCH)/perllocal.pod
- 	-$(NOECHO) umask 02; $(MKPATH) $(DESTINSTALLARCHLIB)
++	-$(NOECHO) umask 02; $(MKPATH) $(DESTINSTALLSITEARCH)
  	-$(NOECHO) umask 02; $(DOC_INSTALL) \
  		"Module" "$(NAME)" \
-@@ -2103,18 +2090,9 @@ doc_site_install :: all
+ 		"installed into" "$(INSTALLSITELIB)" \
  		LINKTYPE "$(LINKTYPE)" \
  		VERSION "$(VERSION)" \
  		EXE_FILES "$(EXE_FILES)" \

@@ -1,4 +1,4 @@
-From d49bc74dc8f9e07e8d578c6193328856eb004bdb Mon Sep 17 00:00:00 2001
+From 9f013fe039f308f6bd0a9afc2dc53a709193484c Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Fiddle with *PREFIX and variables written to the makefile
@@ -54,7 +54,7 @@ index 4905aeb..a80ac20 100644
  
      my $arch    = $Config{archname};
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 5559647..64913e0 100644
+index 82c4e48..940de38 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -2975,8 +2975,7 @@ sub prefixify {
@@ -63,7 +63,7 @@ index 5559647..64913e0 100644
  
 -    if( $self->{ARGS}{PREFIX} &&
 -        $path !~ s{^\Q$sprefix\E\b}{$rprefix}s ) 
-+    if( $path !~ s{^\Q$sprefix\E\b}{$rprefix}s && $self->{ARGS}{PREFIX} ) 
++    if( $path !~ s{^\Q$sprefix\E\b}{$rprefix}s && $self->{ARGS}{PREFIX} )
      {
  
          print STDERR "    cannot prefix, using default.\n" if $Verbose >= 2;
