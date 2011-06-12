@@ -23,8 +23,10 @@ perl (5.12.3-8~revertprocesspl) UNRELEASED; urgency=low
     - fixes/processPL.diff 
   * Split up patch debian/extutils_hacks.diff into several logically
     distinct patches (relates to: #626094)
+  * Update Vcs-* references to point to combined git-dpm based
+    repository at new anonscm URLs
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 12 Jun 2011 15:03:13 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 12 Jun 2011 16:44:20 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 
