@@ -19,8 +19,10 @@ perl (5.12.3-8~revertprocesspl) UNRELEASED; urgency=low
     - debian/arm_optim.diff
     - debian/devel-ppport-ia64-optim.diff
     - fixes/processPL.diff 
+  * Split up patch debian/extutils_hacks.diff into several logically
+    distinct patches (relates to: #626094)
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 10 Jun 2011 17:50:25 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 12 Jun 2011 15:03:13 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 

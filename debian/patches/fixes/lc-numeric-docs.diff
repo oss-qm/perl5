@@ -1,4 +1,4 @@
-From 1cf372d91013beb42e81a2f6a0c26b0137252e7f Mon Sep 17 00:00:00 2001
+From b60edd8728dd00e11a57fb911be1e30f78b988d8 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Tue, 19 Oct 2010 21:55:14 +0300
 Subject: LC_NUMERIC documentation fixes

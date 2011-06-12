@@ -1,4 +1,4 @@
-From dcc72c67de257aca6cb4b9f4d9f2ffd995f71863 Mon Sep 17 00:00:00 2001
+From f8fb8860f03d1b6a48d88148bd7018ba2e106aca Mon Sep 17 00:00:00 2001
 From: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
 Date: Thu, 28 Apr 2011 22:01:32 +0100
 Subject: Correct the version of Module::CoreList that was released with v5.12.3

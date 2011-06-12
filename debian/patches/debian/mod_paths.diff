@@ -1,4 +1,4 @@
-From c3d7b488b764c1e43ed444759a73d284c1945466 Mon Sep 17 00:00:00 2001
+From b1397b740812c8d7beea76df9443e0543204b01b Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
@@ -15,7 +15,6 @@ Our order is:
 The rationale being that an admin (via site), or module packager
 (vendor) can chose to shadow core modules when there is a newer
 version than is included in core.
-
 
 Patch-Name: debian/mod_paths.diff
 ---
