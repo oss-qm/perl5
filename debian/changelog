@@ -1,4 +1,4 @@
-perl (5.12.3-8~revertprocesspl) UNRELEASED; urgency=low
+perl (5.12.3-8) UNRELEASED; urgency=low
 
   [ Niko Tyni ]
   * Move debian/check-control to debian/t/ to anticipate new package
@@ -20,13 +20,13 @@ perl (5.12.3-8~revertprocesspl) UNRELEASED; urgency=low
   * Revert obsolete patches:
     - debian/arm_optim.diff
     - debian/devel-ppport-ia64-optim.diff
-    - fixes/processPL.diff 
+    - fixes/processPL.diff (Closes: #626094) 
   * Split up patch debian/extutils_hacks.diff into several logically
-    distinct patches (relates to: #626094)
+    distinct patches (relates to: #624508)
   * Update Vcs-* references to point to combined git-dpm based
     repository at new anonscm URLs
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 12 Jun 2011 16:44:20 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 12 Jun 2011 21:59:58 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 
