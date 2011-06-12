@@ -1,4 +1,4 @@
-From c9785b163b8413eedf99eed019bd7f0a7588a06c Mon Sep 17 00:00:00 2001
+From 6f8a03fdfdd6d9d9113c0a91ae85b16885539d20 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Remove standard libs from LD_RUN_PATH as per Debian policy.

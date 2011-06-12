@@ -1,4 +1,4 @@
-From 4719ec0e3cf4cf80af5a3269c892219da50142ae Mon Sep 17 00:00:00 2001
+From 1cbb5e8013774f070998e0333e25a9797a27329a Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 9 Apr 2010 11:18:35 +0300
 Subject: Fix CPANPLUS test failures when HOME doesn't exist

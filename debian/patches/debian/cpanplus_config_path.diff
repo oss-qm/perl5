@@ -1,4 +1,4 @@
-From 4e33816af0bd36b563b85cb18a9b952a5e101238 Mon Sep 17 00:00:00 2001
+From 07598a7bb5a6013a1398bffe7ed9e96064130d0e Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 6 Jul 2009 22:17:53 +0300
 Subject: Save local versions of CPANPLUS::Config::System into /etc/perl.

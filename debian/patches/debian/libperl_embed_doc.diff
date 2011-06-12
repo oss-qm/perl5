@@ -1,7 +1,9 @@
-From 05033ad345b02d42ddb2480675dd49f781ea52bb Mon Sep 17 00:00:00 2001
+From b6e6769cde1f3b1d417f6265f0f71d75302d8425 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Note that libperl-dev package is required for embedded linking
+
+Bug-Debian: http://bugs.debian.org/186778
 
 Patch-Name: debian/libperl_embed_doc.diff
 ---

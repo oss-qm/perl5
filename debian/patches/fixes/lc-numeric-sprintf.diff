@@ -1,4 +1,4 @@
-From f5f307b1eeaa6eb6a29d0de913f26c6f640ce1fc Mon Sep 17 00:00:00 2001
+From 6a2d69fa872e3c707038b4a3e7519a01b3f9d272 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 27 Oct 2010 10:56:24 +0300
 Subject: Fix sprintf not to ignore LC_NUMERIC with constants
