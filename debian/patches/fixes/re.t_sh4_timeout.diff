@@ -1,10 +1,11 @@
-From db6d83371c90c9fca9465d5ffee885d957ce1b3c Mon Sep 17 00:00:00 2001
+From fc123646bccba5f42a51fc18b301edbbae9ee750 Mon Sep 17 00:00:00 2001
 From: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 Date: Sun, 5 Jun 2011 15:28:58 +0100
 Subject: Update lengthen time-out time for t/re/re.t.
 
 Bug-Debian: http://bugs.debian.org/626125
 Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=92226
+Origin: upstream, http://perl5.git.perl.org/perl.git/commitdiff/7c47ab277d9951f7d3b1f59075afbc754894081c
 
 When we carry out this test on SH4, it becomes the time-out.
 2 seconds are set in watchdog, but are too short for SH4.
