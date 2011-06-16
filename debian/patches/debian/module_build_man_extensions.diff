@@ -1,7 +1,8 @@
 From 99afb5c07066ccac8035c3f0df3e48812b5e03ac Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 8 May 2008 14:32:33 +0300
-Subject: Adjust Module::Build manual page extensions for the Debian Perl policy
+Subject: Adjust Module::Build manual page extensions for the Debian Perl
+ policy
 
 Bug-Debian: http://bugs.debian.org/479460
 
@@ -32,6 +33,3 @@ index fba916a..82df4cc 100644
      my $manpage = $self->man3page_name( $relfile ) . '.' .
  	          $self->config( 'man3ext' );
      my $outfile = File::Spec->catfile( $mandir, $manpage);
--- 
-1.7.2.5
-

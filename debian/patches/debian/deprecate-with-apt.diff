@@ -1,4 +1,4 @@
-From 7187e5795269403df99c0a87eee4947d87040fd7 Mon Sep 17 00:00:00 2001
+From 81ae98ad5c360c1c2d4f003ddf43a897aa57fa2f Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules
@@ -404,6 +404,3 @@ index fc2d16a..1a8aef4 100644
  
  ;# The validate routine takes a single multiline string consisting of
  ;# lines containing a filename plus a file test to try on it.  (The
--- 
-1.7.2.5
-

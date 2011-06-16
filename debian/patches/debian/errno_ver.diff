@@ -1,7 +1,8 @@
 From 62c51df723b3705ebcc0dbf648aa6779127f52dc Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 16 Dec 2005 01:32:14 +1100
-Subject: Remove Errno version check due to upgrade problems with long-running processes.
+Subject: Remove Errno version check due to upgrade problems with long-running
+ processes.
 
 Bug-Debian: http://bugs.debian.org/343351
 
@@ -33,6 +34,3 @@ index 56bc815..01f510a 100644
  our \$VERSION = "$VERSION";
  \$VERSION = eval \$VERSION;
  our \@ISA = 'Exporter';
--- 
-1.7.2.5
-

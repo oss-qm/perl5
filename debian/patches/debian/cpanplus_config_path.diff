@@ -1,4 +1,4 @@
-From 8fd41c297052dd00d2b604aa6b0f26d6b266dc6b Mon Sep 17 00:00:00 2001
+From fa5711a874cc34d9aadd75d7dbf9b41700e9f305 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 6 Jul 2009 22:17:53 +0300
 Subject: Save local versions of CPANPLUS::Config::System into /etc/perl.
@@ -42,6 +42,3 @@ index 443d5a4..f7085a8 100644
                                      require CPANPLUS::Internals;
                                      require File::Basename;
                                      my $dir = File::Basename::dirname(
--- 
-1.7.2.5
-

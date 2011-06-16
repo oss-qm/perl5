@@ -1,10 +1,9 @@
-From f981abf8cc1eb10cc9b0fb07b5a813a4a4dd7e4e Mon Sep 17 00:00:00 2001
+From 23269ae1f2d76072b3defdff7b96a83515326d94 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 9 Jan 2009 18:54:47 +0200
 Subject: Make perlivp skip include directories in /usr/local
 
 Bug-Debian: http://bugs.debian.org/510895
-
 
 On Sat, Jan 10, 2009 at 12:37:18AM +1100, Brendan O'Dea wrote:
 > On Wed, Jan 7, 2009 at 12:21 AM, Niko Tyni <ntyni@debian.org> wrote:
@@ -18,7 +17,6 @@ On Sat, Jan 10, 2009 at 12:37:18AM +1100, Brendan O'Dea wrote:
 > stats at use/require time in the common case that the user has not
 > installed any local packages.  As Niko points out, they will be
 > created as required.
-
 
 Signed-off-by: Niko Tyni <ntyni@debian.org>
 
@@ -39,6 +37,3 @@ index 6fcb670..1401cac 100644
      if (-d $_) {
          print "## Perl \@INC directory `$_' exists.\n" if $opt{'v'};
          $INC_there++;
--- 
-1.7.2.5
-

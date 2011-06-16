@@ -3025,11 +3025,14 @@ sub processPL {
 	    # pm_to_blib depends on then it can't depend on pm_to_blib
 	    # else we have a dependency loop.
 	    my $pm_dep;
+	    my $perlrun;
 	    if( defined $self->{PM}{$target} ) {
 		$pm_dep  = '';
+		$perlrun = 'PERLRUN';
 	    }
 	    else {
 		$pm_dep  = 'pm_to_blib';
+		$perlrun = 'PERLRUNINST';
 	    }
 
             $m .= <<MAKE_FRAG;
@@ -3038,7 +3041,7 @@ all :: $target
 	\$(NOECHO) \$(NOOP)
 
 $target :: $plfile $pm_dep
-	\$(PERLRUNINST) $plfile $target
+	\$($perlrun) $plfile $target
 MAKE_FRAG
 
 	}

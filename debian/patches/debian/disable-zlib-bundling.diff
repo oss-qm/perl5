@@ -1,4 +1,4 @@
-From 9eeeb8fe69ae074d433037de453a808d02839ec9 Mon Sep 17 00:00:00 2001
+From a47fb9c5b8b7966377b2bbf22e11b3591266f02f Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 10 Apr 2009 01:17:43 +0300
 Subject: Disable zlib bundling in Compress::Raw::Zlib
@@ -28,6 +28,3 @@ index c56cc03..2c6659b 100644
  
  OLD_ZLIB        = False
  GZIP_OS_CODE    = AUTO_DETECT
--- 
-1.7.2.5
-

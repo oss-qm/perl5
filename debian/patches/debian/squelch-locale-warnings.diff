@@ -1,4 +1,4 @@
-From 7a59975269cb6021150f06a9be3ea9c5d51bf74d Mon Sep 17 00:00:00 2001
+From 7cf2ebf439732d5796f6f857ee2099aff8f4aaf2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts
@@ -53,6 +53,3 @@ index 8926d8b..6c55889 100644
  =back
  
  The following environment variables are not specific to Perl: They are
--- 
-1.7.2.5
-

@@ -14,13 +14,10 @@ debian/mod_paths.diff
 debian/module_build_man_extensions.diff
 debian/prune_libs.diff
 fixes/net_smtp_docs.diff
-fixes/processPL.diff
 debian/perlivp.diff
 debian/disable-zlib-bundling.diff
 debian/cpanplus_definstalldirs.diff
 debian/cpanplus_config_path.diff
-debian/devel-ppport-ia64-optim.diff
-debian/arm_optim.diff
 debian/deprecate-with-apt.diff
 fixes/hurd-ccflags.diff
 debian/squelch-locale-warnings.diff

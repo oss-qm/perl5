@@ -37,6 +37,3 @@ index d9911f9..f59f75c 100755
  	    shift
  	    perllibs="$*"
  	    ;;
--- 
-1.7.2.5
-
