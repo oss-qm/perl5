@@ -1,4 +1,4 @@
-From 4c24366873ba07a7162eb8bf952ce2539ccc7ffb Mon Sep 17 00:00:00 2001
+From da8482586a0eaffd019b1fc4aad1b4bb8fab8c82 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 18 May 2011 21:44:06 -0700
 Subject: Make h2ph correctly search gcc include directories

@@ -24,6 +24,8 @@ perl (5.14.0-2) UNRELEASED; urgency=low
     README.source
   * Update Vcs-* references to point to combined git-dpm based
     repository at new anonscm URLs
+  * Split up patch debian/extutils_hacks.diff into several logically
+    distinct patches (relates to: #624508)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 04 Jun 2011 22:31:47 +0100
 

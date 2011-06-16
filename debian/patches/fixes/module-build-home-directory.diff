@@ -1,4 +1,4 @@
-From 3e5df8da870910cf92108366accca98e17d3efc7 Mon Sep 17 00:00:00 2001
+From 5030ff9d8f6d234fcc1bbb455c16c270d58e32af Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 2 May 2011 10:35:04 +0100
 Subject: Fix failing tilde test when run under a UID without a passwd entry

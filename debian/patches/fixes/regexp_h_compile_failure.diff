@@ -1,4 +1,4 @@
-From 085acddf56bebe352459730a7629a5444777e5e2 Mon Sep 17 00:00:00 2001
+From 4b26c4a606ff1004d3420018ab93a3e627b6226b Mon Sep 17 00:00:00 2001
 From: Jim Cromie <jim.cromie@gmail.com>
 Date: Tue, 31 May 2011 22:15:11 -0600
 Subject: regexp.h: work around -Werror compile failure of XS in linux perf

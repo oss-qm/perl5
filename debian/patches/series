@@ -4,7 +4,12 @@ debian/db_file_ver.diff
 debian/doc_info.diff
 debian/enc2xs_inc.diff
 debian/errno_ver.diff
-debian/extutils_hacks.diff
+debian/libperl_embed_doc.diff
+fixes/respect_umask.diff
+debian/writable_site_dirs.diff
+debian/extutils_set_libperl_path.diff
+debian/no_packlist_perllocal.diff
+debian/prefix_changes.diff
 debian/fakeroot.diff
 debian/instmodsh_doc.diff
 debian/ld_run_path.diff
