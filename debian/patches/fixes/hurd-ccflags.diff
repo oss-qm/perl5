@@ -1,9 +1,11 @@
-From 0bca2a78532a8a8711ccd6f18fdf371fc4da495a Mon Sep 17 00:00:00 2001
+From 136f1abe277518b6932af7e857243805337328c9 Mon Sep 17 00:00:00 2001
 From: Samuel Thibault <sthibault@debian.org>
 Date: Wed, 4 Aug 2010 13:34:05 +0300
 Subject: Make hints/gnu.sh append to $ccflags rather than overriding them
 
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=92244
 Bug-Debian: http://bugs.debian.org/587901
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/a190e648879
 
 Don't override possible extra $ccflags values given to Configure
 on GNU/Hurd.

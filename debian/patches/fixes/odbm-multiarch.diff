@@ -1,4 +1,4 @@
-From 91075a205f6e0a78658a4a06c421abf7bae133ad Mon Sep 17 00:00:00 2001
+From 57fa717c64b27960d2322d153738152a12af19cf Mon Sep 17 00:00:00 2001
 From: Vladimir Timofeev <vovkasm@gmail.com>
 Date: Tue, 10 May 2011 09:17:41 -0400
 Subject: Fix ODBM_File failures on Ubuntu natty [multiarch]
