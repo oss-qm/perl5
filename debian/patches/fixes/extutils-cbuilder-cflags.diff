@@ -1,10 +1,12 @@
-From 8fc3ee089e55d9985ba166255beb08a149766e20 Mon Sep 17 00:00:00 2001
+From f3b8dfc1f8f1394e5cba590140a9ea32bf8ccffd Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Apr 2011 09:18:54 +0300
 Subject: Append CFLAGS and LDFLAGS to their Config.pm counterparts in
  EU::CBuilder
 
 Bug: http://rt.perl.org/rt3//Public/Bug/Display.html?id=89478
+Bug-Debian: http://bugs.debian.org/624460
+Origin: upstream, http://perl5.git.perl.org/perl.git/commitdiff/011e8fb476b5fb27c9aa613360d918aa0b798b3d
 
 Since ExtUtils::CBuilder 0.27_04 (bleadperl commit 06e8058f27e4),
 CFLAGS and LDFLAGS from the environment have overridden the Config.pm
