@@ -1,4 +1,4 @@
-From 9942fbc8d95829f774eb1ac4cd90a8a9d2a1c733 Mon Sep 17 00:00:00 2001
+From 93f512b9036496f765483bad860b3250803e104a Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 15 May 2011 19:35:58 +0300
 Subject: List packaged patches in patchlevel.h
@@ -16,7 +16,7 @@ Patch-Name: debian/patchlevel.diff
  2 files changed, 2 insertions(+), 0 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
-index 5855917..291be04 100644
+index f802d99..f3c323b 100644
 --- a/MANIFEST
 +++ b/MANIFEST
 @@ -4256,6 +4256,7 @@ overload.h			generated overload name table (implementation)
@@ -28,7 +28,7 @@ index 5855917..291be04 100644
  perlapi.c			Perl API functions
  perlapi.h			Perl API function declarations
 diff --git a/patchlevel.h b/patchlevel.h
-index 9c0646b..5cede1c 100644
+index 1a905b1..5c42c00 100644
 --- a/patchlevel.h
 +++ b/patchlevel.h
 @@ -137,6 +137,7 @@ static const char * const local_patches[] = {

@@ -1,11 +1,10 @@
-From f156cdac4474488d8fe46d438831b2102f79b547 Mon Sep 17 00:00:00 2001
+From 33ab15f39262e7d78a5ebc0aa1e88e7e86f2a277 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 1 Nov 2008 15:10:16 +0200
 Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate
  slower build hosts
 
 Bug-Debian: http://bugs.debian.org/501970
-
 
 Patch-Name: debian/arm_thread_stress_timeout.diff
 ---

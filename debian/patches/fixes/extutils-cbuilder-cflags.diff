@@ -1,4 +1,4 @@
-From f3b8dfc1f8f1394e5cba590140a9ea32bf8ccffd Mon Sep 17 00:00:00 2001
+From 642dff461e24880423e2b737052c70899966b9a6 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Apr 2011 09:18:54 +0300
 Subject: Append CFLAGS and LDFLAGS to their Config.pm counterparts in

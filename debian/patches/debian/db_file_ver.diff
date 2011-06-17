@@ -1,4 +1,4 @@
-From 5272e8cad6ebdc6ac29763786a3195a41ff3314e Mon Sep 17 00:00:00 2001
+From 0eed3bed436e4cffe50d2e447b898526c1782746 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 16 Dec 2005 01:32:14 +1100
 Subject: Remove overly restrictive DB_File version check.
@@ -6,7 +6,6 @@ Subject: Remove overly restrictive DB_File version check.
 Bug-Debian: http://bugs.debian.org/340047
 
 Package dependencies ensure the correct library is linked at run-time.
-
 
 Patch-Name: debian/db_file_ver.diff
 ---

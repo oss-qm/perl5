@@ -31,6 +31,3 @@ fixes/extutils-cbuilder-cflags.diff
 fixes/module-build-home-directory.diff
 debian/patchlevel.diff
 fixes/h2ph-multiarch.diff
-fixes/odbm-multiarch.diff
-fixes/regexp_h_compile_failure.diff
-fixes/re.t_sh4_timeout.diff

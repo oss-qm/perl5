@@ -1,4 +1,4 @@
-From 99f9a1941f51c096fdb5f230b176d7f697a6ed63 Mon Sep 17 00:00:00 2001
+From a77b92b9efbab2fc3c29e076ce10acad54c96266 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 8 May 2008 14:32:33 +0300
 Subject: Adjust Module::Build manual page extensions for the Debian Perl

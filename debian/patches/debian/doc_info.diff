@@ -1,4 +1,4 @@
-From cc4b7ffb5739054c736834931f85bef8266606dc Mon Sep 17 00:00:00 2001
+From feaaa761d2c43fe8967a28cef2e8c85c7c3bf202 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Replace generic man(1) instructions with Debian-specific
@@ -6,17 +6,16 @@ Subject: Replace generic man(1) instructions with Debian-specific
 
 Indicate that the user needs to install the perl-doc package.
 
-
 Patch-Name: debian/doc_info.diff
 ---
  pod/perl.pod |   12 ++++++++++--
  1 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/pod/perl.pod b/pod/perl.pod
-index 95bb507..a22b1e8 100644
+index f35b79e..d507da1 100644
 --- a/pod/perl.pod
 +++ b/pod/perl.pod
-@@ -259,8 +259,16 @@ For ease of access, the Perl manual has been split up into several sections.
+@@ -260,8 +260,16 @@ For ease of access, the Perl manual has been split up into several sections.
      perlwin32		Perl notes for Windows
  
  

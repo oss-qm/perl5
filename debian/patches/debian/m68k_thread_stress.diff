@@ -1,11 +1,10 @@
-From 4792514bb235fad19333d86dc49ce062fc01aaa7 Mon Sep 17 00:00:00 2001
+From 7a50e56c4c8c4aaab21cfaaafbba5b64ee6f5e9b Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 8 Sep 2008 20:48:14 +0300
 Subject: Disable some threads tests on m68k for now due to missing TLS.
 
 Bug-Debian: http://bugs.debian.org/495826
 Bug-Debian: http://bugs.debian.org/517938
-
 
 Patch-Name: debian/m68k_thread_stress.diff
 ---

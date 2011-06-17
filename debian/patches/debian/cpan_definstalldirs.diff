@@ -1,4 +1,4 @@
-From acc36e74e8a16f7883e4c7849f581e5401de85ad Mon Sep 17 00:00:00 2001
+From e52cc65a1b5a0e436f483de7096e0fb7ff8587b8 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Provide a sensible INSTALLDIRS default for modules installed from
@@ -7,7 +7,6 @@ Subject: Provide a sensible INSTALLDIRS default for modules installed from
 Some modules which are included in core set INSTALLDIRS => 'perl'
 explicitly in Makefile.PL or Build.PL.  This makes sense for the normal @INC
 ordering, but not ours.
-
 
 Patch-Name: debian/cpan_definstalldirs.diff
 ---
