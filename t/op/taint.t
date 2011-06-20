@@ -1318,7 +1318,6 @@ foreach my $ord (78, 163, 256) {
     unlike($err, qr/^\d+$/, 'tainted $!');
 }
 
-
 {
     # [perl #87336] lc/uc(first) failing to taint the returned string
     my $source = "foo$TAINT";

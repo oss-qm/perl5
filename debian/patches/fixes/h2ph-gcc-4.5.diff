@@ -1,4 +1,4 @@
-From 2b8f178cc5da5be4f8956fedd5a6ef6ad5f8f698 Mon Sep 17 00:00:00 2001
+From faf23e1c00c9687c4f3061d0b54c3ab6a23dd0f8 Mon Sep 17 00:00:00 2001
 From: Robin Barker <rmbarker@cpan.org>
 Date: Thu, 22 Apr 2010 11:51:20 +0100
 Subject: h2ph fix for gcc 4.5

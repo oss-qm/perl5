@@ -1,6 +1,7 @@
-perl (5.12.3-8) UNRELEASED; urgency=low
+perl (5.12.4-1) UNRELEASED; urgency=low
 
   [ Niko Tyni ]
+  * New upstream release.
   * Move debian/check-control to debian/t/ to anticipate new package
     maintainer tests in the future.
   * Switch to git-dpm for managing debian/patches

@@ -1,4 +1,4 @@
-From 074734829fa880d7161e81e14e57e5bb63368ba0 Mon Sep 17 00:00:00 2001
+From a153a1cef177b08876e5175744f50a3607f3243d Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 8 Sep 2008 20:48:14 +0300
 Subject: Disable some threads tests on m68k for now due to missing TLS.
