@@ -241,8 +241,7 @@ Priority: optional
 Architecture: any
 Depends: perl (= ${binary:Version}), libperl5.12 (= ${binary:Version})
 Description: Perl library: development files
- Files for developing applications which embed a Perl interpreter and for
- programs compiled with perlcc.
+ Files for developing applications which embed a Perl interpreter.
 
 Package: perl
 Priority: standard

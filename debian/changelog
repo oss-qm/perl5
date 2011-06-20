@@ -10,6 +10,7 @@ perl (5.12.3-8) UNRELEASED; urgency=low
     + ODBM_File hints find libgdbm_compat again (Closes: #625634)
   * Support the 'build-arch' and 'build-indep' debian/rules targets
     as synonyms for 'build'.
+  * Remove a stale perlcc reference from the libperl-dev long description.
 
   [ Dominic Hargreaves ]
   * Note removal of perl-suid in README.Debian and suggest alternatives
