@@ -1,10 +1,10 @@
-From: Niko Tyni <ntyni@debian.org>
-Subject: Upgrade Safe.pm to 2.25, fixing CVE-2010-1974
-Bug-Debian: http://bugs.debian.org/582978
-Origin: upstream
+From: Rafael Garcia-Suarez <rgs@consttype.org>
+Date: Thu, 29 Apr 2010 13:02:01 +0200
+Subject: [PATCH] Wrap by default coderefs returned by rdo and reval
 
-Upgrade Safe.pm to 2.25, fixing CVE-2010-1974, as recommended in
+Origin: http://perl5.git.perl.org/perl.git/commit/554545435d592fa5ae8b79e031e59e9b09d6ff69
+Bug-Debian: http://bugs.debian.org/631529
 
- http://blogs.perl.org/users/rafael_garcia-suarez/2010/03/new-safepm-fixes-security-hole.html
+(suggested by Tim Bunce)
 
-Although 2.27 is available, its changes are more intrusive.
+Modified to apply to 5.10 in Debian.
