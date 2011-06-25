@@ -1,3 +1,10 @@
+perl (5.10.1-17squeeze2) stable-security; urgency=low
+
+  * [SECURITY] CVE-2010-1447: further Safe.pm fixes for breaking out
+    of safe compartment using subroutine references
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 25 Jun 2011 15:58:24 +0100
+
 perl (5.10.1-17squeeze1) stable-security; urgency=low
 
   * [SECURITY] CVE-2011-1487: taint laundering in lc, uc, et al.
