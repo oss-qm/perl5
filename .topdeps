@@ -50,3 +50,4 @@ fixes/lc-numeric-sprintf
 fixes/concat-stack-corruption
 fixes/cgi-multiline-header
 fixes/casing-taint-cve-2011-1487
+fixes/safe-reval-rdo-cve-2010-1447
