@@ -26,8 +26,10 @@ perl (5.12.3-8) UNRELEASED; urgency=low
     distinct patches (relates to: #624508)
   * Update Vcs-* references to point to combined git-dpm based
     repository at new anonscm URLs
+  * Don't use LD_RUN_PATH for multiarch directories (Closes: #631096)
+    (thanks, Ahmed El-Mahmoudy)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 12 Jun 2011 21:59:58 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 26 Jun 2011 22:27:44 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 

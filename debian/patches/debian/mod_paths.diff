@@ -1,4 +1,4 @@
-From 066ca2f94ef6f84a7902303f3c22cb5722aa81c9 Mon Sep 17 00:00:00 2001
+From e4d18d85956d8ae257aba9c2ba865d4ac71c83f7 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
@@ -97,3 +97,6 @@ index 05cea40..023d6a0 100644
  #ifdef PERL_OTHERLIBDIRS
      S_incpush_use_sep(aTHX_ STR_WITH_LEN(PERL_OTHERLIBDIRS),
  		      INCPUSH_ADD_OLD_VERS|INCPUSH_ADD_ARCHONLY_SUB_DIRS
+-- 
+1.7.2.5
+

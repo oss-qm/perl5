@@ -42,3 +42,6 @@ index fc13b2b..d420229 100755
  	*)
  	    case "$osname" in
  	    os2)
+-- 
+1.7.2.5
+

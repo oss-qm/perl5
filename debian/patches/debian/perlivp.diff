@@ -1,4 +1,4 @@
-From d42206b874d21d0a0def7ba01d22442ba0e0636e Mon Sep 17 00:00:00 2001
+From 443c08f82b4ccb83f6e069416ae7d37093f1abd2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 9 Jan 2009 18:54:47 +0200
 Subject: Make perlivp skip include directories in /usr/local
@@ -37,3 +37,6 @@ index 9783261..156146f 100644
      if ($^O eq 'MacOS') {
          next if $_ eq ':'; # skip -d test here
          next if $_ eq 'Dev:Pseudo:'; # why is this in @INC?
+-- 
+1.7.2.5
+

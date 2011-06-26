@@ -1,4 +1,4 @@
-From 915292c3fa011efadab73b1e4b1998ede53971c9 Mon Sep 17 00:00:00 2001
+From aa5200462d8ea62e79d0d1f83d780d6f3a6e8e12 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Thu, 20 Sep 2007 19:47:14 +1000
 Subject: Document the Net::SMTP 'Port' option
@@ -23,3 +23,6 @@ index a28496d..07b2498 100644
  
  Example:
  
+-- 
+1.7.2.5
+

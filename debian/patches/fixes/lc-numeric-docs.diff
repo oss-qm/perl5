@@ -1,4 +1,4 @@
-From 22267620da8ce0b6fb27f8b2bcd252eee9504c68 Mon Sep 17 00:00:00 2001
+From 70699e18c5f75b6d1cd5b019ce1992dca21dec23 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Tue, 19 Oct 2010 21:55:14 +0300
 Subject: LC_NUMERIC documentation fixes
@@ -95,3 +95,6 @@ index 60b7bab..e0c1333 100644
  
  =head2 Freely available locale definitions
  
+-- 
+1.7.2.5
+

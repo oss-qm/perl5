@@ -34,3 +34,6 @@ index 8ece7e6..7601a64 100644
  		"Module" "$(NAME)" \
  		"installed into" "$(INSTALLSITELIB)" \
  		LINKTYPE "$(LINKTYPE)" \
+-- 
+1.7.2.5
+

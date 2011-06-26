@@ -1,8 +1,7 @@
 From e3e8fab77fca1142f4d58418430dbe1fc514faec Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 1 Nov 2008 15:10:16 +0200
-Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate
- slower build hosts
+Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts
 
 Bug-Debian: http://bugs.debian.org/501970
 
@@ -25,3 +24,6 @@ index adfd1ed..652a3e6 100755
  
      my $mutex = 1;
      share($mutex);
+-- 
+1.7.2.5
+

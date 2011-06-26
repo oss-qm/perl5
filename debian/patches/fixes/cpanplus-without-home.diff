@@ -1,4 +1,4 @@
-From 1cbb5e8013774f070998e0333e25a9797a27329a Mon Sep 17 00:00:00 2001
+From 79f496065bb2081ad3449f8dd2ca65b39c9129d7 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 9 Apr 2010 11:18:35 +0300
 Subject: Fix CPANPLUS test failures when HOME doesn't exist
@@ -30,3 +30,6 @@ index 27d2abc..8475c36 100644
  use File::Copy;
  use Params::Check               qw[check];
  use Module::Load::Conditional   qw[can_load];
+-- 
+1.7.2.5
+

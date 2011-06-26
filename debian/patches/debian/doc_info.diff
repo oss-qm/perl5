@@ -1,8 +1,7 @@
 From 0c5f0c9e5a2b3b6ec46fe695247943dd93b88809 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
-Subject: Replace generic man(1) instructions with Debian-specific
- information.
+Subject: Replace generic man(1) instructions with Debian-specific information.
 
 Indicate that the user needs to install the perl-doc package.
 
@@ -35,3 +34,6 @@ index e67f062..3b8ae83 100644
  
  In general, if something strange has gone wrong with your program and you're
  not sure where you should look for help, try the B<-w> switch first.  It will
+-- 
+1.7.2.5
+

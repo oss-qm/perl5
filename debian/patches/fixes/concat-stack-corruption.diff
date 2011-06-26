@@ -1,4 +1,4 @@
-From 9341db77adc1053100ce6e2749c7b9e760943d2a Mon Sep 17 00:00:00 2001
+From 058d6892ea7967645c4fd68fddb63a474de6ff60 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Oct 2010 23:52:17 +0300
 Subject: Fix stack pointer corruption in pp_concat() with 'use encoding'
@@ -37,3 +37,6 @@ index ee699ef..c5ed14e 100644
      }
      sv_catpvn_nomg(TARG, rpv, rlen);
  
+-- 
+1.7.2.5
+

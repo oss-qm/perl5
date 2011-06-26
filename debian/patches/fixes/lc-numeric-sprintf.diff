@@ -1,4 +1,4 @@
-From 66ea408df9596926abe50bcce27cc7dfe58dcd29 Mon Sep 17 00:00:00 2001
+From f4bc26697c34a1517c5fd37c5f71a6f3c790e27b Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 27 Oct 2010 10:56:24 +0300
 Subject: Fix sprintf not to ignore LC_NUMERIC with constants
@@ -29,3 +29,6 @@ index e94f158..3c6badb 100644
  	/* XXX what about the numeric ops? */
  	if (PL_hints & HINT_LOCALE)
  	    goto nope;
+-- 
+1.7.2.5
+

@@ -1,4 +1,4 @@
-From fc123646bccba5f42a51fc18b301edbbae9ee750 Mon Sep 17 00:00:00 2001
+From 99ad034398015c0b8941e1635b80b164d64390be Mon Sep 17 00:00:00 2001
 From: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 Date: Sun, 5 Jun 2011 15:28:58 +0100
 Subject: Update lengthen time-out time for t/re/re.t.
@@ -29,3 +29,6 @@ index 249c6dd..84a5d1d 100755
          eval '"\x{100}\x{FB00}" =~ /\x{100}\N{U+66}+/i';
          pass("Didn't loop");
      }
+-- 
+1.7.2.5
+

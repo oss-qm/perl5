@@ -1,4 +1,4 @@
-From 074734829fa880d7161e81e14e57e5bb63368ba0 Mon Sep 17 00:00:00 2001
+From b7b37fc26b1036d56d19779f8ae7eecf02b38866 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 8 Sep 2008 20:48:14 +0300
 Subject: Disable some threads tests on m68k for now due to missing TLS.
@@ -44,3 +44,6 @@ index e3a1086..633374e 100755
  }
  
  use ExtUtils::testlib;
+-- 
+1.7.2.5
+

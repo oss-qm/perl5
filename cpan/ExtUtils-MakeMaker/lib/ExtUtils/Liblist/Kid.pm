@@ -54,7 +54,7 @@ sub _unix_os2_ext {
     my($found) = 0;
 
     # Debian-specific: don't use LD_RUN_PATH for standard dirs
-    $ld_run_path_seen{$_}++ for qw(/lib /usr/lib /usr/X11R6/lib);
+    $ld_run_path_seen{$_}++ for @libpath;
 
     foreach my $thislib (split ' ', $potential_libs) {
 
