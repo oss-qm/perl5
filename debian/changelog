@@ -22,6 +22,8 @@ perl (5.14.1-1) UNRELEASED; urgency=low
   * Don't use LD_RUN_PATH for multiarch directories (Closes: #631096)
     (thanks, Ahmed El-Mahmoudy)
   * Add Depends on libc6-dev | libc-dev to libperl-dev (Closes: #631308)
+  * Add a './perl.static -Ilib -V' invocation to the end of the build,
+    for the build log record (refers to: #630399)
 
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool
