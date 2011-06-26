@@ -1,9 +1,9 @@
 perl (5.10.1-17squeeze2) stable-security; urgency=low
 
   * [SECURITY] CVE-2010-1447: further Safe.pm fixes for breaking out
-    of safe compartment using subroutine references
+    of safe compartment using subroutine references (Closes: #631529)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 25 Jun 2011 15:58:24 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 26 Jun 2011 16:10:22 +0100
 
 perl (5.10.1-17squeeze1) stable-security; urgency=low
 
