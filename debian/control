@@ -239,7 +239,8 @@ Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: perl (= ${binary:Version}), libperl5.12 (= ${binary:Version})
+Depends: perl (= ${binary:Version}), libperl5.12 (= ${binary:Version}),
+ libc6-dev | libc-dev
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter.
 
