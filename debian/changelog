@@ -21,6 +21,7 @@ perl (5.14.1-1) UNRELEASED; urgency=low
   * Remove a stale perlcc reference from the libperl-dev long description.
   * Don't use LD_RUN_PATH for multiarch directories (Closes: #631096)
     (thanks, Ahmed El-Mahmoudy)
+  * Add Depends on libc6-dev | libc-dev to libperl-dev (Closes: #631308)
 
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool
