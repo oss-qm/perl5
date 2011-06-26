@@ -29,8 +29,10 @@ perl (5.12.3-8) UNRELEASED; urgency=low
   * Don't use LD_RUN_PATH for multiarch directories (Closes: #631096)
     (thanks, Ahmed El-Mahmoudy)
   * Add Depends on libc6-dev | libc-dev to libperl-dev (Closes: #631308)
+  * Add a './perl.static -Ilib -V' invocation to the end of the build,
+    for the build log record (refers to: #630399)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 26 Jun 2011 22:33:54 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 26 Jun 2011 22:39:05 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 

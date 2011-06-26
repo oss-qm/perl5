@@ -71,6 +71,9 @@ perl.static:
 	mv libperl.a libperl-static
 	mv perl perl.static
 
+	# for the build log
+	./perl.static -Ilib -V
+
 perl.debug:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
