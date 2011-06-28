@@ -57,3 +57,11 @@ Modified to apply to 5.10 in Debian.
 +my ($l_sorted, $p_sorted) = $func1->(3,1,2);
  is $l_sorted, "1,2,3";
  is $p_sorted, "1,2,3";
+
+@@ -57,5 +51,6 @@ is $@, 42, 'successful closure call shou
+     local $SIG{__WARN__} = sub { $warns++ };
+     ok !eval { $die_func->("died\n"); 1 }, 'should die';
+     is $@, "died\n", '$@ should be set correctly';
++    local $TODO = "Shouldn't warn";
+     is $warns, 0;
+ }
