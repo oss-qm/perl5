@@ -1,4 +1,4 @@
-From 61ab2505a2b968d6e9c9dce41cc3f63f39e14efd Mon Sep 17 00:00:00 2001
+From d7a8de13a96fcf5ac2a06c6c739e80a5b46ead91 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 6 Jul 2009 21:58:41 +0300
 Subject: Configure CPANPLUS to use the site directories by default.

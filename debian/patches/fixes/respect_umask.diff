@@ -1,4 +1,4 @@
-From b50fc3e09e5c9a756a3d331b5a34bd170643b665 Mon Sep 17 00:00:00 2001
+From e1d6ca513d7ab1b42e40850a93e3b405b85b510a Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Respect umask during installation

@@ -1,4 +1,4 @@
-From 525d07d00000285fc1ded09746084837991686d2 Mon Sep 17 00:00:00 2001
+From 7a19bc527b727d5f73f3501cdeec302ca5b1f7d9 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Set location of CPAN::Config to /etc/perl as /usr may not be writable.

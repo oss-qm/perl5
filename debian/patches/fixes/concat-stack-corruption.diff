@@ -1,4 +1,4 @@
-From 058d6892ea7967645c4fd68fddb63a474de6ff60 Mon Sep 17 00:00:00 2001
+From ee31fae45c5f44c20d35e9990ce551ee9c3117a4 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Oct 2010 23:52:17 +0300
 Subject: Fix stack pointer corruption in pp_concat() with 'use encoding'

@@ -1,4 +1,4 @@
-From a78eae87dc57b30e55b548408bb790c025f42f4d Mon Sep 17 00:00:00 2001
+From 8d90f18160d774934a503871e1854f91c8f45dc2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 30 Aug 2009 13:58:35 +0300
 Subject: Allow for flock returning EAGAIN instead of EWOULDBLOCK on linux/parisc

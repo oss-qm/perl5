@@ -33,8 +33,6 @@ fixes/lc-numeric-docs.diff
 fixes/lc-numeric-sprintf.diff
 fixes/concat-stack-corruption.diff
 fixes/h2ph-gcc-4.5.diff
-fixes/casing-taint-cve-2011-1487.diff
-fixes/correct-module-corelist-version.diff
 fixes/module-build-home-directory.diff
 debian/patchlevel.diff
 fixes/h2ph-multiarch.diff

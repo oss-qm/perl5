@@ -1,4 +1,4 @@
-From 8acc7a92c9b04529bb691bc442407f4a25e4e16c Mon Sep 17 00:00:00 2001
+From 77e50e1641b79a3bcd02cc3dc5089ebf4b4b3bae Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules

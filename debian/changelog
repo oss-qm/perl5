@@ -1,6 +1,7 @@
-perl (5.12.3-8) UNRELEASED; urgency=low
+perl (5.12.4-1) UNRELEASED; urgency=low
 
   [ Niko Tyni ]
+  * New upstream release.
   * Move debian/check-control to debian/t/ to anticipate new package
     maintainer tests in the future.
   * Switch to git-dpm for managing debian/patches
@@ -11,6 +12,8 @@ perl (5.12.3-8) UNRELEASED; urgency=low
   * Support the 'build-arch' and 'build-indep' debian/rules targets
     as synonyms for 'build'.
   * Remove a stale perlcc reference from the libperl-dev long description.
+  * Remove the Debian/Ubuntu specific multiarch path fix introduced in
+    5.12.3-3 and obsoleted by the upstream fix in 5.12.4.
 
   [ Dominic Hargreaves ]
   * Note removal of perl-suid in README.Debian and suggest alternatives

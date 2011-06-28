@@ -3823,7 +3823,6 @@ overload.pl			generate overload.h
 pad.c				Scratchpad functions
 pad.h				Scratchpad headers
 parser.h			parser object header
-patchlevel-debian.h			List of patches applied via the Debian packaging
 patchlevel.h			The current patch level of perl
 perlapi.c			Perl API functions
 perlapi.h			Perl API function declarations
@@ -3876,6 +3875,7 @@ pod/perl5120delta.pod		Perl changes in version 5.12.0
 pod/perl5121delta.pod		Perl changes in version 5.12.1
 pod/perl5122delta.pod		Perl changes in version 5.12.2
 pod/perl5123delta.pod		Perl changes in version 5.12.3
+pod/perl5124delta.pod		Perl changes in version 5.12.4
 pod/perl561delta.pod		Perl changes in version 5.6.1
 pod/perl56delta.pod		Perl changes in version 5.6
 pod/perl570delta.pod		Perl changes in version 5.7.0
