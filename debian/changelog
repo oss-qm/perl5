@@ -19,6 +19,8 @@ perl (5.14.1-1) UNRELEASED; urgency=low
   * Support the 'build-arch' and 'build-indep' debian/rules targets
     as synonyms for 'build'.
   * Remove a stale perlcc reference from the libperl-dev long description.
+  * Don't use LD_RUN_PATH for multiarch directories (Closes: #631096)
+    (thanks, Ahmed El-Mahmoudy)
 
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool

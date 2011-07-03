@@ -1,4 +1,4 @@
-From 1293e4822ee7e4518a589be4179a39b336412074 Mon Sep 17 00:00:00 2001
+From 54218379af5a4ae67a673ffcedeb557a541abbb7 Mon Sep 17 00:00:00 2001
 From: Samuel Thibault <sthibault@debian.org>
 Date: Wed, 4 Aug 2010 13:34:05 +0300
 Subject: Make hints/gnu.sh append to $ccflags rather than overriding them
