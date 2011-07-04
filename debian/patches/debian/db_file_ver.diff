@@ -32,6 +32,3 @@ index 47158d3..67ccdff 100644
      
      /* check that libdb is recent enough  -- we need 2.3.4 or greater */
      if (Major == 2 && (Minor < 3 || (Minor ==  3 && Patch < 4)))
--- 
-1.7.2.5
-

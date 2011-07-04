@@ -151,6 +151,3 @@ index da58365..d6d5c11 100644
          }
          if ($need_filtering) {
              run_filter($pm_filter, $from, $to);
--- 
-1.7.2.5
-

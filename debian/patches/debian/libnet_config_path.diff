@@ -1,4 +1,4 @@
-From 4a62ead7aa7d13ea413f868d4d4c3325ba67be9f Mon Sep 17 00:00:00 2001
+From 0ff3ab626865b2655f6968b4210fa965ba0fbac9 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Set location of libnet.cfg to /etc/perl/Net as /usr may not be writable.
@@ -34,6 +34,3 @@ index db51c1f..8404593 100644
  can be done by having a C<.libnetrc> file in their home directory. This file
  should return a reference to a HASH containing the keys described below.
  For example
--- 
-1.7.2.5
-

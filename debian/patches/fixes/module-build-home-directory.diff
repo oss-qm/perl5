@@ -1,4 +1,4 @@
-From 0e4b7d4f4d19f727949963b5ab23b2741cff02a3 Mon Sep 17 00:00:00 2001
+From 4f22eff8a3dd3c1f7031d0f0e2be57948c7e6a0f Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 2 May 2011 10:35:04 +0100
 Subject: Fix failing tilde test when run under a UID without a passwd entry
@@ -35,6 +35,3 @@ index a5ed790..d4ef53e 100755
      my ($me, $home) = @info[0,7];
  
      my $expected = "$home/foo";
--- 
-1.7.2.5
-

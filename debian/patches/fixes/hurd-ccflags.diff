@@ -1,4 +1,4 @@
-From 43f087ac925622de54a29977d6e248e5f9c3db29 Mon Sep 17 00:00:00 2001
+From 37566f8821c3379b459ae73bf34577d47753f9ae Mon Sep 17 00:00:00 2001
 From: Samuel Thibault <sthibault@debian.org>
 Date: Wed, 4 Aug 2010 13:34:05 +0300
 Subject: Make hints/gnu.sh append to $ccflags rather than overriding them
@@ -28,6 +28,3 @@ index 2cfce54..c1ba2db 100644
  
  # The following routines are only available as stubs in GNU libc.
  # XXX remove this once metaconf detects the GNU libc stubs.
--- 
-1.7.2.5
-

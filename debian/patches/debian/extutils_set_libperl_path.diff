@@ -21,6 +21,3 @@ index 7601a64..568de65 100644
  	$dir = "$self->{PERL_ARCHLIB}/.." if $self->{UNINSTALLED_PERL};
  	$libperl ||= "libperl$self->{LIB_EXT}";
  	$libperl   = "$dir/$libperl";
--- 
-1.7.2.5
-

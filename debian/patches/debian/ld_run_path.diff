@@ -1,4 +1,4 @@
-From b65ffba8f57b0b8ca0d103a83b8ed39cee04bfb5 Mon Sep 17 00:00:00 2001
+From 61e578783d12482047cfa9b1ae227242509e5361 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Remove standard libs from LD_RUN_PATH as per Debian policy.
@@ -22,6 +22,3 @@ index b807e97..bf0822f 100644
      foreach my $thislib (split ' ', $potential_libs) {
  
  	# Handle possible linker path arguments.
--- 
-1.7.2.5
-

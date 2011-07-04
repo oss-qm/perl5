@@ -1,4 +1,4 @@
-From faf23e1c00c9687c4f3061d0b54c3ab6a23dd0f8 Mon Sep 17 00:00:00 2001
+From 9f0c23f8149c6c3a5620f0c632bf19e19f8681b8 Mon Sep 17 00:00:00 2001
 From: Robin Barker <rmbarker@cpan.org>
 Date: Thu, 22 Apr 2010 11:51:20 +0100
 Subject: h2ph fix for gcc 4.5
@@ -105,6 +105,3 @@ index 8f56db4..1255807 100644
  	    } else {
  		print PREAMBLE
  		    "unless (defined &$_) { sub $_() { \"",
--- 
-1.7.2.5
-

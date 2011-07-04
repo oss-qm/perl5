@@ -32,6 +32,3 @@ index 124b8fc..b554cd4 100644
  \$VERSION = "$VERSION";
  \$VERSION = eval \$VERSION;
  \@ISA = qw(Exporter);
--- 
-1.7.2.5
-

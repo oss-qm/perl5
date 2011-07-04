@@ -34,6 +34,3 @@ index 53ffbf1..53976ff 100644
      my_dflt_prompt(mbuild_arg => "", $matcher);
  
      if (exists $CPAN::HandleConfig::keys{mbuild_install_build_command}
--- 
-1.7.2.5
-

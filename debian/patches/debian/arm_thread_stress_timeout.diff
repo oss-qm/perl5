@@ -23,6 +23,3 @@ index adfd1ed..652a3e6 100755
  
      my $mutex = 1;
      share($mutex);
--- 
-1.7.2.5
-

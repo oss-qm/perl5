@@ -21,6 +21,3 @@ index 76cd81e..65a3b27 100644
          my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
          my($configpmtest) = File::Spec->catfile($configpmdir,"Config.pm");
          my $inc_key;
--- 
-1.7.2.5
-

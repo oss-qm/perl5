@@ -1,4 +1,4 @@
-From 70c1d532854b2536f1383a1c92f44ddce0b47938 Mon Sep 17 00:00:00 2001
+From 87c60fffb900309f563bb06f466559e2fc109e07 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 8 May 2008 14:32:33 +0300
 Subject: Adjust Module::Build manual page extensions for the Debian Perl policy
@@ -32,6 +32,3 @@ index 5bd8ec7..b4e606a 100644
      my $manpage = $self->man3page_name( $relfile ) . '.' .
  	          $self->config( 'man3ext' );
      my $outfile = File::Spec->catfile( $mandir, $manpage);
--- 
-1.7.2.5
-

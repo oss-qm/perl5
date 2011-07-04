@@ -33,6 +33,3 @@ index 9868e50..b2fc358 100644
  
  In general, if something strange has gone wrong with your program and you're
  not sure where you should look for help, try the B<-w> switch first.  It will
--- 
-1.7.2.5
-

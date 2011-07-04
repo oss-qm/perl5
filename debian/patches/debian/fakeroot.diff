@@ -42,6 +42,3 @@ index cd388a7..eebe712 100755
  	*)
  	    case "$osname" in
  	    os2)
--- 
-1.7.2.5
-

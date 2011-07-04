@@ -1,4 +1,4 @@
-From 91fa4c48af8f7aa96ba11979319f458e2a036d04 Mon Sep 17 00:00:00 2001
+From f0ba0f9bfa4857a15e0ea06a693ff361124f0a93 Mon Sep 17 00:00:00 2001
 From: Vladimir Timofeev <vovkasm@gmail.com>
 Date: Tue, 10 May 2011 09:17:41 -0400
 Subject: Fix ODBM_File failures on Ubuntu natty [multiarch]
@@ -31,6 +31,3 @@ index f8ca492..204bba0 100644
 +foreach (split / /, $Config{libpth}) {
 +    $self->{LIBS}->[0] .= ' -lgdbm_compat' if -e $_.'/libgdbm_compat.so';
  }
--- 
-1.7.2.5
-
