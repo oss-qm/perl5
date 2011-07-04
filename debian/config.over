@@ -58,6 +58,14 @@ if [ "$i_db" != "$define" ]; then
     exit 1
 fi
 
+# force /usr/lib/<triplet> into $Config{libpth} if it's not there yet
+# see #630399
+multiarch_dir=/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`
+if ! echo $libpth | grep -q "$multiarch_dir"
+then
+    libpth="$libpth $multiarch_dir"
+fi
+
 # set generic email addresses, host/domain names
 cf_by='Debian Project'
 cf_email=perl@packages.debian.org
