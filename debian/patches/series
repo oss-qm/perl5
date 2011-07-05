@@ -38,3 +38,4 @@ debian/patchlevel.diff
 fixes/h2ph-multiarch.diff
 fixes/odbm-multiarch.diff
 fixes/re.t_sh4_timeout.diff
+fixes/index-tainting.diff

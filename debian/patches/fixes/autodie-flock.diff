@@ -1,7 +1,8 @@
 From dd6ba3c0a31b0adeaca1abd5a69ef7679af30e01 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 30 Aug 2009 13:58:35 +0300
-Subject: Allow for flock returning EAGAIN instead of EWOULDBLOCK on linux/parisc
+Subject: Allow for flock returning EAGAIN instead of EWOULDBLOCK on
+ linux/parisc
 
 Bug-Debian: http://bugs.debian.org/543731
 Origin: upstream, http://github.com/pfenwick/autodie/commit/037738e11a6097734b0e1dabdd77b92e5fe35219
