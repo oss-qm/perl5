@@ -1,4 +1,4 @@
-From d7a85159932abab446156c32e752570e5333a855 Mon Sep 17 00:00:00 2001
+From 58045b57b86605fc6fd09be695482e5468c81b31 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian

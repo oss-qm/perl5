@@ -1,4 +1,4 @@
-From a1f5eb0a01dfd639e807e019ce51b617d4f46ac1 Mon Sep 17 00:00:00 2001
+From 1da9ff6ae9866af2deb8ca881ecec362d409f008 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 16 Dec 2005 01:32:14 +1100
 Subject: Remove Errno version check due to upgrade problems with long-running

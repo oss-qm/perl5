@@ -1,4 +1,4 @@
-From b449da12f582ca3408b37f6a8591080ba7793ab9 Mon Sep 17 00:00:00 2001
+From 3f87e939daad01a0a1ede5f60914efd05716b1a5 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 10 Apr 2009 01:17:43 +0300
 Subject: Disable zlib bundling in Compress::Raw::Zlib
