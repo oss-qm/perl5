@@ -24,6 +24,7 @@ perl (5.14.1-1) UNRELEASED; urgency=low
   * Add Depends on libc6-dev | libc-dev to libperl-dev (Closes: #631308)
   * Add a './perl.static -Ilib -V' invocation to the end of the build,
     for the build log record (refers to: #630399)
+  * Merge 5.12.4-1 from unstable.
 
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool
@@ -70,6 +71,45 @@ perl (5.14.0-1) experimental; urgency=low
     libperl4-corelibs-perl, libshell-perl
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 20 May 2011 18:07:12 +0100
+
+perl (5.12.4-1) unstable; urgency=low
+
+  [ Niko Tyni ]
+  * New upstream release.
+  * Move debian/check-control to debian/t/ to anticipate new package
+    maintainer tests in the future.
+  * Switch to git-dpm for managing debian/patches
+    + generate the patchlevel information from debian/patches at build time.
+  * Multiarch related fixes:
+    + h2ph now correctly gets the header directories from gcc (Closes: #625808)
+    + ODBM_File hints find libgdbm_compat again (Closes: #625634)
+  * Support the 'build-arch' and 'build-indep' debian/rules targets
+    as synonyms for 'build'.
+  * Remove a stale perlcc reference from the libperl-dev long description.
+  * Remove the Debian/Ubuntu specific multiarch path fix introduced in
+    5.12.3-3 and obsoleted by the upstream fix in 5.12.4.
+
+  [ Dominic Hargreaves ]
+  * Note removal of perl-suid in README.Debian and suggest alternatives
+    (Closes: #628042)
+  * Lengthen time-out in t/re/re.t; fixes FTBFS on sh4 (Closes: #626125)
+  * Add note about git format-patch signatures to git-dpm section of
+    README.source
+  * Revert obsolete patches:
+    - debian/arm_optim.diff
+    - debian/devel-ppport-ia64-optim.diff
+    - fixes/processPL.diff (Closes: #626094) 
+  * Split up patch debian/extutils_hacks.diff into several logically
+    distinct patches (relates to: #624508)
+  * Update Vcs-* references to point to combined git-dpm based
+    repository at new anonscm URLs
+  * Don't use LD_RUN_PATH for multiarch directories (Closes: #631096)
+    (thanks, Ahmed El-Mahmoudy)
+  * Add Depends on libc6-dev | libc-dev to libperl-dev (Closes: #631308)
+  * Add a './perl.static -Ilib -V' invocation to the end of the build,
+    for the build log record (refers to: #630399)
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 28 Jun 2011 22:25:28 +0100
 
 perl (5.12.3-7) unstable; urgency=low
 
