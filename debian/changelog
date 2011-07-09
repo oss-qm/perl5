@@ -12,6 +12,7 @@ perl (5.12.4-2) UNRELEASED; urgency=low
     incompatibility issue in partial upgrades. (Closes: #633076)
   * No longer prune -lnsl and -lutil in debian/config.over, this was
     obsoleted by a related change in 5.6.1-7 (!)
+  * Match bzip2 archives in debian/watch.
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 04 Jul 2011 10:42:42 +0300
 
