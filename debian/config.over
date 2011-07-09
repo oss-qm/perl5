@@ -21,23 +21,6 @@ done
 
 ccdlflags="$tmp"
 
-# -lnsl is brought in automatically via nsswitch as required
-# -lutil is a glibc BSD compat library which we don't use
-for var in libs perllibs
-do
-    eval val=\"\$$var\"
-    tmp=
-    for t in $val
-    do
-	case $t in
-	    -lnsl|-lutil) ;;
-	    *) tmp="$tmp${tmp:+ }$t"
-	esac
-    done
-
-    eval $var=\"$tmp\"
-done
-
 # set previous version dirs
 inc_version_list=
 inc_version_list_init=0

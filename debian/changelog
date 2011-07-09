@@ -10,6 +10,8 @@ perl (5.12.4-2) UNRELEASED; urgency=low
   * Fix tainting with index() of a constant. (Closes: #291450)
   * Break older versions of doc-base to avoid a Storable binary
     incompatibility issue in partial upgrades. (Closes: #633076)
+  * No longer prune -lnsl and -lutil in debian/config.over, this was
+    obsoleted by a related change in 5.6.1-7 (!)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 04 Jul 2011 10:42:42 +0300
 
