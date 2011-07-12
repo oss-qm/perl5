@@ -25,6 +25,7 @@ perl (5.14.1-1) UNRELEASED; urgency=low
   * Add a './perl.static -Ilib -V' invocation to the end of the build,
     for the build log record (refers to: #630399)
   * Merge 5.12.4-1 from unstable.
+  * Fix tainting with index() of a constant. (Closes: #291450)
 
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool

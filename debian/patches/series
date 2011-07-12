@@ -31,3 +31,4 @@ fixes/extutils-cbuilder-cflags.diff
 fixes/module-build-home-directory.diff
 debian/patchlevel.diff
 fixes/h2ph-multiarch.diff
+fixes/index-tainting.diff
