@@ -1,4 +1,4 @@
-perl (5.14.1-1) UNRELEASED; urgency=low
+perl (5.14.1-1) experimental; urgency=low
 
   [ Niko Tyni ]
   * New upstream version.
@@ -52,7 +52,7 @@ perl (5.14.1-1) UNRELEASED; urgency=low
     distinct patches (relates to: #624508)
   * Merge 5.12.4-2 from unstable.
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 04 Jun 2011 22:31:47 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 27 Jul 2011 22:15:23 +0100
 
 perl (5.14.0-1) experimental; urgency=low
 
