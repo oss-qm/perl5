@@ -26,6 +26,18 @@ perl (5.14.1-1) UNRELEASED; urgency=low
     for the build log record (refers to: #630399)
   * Merge 5.12.4-1 from unstable.
   * Fix tainting with index() of a constant. (Closes: #291450)
+  * debian/config.over: Force the multiarch directory /usr/lib/<triplet>
+    into $Config{libpth} even if doesn't exist yet. This should guarantee
+    that ExtUtils::Embed works on multiarch enabled system even when
+    the package isn't built on one. Thanks to Jonathan Nieder.
+    (Closes: #630399)
+    + needs a build dependency on dpkg-dev (>= 1.16.0) for
+      "dpkg-architecture -qDEB_HOST_MULTIARCH".
+  * Break older versions of doc-base to avoid a Storable binary
+    incompatibility issue in partial upgrades. (Closes: #633076)
+  * No longer prune -lnsl and -lutil in debian/config.over, this was
+    obsoleted by a related change in 5.6.1-7 (!)
+  * Match bzip2 archives in debian/watch.
 
   [ Dominic Hargreaves ]
   * work around -Werror compile failure of XS in linux perf tool
@@ -38,6 +50,7 @@ perl (5.14.1-1) UNRELEASED; urgency=low
     repository at new anonscm URLs
   * Split up patch debian/extutils_hacks.diff into several logically
     distinct patches (relates to: #624508)
+  * Merge 5.12.4-2 from unstable.
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 04 Jun 2011 22:31:47 +0100
 
@@ -72,6 +85,18 @@ perl (5.14.0-1) experimental; urgency=low
     libperl4-corelibs-perl, libshell-perl
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 20 May 2011 18:07:12 +0100
+
+perl (5.12.4-2) unstable; urgency=low
+
+  [ Niko Tyni ]
+  * Fix tainting with index() of a constant. (Closes: #291450)
+  * Break older versions of doc-base to avoid a Storable binary
+    incompatibility issue in partial upgrades. (Closes: #633076)
+  * No longer prune -lnsl and -lutil in debian/config.over, this was
+    obsoleted by a related change in 5.6.1-7 (!)
+  * Match bzip2 archives in debian/watch.
+
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 27 Jul 2011 19:59:30 +0100
 
 perl (5.12.4-1) unstable; urgency=low
 

@@ -21,23 +21,6 @@ done
 
 ccdlflags="$tmp"
 
-# -lnsl is brought in automatically via nsswitch as required
-# -lutil is a glibc BSD compat library which we don't use
-for var in libs perllibs
-do
-    eval val=\"\$$var\"
-    tmp=
-    for t in $val
-    do
-	case $t in
-	    -lnsl|-lutil) ;;
-	    *) tmp="$tmp${tmp:+ }$t"
-	esac
-    done
-
-    eval $var=\"$tmp\"
-done
-
 # set previous version dirs
 inc_version_list=
 inc_version_list_init=0
@@ -56,6 +39,14 @@ fi
 if [ "$i_db" != "$define" ]; then
     echo "debian/config.over: Berkeley DB support not enabled, aborting!" 1>&2
     exit 1
+fi
+
+# force /usr/lib/<triplet> into $Config{libpth} if it's not there yet
+# see #630399
+multiarch_dir=/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`
+if ! echo $libpth | grep -q "$multiarch_dir"
+then
+    libpth="$libpth $multiarch_dir"
 fi
 
 # set generic email addresses, host/domain names

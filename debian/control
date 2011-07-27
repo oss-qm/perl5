@@ -5,7 +5,8 @@ Maintainer: Niko Tyni <ntyni@debian.org>
 Uploaders: Dominic Hargreaves <dom@earth.li>
 Standards-Version: 3.9.2
 Build-Depends: file, cpio (>= 2.6-5), libdb-dev, libgdbm-dev, netbase [!hurd-i386],
- gcc (>= 4:4.2), procps | hurd, zlib1g-dev | libz-dev, libbz2-dev
+ gcc (>= 4:4.2), procps | hurd, zlib1g-dev | libz-dev, libbz2-dev,
+ dpkg-dev (>= 1.16.0)
 Build-Conflicts: libterm-readline-gnu-perl (<< 1.17), libfile-sharedir-perl
 Vcs-Git: git://anonscm.debian.org/perl/perl.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=perl/perl.git
@@ -20,7 +21,8 @@ Breaks: autoconf2.13 (<< 2.13-45),
  libscalar-list-utils-perl (<< 1:1.23),
  libfile-spec-perl (<< 3.3300),
  libxsloader-perl (<< 0.13),
- libmarc-charset-perl (<< 1.2)
+ libmarc-charset-perl (<< 1.2),
+ doc-base (<< 0.10.0)
 Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.10.1-1), libperl5.8 (<< 5.8.0-20),
  libscalar-list-utils-perl,
  libxsloader-perl 
