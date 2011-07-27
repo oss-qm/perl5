@@ -2,7 +2,7 @@ perl (5.12.4-3) UNRELEASED; urgency=low
 
   * Fix lintian error by build-depending on procps [!hurd-any] rather
     than procps | hurd (and adjust existing [!hurd-i386] to
-    [!hurd-any] (Closes: #635647)
+    [!hurd-any]) (Closes: #635647)
 
  -- Dominic Hargreaves <dom@earth.li>  Thu, 28 Jul 2011 00:05:36 +0100
 
