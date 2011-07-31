@@ -63,12 +63,12 @@ Description: Perl documentation
 Package: perl-modules
 Priority: standard
 Architecture: all
-Depends: perl (>= ${Upstream-Version}-1)
-Recommends: libswitch-perl,
- libpod-plainer-perl,
- libclass-isa-perl,
- libshell-perl,
+Depends: perl (>= ${Upstream-Version}-1),
+ libswitch-perl,
+ libclass-isa-perl
+Recommends: libshell-perl,
  libperl4-corelibs-perl
+Suggests: libpod-plainer-perl
 Breaks: libpod-parser-perl (<< 1.37),
  libansicolor-perl (<< 3.00),
  libfile-temp-perl (<< 0.22),
