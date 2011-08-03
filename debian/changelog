@@ -99,6 +99,13 @@ perl (5.14.0-1) experimental; urgency=low
 perl (5.12.4-2) unstable; urgency=low
 
   [ Niko Tyni ]
+  * debian/config.over: Force the multiarch directory /usr/lib/<triplet>
+    into $Config{libpth} even if doesn't exist yet. This should guarantee
+    that ExtUtils::Embed works on multiarch enabled system even when
+    the package isn't built on one. Thanks to Jonathan Nieder.
+    (Closes: #630399)
+    + needs a build dependency on dpkg-dev (>= 1.16.0) for
+      "dpkg-architecture -qDEB_HOST_MULTIARCH".
   * Fix tainting with index() of a constant. (Closes: #291450)
   * Break older versions of doc-base to avoid a Storable binary
     incompatibility issue in partial upgrades. (Closes: #633076)
