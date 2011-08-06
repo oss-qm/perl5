@@ -138,7 +138,10 @@ my @fallbackMethods = ();
 # happy, the timeout is now zero by default on all systems 
 # except on OSX where it is set to 250 msec, and can be set 
 # with the infamous setlogsock() function.
-$sock_timeout = 0.25 if $^O =~ /darwin/;
+#
+# Debian change: include Debian GNU/kFreeBSD, lower to 1ms
+# see [rt.cpan.org #69997]
+$sock_timeout = 0.001 if $^O =~ /darwin|gnukfreebsd/;
 
 # coderef for a nicer handling of errors
 my $err_sub = $options{nofatal} ? \&warnings::warnif : \&croak;
