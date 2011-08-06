@@ -1,8 +1,7 @@
 From b078aaf23498c8beeea8acbb6d4e505d975776bd Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
-Subject: Replace generic man(1) instructions with Debian-specific
- information.
+Subject: Replace generic man(1) instructions with Debian-specific information.
 
 Indicate that the user needs to install the perl-doc package.
 

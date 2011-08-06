@@ -5,8 +5,10 @@ perl (5.14.1-2) UNRELEASED; urgency=low
     (see: #629472)
   * Demote libpod-plainer-perl from Recommends to Suggests, based on
     analysis of its usage in Debian (see: #629472)
+  * Skip a crashing test case in t/op/threads.t on GNU/kFreeBSD
+    (see: #628493, thanks Niko)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 31 Jul 2011 22:07:55 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:11:11 +0100
 
 perl (5.14.1-1) experimental; urgency=low
 
