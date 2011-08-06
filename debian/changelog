@@ -7,8 +7,10 @@ perl (5.14.1-2) UNRELEASED; urgency=low
     analysis of its usage in Debian (see: #629472)
   * Skip a crashing test case in t/op/threads.t on GNU/kFreeBSD
     (see: #628493, thanks Niko)
+  * Apply patch from Niko documenting the correct use of CCFLAGS in
+    ExtUtils::MakeMaker (see: #628522)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:11:11 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:26:23 +0100
 
 perl (5.14.1-1) experimental; urgency=low
 
