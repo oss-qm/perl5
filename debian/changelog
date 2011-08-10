@@ -15,6 +15,10 @@ perl (5.14.1-2) UNRELEASED; urgency=low
     (Closes: #637376)
   * Improve general GNU hints, fixing build failures on GNU/Hurd. Patch by
     Pino Toscano. (Closes: #636609)
+  * Merge 5.12.4-3 and 5.12.4-4 from unstable
+  * Fix lintian error by build-depending on procps [!hurd-any] rather
+    than procps | hurd (and adjust existing [!hurd-i386] to
+    [!hurd-any]) (Closes: #635647)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:26:23 +0100
 
@@ -105,6 +109,30 @@ perl (5.14.0-1) experimental; urgency=low
     libperl4-corelibs-perl, libshell-perl
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 20 May 2011 18:07:12 +0100
+
+perl (5.12.4-4) unstable; urgency=medium
+
+  * Fix decode_xs n-byte heap-overflow security bug in Unicode.xs
+    (Closes: #637376)
+
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 10 Aug 2011 19:25:23 +0100
+
+perl (5.12.4-3) unstable; urgency=low
+
+  [ Dominic Hargreaves ]
+  * Fix lintian error by build-depending on procps [!hurd-any] rather
+    than procps | hurd (and adjust existing [!hurd-i386] to
+    [!hurd-any]) (Closes: #635647)
+  * Apply patch from Niko documenting the correct use of CCFLAGS in
+    ExtUtils::MakeMaker (see: #628522)
+  * Use a socket timeout on GNU/kFreeBSD to catch ICMP port unreachable
+    messages (thanks, Niko) (Closes: #627821)
+
+  [ Niko Tyni ]
+  * Improve general GNU hints, fixing build failures on GNU/Hurd. Patch by
+    Pino Toscano. (Closes: #636609)
+
+ -- Niko Tyni <ntyni@debian.org>  Wed, 10 Aug 2011 08:16:20 +0300
 
 perl (5.12.4-2) unstable; urgency=low
 
