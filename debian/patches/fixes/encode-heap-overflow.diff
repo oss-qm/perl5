@@ -1,9 +1,10 @@
-From 602decdf2877d37c82cb80fd226376ff96357458 Mon Sep 17 00:00:00 2001
+From 2e6e1e81494d349380e13ca735d1774bf124bd60 Mon Sep 17 00:00:00 2001
 From: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
 Date: Wed, 10 Aug 2011 19:09:32 +0100
 Subject: Fix decode_xs n-byte heap-overflow security bug in Unicode.xs
 
 Bug-Debian: http://bugs.debian.org/637376
+Origin: http://perl5.git.perl.org/perl.git/commitdiff/e46d973584785af1f445c4dedbee4243419cb860#patch5
 
 Patch-Name: fixes/encode-heap-overflow.diff
 ---
