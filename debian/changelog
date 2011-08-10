@@ -10,8 +10,8 @@ perl (5.12.4-3) unstable; urgency=low
     messages (thanks, Niko) (Closes: #627821)
 
   [ Niko Tyni ]
-  * Improve general GNU hints, fixing build failures GNU/Hurd. Patch by
-    Pino Toscano.
+  * Improve general GNU hints, fixing build failures on GNU/Hurd. Patch by
+    Pino Toscano. (Closes: #636609)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 10 Aug 2011 08:16:20 +0300
 
