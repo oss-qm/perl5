@@ -1,4 +1,4 @@
-perl (5.12.4-4) unstable; urgency=low
+perl (5.12.4-4) unstable; urgency=medium
 
   * Fix decode_xs n-byte heap-overflow security bug in Unicode.xs
     (Closes: #637376)
