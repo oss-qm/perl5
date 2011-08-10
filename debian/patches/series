@@ -42,3 +42,4 @@ fixes/index-tainting.diff
 fixes/document_makemaker_ccflags.diff
 fixes/sys-syslog-socket-timeout-kfreebsd.patch
 fixes/hurd-hints.diff
+fixes/encode-heap-overflow.diff
