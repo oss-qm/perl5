@@ -1,12 +1,11 @@
-From 44159ea1454ea8f237d90fbd292eaa836191fdc8 Mon Sep 17 00:00:00 2001
-From: Niko Tyni <ntyni@debian.org>
+From e4af27d9dfc130a0754762e2a3b6f22ac13d211a Mon Sep 17 00:00:00 2001
+From: Pino Toscano <pino@debian.org>
 Date: Wed, 10 Aug 2011 08:11:33 +0300
-Subject: Author: Pino Toscano <pino@debian.org> Bug-Debian:
- http://bugs.debian.org/636609
+Subject: Improve general GNU hints, needed for GNU/Hurd.
 
-Improve general GNU hints, needed for GNU/Hurd.
+Bug-Debian: http://bugs.debian.org/636609
 
-Patch-Name: fixes/hurd-hints
+Patch-Name: fixes/hurd-hints.diff
 ---
  ext/ODBM_File/hints/gnu.pl |    1 +
  hints/gnu.sh               |   12 ++++++++++++
