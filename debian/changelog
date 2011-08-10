@@ -1,5 +1,6 @@
 perl (5.12.4-3) UNRELEASED; urgency=low
 
+  [ Dominic Hargreaves ]
   * Fix lintian error by build-depending on procps [!hurd-any] rather
     than procps | hurd (and adjust existing [!hurd-i386] to
     [!hurd-any]) (Closes: #635647)
@@ -7,6 +8,10 @@ perl (5.12.4-3) UNRELEASED; urgency=low
     ExtUtils::MakeMaker (see: #628522)
   * Use a socket timeout on GNU/kFreeBSD to catch ICMP port unreachable
     messages (thanks, Niko) (Closes: #627821)
+
+  [ Niko Tyni ]
+  * Improve general GNU hints, fixing build failures GNU/Hurd. Patch by
+    Pino Toscano.
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:18:40 +0100
 
