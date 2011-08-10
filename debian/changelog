@@ -13,6 +13,8 @@ perl (5.14.1-2) UNRELEASED; urgency=low
     messages (thanks, Niko) (Closes: #627821)
   * Fix decode_xs n-byte heap-overflow security bug in Unicode.xs
     (Closes: #637376)
+  * Improve general GNU hints, fixing build failures on GNU/Hurd. Patch by
+    Pino Toscano. (Closes: #636609)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:26:23 +0100
 

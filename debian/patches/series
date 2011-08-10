@@ -36,3 +36,4 @@ debian/skip-kfreebsd-crash.diff
 fixes/document_makemaker_ccflags.diff
 fixes/sys-syslog-socket-timeout-kfreebsd.patch
 fixes/encode-heap-overflow.diff
+fixes/hurd-hints.diff
