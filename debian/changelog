@@ -1,4 +1,4 @@
-perl (5.12.4-3) UNRELEASED; urgency=low
+perl (5.12.4-3) unstable; urgency=low
 
   [ Dominic Hargreaves ]
   * Fix lintian error by build-depending on procps [!hurd-any] rather
@@ -13,7 +13,7 @@ perl (5.12.4-3) UNRELEASED; urgency=low
   * Improve general GNU hints, fixing build failures GNU/Hurd. Patch by
     Pino Toscano.
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:18:40 +0100
+ -- Niko Tyni <ntyni@debian.org>  Wed, 10 Aug 2011 08:16:20 +0300
 
 perl (5.12.4-2) unstable; urgency=low
 
