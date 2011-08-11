@@ -1,4 +1,4 @@
-perl (5.14.1-2) UNRELEASED; urgency=low
+perl (5.14.1-2) experimental; urgency=low
 
   * Promote libclass-isa-perl and libswitch-perl from Recommends to
     Depends, to improve partial upgrades from squeeze to wheezy
@@ -20,7 +20,7 @@ perl (5.14.1-2) UNRELEASED; urgency=low
     than procps | hurd (and adjust existing [!hurd-i386] to
     [!hurd-any]) (Closes: #635647)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 06 Aug 2011 16:26:23 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 11 Aug 2011 18:28:44 +0100
 
 perl (5.14.1-1) experimental; urgency=low
 
