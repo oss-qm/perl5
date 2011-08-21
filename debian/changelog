@@ -1,7 +1,7 @@
 perl (5.12.4-4) unstable; urgency=medium
 
-  * Fix decode_xs n-byte heap-overflow security bug in Unicode.xs
-    (Closes: #637376)
+  * [SECURITY] CVE-2011-2939: Fix decode_xs n-byte heap-overflow security
+    bug in Unicode.xs (Closes: #637376)
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 10 Aug 2011 19:25:23 +0100
 
