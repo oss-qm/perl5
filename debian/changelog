@@ -11,8 +11,8 @@ perl (5.14.1-2) experimental; urgency=low
     ExtUtils::MakeMaker (see: #628522)
   * Use a socket timeout on GNU/kFreeBSD to catch ICMP port unreachable
     messages (thanks, Niko) (Closes: #627821)
-  * Fix decode_xs n-byte heap-overflow security bug in Unicode.xs
-    (Closes: #637376)
+  * [SECURITY] CVE-2011-2939: Fix decode_xs n-byte heap-overflow security
+    bug in Unicode.xs (Closes: #637376)
   * Improve general GNU hints, fixing build failures on GNU/Hurd. Patch by
     Pino Toscano. (Closes: #636609)
   * Merge 5.12.4-3 and 5.12.4-4 from unstable
