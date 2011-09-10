@@ -1,0 +1,121 @@
+From caf3a75f18a8109b50601073e76e5065361848f3 Mon Sep 17 00:00:00 2001
+From: Father Chrysostomos <sprout@cpan.org>
+Date: Thu, 18 Aug 2011 08:50:02 -0700
+Subject: Carp (actually caller) leaking memory
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/790db5db7e
+Bug-Debian: http://bugs.debian.org/638676
+Bug: https://rt.perl.org/rt3/Public/Bug/Display.html?id=97010
+Patch-Name: fixes/carp-memleak.diff
+
+Commit eff7e72c3 (Detect incomplete caller overrides in Carp) used
+this little trick for detecting a @DB::args that an overridden
+caller() failed to set:
+
++  @args = \$i; # A sentinal, which no-one else has the address of
+
+But there is a bug in caller().  The first time caller tries to write
+to @DB::args, it calls Perl_init_dbargs first.  That function checks
+whether @DB::args is AvREAL, in case someone has assigned to it, and
+takes appropriate measures.  But caller doesn’t bother calling
+Perl_init_dbargs more than once.  So manually-assigned items in
+@DB::args would leak, starting with the *second* call to caller.
+
+Commit eff7e72c3 triggered that bug, resulting in a regression in
+Carp, in that it started leaking.  eff7e72c3 was backported to 5.12.2
+with commit 97705941a4, so in both 5.12 and 5.14 Carp is affected.
+
+This bug (the caller bug, not Carp’s triggering thereof) also affects
+any caller overrides that set @DB::args themselves, if there are
+alternate calls to the overridden caller and CORE::caller.
+
+This commit fixes that by changing the if (!PL_dbargs) condition
+in pp_caller to if (!PL_dbargs || AvREAL(PL_dbargs)).  I.e., if
+@args is either uninitialised or AvREAL then call Perl_init_dbargs.
+Perl_init_dbargs also has a bug in it, that this fixes: The array not
+only needs AvREAL turned off, but also AvREIFY turned on, so that
+assignments to it that occur after its initialisation turn AvREAL back
+on again.  (In fact, Larry Wall added a comment suggesting this back
+in perl 5.000.)
+
+(cherry-picked from af80dd863acea8450a9f41ae03645f4d69dad091)
+---
+ av.h          |    2 +-
+ perl.c        |    2 +-
+ pp_ctl.c      |    2 +-
+ t/op/caller.t |   13 ++++++++++++-
+ 4 files changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/av.h b/av.h
+index f8c9d1b..d0bbebd 100644
+--- a/av.h
++++ b/av.h
+@@ -29,7 +29,7 @@ struct xpvav {
+  * real if the array needs to be modified in some way.  Functions that
+  * modify fake AVs check both flags to call av_reify() as appropriate.
+  *
+- * Note that the Perl stack and @DB::args have neither flag set. (Thus,
++ * Note that the Perl stack has neither flag set. (Thus,
+  * items that go on the stack are never refcounted.)
+  *
+  * These internal details are subject to change any time.  AV
+diff --git a/perl.c b/perl.c
+index 023d6a0..1219799 100644
+--- a/perl.c
++++ b/perl.c
+@@ -3779,7 +3779,7 @@ Perl_init_dbargs(pTHX)
+ 	   "leak" until global destruction.  */
+ 	av_clear(args);
+     }
+-    AvREAL_off(PL_dbargs);	/* XXX should be REIFY (see av.h) */
++    AvREIFY_only(PL_dbargs);
+ }
+ 
+ void
+diff --git a/pp_ctl.c b/pp_ctl.c
+index dbec3a9..b9bcc28 100644
+--- a/pp_ctl.c
++++ b/pp_ctl.c
+@@ -1799,7 +1799,7 @@ PP(pp_caller)
+ 	AV * const ary = cx->blk_sub.argarray;
+ 	const int off = AvARRAY(ary) - AvALLOC(ary);
+ 
+-	if (!PL_dbargs)
++	if (!PL_dbargs || AvREAL(PL_dbargs))
+ 	    Perl_init_dbargs(aTHX);
+ 
+ 	if (AvMAX(PL_dbargs) < AvFILLp(ary) + off)
+diff --git a/t/op/caller.t b/t/op/caller.t
+index b857322..196e70e 100755
+--- a/t/op/caller.t
++++ b/t/op/caller.t
+@@ -5,7 +5,7 @@ BEGIN {
+     chdir 't' if -d 't';
+     @INC = '../lib';
+     require './test.pl';
+-    plan( tests => 80 );
++    plan( tests => 81 );
+ }
+ 
+ my @c;
+@@ -205,6 +205,17 @@ EOP
+     }
+ }
+ 
++# This also used to leak [perl #97010]:
++{
++    my $gone;
++    sub fwib::DESTROY { ++$gone }
++    package DB;
++    sub { () = caller(0) }->(); # initialise PL_dbargs
++    @args = bless[],'fwib';
++    sub { () = caller(0) }->(); # clobber @args without initialisation
++    ::is $gone, 1, 'caller does not leak @DB::args elems when AvREAL';
++}
++
+ $::testing_caller = 1;
+ 
+ do './op/caller.pl' or die $@;
