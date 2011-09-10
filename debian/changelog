@@ -1,6 +1,6 @@
 perl (5.14.1-3) UNRELEASED; urgency=low
 
-  * 
+  * Fix a memory leak in Carp::shortmess. (Closes: #638676)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 10 Sep 2011 08:07:52 +0300
 
