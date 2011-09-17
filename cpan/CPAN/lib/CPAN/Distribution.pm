@@ -3735,7 +3735,7 @@ sub _display_url {
       if $CPAN::DEBUG;
 
     # should we define it in the config instead?
-    my $html_converter = "html2text.pl";
+    my $html_converter = "html2text";
 
     my $web_browser = $CPAN::Config->{'lynx'} || undef;
     my $web_browser_out = $web_browser
