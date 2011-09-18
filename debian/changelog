@@ -1,8 +1,12 @@
 perl (5.14.1-3) UNRELEASED; urgency=low
 
+  [ Niko Tyni ]
   * Fix a memory leak in Carp::shortmess. (Closes: #638676)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 10 Sep 2011 08:07:52 +0300
+  [ Dominic Hargreaves ]
+  * Fix typos in several pod/perl*.pod files (Closes: #637816)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 18 Sep 2011 18:11:12 +0100
 
 perl (5.14.1-2) experimental; urgency=low
 
