@@ -1,4 +1,4 @@
-From b078aaf23498c8beeea8acbb6d4e505d975776bd Mon Sep 17 00:00:00 2001
+From 16ebe1f5232621d8894aa6c6210fdf2fc9b54a84 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Replace generic man(1) instructions with Debian-specific
@@ -12,10 +12,10 @@ Patch-Name: debian/doc_info.diff
  1 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/pod/perl.pod b/pod/perl.pod
-index f35b79e..d507da1 100644
+index 29cabf1..529ad6f 100644
 --- a/pod/perl.pod
 +++ b/pod/perl.pod
-@@ -260,8 +260,16 @@ For ease of access, the Perl manual has been split up into several sections.
+@@ -261,8 +261,16 @@ For ease of access, the Perl manual has been split up into several sections.
      perlwin32		Perl notes for Windows
  
  

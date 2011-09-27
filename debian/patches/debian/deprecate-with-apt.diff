@@ -1,4 +1,4 @@
-From a082e552fc45c8dafe14fb7611b420e4391c1d47 Mon Sep 17 00:00:00 2001
+From c2bd2059cfbba573643c748ace4ff4db4cbf015d Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules

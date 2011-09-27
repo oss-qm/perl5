@@ -1,4 +1,4 @@
-From 5f9254b118cb5d94ffe63c3d0ac2212888d74f92 Mon Sep 17 00:00:00 2001
+From e25298a339dd6679f1b080f0125ac1b237b87950 Mon Sep 17 00:00:00 2001
 From: David Mitchell <davem@iabyn.com>
 Date: Tue, 28 Jun 2011 17:04:40 +0100
 Subject: RT 64804: tainting with index() of a constant

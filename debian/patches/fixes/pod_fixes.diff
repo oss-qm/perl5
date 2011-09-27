@@ -1,4 +1,4 @@
-From 3cf92459136a9e103ccb7e180db9094ca9b02e61 Mon Sep 17 00:00:00 2001
+From c6b1fdd18dab0236458502564e54c180bb0ce341 Mon Sep 17 00:00:00 2001
 From: Keith Thompson <kst@mib.org>
 Date: Fri, 29 Jul 2011 17:17:00 -0700
 Subject: Fix typos in several pod/perl*.pod files
@@ -54,7 +54,7 @@ index 2ee3637..719a740 100644
  
    # These examples are subject to system-specific variation.
 diff --git a/pod/perlglossary.pod b/pod/perlglossary.pod
-index 3a573c3..113a7a2 100644
+index 639ce33..191371c 100644
 --- a/pod/perlglossary.pod
 +++ b/pod/perlglossary.pod
 @@ -507,7 +507,7 @@ the class (its L<objects|/object>).  See also L</inheritance>.
