@@ -37,3 +37,4 @@ fixes/document_makemaker_ccflags.diff
 fixes/sys-syslog-socket-timeout-kfreebsd.patch
 fixes/hurd-hints.diff
 fixes/pod_fixes.diff
+debian/find_html2text.diff

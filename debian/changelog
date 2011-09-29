@@ -3,8 +3,10 @@ perl (5.14.2-1) UNRELEASED; urgency=low
   * Fix typos in several pod/perl*.pod files (Closes: #637816)
   * New upstream version.
     + Fix a memory leak in Carp::shortmess. (Closes: #638676)
+  * Update CPAN::Distribution to use html2text rather than html2text.pl;
+    thanks to Andreas Marschke for the patch (Closes: #640479)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 18 Sep 2011 18:11:12 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 29 Sep 2011 21:40:24 +0100
 
 perl (5.14.1-2) experimental; urgency=low
 
