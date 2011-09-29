@@ -1,4 +1,4 @@
-perl (5.14.2-1) UNRELEASED; urgency=low
+perl (5.14.2-1) experimental; urgency=low
 
   * Fix typos in several pod/perl*.pod files (Closes: #637816)
   * New upstream version.
@@ -9,7 +9,7 @@ perl (5.14.2-1) UNRELEASED; urgency=low
     as the Perl4 libraries are provided by perl itself
   * Merge 5.12.4-5 from unstable
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 29 Sep 2011 21:40:24 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 29 Sep 2011 21:51:55 +0100
 
 perl (5.14.1-2) experimental; urgency=low
 
