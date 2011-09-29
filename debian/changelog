@@ -1,4 +1,4 @@
-perl (5.12.4-5) UNRELEASED; urgency=low
+perl (5.12.4-5) unstable; urgency=low
 
   [ Niko Tyni ]
   * Fix a memory leak in Carp::shortmess. (Closes: #638676)
@@ -10,7 +10,7 @@ perl (5.12.4-5) UNRELEASED; urgency=low
     and script-uses-perl4-libs-without-dep as the Perl4 libraries are
     provided by perl itself
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 10 Sep 2011 08:04:15 +0300
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 29 Sep 2011 20:34:43 +0100
 
 perl (5.12.4-4) unstable; urgency=medium
 
