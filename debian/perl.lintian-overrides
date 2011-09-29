@@ -3,3 +3,6 @@ no-copyright-file
 debian-changelog-file-missing-or-wrong-name
 # lintian is looking at the upstream changelog here
 syntax-error-in-debian-changelog
+# special case; perl-modules itself provides libperl4-corelibs-perl
+script-uses-perl4-libs-without-dep usr/bin/c2ph:307 getopts.pl
+script-uses-perl4-libs-without-dep usr/bin/pstruct:307 getopts.pl

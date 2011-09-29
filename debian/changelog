@@ -6,6 +6,9 @@ perl (5.12.4-5) UNRELEASED; urgency=low
   [ Dominic Hargreaves ]
   * Update CPAN::Distribution to use html2text rather than html2text.pl;
     thanks to Andreas Marschke for the patch (Closes: #640479)
+  * Override Lintian warnings perl-module-uses-perl4-libs-without-dep
+    and script-uses-perl4-libs-without-dep as the Perl4 libraries are
+    provided by perl itself
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 10 Sep 2011 08:04:15 +0300
 
