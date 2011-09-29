@@ -5,6 +5,9 @@ perl (5.14.2-1) UNRELEASED; urgency=low
     + Fix a memory leak in Carp::shortmess. (Closes: #638676)
   * Update CPAN::Distribution to use html2text rather than html2text.pl;
     thanks to Andreas Marschke for the patch (Closes: #640479)
+  * Override Lintian warning perl-module-uses-perl4-libs-without-dep
+    as the Perl4 libraries are provided by perl itself
+  * Merge 5.12.4-5 from unstable
 
  -- Dominic Hargreaves <dom@earth.li>  Thu, 29 Sep 2011 21:40:24 +0100
 
@@ -120,10 +123,24 @@ perl (5.14.0-1) experimental; urgency=low
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 20 May 2011 18:07:12 +0100
 
+perl (5.12.4-5) unstable; urgency=low
+
+  [ Niko Tyni ]
+  * Fix a memory leak in Carp::shortmess. (Closes: #638676)
+
+  [ Dominic Hargreaves ]
+  * Update CPAN::Distribution to use html2text rather than html2text.pl;
+    thanks to Andreas Marschke for the patch (Closes: #640479)
+  * Override Lintian warnings perl-module-uses-perl4-libs-without-dep
+    and script-uses-perl4-libs-without-dep as the Perl4 libraries are
+    provided by perl itself
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 29 Sep 2011 20:34:43 +0100
+
 perl (5.12.4-4) unstable; urgency=medium
 
-  * Fix decode_xs n-byte heap-overflow security bug in Unicode.xs
-    (Closes: #637376)
+  * [SECURITY] CVE-2011-2939: Fix decode_xs n-byte heap-overflow security
+    bug in Unicode.xs (Closes: #637376)
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 10 Aug 2011 19:25:23 +0100
 
