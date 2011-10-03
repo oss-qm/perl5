@@ -45,3 +45,4 @@ fixes/hurd-hints.diff
 fixes/encode-heap-overflow.diff
 fixes/carp-memleak.diff
 debian/find_html2text.diff
+fixes/digest_eval_hole.diff
