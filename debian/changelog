@@ -1,9 +1,9 @@
-perl (5.12.4-6) UNRELEASED; urgency=low
+perl (5.12.4-6) unstable; urgency=medium
 
   * [SECURITY] CVE-2011-3597: Fix unsafe use of eval in Digest->new();
     thanks to Ansgar Burchardt for the notification (Closes: #644108)
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 03 Oct 2011 19:18:14 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 07 Oct 2011 22:15:54 +0100
 
 perl (5.12.4-5) unstable; urgency=low
 
