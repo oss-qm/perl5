@@ -2,6 +2,7 @@ perl (5.14.2-2) UNRELEASED; urgency=low
 
   * [SECURITY] CVE-2011-3597: Fix unsafe use of eval in Digest->new();
     thanks to Ansgar Burchardt for the notification (Closes: #644108)
+  * Merge 5.12.4-6 from unstable
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 30 Oct 2011 17:09:03 +0000
 
@@ -129,6 +130,13 @@ perl (5.14.0-1) experimental; urgency=low
     libperl4-corelibs-perl, libshell-perl
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 20 May 2011 18:07:12 +0100
+
+perl (5.12.4-6) unstable; urgency=medium
+
+  * [SECURITY] CVE-2011-3597: Fix unsafe use of eval in Digest->new();
+    thanks to Ansgar Burchardt for the notification (Closes: #644108)
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 07 Oct 2011 22:15:54 +0100
 
 perl (5.12.4-5) unstable; urgency=low
 
