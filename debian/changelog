@@ -3,8 +3,12 @@ perl (5.14.2-2) UNRELEASED; urgency=low
   * [SECURITY] CVE-2011-3597: Fix unsafe use of eval in Digest->new();
     thanks to Ansgar Burchardt for the notification (Closes: #644108)
   * Merge 5.12.4-6 from unstable
+  * Fix NDBM_File hints on GNU/Hurd
+    (thanks, Pino Toscano) (Closes: #645989)
+  * Fix hang in t/ext/POSIX/t/sysconf.t on GNU/Hurd
+    (thanks, Pino Toscano) (Closes: #646016)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 30 Oct 2011 17:09:03 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 05 Nov 2011 23:07:17 +0000
 
 perl (5.14.2-1) experimental; urgency=low
 
