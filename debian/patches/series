@@ -41,3 +41,4 @@ debian/find_html2text.diff
 fixes/digest_eval_hole.diff
 fixes/hurd-ndbm.diff
 fixes/sysconf.t-posix.diff
+fixes/hurd-largefile.diff
