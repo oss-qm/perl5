@@ -1,4 +1,4 @@
-perl (5.14.2-2) UNRELEASED; urgency=low
+perl (5.14.2-2) experimental; urgency=low
 
   * [SECURITY] CVE-2011-3597: Fix unsafe use of eval in Digest->new();
     thanks to Ansgar Burchardt for the notification (Closes: #644108)
@@ -10,7 +10,7 @@ perl (5.14.2-2) UNRELEASED; urgency=low
   * Enable LFS on GNU/Hurd
     (thanks, Pino Toscano) (Closes: #645790)
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 07 Nov 2011 18:50:14 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 12 Nov 2011 17:25:33 +0000
 
 perl (5.14.2-1) experimental; urgency=low
 
