@@ -1,3 +1,9 @@
+perl (5.14.2-3) unstable; urgency=low
+
+  * Upload to unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Nov 2011 12:12:26 +0000
+
 perl (5.14.2-2) experimental; urgency=low
 
   * [SECURITY] CVE-2011-3597: Fix unsafe use of eval in Digest->new();
