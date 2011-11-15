@@ -267,6 +267,7 @@ Package: perl
 Priority: standard
 Architecture: any
 Depends: perl-base (= ${binary:Version}), perl-modules (>= ${source:Version}), ${shlibs:Depends}
+Conflicts: libjson-pp-perl (<< 2.27200-2)
 Breaks: perl-doc (<< ${Upstream-Version}-1),
  libdigest-md5-perl (<< 2.51),
  libmime-base64-perl (<< 3.13),

@@ -1,3 +1,10 @@
+perl (5.14.2-4) unstable; urgency=low
+
+  * Add Conflicts: libjson-pp-perl (<< 2.27200-2) to perl package
+    to fix file conflict with dual-lived module (Closes: #648897)
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 15 Nov 2011 23:36:39 +0000
+
 perl (5.14.2-3) unstable; urgency=low
 
   * Upload to unstable
