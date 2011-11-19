@@ -1,6 +1,6 @@
 perl (5.14.2-6) UNRELEASED; urgency=low
 
-  * 
+  * debian/rules: correctly handle subject line wraps in patch headers.
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 19 Nov 2011 22:15:05 +0200
 

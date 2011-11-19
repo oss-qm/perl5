@@ -35,7 +35,7 @@ fi
 while read patch strip
 do
     patchname=$(echo $patch | sed 's/\.diff$//')
-    < $patchdir/$patch sed -n -e '
+    < $patchdir/$patch sed -e '/^Subject:/ { N; s/\n / / }' | sed -n -e '
 
     # massage the patch headers
     s|^Bug: .*https\?://rt\.perl\.org/.*id=\(.*\).*|[perl #\1]|; tprepend;
