@@ -16,7 +16,7 @@ Essential: yes
 Priority: required
 Architecture: any
 Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.14.20)
-Conflicts: safe-rm (<< 0.8)
+Conflicts: safe-rm (<< 0.8), update-inetd (<< 4.41)
 Breaks: autoconf2.13 (<< 2.13-45),
  libscalar-list-utils-perl (<< 1:1.23),
  libfile-spec-perl (<< 3.3300),
