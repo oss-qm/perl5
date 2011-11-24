@@ -5,6 +5,8 @@ perl (5.14.2-6) UNRELEASED; urgency=low
 
   [ Dominic Hargreaves ]
   * Add versioned Conflicts on update-inetd (<< 4.41) (Closes: #649177)
+  * Conflict on rather than Break doc-base (<< 0.10.3); aptitude
+    runs doc-base triggers before the new version has been unpacked
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 19 Nov 2011 22:15:05 +0200
 
