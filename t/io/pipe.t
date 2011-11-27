@@ -9,6 +9,9 @@ BEGIN {
     if (!$Config{'d_fork'}) {
         skip_all("fork required to pipe");
     }
+    elsif ($^O eq 'gnu') {
+        skip_all('fails on GNU/Hurd (Debian #650187)');
+    }
     else {
         plan(tests => 24);
     }
