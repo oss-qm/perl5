@@ -8,6 +8,9 @@ BEGIN {
     if (! $Config{'useithreads'}) {
         skip_all(q/Perl not compiled with 'useithreads'/);
     }
+    if ($^O eq 'gnu') {
+        skip_all(q|fails on GNU/Hurd (Debian #650097)|);
+    }
 
     plan(11);
 }

@@ -9,8 +9,9 @@ perl (5.14.2-6) UNRELEASED; urgency=low
     runs doc-base triggers before the new version has been unpacked
   * Update Lintian override for perl-module-uses-perl4-libs-without-dep
     to reflect new path to CGI.pm
+  * Disable various tests which fail on GNU/Hurd (see #648623)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 19 Nov 2011 22:15:05 +0200
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 27 Nov 2011 16:50:15 +0000
 
 perl (5.14.2-5) unstable; urgency=low
 
