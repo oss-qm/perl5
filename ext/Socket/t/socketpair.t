@@ -8,7 +8,8 @@ BEGIN {
     require Config; import Config;
     $can_fork = $Config{'d_fork'} || $Config{'d_pseudofork'};
 
-    if ($^O eq "hpux" or $Config{'extensions'} !~ /\bSocket\b/ &&
+    # fails on GNU/Hurd (Debian #650186)
+    if ($^O eq "gnu" or $^O eq "hpux" or $Config{'extensions'} !~ /\bSocket\b/ &&
         !(($^O eq 'VMS') && $Config{d_socket})) {
 	print "1..0\n";
 	exit 0;
