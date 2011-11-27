@@ -163,14 +163,20 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
         # syslog() with level "info" (as a string), should pass
         $r = eval { syslog('info', "$test_string by connecting to a $sock_type socket") } || 0;
         is( $@, '', "[$sock_type] syslog() called with level 'info' (string)" );
-        ok( $r, "[$sock_type] syslog() should return true: '$r'" );
+        TODO: {
+            local $TODO = 'fails on GNU/Hurd (Debian #650093)' if $^O eq 'gnu';
+            ok( $r, "[$sock_type] syslog() should return true: '$r'" );
+        }
 
         # syslog() with level "info" (as a macro), should pass
         { local $! = 1;
           $r = eval { syslog(LOG_INFO(), "$test_string by connecting to a $sock_type socket, setting a fake errno: %m") } || 0;
         }
         is( $@, '', "[$sock_type] syslog() called with level 'info' (macro)" );
-        ok( $r, "[$sock_type] syslog() should return true: '$r'" );
+        TODO: {
+            local $TODO = 'fails on GNU/Hurd (Debian #650093)' if $^O eq 'gnu';
+            ok( $r, "[$sock_type] syslog() should return true: '$r'" );
+        }
 
         push @passed, $sock_type;
 
@@ -179,7 +185,10 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
             # closelog()
             $r = eval { closelog() } || 0;
             is( $@, '', "[$sock_type] closelog()" );
-            ok( $r, "[$sock_type] closelog() should return true: '$r'" );
+            TODO: {
+                local $TODO = 'fails on GNU/Hurd (Debian #650093)' if $^O eq 'gnu';
+                ok( $r, "[$sock_type] closelog() should return true: '$r'" );
+            }
         }
     }
 }
