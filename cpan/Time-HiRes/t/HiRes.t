@@ -353,6 +353,7 @@ unless (defined &Time::HiRes::setitimer
 	&& $Config{sig_name} =~ m/\bVTALRM\b/
 	&& $^O ne 'nto' # nto: QNX 6 has the API but no implementation
 	&& $^O ne 'haiku' # haiku: has the API but no implementation
+	&& $^O ne 'gnu' # GNU/Hurd: has the API but no implementation; <http://savannah.gnu.org/task/?8916>
     ) {
     for (18..19) {
 	print "ok $_ # Skip: no virtual interval timers\n";
