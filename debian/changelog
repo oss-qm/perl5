@@ -1,4 +1,4 @@
-perl (5.14.2-6) UNRELEASED; urgency=low
+perl (5.14.2-6) unstable; urgency=low
 
   [ Niko Tyni ]
   * debian/rules: correctly handle subject line wraps in patch headers.
@@ -11,7 +11,7 @@ perl (5.14.2-6) UNRELEASED; urgency=low
     to reflect new path to CGI.pm
   * Disable various tests which fail on GNU/Hurd (see #648623)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 27 Nov 2011 16:50:15 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 28 Nov 2011 19:48:05 +0000
 
 perl (5.14.2-5) unstable; urgency=low
 
