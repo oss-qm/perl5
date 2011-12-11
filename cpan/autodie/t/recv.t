@@ -1,14 +1,8 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More;
+use Test::More tests => 8;
 use Socket;
 use autodie qw(socketpair);
-
-if ($^O eq 'gnu') {
-    plan skip_all => 'fails on GNU/Hurd (Debian #650095)';
-} else {
-    plan tests => 8;
-}
 
 # All of this code is based around recv returning an empty
 # string when it gets data from a local machine (using AF_UNIX),

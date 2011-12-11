@@ -1,8 +1,11 @@
 perl (5.14.2-7) UNRELEASED; urgency=low
 
-  * 
+  * Re-enable tests dist/threads/t/libc.t, ext/Socket/t/socketpair.t
+    on GNU/Hurd fixed by changes in hurd (20111206-1)
+  * Re-enable test cpan/autodie/t/recv.t on GNU/Hurd fixed by changes in
+    eglibc (2.13-22)
 
- -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Nov 2011 21:19:09 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 11 Dec 2011 20:32:21 +0000
 
 perl (5.14.2-6) unstable; urgency=low
 

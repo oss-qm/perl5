@@ -44,10 +44,7 @@ fixes/sysconf.t-posix.diff
 fixes/hurd-largefile.diff
 debian/hurd_test_todo_syslog.diff
 fixes/hurd_skip_itimer_virtual.diff
-debian/hurd_test_skip_socketpair.diff
 debian/hurd_test_skip_sigdispatch.diff
 debian/hurd_test_skip_stack.diff
-debian/hurd_test_skip_recv.diff
-debian/hurd_test_skip_libc.diff
 debian/hurd_test_skip_pipe.diff
 debian/hurd_test_skip_io_pipe.diff
