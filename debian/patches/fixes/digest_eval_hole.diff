@@ -1,0 +1,33 @@
+From: "Michael G. Schwern" <schwern@pobox.com>
+Date: Mon, 3 Oct 2011 19:05:29 +0100
+Subject: Close the eval "require $module" security hole in
+ Digest->new($algorithm)
+
+Also the filter was incomplete.
+
+Bug-Debian: http://bugs.debian.org/644108
+
+Index: perl-squeeze/lib/Digest.pm
+===================================================================
+--- perl-squeeze.orig/lib/Digest.pm	2011-12-18 16:53:18.000000000 +0000
++++ perl-squeeze/lib/Digest.pm	2011-12-18 16:53:24.000000000 +0000
+@@ -24,7 +24,7 @@
+     shift;  # class ignored
+     my $algorithm = shift;
+     my $impl = $MMAP{$algorithm} || do {
+-	$algorithm =~ s/\W+//;
++	$algorithm =~ s/\W+//g;
+ 	"Digest::$algorithm";
+     };
+     $impl = [$impl] unless ref($impl);
+@@ -35,7 +35,9 @@
+ 	($class, @args) = @$class if ref($class);
+ 	no strict 'refs';
+ 	unless (exists ${"$class\::"}{"VERSION"}) {
+-	    eval "require $class";
++	    my $pm_file = $class . ".pm";
++	    $pm_file =~ s{::}{/}g;
++	    eval { require $pm_file };
+ 	    if ($@) {
+ 		$err ||= $@;
+ 		next;
