@@ -1,4 +1,3 @@
-fixes/digest_eval_hole.diff
 debian/arm_thread_stress_timeout.diff -p1
 debian/cpan_config_path.diff -p1
 debian/cpan_definstalldirs.diff -p1
@@ -51,4 +50,6 @@ fixes/concat-stack-corruption.diff -p1
 fixes/cgi-multiline-header.diff -p1
 fixes/casing-taint-cve-2011-1487.diff -p1
 fixes/safe-reval-rdo-cve-2010-1447.diff -p1
+fixes/encode-heap-overflow.diff -p1
+fixes/digest_eval_hole.diff
 patchlevel -p1
