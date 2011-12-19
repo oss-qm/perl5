@@ -185,6 +185,7 @@ static const char * const local_patches[] = {
 	,"DEBPKG:fixes/safe-reval-rdo-cve-2010-1447 - [PATCH] Wrap by default coderefs returned by rdo and reval"
 	,"DEBPKG:fixes/encode-heap-overflow - [PATCH] Fix decode_xs n-byte heap-overflow security bug in"
 	,"DEBPKG:fixes/digest_eval_hole - Close the eval "require $module" security hole in"
+	,"DEBPKG:fixes/unregister_signal_handler - [PATCH] main: Unregister signal handler before destroying my_perl"
 	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-17squeeze3 in patchlevel.h"
 	,NULL
 };

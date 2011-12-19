@@ -4,6 +4,8 @@ perl (5.10.1-17squeeze3) UNRELEASED; urgency=low
     bug in Unicode.xs (Closes: #637376)
   * [SECURITY] CVE-2011-3597: Fix unsafe use of eval in Digest->new();
     thanks to Ansgar Burchardt for the notification (Closes: #644108)
+  * Unregister signal handler before destroying my_perl; fixes segfault
+    (Closes: #604902)
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 17 Aug 2011 00:24:10 +0100
 

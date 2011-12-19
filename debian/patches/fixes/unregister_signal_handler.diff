@@ -1,0 +1,44 @@
+From 01be0729981136a058cce07a897ccdb94609e1c0 Mon Sep 17 00:00:00 2001
+From: John Wright <john@johnwright.org>
+Date: Wed, 6 May 2009 00:47:15 -0600
+Subject: [PATCH] main: Unregister signal handler before destroying my_perl
+
+If the signal handler runs after perl_destruct() has been called, it
+will get an invalid (or NULL) my_perl when it asks for the
+thread-specific interpreter struct.  This patch resets the signal
+handler for any signal previously handled by PL_csighandlerp to SIG_DFL
+before calling perl_destruct().
+---
+ miniperlmain.c |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
+
+diff --git a/miniperlmain.c b/miniperlmain.c
+index f60a3e0..f2302c2 100644
+--- a/miniperlmain.c
++++ b/miniperlmain.c
+@@ -67,7 +67,7 @@ main(int argc, char **argv, char **env)
+ #endif
+ {
+     dVAR;
+-    int exitstatus;
++    int exitstatus, i;
+ #ifdef PERL_GLOBAL_STRUCT
+     struct perl_vars *plvarsp = init_global_struct();
+ #  ifdef PERL_GLOBAL_STRUCT_PRIVATE
+@@ -116,6 +116,13 @@ main(int argc, char **argv, char **env)
+     if (!exitstatus)
+         perl_run(my_perl);
+ 
++    /* Unregister our signal handler before destroying my_perl */
++    for (i = 0; PL_sig_name[i]; i++) {
++	if (rsignal_state(PL_sig_num[i]) == (Sighandler_t) PL_csighandlerp) {
++	    rsignal(PL_sig_num[i], (Sighandler_t) SIG_DFL);
++	}
++    }
++
+     exitstatus = perl_destruct(my_perl);
+ 
+     perl_free(my_perl);
+-- 
+1.7.4.1
+
