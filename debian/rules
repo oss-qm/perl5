@@ -436,6 +436,7 @@ refresh-patchlevel: $(patches)
 	grep -q $(patchlevelpatch) $(patches) || echo '$(patchlevelpatch) -p1' >> $(patches)
 	sed s/VERSION/$(package_version)/ debian/$(patchlevelpatch).head > debian/patches/$(patchlevelpatch)
 	perl debian/list-patches $(patchprefix) < $(patches) | \
+	  sed -e 's/\"/\\\"/g' | \
 	  xargs -d\\n -r perl -x patchlevel.h
 	diff --unified=0 patchlevel.bak patchlevel.h | \
 	  filterdiff --remove-timestamps --addprefix perl/ >> debian/patches/$(patchlevelpatch)
