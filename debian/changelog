@@ -4,8 +4,10 @@ perl (5.14.2-7) UNRELEASED; urgency=low
     on GNU/Hurd fixed by changes in hurd (20111206-1)
   * Re-enable test cpan/autodie/t/recv.t on GNU/Hurd fixed by changes in
     eglibc (2.13-22)
+  * Add missing POD descriptions in modules from CPAN, to fix Lintian
+    warnings (Closes: #650448, #650450, #650451, #650452)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 11 Dec 2011 20:32:21 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 20 Dec 2011 23:58:16 +0000
 
 perl (5.14.2-6) unstable; urgency=low
 

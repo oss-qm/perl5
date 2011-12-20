@@ -48,3 +48,7 @@ debian/hurd_test_skip_sigdispatch.diff
 debian/hurd_test_skip_stack.diff
 debian/hurd_test_skip_pipe.diff
 debian/hurd_test_skip_io_pipe.diff
+fixes/manpage_name_CPAN.diff
+fixes/manpage_name_CPANPLUS.diff
+fixes/manpage_name_Test-Harness.diff
+fixes/manpage_name_Term-UI.diff
