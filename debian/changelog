@@ -1,4 +1,4 @@
-perl (5.10.1-17squeeze3) UNRELEASED; urgency=low
+perl (5.10.1-17squeeze3) stable; urgency=low
 
   * [SECURITY] CVE-2011-2939: Fix decode_xs n-byte heap-overflow security
     bug in Unicode.xs (Closes: #637376)
@@ -7,7 +7,7 @@ perl (5.10.1-17squeeze3) UNRELEASED; urgency=low
   * Unregister signal handler before destroying my_perl; fixes segfault
     (Closes: #604902)
 
- -- Dominic Hargreaves <dom@earth.li>  Wed, 17 Aug 2011 00:24:10 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 20 Dec 2011 20:01:23 +0000
 
 perl (5.10.1-17squeeze2) stable-security; urgency=low
 
