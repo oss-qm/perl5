@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-CPANPLUS::Config::System
+CPANPLUS::Config::System - system configuration for CPANPLUS
 
 =head1 DESCRIPTION
 
