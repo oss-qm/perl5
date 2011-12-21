@@ -52,3 +52,4 @@ fixes/manpage_name_CPAN.diff
 fixes/manpage_name_CPANPLUS.diff
 fixes/manpage_name_Test-Harness.diff
 fixes/manpage_name_Term-UI.diff
+fixes/podlators_ae_ligature_fallback.diff

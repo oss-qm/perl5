@@ -6,8 +6,10 @@ perl (5.14.2-7) UNRELEASED; urgency=low
     eglibc (2.13-22)
   * Add missing POD descriptions in modules from CPAN, to fix Lintian
     warnings (Closes: #650448, #650450, #650451, #650452)
+  * Fix AE ligature fallback handling in Pod::Man (thanks to
+    Russ Allbery for the fix) (Closes: #652851)
 
- -- Dominic Hargreaves <dom@earth.li>  Tue, 20 Dec 2011 23:58:16 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 21 Dec 2011 22:21:34 +0000
 
 perl (5.14.2-6) unstable; urgency=low
 
