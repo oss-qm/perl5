@@ -1,5 +1,9 @@
 # see #522827
-no-copyright-file
+# The following override is no longer useful, since the tag has been
+# marked as non-overridable. It's also no longer needed, since
+# #553262 was implemented in lintian. Keeping this here to provide
+# a reminder of this special-case
+#no-copyright-file
 debian-changelog-file-missing-or-wrong-name
 # lintian is looking at the upstream changelog here
 syntax-error-in-debian-changelog

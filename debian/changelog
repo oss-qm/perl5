@@ -11,6 +11,8 @@ perl (5.14.2-7) UNRELEASED; urgency=low
   * Update references to the FSF's postal address (fixes Lintian warnings)
   * Add Lintian override for missing manpage for perldoc stub
   * Fix POD formatting in Term-Cap and Pod-Parser (fixes Lintian warnings)
+  * Remove special-case override for non-overridable no-copyright-file
+    (see #522827 and #553262)
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 02 Jan 2012 18:22:43 +0000
 
