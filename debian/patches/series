@@ -53,3 +53,4 @@ fixes/manpage_name_CPANPLUS.diff
 fixes/manpage_name_Test-Harness.diff
 fixes/manpage_name_Term-UI.diff
 fixes/podlators_ae_ligature_fallback.diff
+fixes/fsf_postal_address.diff
