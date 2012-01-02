@@ -39,9 +39,9 @@ This module defines some basic input objects used by B<Pod::Parser> when
 reading and parsing POD text from an input source. The following objects
 are defined:
 
-=over 4
-
 =begin __PRIVATE__
+
+=over 4
 
 =item package B<Pod::InputSource>
 
@@ -50,7 +50,11 @@ wrapper around a filehandle or C<IO::Handle>-type object (or anything
 that implements the C<getline()> method) which keeps track of some
 additional information relevant to the parsing of PODs.
 
+=back
+
 =end __PRIVATE__
+
+=over 4
 
 =item package B<Pod::Paragraph>
 
