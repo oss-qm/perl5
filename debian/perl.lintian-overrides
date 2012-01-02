@@ -3,3 +3,6 @@ no-copyright-file
 debian-changelog-file-missing-or-wrong-name
 # lintian is looking at the upstream changelog here
 syntax-error-in-debian-changelog
+# corner case; this perldoc is just a stub, not a full implementation,
+# so no point in trying to provide a manpage here.
+binary-without-manpage usr/bin/perldoc
