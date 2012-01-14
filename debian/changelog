@@ -9,7 +9,8 @@ perl (5.14.2-7) UNRELEASED; urgency=low
   * Fix AE ligature fallback handling in Pod::Man (thanks to
     Russ Allbery for the fix) (Closes: #652851)
   * Update references to the FSF's postal address (fixes Lintian warnings)
-  * Add Lintian override for missing manpage for perldoc stub
+  * Add Lintian overrides for missing manpages for perldoc stub and
+    cpanp-run-perl utility script (Closes: #654652)
   * Fix POD formatting in Term-Cap and Pod-Parser (fixes Lintian warnings)
   * Remove special-case override for non-overridable no-copyright-file
     Lintian tag (see #522827 and #553262)

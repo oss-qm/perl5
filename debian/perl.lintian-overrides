@@ -10,3 +10,5 @@ syntax-error-in-debian-changelog
 # corner case; this perldoc is just a stub, not a full implementation,
 # so no point in trying to provide a manpage here.
 binary-without-manpage usr/bin/perldoc
+# not intended as a user interface
+binary-without-manpage usr/bin/cpanp-run-perl
