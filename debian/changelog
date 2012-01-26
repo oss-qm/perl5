@@ -1,5 +1,6 @@
 perl (5.14.2-7) UNRELEASED; urgency=low
 
+  [ Dominic Hargreaves ]
   * Re-enable tests dist/threads/t/libc.t, ext/Socket/t/socketpair.t
     on GNU/Hurd fixed by changes in hurd (20111206-1)
   * Re-enable test cpan/autodie/t/recv.t on GNU/Hurd fixed by changes in
@@ -14,6 +15,9 @@ perl (5.14.2-7) UNRELEASED; urgency=low
   * Fix POD formatting in Term-Cap and Pod-Parser (fixes Lintian warnings)
   * Remove special-case override for non-overridable no-copyright-file
     Lintian tag (see #522827 and #553262)
+
+  [ Jonathan Nieder ]
+  * Add Homepage field pointing to dev.perl.org (Closes: #657274)
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 02 Jan 2012 18:22:43 +0000
 
