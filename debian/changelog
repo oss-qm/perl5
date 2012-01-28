@@ -1,4 +1,4 @@
-perl (5.14.2-7) UNRELEASED; urgency=low
+perl (5.14.2-7) unstable; urgency=low
 
   [ Dominic Hargreaves ]
   * Re-enable tests dist/threads/t/libc.t, ext/Socket/t/socketpair.t
@@ -19,7 +19,7 @@ perl (5.14.2-7) UNRELEASED; urgency=low
   [ Jonathan Nieder ]
   * Add Homepage field pointing to dev.perl.org (Closes: #657274)
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 02 Jan 2012 18:22:43 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 28 Jan 2012 21:40:00 +0000
 
 perl (5.14.2-6) unstable; urgency=low
 
