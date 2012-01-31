@@ -1,3 +1,10 @@
+perl (5.14.2-8) UNRELEASED; urgency=low
+
+  * Include some notes in debian/rules about not using perl more than
+    necessary
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 31 Jan 2012 19:50:57 +0000
+
 perl (5.14.2-7) unstable; urgency=low
 
   [ Dominic Hargreaves ]

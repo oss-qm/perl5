@@ -3,6 +3,13 @@
 #
 # debian/rules for perl.
 #
+# Note that although this rules file currently invokes tools from dpkg-dev
+# implemented in perl (such as dpkg-architecture and so on), it aspires
+# to not use perl at all, so that a new architecture can easily be
+# bootstrapped. This aspiration should be considered when changing this
+# file.
+#
+# <http://lists.alioth.debian.org/pipermail/perl-maintainers/2012-January/002870.html>
 
 export SHELL = /bin/bash
 
