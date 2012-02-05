@@ -49,7 +49,7 @@ subst_upstream = -VUpstream-Version=$(package_upstream_version)
 subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`"
 subst_next_upstream = -VNext-Upstream-Version=$(nextversion)
 
-# for ext/Compress-Raw-Bzip2
+# for cpan/Compress-Raw-Bzip2
 export BUILD_BZIP2=0
 export BZIP2_INCLUDE=/usr/include
 export BZIP2_LIB=/usr/lib
