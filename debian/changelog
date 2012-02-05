@@ -11,6 +11,8 @@ perl (5.14.2-8) UNRELEASED; urgency=low
   * Make perl-base and perl-modules conflict with defoma (<< 0.11.12),
     whose older versions may break when invoked from preinst scripts
     during squeeze -> wheezy upgrades. (Closes: #657940)
+  * Use dpkg-buildflags (when available) to enable hardened builds.
+    (Closes: #657853)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 31 Jan 2012 19:50:57 +0000
 

@@ -8,6 +8,7 @@ SETsubver= PERL_SUBVERSION' | gcc -E -DPERL_PATCHLEVEL_H_IMPLICIT - \
 fullver="$ver.$subver"
 nextver="$ver."$(($subver+1))
 ccflags=-DDEBIAN
+ldflags=
 arch_cpu=${DEB_BUILD_ARCH_CPU:-$(dpkg-architecture -qDEB_BUILD_ARCH_CPU)}
 gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
 optimize=-O2
@@ -80,6 +81,12 @@ case ",$DEB_BUILD_OPTIONS," in
 	optimize="$optimize${optimize:+ }-O0";;
 esac
 
+if which dpkg-buildflags >/dev/null 2>&1; then
+    ccflags="$ccflags $(dpkg-buildflags --get CPPFLAGS)"
+    ccflags="$ccflags $(dpkg-buildflags --get CFLAGS)"
+    ldflags="$ldflags $(dpkg-buildflags --get LDFLAGS)"
+fi
+
 # post-configure tweaks
 cp debian/config.over .
 
@@ -88,6 +95,8 @@ eval /bin/bash Configure			\
     -Dusethreads				\
     -Duselargefiles				\
     -Dccflags=\'$ccflags\'			\
+    -Dldflags=\'$ldflags\'			\
+    -Dlddlflags=\'-shared $ldflags\'			\
     -Dcccdlflags=-fPIC				\
     -Darchname=$gnu_type			\
     -Dprefix=/usr				\
