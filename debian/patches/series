@@ -54,3 +54,4 @@ fixes/manpage_name_Term-UI.diff
 fixes/podlators_ae_ligature_fallback.diff
 fixes/fsf_postal_address.diff
 fixes/cpan_module_pod_fixes.diff
+0057-Use-Text-ParseWords-instead-of-shellwords.pl.patch
