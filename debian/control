@@ -19,6 +19,7 @@ Architecture: any
 Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.14.20)
 Conflicts: safe-rm (<< 0.8),
  update-inetd (<< 4.41),
+ defoma (<< 0.11.12),
  doc-base (<< 0.10.3)
 Breaks: autoconf2.13 (<< 2.13-45),
  libscalar-list-utils-perl (<< 1:1.23),
@@ -71,6 +72,7 @@ Depends: perl (>= ${Upstream-Version}-1),
 Recommends: libshell-perl,
  libperl4-corelibs-perl
 Suggests: libpod-plainer-perl
+Conflicts: defoma (<< 0.11.12)
 Breaks: libpod-parser-perl (<< 1.37),
  libansicolor-perl (<< 3.00),
  libfile-temp-perl (<< 0.22),
