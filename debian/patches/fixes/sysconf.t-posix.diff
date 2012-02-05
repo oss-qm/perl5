@@ -1,4 +1,4 @@
-From 439649cb82bf2d0764f4fab772c8dca5cbcba210 Mon Sep 17 00:00:00 2001
+From f7ebefeca69148cbc3cc2f231acf443fde7315a7 Mon Sep 17 00:00:00 2001
 From: Pino Toscano <pino@debian.org>
 Date: Mon, 31 Oct 2011 21:37:04 +0000
 Subject: Fix hang in ext/POSIX/t/sysconf.t on GNU/Hurd

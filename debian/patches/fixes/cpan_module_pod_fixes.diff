@@ -1,4 +1,4 @@
-From 51c41fb3cc272a46fd9f64f61eaeb6c7a3efcbc4 Mon Sep 17 00:00:00 2001
+From 2472b3a4359838a29e72a8787aa49b14a43c86d5 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Thu, 22 Dec 2011 22:30:53 +0000
 Subject: Fix POD formatting in Term-Cap and Pod-Parser

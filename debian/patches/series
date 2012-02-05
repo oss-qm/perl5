@@ -20,7 +20,6 @@ debian/module_build_man_extensions.diff
 debian/prune_libs.diff
 fixes/net_smtp_docs.diff
 debian/perlivp.diff
-debian/disable-zlib-bundling.diff
 debian/cpanplus_definstalldirs.diff
 debian/cpanplus_config_path.diff
 debian/deprecate-with-apt.diff

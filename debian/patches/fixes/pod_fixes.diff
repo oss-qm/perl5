@@ -1,4 +1,4 @@
-From c6b1fdd18dab0236458502564e54c180bb0ce341 Mon Sep 17 00:00:00 2001
+From 7ad7e3ce779983ac97a124a8b3823f99e02bad4c Mon Sep 17 00:00:00 2001
 From: Keith Thompson <kst@mib.org>
 Date: Fri, 29 Jul 2011 17:17:00 -0700
 Subject: Fix typos in several pod/perl*.pod files

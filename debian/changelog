@@ -6,7 +6,7 @@ perl (5.14.2-8) UNRELEASED; urgency=low
 
   [ Niko Tyni ]
   * Pass system zlib information to the Compress-Raw-Zlib build system
-    with environment variables.
+    with environment variables instead of patching the source.
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 31 Jan 2012 19:50:57 +0000
 

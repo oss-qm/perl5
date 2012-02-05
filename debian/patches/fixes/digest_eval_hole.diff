@@ -1,4 +1,4 @@
-From 4b6a7324284e7435a361c58f7ddb32fc0c635bd0 Mon Sep 17 00:00:00 2001
+From 83f11e23b9d339ef00c88907a47d5f8eaf3c2977 Mon Sep 17 00:00:00 2001
 From: "Michael G. Schwern" <schwern@pobox.com>
 Date: Mon, 3 Oct 2011 19:05:29 +0100
 Subject: Close the eval "require $module" security hole in

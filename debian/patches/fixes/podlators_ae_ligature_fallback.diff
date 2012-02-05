@@ -1,4 +1,4 @@
-From d775d53686e7b34a523a3ece86a26c39a2d67adc Mon Sep 17 00:00:00 2001
+From 00440a0960d80dfdd7922efd4cf9467794a2079e Mon Sep 17 00:00:00 2001
 From: Russ Allbery <rra@stanford.edu>
 Date: Tue, 20 Dec 2011 17:13:29 -0800
 Subject: Fix the ASCII fallback string for AE
