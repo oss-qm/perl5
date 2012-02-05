@@ -1,7 +1,12 @@
 perl (5.14.2-8) UNRELEASED; urgency=low
 
+  [ Dominic Hargreaves ]
   * Include some notes in debian/rules about not using perl more than
     necessary
+
+  [ Niko Tyni ]
+  * Pass system zlib information to the Compress-Raw-Zlib build system
+    with environment variables.
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 31 Jan 2012 19:50:57 +0000
 
