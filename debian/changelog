@@ -4,6 +4,7 @@ perl (5.14.2-8) UNRELEASED; urgency=low
   * Include some notes in debian/rules about not using perl more than
     necessary
   * Fix CGI.pm to not use the deprecated shellwords.pl library
+  * Don't use _POSIX_PATH_MAX as a fallback PATH_MAX (Closes: #656869)
 
   [ Niko Tyni ]
   * Pass system zlib information to the Compress-Raw-Zlib build system
