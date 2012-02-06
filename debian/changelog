@@ -13,6 +13,8 @@ perl (5.14.2-8) UNRELEASED; urgency=low
     during squeeze -> wheezy upgrades. (Closes: #657940)
   * Use dpkg-buildflags (when available) to enable hardened builds.
     (Closes: #657853)
+    + explicitly disable the 'pie' flags until somebody finds a way
+      to make them work with the build system
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 31 Jan 2012 19:50:57 +0000
 

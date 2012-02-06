@@ -82,6 +82,8 @@ case ",$DEB_BUILD_OPTIONS," in
 esac
 
 if which dpkg-buildflags >/dev/null 2>&1; then
+    # patches to make +pie work are welcome, but disable it for now
+    export DEB_BUILD_MAINT_OPTIONS=hardening=-pie.
     ccflags="$ccflags $(dpkg-buildflags --get CPPFLAGS)"
     ccflags="$ccflags $(dpkg-buildflags --get CFLAGS)"
     ldflags="$ldflags $(dpkg-buildflags --get LDFLAGS)"
