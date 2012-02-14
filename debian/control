@@ -300,7 +300,8 @@ Breaks: perl-doc (<< ${Upstream-Version}-1),
  libyaml-perl (<< 0.73-1),
  libload-perl (<< 0.20-1),
  libsoap-lite-perl (<< 0.712-4),
- libnet-jifty-perl (<< 0.14-1)
+ libnet-jifty-perl (<< 0.14-1),
+ ftpmirror (<< 1.96+dfsg-13)
 Replaces: perl-base (<< 5.10.1-12),
  perl-doc (<< 5.8.0-1),
  perl-modules (<< 5.8.1-1),

@@ -2,6 +2,7 @@ perl (5.14.2-9) UNRELEASED; urgency=low
 
   * Add Breaks on various packages which had 5.12/5.14 compatibility
     bugs fixed since squeeze, to help with partial upgrades
+  * Add Breaks on ftpmirror for the same reason (Closes: #659799)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 14 Feb 2012 19:38:31 +0000
 
