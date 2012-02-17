@@ -8,6 +8,9 @@ perl (5.14.2-9) UNRELEASED; urgency=low
   [ Niko Tyni ]
   * No longer disable the 'pie' build flags: the implementation was
     overwriting DEB_BUILD_MAINT_OPTIONS altogether.
+  * Modify Config_heavy.pm after the build to remove dpkg-buildflags
+    effects on ccflags and lddlflags; we don't want to force them on
+    all XS modules at this stage. (See #657853)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 14 Feb 2012 19:38:31 +0000
 

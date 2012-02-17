@@ -132,6 +132,16 @@ install-stamp: build-stamp
 	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
 		$(lib)/Config.pm $(lib)/Config_heavy.pl
 
+	# remove dpkg-buildflags effects from %Config
+	# see #657853
+	if which dpkg-buildflags >/dev/null 2>&1; then \
+		ccflags="$(shell dpkg-buildflags --get CPPFLAGS) $(shell dpkg-buildflags --get CFLAGS)"; \
+		ldflags="$(shell dpkg-buildflags --get LDFLAGS)"; \
+		./perl.static -i -pe "/^c(c|pp)flags/ and s/\Q$$ccflags//;\
+		   /^ld(dl)?flags/ and s/\Q$$ldflags//" \
+		   $(lib)/Config.pm $(lib)/Config_heavy.pl; \
+	fi
+
 	# convert required header files
 	-cd /usr/include; $(srcdir)/perl.static -I $(srcdir)/lib \
 	    $(srcdir)/utils/h2ph -a -d $(srcdir)/$(lib) \
