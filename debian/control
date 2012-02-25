@@ -120,8 +120,7 @@ Breaks: libpod-parser-perl (<< 1.37),
  libdigest-perl (<< 1.16),
  libextutils-install-perl (<< 1.56),
  libhttp-tiny-perl (<< 0.012),
- libfile-path-perl (<< 2.08.01),
- libshell-perl (<< 0.72.01)
+ libfile-path-perl (<< 2.08.01)
 Replaces: libpod-parser-perl,
  libansicolor-perl,
  libfile-temp-perl,
