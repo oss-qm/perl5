@@ -1,4 +1,4 @@
-Format: http://www.debian.org/doc/copyright-format/1.0
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: perl
 Source: http://www.perl.com/CPAN/src/5.0/
 Comment:

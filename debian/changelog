@@ -11,6 +11,7 @@ perl (5.14.2-9) UNRELEASED; urgency=low
   * Modify Config_heavy.pm after the build to remove dpkg-buildflags
     effects on ccflags and lddlflags; we don't want to force them on
     all XS modules at this stage. (See #657853)
+  * Update the DEP-5 URL in debian/copyright now that it is finally stabilized.
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 14 Feb 2012 19:38:31 +0000
 
