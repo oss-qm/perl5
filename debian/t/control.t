@@ -258,6 +258,7 @@ sub get_archive_info {
 	return (0, 0) if !exists $apt->{$p}{VersionList}; # virtual package
 	my $latest = (sort byversion @{$apt->{$p}{VersionList}})[-1];
 	my $v = $latest->{VerStr};
+	$v =~ s/\+dfsg//;
 	my ($epoch, $major, $prefix, $suffix, $revision) =
 		($v =~ /^(?:(\d+):)?((?:\d+\.))+(\d+)(?:_(\d+))?(-[^-]+)$/);
 	return ($epoch, length $prefix);
