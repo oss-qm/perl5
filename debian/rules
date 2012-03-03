@@ -135,11 +135,18 @@ install-stamp: build-stamp
 	# remove dpkg-buildflags effects from %Config
 	# see #657853
 	if which dpkg-buildflags >/dev/null 2>&1; then \
-		ccflags="$(shell dpkg-buildflags --get CPPFLAGS) $(shell dpkg-buildflags --get CFLAGS)"; \
-		ldflags="$(shell dpkg-buildflags --get LDFLAGS)"; \
-		./perl.static -i -pe "/^c(c|pp)flags/ and s/\Q$$ccflags//;\
-		   /^ld(dl)?flags/ and s/\Q$$ldflags//" \
-		   $(lib)/Config.pm $(lib)/Config_heavy.pl; \
+		for flag in $(shell dpkg-buildflags --get CPPFLAGS) \
+		         $(shell dpkg-buildflags --get CFLAGS); do \
+			case "$$flag" in -fstack-protector) ;; \
+			     *) ./perl.static -i -pe "/^(cc|cpp)flags/ and \
+			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
+		            $(lib)/Config.pm $(lib)/Config_heavy.pl ;; \
+		    esac; done; \
+		for flag in $(shell dpkg-buildflags --get LDFLAGS); do \
+			./perl.static -i -pe "/^ld(dl)?flags/ and \
+			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
+		          $(lib)/Config.pm $(lib)/Config_heavy.pl ; \
+		done; \
 	fi
 
 	# convert required header files
