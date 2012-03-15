@@ -1,3 +1,9 @@
+perl (5.14.2-10) unstable; urgency=low
+
+  * Properly propagate tainted errors (Closes: #663158)
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 15 Mar 2012 19:31:28 +0000
+
 perl (5.14.2-9) unstable; urgency=low
 
   [ Dominic Hargreaves ]
