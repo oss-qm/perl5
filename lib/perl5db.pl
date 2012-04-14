@@ -6941,7 +6941,7 @@ properly set up.
 sub xterm_get_fork_TTY {
     ( my $name = $0 ) =~ s,^.*[/\\],,s;
     open XT,
-qq[3>&1 xterm -title "Daughter Perl debugger $pids $name" -e sh -c 'tty 1>&3;\
+qq[3>&1 x-terminal-emulator -T "Daughter Perl debugger $pids $name" -e sh -c 'tty 1>&3;\
  sleep 10000000' |];
 
     # Get the output from 'tty' and clean it up a little.
