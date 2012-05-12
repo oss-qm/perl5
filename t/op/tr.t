@@ -6,7 +6,7 @@ BEGIN {
     require './test.pl';
 }
 
-plan tests => 128;
+plan tests => 130;
 
 my $Is_EBCDIC = (ord('i') == 0x89 & ord('J') == 0xd1);
 
@@ -483,11 +483,13 @@ is($s, "AxBC", "utf8, DELETE");
 }
 
 ($s) = keys %{{pie => 3}};
-my $wasro = Internals::SvREADONLY($s);
-{
+SKIP: {
+    if (!eval { require B }) { skip "no B", 1 }
+    my $wasro = B::svref_2object(\$s)->FLAGS & &B::SVf_READONLY;
     $wasro or local $TODO = "didn't have a COW";
     $s =~ tr/i//;
-    ok( Internals::SvREADONLY($s), "count-only tr doesn't deCOW COWs" );
+    ok( B::svref_2object(\$s)->FLAGS & &B::SVf_READONLY,
+       "count-only tr doesn't deCOW COWs" );
 }
 
 # [ RT #61520 ]
@@ -504,4 +506,13 @@ my $wasro = Internals::SvREADONLY($s);
     is($x,"\x{143}", "utf8 + closure");
 }
 
+# Freeing of trans ops prior to pmtrans() [perl #102858].
+eval q{ $a ~= tr/a/b/; };
+ok 1;
+SKIP: {
+    skip "no encoding", 1 unless eval { require encoding; 1 };
+    eval q{ use encoding "utf8"; $a ~= tr/a/b/; };
+    ok 1;
+}
 
+1;

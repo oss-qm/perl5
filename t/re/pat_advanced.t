@@ -1521,11 +1521,14 @@ sub run_tests {
             my $ary = shift @$t;
             foreach my $pat (@$t) {
                 foreach my $str (@$ary) {
-                    ok $str =~ /($pat)/, $pat;
-                    is($1, $str, $pat);
+                    my $temp_str = $str;
+                    $temp_str = display($temp_str);
+                    ok $str =~ /($pat)/, $temp_str . " =~ /($pat)";
+                    my $temp_1 = $1;
+                    is($1, $str, "\$1='" . display($temp_1) . "' eq '" . $temp_str . "' after ($pat)");
                     utf8::upgrade ($str);
-                    ok $str =~ /($pat)/, "Upgraded string - $pat";
-                    is($1, $str, "Upgraded string - $pat");
+                    ok $str =~ /($pat)/, "Upgraded " . $temp_str . " =~ /($pat)/";
+                    is($1, $str, "\$1='" . display($temp_1) . "' eq '" . $temp_str . "'(upgraded) after ($pat)");
                 }
             }
         }
@@ -1740,7 +1743,7 @@ EOP
 
         my @isPunct = grep {/[[:punct:]]/ != /\p{IsPunct}/}
                             map {chr} 0x80 .. 0xff;
-        is(join ('', @isPunct), "\xa1\xab\xb7\xbb\xbf",    # ¡ « · » ¿
+        is(join ('', @isPunct), "\xa1\xa7\xab\xb6\xb7\xbb\xbf",    # ¡ « · » ¿
 	   'IsPunct disagrees with [:punct:] outside ASCII');
 
         my @isPunctLatin1 = eval q {
@@ -2054,7 +2057,7 @@ EOP
                  (?<=[=&]) (?=.)
             )}iox';
 	is($@, '', $message);
-	isa_ok($r, 'Regexp', $message);
+	object_ok($r, 'Regexp', $message);
     }
 
     # RT #82610
@@ -2065,6 +2068,9 @@ EOP
         utf8::upgrade($p);
         like("\xC0", $p, "Verify \"\\xC0\" =~ /[\\xE0_]/i; pattern in utf8");
     }
+
+    ok "x" =~ /\A(?>(?:(?:)A|B|C?x))\z/,
+        "Check TRIE does not overwrite EXACT following NOTHING at start - RT #111842";
 
     #
     # Keep the following tests last -- they may crash perl
@@ -2110,6 +2116,43 @@ EOP
 
     {   # Bug #90536, caused failed assertion
         unlike("s\N{U+DF}", qr/^\x{00DF}/i, "\"s\\N{U+DF}\", qr/^\\x{00DF}/i");
+    }
+
+    # User-defined Unicode properties to match above-Unicode code points
+    sub Is_32_Bit_Super { return "110000\tFFFFFFFF\n" }
+    sub Is_Portable_Super { return '!utf8::Any' }   # Matches beyond 32 bits
+
+    {   # Assertion was failing on on 64-bit platforms; just didn't work on 32.
+        no warnings qw(non_unicode portable);
+        use Config;
+
+        # We use 'ok' instead of 'like' because the warnings are lexically
+        # scoped, and want to turn them off, so have to do the match in this
+        # scope
+        if ($Config{uvsize} < 8) {
+            ok(chr(0xFFFF_FFFE) =~ /\p{Is_32_Bit_Super}/,
+                            "chr(0xFFFF_FFFE) can match a Unicode property");
+            ok(chr(0xFFFF_FFFF) =~ /\p{Is_32_Bit_Super}/,
+                            "chr(0xFFFF_FFFF) can match a Unicode property");
+        }
+        else {
+            no warnings 'overflow';
+            ok(chr(0xFFFF_FFFF_FFFF_FFFE) =~ qr/\p{Is_Portable_Super}/,
+                    "chr(0xFFFF_FFFF_FFFF_FFFE) can match a Unicode property");
+            ok(chr(0xFFFF_FFFF_FFFF_FFFF) =~ qr/^\p{Is_Portable_Super}$/,
+                    "chr(0xFFFF_FFFF_FFFF_FFFF) can match a Unicode property");
+
+            # This test is because something was declared as 32 bits, but
+            # should have been cast to 64; only a problem where
+            # sizeof(STRLEN) != sizeof(UV)
+            ok(chr(0xFFFF_FFFF_FFFF_FFFE) !~ qr/\p{Is_32_Bit_Super}/, "chr(0xFFFF_FFFF_FFFF_FFFE) shouldn't match a range ending in 0xFFFF_FFFF");
+        }
+    }
+
+    { # [perl #112530], the code below caused a panic
+        sub InFoo { "a\tb\n9\ta\n" }
+        like("\n", qr/\p{InFoo}/,
+                            "Overlapping ranges in user-defined properties");
     }
 
     # !!! NOTE that tests that aren't at all likely to crash perl should go

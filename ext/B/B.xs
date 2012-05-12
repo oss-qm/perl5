@@ -125,9 +125,11 @@ cc_opclass(pTHX_ const OP *o)
 	return ((o->op_private & OPpASSIGN_BACKWARDS) ? OPc_UNOP : OPc_BINOP);
 
     if (o->op_type == OP_AELEMFAST) {
+#if PERL_VERSION <= 14
 	if (o->op_flags & OPf_SPECIAL)
 	    return OPc_BASEOP;
 	else
+#endif
 #ifdef USE_ITHREADS
 	    return OPc_PADOP;
 #else
@@ -607,10 +609,10 @@ typedef struct refcounted_he	*B__RHE;
 #endif
 
 #ifdef MULTIPLICITY
-#  define ASSIGN_COMMON_ALIAS(var) \
-    STMT_START { XSANY.any_i32 = offsetof(struct interpreter, var); } STMT_END
+#  define ASSIGN_COMMON_ALIAS(prefix, var) \
+    STMT_START { XSANY.any_i32 = offsetof(struct interpreter, prefix##var); } STMT_END
 #else
-#  define ASSIGN_COMMON_ALIAS(var) \
+#  define ASSIGN_COMMON_ALIAS(prefix, var) \
     STMT_START { XSANY.any_ptr = (void *)&PL_##var; } STMT_END
 #endif
 
@@ -655,35 +657,35 @@ BOOT:
     specialsv_list[6] = (SV *) pWARN_STD;
     
     cv = newXS("B::init_av", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Iinitav);
+    ASSIGN_COMMON_ALIAS(I, initav);
     cv = newXS("B::check_av", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Icheckav_save);
+    ASSIGN_COMMON_ALIAS(I, checkav_save);
 #if PERL_VERSION >= 9
     cv = newXS("B::unitcheck_av", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Iunitcheckav_save);
+    ASSIGN_COMMON_ALIAS(I, unitcheckav_save);
 #endif
     cv = newXS("B::begin_av", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Ibeginav_save);
+    ASSIGN_COMMON_ALIAS(I, beginav_save);
     cv = newXS("B::end_av", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Iendav);
+    ASSIGN_COMMON_ALIAS(I, endav);
     cv = newXS("B::main_cv", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Imain_cv);
+    ASSIGN_COMMON_ALIAS(I, main_cv);
     cv = newXS("B::inc_gv", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Iincgv);
+    ASSIGN_COMMON_ALIAS(I, incgv);
     cv = newXS("B::defstash", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Idefstash);
+    ASSIGN_COMMON_ALIAS(I, defstash);
     cv = newXS("B::curstash", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Icurstash);
+    ASSIGN_COMMON_ALIAS(I, curstash);
     cv = newXS("B::formfeed", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Iformfeed);
+    ASSIGN_COMMON_ALIAS(I, formfeed);
 #ifdef USE_ITHREADS
     cv = newXS("B::regex_padav", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Iregex_padav);
+    ASSIGN_COMMON_ALIAS(I, regex_padav);
 #endif
     cv = newXS("B::warnhook", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Iwarnhook);
+    ASSIGN_COMMON_ALIAS(I, warnhook);
     cv = newXS("B::diehook", intrpvar_sv_common, file);
-    ASSIGN_COMMON_ALIAS(Idiehook);
+    ASSIGN_COMMON_ALIAS(I, diehook);
 }
 
 long 
@@ -782,10 +784,8 @@ ppname(opnum)
 	int	opnum
     CODE:
 	ST(0) = sv_newmortal();
-	if (opnum >= 0 && opnum < PL_maxo) {
-	    sv_setpvs(ST(0), "pp_");
-	    sv_catpv(ST(0), PL_op_name[opnum]);
-	}
+	if (opnum >= 0 && opnum < PL_maxo)
+	    Perl_sv_setpvf(aTHX_ ST(0), "pp_%s", PL_op_name[opnum]);
 
 void
 hash(sv)
@@ -981,12 +981,12 @@ ppaddr(o)
 	B::OP		o
     PREINIT:
 	int i;
-	SV *sv = newSVpvs_flags("PL_ppaddr[OP_", SVs_TEMP);
+	SV *sv;
     CODE:
-	sv_catpv(sv, PL_op_name[o->op_type]);
+	sv = sv_2mortal(Perl_newSVpvf(aTHX_ "PL_ppaddr[OP_%s]",
+				      PL_op_name[o->op_type]));
 	for (i=13; (STRLEN)i < SvCUR(sv); ++i)
 	    SvPVX(sv)[i] = toUPPER(SvPVX(sv)[i]);
-	sv_catpvs(sv, "]");
 	ST(0) = sv;
 
 #if PERL_VERSION >= 9
@@ -1227,7 +1227,9 @@ pv(o)
 	    ST(0) = newSVpvn_flags(o->op_pv, strlen(o->op_pv), SVs_TEMP);
 
 #define COP_label(o)	CopLABEL(o)
-#define COP_arybase(o)	CopARYBASE_get(o)
+#ifdef CopSTASH_flags
+#define COP_stashflags(o)	CopSTASH_flags(o)
+#endif
 
 MODULE = B	PACKAGE = B::COP		PREFIX = COP_
 
@@ -1251,6 +1253,14 @@ COP_stash(o)
 	PUSHs(make_sv_object(aTHX_
 			     ix ? (SV *)CopFILEGV(o) : (SV *)CopSTASH(o)));
 
+#ifdef CopSTASH_flags
+
+U32
+COP_stashflags(o)
+	B::COP	o
+
+#endif
+
 #else
 
 char *
@@ -1268,6 +1278,10 @@ COP_stashpv(o)
 I32
 COP_arybase(o)
 	B::COP	o
+    CODE:
+	RETVAL = 0;
+    OUTPUT:
+	RETVAL
 
 void
 COP_warnings(o)
@@ -1370,8 +1384,13 @@ MODULE = B	PACKAGE = B::IV
 #define PVMG_stash_ix	sv_SVp | offsetof(struct xpvmg, xmg_stash)
 
 #if PERL_VERSION >= 10
+#  if PERL_VERSION > 14
+#    define PVBM_useful_ix	sv_I32p | offsetof(struct xpvgv, xnv_u.xbm_s.xbm_useful)
+#    define PVBM_previous_ix	sv_UVp | offsetof(struct xpvuv, xuv_uv)
+#  else
 #define PVBM_useful_ix	sv_I32p | offsetof(struct xpvgv, xiv_u.xivu_i32)
 #define PVBM_previous_ix    sv_U32p | offsetof(struct xpvgv, xnv_u.xbm_s.xbm_previous)
+#  endif
 #define PVBM_rare_ix	sv_U8p | offsetof(struct xpvgv, xnv_u.xbm_s.xbm_rare)
 #else
 #define PVBM_useful_ix	sv_I32p | offsetof(struct xpvbm, xbm_useful)
@@ -1614,20 +1633,42 @@ PV(sv)
 	U32 utf8 = 0;
     CODE:
 	if (ix == 3) {
+#ifndef PERL_FBM_TABLE_OFFSET
+	    const MAGIC *const mg = mg_find(sv, PERL_MAGIC_bm);
+
+	    if (!mg)
+                croak("argument to B::BM::TABLE is not a PVBM");
+	    p = mg->mg_ptr;
+	    len = mg->mg_len;
+#else
 	    p = SvPV(sv, len);
 	    /* Boyer-Moore table is just after string and its safety-margin \0 */
 	    p += len + PERL_FBM_TABLE_OFFSET;
 	    len = 256;
+#endif
 	} else if (ix == 2) {
 	    /* This used to read 257. I think that that was buggy - should have
-	       been 258. (The "\0", the flags byte, and 256 for the table.  Not
-	       that anything anywhere calls this method.  NWC.  */
-	    /* Also, the start pointer has always been SvPVX(sv). Surely it
-	       should be SvPVX(sv) + SvCUR(sv)?  The code has faithfully been
-	       refactored with this behaviour, since PVBM was added in
-	       651aa52ea1faa806.  */
+	       been 258. (The "\0", the flags byte, and 256 for the table.)
+	       The only user of this method is B::Bytecode in B::PV::bsave.
+	       I'm guessing that nothing tested the runtime correctness of
+	       output of bytecompiled string constant arguments to index (etc).
+
+	       Note the start pointer is and has always been SvPVX(sv), not
+	       SvPVX(sv) + SvCUR(sv) PVBM was added in 651aa52ea1faa806, and
+	       first used by the compiler in 651aa52ea1faa806. It's used to
+	       get a "complete" dump of the buffer at SvPVX(), not just the
+	       PVBM table. This permits the generated bytecode to "load"
+	       SvPVX in "one" hit.
+
+	       5.15 and later store the BM table via MAGIC, so the compiler
+	       should handle this just fine without changes if PVBM now
+	       always returns the SvPVX() buffer.  */
 	    p = SvPVX_const(sv);
+#ifdef PERL_FBM_TABLE_OFFSET
 	    len = SvCUR(sv) + (SvVALID(sv) ? 256 + PERL_FBM_TABLE_OFFSET : 0);
+#else
+	    len = SvCUR(sv);
+#endif
 	} else if (ix) {
 	    p = SvPVX(sv);
 	    len = strlen(p);
@@ -1959,12 +2000,12 @@ void
 HvARRAY(hv)
 	B::HV	hv
     PPCODE:
-	if (HvKEYS(hv) > 0) {
+	if (HvUSEDKEYS(hv) > 0) {
 	    SV *sv;
 	    char *key;
 	    I32 len;
 	    (void)hv_iterinit(hv);
-	    EXTEND(sp, HvKEYS(hv) * 2);
+	    EXTEND(sp, HvUSEDKEYS(hv) * 2);
 	    while ((sv = hv_iternextsv(hv, &key, &len))) {
 		mPUSHp(key, len);
 		PUSHs(make_sv_object(aTHX_ sv));

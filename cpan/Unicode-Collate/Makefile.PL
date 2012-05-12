@@ -12,7 +12,10 @@ if (-f "Collate.xs") {
 }
 
 WriteMakefile(
+    'AUTHOR'		=> 'SADAHIRO Tomoyuki <SADAHIRO@cpan.org>',
+    'ABSTRACT'		=> 'Unicode Collation Algorithm',
     'INSTALLDIRS'	=> $] >= 5.007002 ? 'perl' : 'site',
+    'LICENSE'		=> 'perl',
     'NAME'		=> 'Unicode::Collate',
     'VERSION_FROM'	=> 'Collate.pm', # finds $VERSION
     'clean'		=> $clean,
@@ -22,7 +25,6 @@ WriteMakefile(
 	DynaLoader	=> 0,
 	File::Spec	=> 0,
 	strict		=> 0,
-	Test		=> 0,
 	warnings	=> 0,
     },
 );

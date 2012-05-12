@@ -131,6 +131,10 @@ C<PERL_SCAN_ALLOW_UNDERSCORES> is set in I<*flags> then the binary
 number may use '_' characters to separate digits.
 
 =cut
+
+Not documented yet because experimental is C<PERL_SCAN_SILENT_NON_PORTABLE
+which suppresses any message for non-portable numbers that are still valid
+on this platform.
  */
 
 UV
@@ -176,6 +180,7 @@ Perl_grok_bin(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
                     continue;
                 }
                 /* Bah. We're just overflowed.  */
+		/* diag_listed_as: Integer overflow in %s number */
 		Perl_ck_warner_d(aTHX_ packWARN(WARN_OVERFLOW),
 				 "Integer overflow in binary number");
                 overflowed = TRUE;
@@ -206,7 +211,8 @@ Perl_grok_bin(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
     
     if (   ( overflowed && value_nv > 4294967295.0)
 #if UVSIZE > 4
-	|| (!overflowed && value > 0xffffffff  )
+	|| (!overflowed && value > 0xffffffff
+	    && ! (*flags & PERL_SCAN_SILENT_NON_PORTABLE))
 #endif
 	) {
 	Perl_ck_warner(aTHX_ packWARN(WARN_PORTABLE),
@@ -248,6 +254,10 @@ C<PERL_SCAN_ALLOW_UNDERSCORES> is set in I<*flags> then the hex
 number may use '_' characters to separate digits.
 
 =cut
+
+Not documented yet because experimental is C<PERL_SCAN_SILENT_NON_PORTABLE
+which suppresses any message for non-portable numbers that are still valid
+on this platform.
  */
 
 UV
@@ -293,6 +303,7 @@ Perl_grok_hex(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
                     continue;
                 }
                 /* Bah. We're just overflowed.  */
+		/* diag_listed_as: Integer overflow in %s number */
 		Perl_ck_warner_d(aTHX_ packWARN(WARN_OVERFLOW),
 				 "Integer overflow in hexadecimal number");
                 overflowed = TRUE;
@@ -323,7 +334,8 @@ Perl_grok_hex(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
     
     if (   ( overflowed && value_nv > 4294967295.0)
 #if UVSIZE > 4
-	|| (!overflowed && value > 0xffffffff  )
+	|| (!overflowed && value > 0xffffffff
+	    && ! (*flags & PERL_SCAN_SILENT_NON_PORTABLE))
 #endif
 	) {
 	Perl_ck_warner(aTHX_ packWARN(WARN_PORTABLE),
@@ -363,6 +375,10 @@ If C<PERL_SCAN_ALLOW_UNDERSCORES> is set in I<*flags> then the octal
 number may use '_' characters to separate digits.
 
 =cut
+
+Not documented yet because experimental is C<PERL_SCAN_SILENT_NON_PORTABLE
+which suppresses any message for non-portable numbers that are still valid
+on this platform.
  */
 
 UV
@@ -393,6 +409,7 @@ Perl_grok_oct(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
                     continue;
                 }
                 /* Bah. We're just overflowed.  */
+		/* diag_listed_as: Integer overflow in %s number */
 		Perl_ck_warner_d(aTHX_ packWARN(WARN_OVERFLOW),
 			       "Integer overflow in octal number");
                 overflowed = TRUE;
@@ -428,7 +445,8 @@ Perl_grok_oct(pTHX_ const char *start, STRLEN *len_p, I32 *flags, NV *result)
     
     if (   ( overflowed && value_nv > 4294967295.0)
 #if UVSIZE > 4
-	|| (!overflowed && value > 0xffffffff  )
+	|| (!overflowed && value > 0xffffffff
+	    && ! (*flags & PERL_SCAN_SILENT_NON_PORTABLE))
 #endif
 	) {
 	Perl_ck_warner(aTHX_ packWARN(WARN_PORTABLE),
@@ -515,7 +533,7 @@ Perl_grok_numeric_radix(pTHX_ const char **sp, const char *send)
 
     PERL_ARGS_ASSERT_GROK_NUMERIC_RADIX;
 
-    if (PL_numeric_radix_sv && IN_LOCALE) { 
+    if (PL_numeric_radix_sv && IN_SOME_LOCALE_FORM) {
         STRLEN len;
         const char * const radix = SvPV(PL_numeric_radix_sv, len);
         if (*sp + len <= send && memEQ(*sp, radix, len)) {
@@ -829,7 +847,7 @@ Perl_my_atof(pTHX_ const char* s)
 
     PERL_ARGS_ASSERT_MY_ATOF;
 
-    if (PL_numeric_local && IN_LOCALE) {
+    if (PL_numeric_local && IN_SOME_LOCALE_FORM) {
 	NV y;
 
 	/* Scan the number twice; once using locale and once without;

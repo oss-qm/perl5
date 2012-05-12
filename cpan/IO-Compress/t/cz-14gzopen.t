@@ -20,7 +20,7 @@ BEGIN {
     $extra = 1
         if eval { require Test::NoWarnings ;  import Test::NoWarnings; 1 };
 
-    plan tests => 255 + $extra ;
+    plan tests => 260 + $extra ;
 
     use_ok('Compress::Zlib', 2) ;
     use_ok('IO::Compress::Gzip::Constants') ;
@@ -491,7 +491,8 @@ foreach my $stdio ( ['-', '-'], [*STDIN, *STDOUT])
     {
         my $lex = new LexFile my $name ;
         writeFile($name, "abc");
-        chmod 0444, $name ;
+        chmod 0444, $name 
+            or skip "Cannot create non-writable file", 3 ;
 
         skip "Cannot create non-writable file", 3 
             if -w $name ;
@@ -647,4 +648,18 @@ foreach my $stdio ( ['-', '-'], [*STDIN, *STDOUT])
         ok ! $u->gzclose, "  closed" ;
         is $/, $delim, '  $/ unchanged by gzreadline';
     }
+}
+
+{
+    title 'gzflush called twice';
+
+    my $lex = new LexFile my $name ;
+
+    ok my $a = gzopen($name, "w");
+    my $text = "fred\n";
+    my $len = length $text;
+    is $a->gzwrite($text), length($text), "gzwrite ok";
+    
+    is $a->gzflush(Z_SYNC_FLUSH), Z_OK, "gzflush returns Z_OK";
+    is $a->gzflush(Z_SYNC_FLUSH), Z_OK, "gzflush returns Z_OK";    
 }

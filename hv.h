@@ -127,30 +127,23 @@ struct xpvhv {
 #       define PERL_HASH_SEED	0
 #   endif
 #endif
-#define PERL_HASH(hash,str,len) \
-     STMT_START	{ \
-	register const char * const s_PeRlHaSh_tmp = str; \
-	register const unsigned char *s_PeRlHaSh = (const unsigned char *)s_PeRlHaSh_tmp; \
-	register I32 i_PeRlHaSh = len; \
-	register U32 hash_PeRlHaSh = PERL_HASH_SEED; \
-	while (i_PeRlHaSh--) { \
-	    hash_PeRlHaSh += *s_PeRlHaSh++; \
-	    hash_PeRlHaSh += (hash_PeRlHaSh << 10); \
-	    hash_PeRlHaSh ^= (hash_PeRlHaSh >> 6); \
-	} \
-	hash_PeRlHaSh += (hash_PeRlHaSh << 3); \
-	hash_PeRlHaSh ^= (hash_PeRlHaSh >> 11); \
-	(hash) = (hash_PeRlHaSh + (hash_PeRlHaSh << 15)); \
-    } STMT_END
+
+#define PERL_HASH(hash,str,len) PERL_HASH_INTERNAL_(hash,str,len,0)
 
 /* Only hv.c and mod_perl should be doing this.  */
 #ifdef PERL_HASH_INTERNAL_ACCESS
-#define PERL_HASH_INTERNAL(hash,str,len) \
+#define PERL_HASH_INTERNAL(hash,str,len) PERL_HASH_INTERNAL_(hash,str,len,1)
+#endif
+
+/* Common base for PERL_HASH and PERL_HASH_INTERNAL that parameterises
+ * the source of the seed. Not for direct use outside of hv.c. */
+
+#define PERL_HASH_INTERNAL_(hash,str,len,internal) \
      STMT_START	{ \
 	register const char * const s_PeRlHaSh_tmp = str; \
 	register const unsigned char *s_PeRlHaSh = (const unsigned char *)s_PeRlHaSh_tmp; \
 	register I32 i_PeRlHaSh = len; \
-	register U32 hash_PeRlHaSh = PL_rehash_seed; \
+	register U32 hash_PeRlHaSh = (internal ? PL_rehash_seed : PERL_HASH_SEED); \
 	while (i_PeRlHaSh--) { \
 	    hash_PeRlHaSh += *s_PeRlHaSh++; \
 	    hash_PeRlHaSh += (hash_PeRlHaSh << 10); \
@@ -160,7 +153,6 @@ struct xpvhv {
 	hash_PeRlHaSh ^= (hash_PeRlHaSh >> 11); \
 	(hash) = (hash_PeRlHaSh + (hash_PeRlHaSh << 15)); \
     } STMT_END
-#endif
 
 /*
 =head1 Hash Manipulation Functions
@@ -183,6 +175,12 @@ Null HV pointer.
 Returns the package name of a stash, or NULL if C<stash> isn't a stash.
 See C<SvSTASH>, C<CvSTASH>.
 
+=for apidoc Am|STRLEN|HvNAMELEN|HV *stash
+Returns the length of the stash's name.
+
+=for apidoc Am|unsigned char|HvNAMEUTF8|HV *stash
+Returns true if the name is in UTF8 encoding.
+
 =for apidoc Am|char*|HvENAME|HV* stash
 Returns the effective name of a stash, or NULL if there is none. The
 effective name represents a location in the symbol table where this stash
@@ -190,6 +188,12 @@ resides. It is updated automatically when packages are aliased or deleted.
 A stash that is no longer in the symbol table has no effective name. This
 name is preferable to C<HvNAME> for use in MRO linearisations and isa
 caches.
+
+=for apidoc Am|STRLEN|HvENAMELEN|HV *stash
+Returns the length of the stash's effective name.
+
+=for apidoc Am|unsigned char|HvENAMEUTF8|HV *stash
+Returns true if the effective name is in UTF8 encoding.
 
 =for apidoc Am|void*|HeKEY|HE* he
 Returns the actual pointer stored in the key slot of the hash entry. The
@@ -266,7 +270,9 @@ C<SV*>.
 #define HvRITER_get(hv)	(SvOOK(hv) ? HvAUX(hv)->xhv_riter : -1)
 #define HvEITER_get(hv)	(SvOOK(hv) ? HvAUX(hv)->xhv_eiter : NULL)
 #define HvNAME(hv)	HvNAME_get(hv)
+#define HvNAMELEN(hv)   HvNAMELEN_get(hv)
 #define HvENAME(hv)	HvENAME_get(hv)
+#define HvENAMELEN(hv)  HvENAMELEN_get(hv)
 
 /* Checking that hv is a valid package stash is the
    caller's responsibility */
@@ -274,8 +280,6 @@ C<SV*>.
                        ? HvAUX(hv)->xhv_mro_meta \
                        : Perl_mro_meta_init(aTHX_ hv))
 
-/* FIXME - all of these should use a UTF8 aware API, which should also involve
-   getting the length. */
 #define HvNAME_HEK_NN(hv)			  \
  (						  \
   HvAUX(hv)->xhv_name_count			  \
@@ -291,6 +295,9 @@ C<SV*>.
 #define HvNAMELEN_get(hv) \
 	((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvNAME_HEK_NN(hv)) \
 				 ? HEK_LEN(HvNAME_HEK_NN(hv)) : 0)
+#define HvNAMEUTF8(hv) \
+	((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvNAME_HEK_NN(hv)) \
+				 ? HEK_UTF8(HvNAME_HEK_NN(hv)) : 0)
 #define HvENAME_HEK_NN(hv)                                             \
  (                                                                      \
   HvAUX(hv)->xhv_name_count > 0   ? HvAUX(hv)->xhv_name_u.xhvnameu_names[0] : \
@@ -301,11 +308,14 @@ C<SV*>.
 #define HvENAME_HEK(hv) \
 	(SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name ? HvENAME_HEK_NN(hv) : NULL)
 #define HvENAME_get(hv) \
-	((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvENAME_HEK_NN(hv)) \
+   ((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvAUX(hv)->xhv_name_count != -1) \
 			 ? HEK_KEY(HvENAME_HEK_NN(hv)) : NULL)
 #define HvENAMELEN_get(hv) \
-	((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvENAME_HEK_NN(hv)) \
+   ((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvAUX(hv)->xhv_name_count != -1) \
 				 ? HEK_LEN(HvENAME_HEK_NN(hv)) : 0)
+#define HvENAMEUTF8(hv) \
+   ((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvAUX(hv)->xhv_name_count != -1) \
+				 ? HEK_UTF8(HvENAME_HEK_NN(hv)) : 0)
 
 /* the number of keys (including any placeholders) */
 #define XHvTOTALKEYS(xhv)	((xhv)->xhv_keys)
@@ -442,9 +452,8 @@ C<SV*>.
 #define hv_magic(hv, gv, how) sv_magic(MUTABLE_SV(hv), MUTABLE_SV(gv), how, NULL, 0)
 #define hv_undef(hv) Perl_hv_undef_flags(aTHX_ hv, 0)
 
-/* available as a function in hv.c */
-#define Perl_sharepvn(sv, len, hash) HEK_KEY(share_hek(sv, len, hash))
-#define sharepvn(sv, len, hash)	     Perl_sharepvn(sv, len, hash)
+#define Perl_sharepvn(pv, len, hash) HEK_KEY(share_hek(pv, len, hash))
+#define sharepvn(pv, len, hash)	     Perl_sharepvn(pv, len, hash)
 
 #define share_hek_hek(hek)						\
     (++(((struct shared_he *)(((char *)hek)				\
@@ -500,6 +509,9 @@ struct refcounted_he;
 
 /* flags for the refcounted_he API */
 #define REFCOUNTED_HE_KEY_UTF8		0x00000001
+#ifdef PERL_CORE
+# define REFCOUNTED_HE_EXISTS		0x00000002
+#endif
 
 #ifdef PERL_CORE
 

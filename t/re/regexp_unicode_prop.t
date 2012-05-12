@@ -91,6 +91,8 @@ my @USER_DEFINED_PROPERTIES = (
    InNotKana                 => ['\x{3040}', '!\x{3041}'],
    InConsonant               => ['d',        '!e'],
    IsSyriac1                 => ['\x{0712}', '!\x{072F}'],
+   IsSyriac1KanaMark         => ['\x{309A}', '!\x{3090}'],
+   IsSyriac1KanaMark         => ['\x{0730}', '!\x{0712}'],
    '# User-defined character properties may lack \n at the end',
    InGreekSmall              => ['\N{GREEK SMALL LETTER PI}',
                                  '\N{GREEK SMALL LETTER FINAL SIGMA}'],
@@ -202,13 +204,15 @@ sub match {
     }
 
     undef $@;
-    my $match_pat = eval "qr/$match/$caseless";
-    is($@, '', "$name compiled correctly to a regexp");
+    my $pat = "qr/$match/$caseless";
+    my $match_pat = eval $pat;
+    is($@, '', "$pat compiled correctly to a regexp: $@");
     like($str, $match_pat, "$name correctly matched");
 
     undef $@;
-    my $nomatch_pat = eval "qr/$nomatch/$caseless";
-    is($@, '', "$name compiled correctly to a regexp");
+    $pat = "qr/$nomatch/$caseless";
+    my $nomatch_pat = eval $pat;
+    is($@, '', "$pat compiled correctly to a regexp: $@");
     unlike($str, $nomatch_pat, "$name correctly did not match");
 }
 
@@ -341,6 +345,13 @@ sub IsMyUpper {
         return "0041\t005A"
     }
 }
+
+# Verify that can use user-defined properties inside another one
+sub IsSyriac1KanaMark {<<'--'}
++main::IsSyriac1
++main::InKana3
+&utf8::IsMark
+--
 
 # fake user-defined properties; these subs shouldn't be called, because
 # their names don't start with In or Is

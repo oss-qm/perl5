@@ -25,6 +25,8 @@ Good    @>>>>>
 $::mmmm
 .
 
+use constant thr => $Config{useithreads};
+
 sub do_test {
     my $todo = $_[3];
     my $repeat_todo = $_[4];
@@ -54,11 +56,10 @@ sub do_test {
 	    # legitimate regexp, it still isn't true. Seems easier and clearer
 	    # things that look like comments.
 
-	    my $version_condition = qr/\$] [<>]=? 5\.\d\d\d/;
 	    # Could do this is in a s///mge but seems clearer like this:
 	    $pattern = join '', map {
 		# If we identify the version condition, take *it* out whatever
-		s/\s*# ($version_condition(?: && $version_condition)?)$//
+		s/\s*# (\$].*)$//
 		    ? (eval $1 ? $_ : '')
 		    : $_ # Didn't match, so this line is in
 	    } split /^/, $pattern;
@@ -253,7 +254,8 @@ do_test('reference to hash',
     EITER = 0x0
     Elt "123" HASH = $ADDR' . $c_pattern,
 	'',
-	$] > 5.009 && 'The hash iterator used in dump.c sets the OOK flag');
+	$] > 5.009 && $] < 5.015
+	 && 'The hash iterator used in dump.c sets the OOK flag');
 
 do_test('reference to anon sub with empty prototype',
         sub(){@_},
@@ -263,7 +265,8 @@ do_test('reference to anon sub with empty prototype',
   RV = $ADDR
   SV = PVCV\\($ADDR\\) at $ADDR
     REFCNT = 2
-    FLAGS = \\($PADMY,POK,pPOK,ANON,WEAKOUTSIDE,CVGV_RC\\)
+    FLAGS = \\($PADMY,POK,pPOK,ANON,WEAKOUTSIDE,CVGV_RC\\) # $] < 5.015 || !thr
+    FLAGS = \\($PADMY,POK,pPOK,ANON,WEAKOUTSIDE,CVGV_RC,DYNFILE\\) # $] >= 5.015 && thr
     IV = 0					# $] < 5.009
     NV = 0					# $] < 5.009
     PROTOTYPE = ""
@@ -278,7 +281,8 @@ do_test('reference to anon sub with empty prototype',
     MUTEXP = $ADDR
     OWNER = $ADDR)?
     FLAGS = 0x404				# $] < 5.009
-    FLAGS = 0x490				# $] >= 5.009
+    FLAGS = 0x490		# $] >= 5.009 && ($] < 5.015 || !thr)
+    FLAGS = 0x1490				# $] >= 5.015 && thr
     OUTSIDE_SEQ = \\d+
     PADLIST = $ADDR
     PADNAME = $ADDR\\($ADDR\\) PAD = $ADDR\\($ADDR\\)
@@ -292,7 +296,8 @@ do_test('reference to named subroutine without prototype',
   RV = $ADDR
   SV = PVCV\\($ADDR\\) at $ADDR
     REFCNT = (3|4)
-    FLAGS = \\(\\)
+    FLAGS = \\(\\)				# $] < 5.015 || !thr
+    FLAGS = \\(DYNFILE\\)			# $] >= 5.015 && thr
     IV = 0					# $] < 5.009
     NV = 0					# $] < 5.009
     COMP_STASH = $ADDR\\t"main"
@@ -302,17 +307,17 @@ do_test('reference to named subroutine without prototype',
     XSUBANY = 0					# $] < 5.009
     GVGV::GV = $ADDR\\t"main" :: "do_test"
     FILE = ".*\\b(?i:peek\\.t)"
-    DEPTH = 1
-(?:    MUTEXP = $ADDR
-    OWNER = $ADDR
-)?    FLAGS = 0x0
+    DEPTH = 1(?:
+    MUTEXP = $ADDR
+    OWNER = $ADDR)?
+    FLAGS = 0x0					# $] < 5.015 || !thr
+    FLAGS = 0x1000				# $] >= 5.015 && thr
     OUTSIDE_SEQ = \\d+
     PADLIST = $ADDR
     PADNAME = $ADDR\\($ADDR\\) PAD = $ADDR\\($ADDR\\)
        \\d+\\. $ADDR<\\d+> \\(\\d+,\\d+\\) "\\$todo"
        \\d+\\. $ADDR<\\d+> \\(\\d+,\\d+\\) "\\$repeat_todo"
        \\d+\\. $ADDR<\\d+> \\(\\d+,\\d+\\) "\\$pattern"
-      \\d+\\. $ADDR<\\d+> \\(\\d+,\\d+\\) "\\$version_condition"
       \\d+\\. $ADDR<\\d+> FAKE "\\$DEBUG"			# $] < 5.009
       \\d+\\. $ADDR<\\d+> FAKE "\\$DEBUG" flags=0x0 index=0	# $] >= 5.009
       \\d+\\. $ADDR<\\d+> \\(\\d+,\\d+\\) "\\$dump"
@@ -394,7 +399,10 @@ do_test('reference to blessed hash',
     MAX = 7
     RITER = -1
     EITER = 0x0', '',
-	$] > 5.009 ? 'The hash iterator used in dump.c sets the OOK flag'
+	$] > 5.009
+	? $] >= 5.015
+	     ? 0
+	     : 'The hash iterator used in dump.c sets the OOK flag'
 	: "Something causes the HV's array to become allocated");
 
 do_test('typeglob',
@@ -474,7 +482,10 @@ do_test('reference to hash containing Unicode',
       PV = $ADDR "\\\235\\\101"\\\0 \[UTF8 "\\\x\{200\}"\]
       CUR = 2
       LEN = \\d+',
-	$] > 5.009 ? 'The hash iterator used in dump.c sets the OOK flag'
+	$] > 5.009
+	? $] >= 5.015
+	    ?  0
+	    : 'The hash iterator used in dump.c sets the OOK flag'
 	: 'sv_length has been called on the element, and cached the result in MAGIC');
 } else {
 do_test('reference to hash containing Unicode',
@@ -502,7 +513,10 @@ do_test('reference to hash containing Unicode',
       PV = $ADDR "\\\310\\\200"\\\0 \[UTF8 "\\\x\{200\}"\]
       CUR = 2
       LEN = \\d+', '',
-	$] > 5.009 ? 'The hash iterator used in dump.c sets the OOK flag'
+	$] > 5.009
+	? $] >= 5.015
+	    ?  0
+	    : 'The hash iterator used in dump.c sets the OOK flag'
 	: 'sv_length has been called on the element, and cached the result in MAGIC');
 }
 
@@ -591,7 +605,8 @@ do_test('constant subroutine',
   RV = $ADDR
   SV = PVCV\\($ADDR\\) at $ADDR
     REFCNT = (2)
-    FLAGS = \\(POK,pPOK,CONST,ISXSUB\\)
+    FLAGS = \\(POK,pPOK,CONST,ISXSUB\\)		# $] < 5.015
+    FLAGS = \\(POK,pPOK,CONST,DYNFILE,ISXSUB\\)	# $] >= 5.015
     IV = 0					# $] < 5.009
     NV = 0					# $] < 5.009
     PROTOTYPE = ""
@@ -612,7 +627,8 @@ do_test('constant subroutine',
     OWNER = $ADDR)?
     FLAGS = 0x200				# $] < 5.009
     FLAGS = 0xc00				# $] >= 5.009 && $] < 5.013
-    FLAGS = 0xc					# $] >= 5.013
+    FLAGS = 0xc					# $] >= 5.013 && $] < 5.015
+    FLAGS = 0x100c				# $] >= 5.015
     OUTSIDE_SEQ = 0
     PADLIST = 0x0
     OUTSIDE = 0x0 \\(null\\)');	
@@ -660,7 +676,8 @@ do_test('FORMAT',
   RV = $ADDR
   SV = PVFM\\($ADDR\\) at $ADDR
     REFCNT = 2
-    FLAGS = \\(\\)
+    FLAGS = \\(\\)				# $] < 5.015 || !thr
+    FLAGS = \\(DYNFILE\\)			# $] >= 5.015 && thr
     IV = 0					# $] < 5.009
     NV = 0					# $] < 5.009
 (?:    PV = 0
@@ -670,11 +687,12 @@ do_test('FORMAT',
     XSUB = 0x0					# $] < 5.009
     XSUBANY = 0					# $] < 5.009
     GVGV::GV = $ADDR\\t"main" :: "PIE"
-    FILE = ".*\\b(?i:peek\\.t)"
-(?:    DEPTH = 0
+    FILE = ".*\\b(?i:peek\\.t)"(?:
+    DEPTH = 0
     MUTEXP = $ADDR
-    OWNER = $ADDR
-)?    FLAGS = 0x0
+    OWNER = $ADDR)?
+    FLAGS = 0x0					# $] < 5.015 || !thr
+    FLAGS = 0x1000				# $] >= 5.015 && thr
     OUTSIDE_SEQ = \\d+
     LINES = 0
     PADLIST = $ADDR
@@ -699,7 +717,10 @@ do_test('blessing to a class with embedded NUL characters',
     MAX = 7
     RITER = -1
     EITER = 0x0', '',
-	$] > 5.009 ? 'The hash iterator used in dump.c sets the OOK flag'
+	$] > 5.009
+	? $] >= 5.015
+	    ?  0
+	    : 'The hash iterator used in dump.c sets the OOK flag'
 	: "Something causes the HV's array to become allocated");
 
 do_test('ENAME on a stash',
@@ -769,5 +790,133 @@ do_test('ENAMEs on a stash with no NAME',
     NAMECOUNT = -3				# $] > 5.012
     ENAME = "RWOM", "KLANK"			# $] > 5.012
 ');
+
+SKIP: {
+    skip "Not built with usemymalloc", 1
+      unless $Config{usemymalloc} eq 'y';
+    my $x = __PACKAGE__;
+    ok eval { fill_mstats($x); 1 }, 'fill_mstats on COW scalar'
+     or diag $@;
+}
+
+# This is more a test of fbm_compile/pp_study (non) interaction than dumping
+# prowess, but short of duplicating all the gubbins of this file, I can't see
+# a way to make a better place for it:
+
+use constant {
+    perl => 'rules',
+    beer => 'foamy',
+};
+
+unless ($Config{useithreads}) {
+    # These end up as copies in pads under ithreads, which rather defeats the
+    # the point of what we're trying to test here.
+
+    do_test('regular string constant', perl,
+'SV = PV\\($ADDR\\) at $ADDR
+  REFCNT = 5
+  FLAGS = \\(PADMY,POK,READONLY,pPOK\\)
+  PV = $ADDR "rules"\\\0
+  CUR = 5
+  LEN = \d+
+');
+
+    eval 'index "", perl';
+
+    # FIXME - really this shouldn't say EVALED. It's a false posistive on
+    # 0x40000000 being used for several things, not a flag for "I'm in a string
+    # eval"
+
+    do_test('string constant now an FBM', perl,
+'SV = PVMG\\($ADDR\\) at $ADDR
+  REFCNT = 5
+  FLAGS = \\(PADMY,SMG,POK,READONLY,pPOK,VALID,EVALED\\)
+  PV = $ADDR "rules"\\\0
+  CUR = 5
+  LEN = \d+
+  MAGIC = $ADDR
+    MG_VIRTUAL = &PL_vtbl_regexp
+    MG_TYPE = PERL_MAGIC_bm\\(B\\)
+    MG_LEN = 256
+    MG_PTR = $ADDR "(?:\\\\\d){256}"
+  RARE = \d+
+  PREVIOUS = 1
+  USEFUL = 100
+');
+
+    is(study perl, '', "Not allowed to study an FBM");
+
+    do_test('string constant still an FBM', perl,
+'SV = PVMG\\($ADDR\\) at $ADDR
+  REFCNT = 5
+  FLAGS = \\(PADMY,SMG,POK,READONLY,pPOK,VALID,EVALED\\)
+  PV = $ADDR "rules"\\\0
+  CUR = 5
+  LEN = \d+
+  MAGIC = $ADDR
+    MG_VIRTUAL = &PL_vtbl_regexp
+    MG_TYPE = PERL_MAGIC_bm\\(B\\)
+    MG_LEN = 256
+    MG_PTR = $ADDR "(?:\\\\\d){256}"
+  RARE = \d+
+  PREVIOUS = 1
+  USEFUL = 100
+');
+
+    do_test('regular string constant', beer,
+'SV = PV\\($ADDR\\) at $ADDR
+  REFCNT = 6
+  FLAGS = \\(PADMY,POK,READONLY,pPOK\\)
+  PV = $ADDR "foamy"\\\0
+  CUR = 5
+  LEN = \d+
+');
+
+    is(study beer, 1, "Our studies were successful");
+
+    do_test('string constant quite unaffected', beer, 'SV = PV\\($ADDR\\) at $ADDR
+  REFCNT = 6
+  FLAGS = \\(PADMY,POK,READONLY,pPOK\\)
+  PV = $ADDR "foamy"\\\0
+  CUR = 5
+  LEN = \d+
+');
+
+    my $want = 'SV = PVMG\\($ADDR\\) at $ADDR
+  REFCNT = 6
+  FLAGS = \\(PADMY,SMG,POK,READONLY,pPOK,VALID,EVALED\\)
+  PV = $ADDR "foamy"\\\0
+  CUR = 5
+  LEN = \d+
+  MAGIC = $ADDR
+    MG_VIRTUAL = &PL_vtbl_regexp
+    MG_TYPE = PERL_MAGIC_bm\\(B\\)
+    MG_LEN = 256
+    MG_PTR = $ADDR "(?:\\\\\d){256}"
+  RARE = \d+
+  PREVIOUS = \d+
+  USEFUL = 100
+';
+
+    is (eval 'index "not too foamy", beer', 8, 'correct index');
+
+    do_test('string constant now FBMed', beer, $want);
+
+    my $pie = 'good';
+
+    is(study $pie, 1, "Our studies were successful");
+
+    do_test('string constant still FBMed', beer, $want);
+
+    do_test('second string also unaffected', $pie, 'SV = PV\\($ADDR\\) at $ADDR
+  REFCNT = 1
+  FLAGS = \\(PADMY,POK,pPOK\\)
+  PV = $ADDR "good"\\\0
+  CUR = 4
+  LEN = \d+
+');
+}
+
+# (One block of study tests removed when study was made a no-op.)
 
 done_testing();

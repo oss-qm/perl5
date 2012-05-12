@@ -16,7 +16,7 @@ if ( -f "t/testfunc.pl" ) {
 }
 
 unshift(@INC,$dir);
-use Locale::Country;
+use Locale::Codes::Country;
 
 %type = ( "LOCALE_CODE_ALPHA_2" => LOCALE_CODE_ALPHA_2,
           "LOCALE_CODE_ALPHA_3" => LOCALE_CODE_ALPHA_3,
@@ -149,6 +149,11 @@ East Timor
 Zaire
    ~
    _undef_
+
+Zaire
+retired
+   ~
+   zr
 
 Congo, The Democratic Republic of the
    ~

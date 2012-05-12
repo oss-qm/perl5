@@ -1,7 +1,7 @@
 /*    perly.y
  *
  *    Copyright (c) 1991-2002, 2003, 2004, 2005, 2006 Larry Wall
- *    Copyright (c) 2007, 2008 by Larry Wall and others
+ *    Copyright (c) 2007, 2008, 2009, 2010, 2011 by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -74,7 +74,7 @@
 %token <i_tkval> '{' '}' '[' ']' '-' '+' '$' '@' '%' '*' '&' ';'
 
 %token <opval> WORD METHOD FUNCMETH THING PMFUNC PRIVATEREF QWLIST
-%token <opval> FUNC0SUB UNIOPSUB LSTOPSUB
+%token <opval> FUNC0OP FUNC0SUB UNIOPSUB LSTOPSUB
 %token <opval> PLUGEXPR PLUGSTMT
 %token <p_tkval> LABEL
 %token <i_tkval> FORMAT SUB ANONSUB PACKAGE USE
@@ -260,13 +260,15 @@ fullstmt:	barestmt
 
 labfullstmt:	LABEL barestmt
 			{
-			  $$ = newSTATEOP(0, PVAL($1), $2);
+			  $$ = newSTATEOP(SvUTF8(((SVOP*)$1)->op_sv),
+                                        savepv(SvPVX(((SVOP*)$1)->op_sv)), $2);
 			  TOKEN_GETMAD($1,
 			      $2 ? cLISTOPx($$)->op_first : $$, 'L');
 			}
 	|	LABEL labfullstmt
 			{
-			  $$ = newSTATEOP(0, PVAL($1), $2);
+			  $$ = newSTATEOP(SvUTF8(((SVOP*)$1)->op_sv),
+                                        savepv(SvPVX(((SVOP*)$1)->op_sv)), $2);
 			  TOKEN_GETMAD($1, cLISTOPx($$)->op_first, 'L');
 			}
 	;
@@ -294,7 +296,7 @@ barestmt:	PLUGSTMT
 #endif
 			  if (CvOUTSIDE(fmtcv) && !CvUNIQUE(CvOUTSIDE(fmtcv))) {
 			      SvREFCNT_inc_simple_void(fmtcv);
-			      pad_add_anon((SV*)fmtcv, OP_NULL);
+			      pad_add_anon(fmtcv, OP_NULL);
 			  }
 			}
 	|	SUB startsub subname proto subattrlist subbody
@@ -816,7 +818,7 @@ subscripted:    star '{' expr ';' '}'        /* *main::{something} */
 			  TOKEN_GETMAD($2,$$,'[');
 			  TOKEN_GETMAD($4,$$,']');
 			}
-	|	scalar '{' expr ';' '}'    /* $foo->{bar();} */
+	|	scalar '{' expr ';' '}'    /* $foo{bar();} */
 			{ $$ = newBINOP(OP_HELEM, 0, oopsHV($1), jmaybe($3));
 			    PL_parser->expect = XOPERATOR;
 			  TOKEN_GETMAD($2,$$,'{');
@@ -1229,6 +1231,13 @@ term	:	termbinop
 	|	FUNC0 '(' ')'
 			{ $$ = newOP(IVAL($1), 0);
 			  TOKEN_GETMAD($1,$$,'o');
+			  TOKEN_GETMAD($2,$$,'(');
+			  TOKEN_GETMAD($3,$$,')');
+			}
+	|	FUNC0OP       /* Same as above, but op created in toke.c */
+			{ $$ = $1; }
+	|	FUNC0OP '(' ')'
+			{ $$ = $1;
 			  TOKEN_GETMAD($2,$$,'(');
 			  TOKEN_GETMAD($3,$$,')');
 			}

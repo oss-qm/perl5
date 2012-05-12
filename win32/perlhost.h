@@ -840,21 +840,6 @@ PerlStdIOFdupopen(struct IPerlStdIO* piPerl, FILE* pf)
     int fileno = win32_dup(win32_fileno(pf));
 
     /* open the file in the same mode */
-#ifdef __BORLANDC__
-    if((pf)->flags & _F_READ) {
-	mode[0] = 'r';
-	mode[1] = 0;
-    }
-    else if((pf)->flags & _F_WRIT) {
-	mode[0] = 'a';
-	mode[1] = 0;
-    }
-    else if((pf)->flags & _F_RDWR) {
-	mode[0] = 'r';
-	mode[1] = '+';
-	mode[2] = 0;
-    }
-#else
     if((pf)->_flag & _IOREAD) {
 	mode[0] = 'r';
 	mode[1] = 0;
@@ -868,7 +853,6 @@ PerlStdIOFdupopen(struct IPerlStdIO* piPerl, FILE* pf)
 	mode[1] = '+';
 	mode[2] = 0;
     }
-#endif
 
     /* it appears that the binmode is attached to the
      * file descriptor so binmode files will be handled
@@ -1710,7 +1694,6 @@ static THREAD_RET_TYPE
 win32_start_child(LPVOID arg)
 {
     PerlInterpreter *my_perl = (PerlInterpreter*)arg;
-    GV *tmpgv;
     int status;
     HWND parent_message_hwnd;
 #ifdef PERL_SYNC_FORK
@@ -1722,18 +1705,11 @@ win32_start_child(LPVOID arg)
     PERL_SET_THX(my_perl);
     win32_checkTLS(my_perl);
 
-    /* set $$ to pseudo id */
 #ifdef PERL_SYNC_FORK
     w32_pseudo_id = id;
 #else
     w32_pseudo_id = GetCurrentThreadId();
 #endif
-    if (tmpgv = gv_fetchpv("$", TRUE, SVt_PV)) {
-	SV *sv = GvSV(tmpgv);
-	SvREADONLY_off(sv);
-	sv_setiv(sv, -(IV)w32_pseudo_id);
-	SvREADONLY_on(sv);
-    }
 #ifdef PERL_USES_PL_PIDSTATUS    
     hv_clear(PL_pidstatus);
 #endif    
@@ -1781,6 +1757,10 @@ restart:
 		LEAVE;
 	    FREETMPS;
 	    PL_curstash = PL_defstash;
+	    if (PL_curstash != PL_defstash) {
+		SvREFCNT_dec(PL_curstash);
+		PL_curstash = (HV *)SvREFCNT_inc(PL_defstash);
+	    }
 	    if (PL_endav && !PL_minus_c)
 		call_list(oldscope, PL_endav);
 	    status = STATUS_EXIT;

@@ -13,7 +13,7 @@ BEGIN {
 use strict;
 no warnings 'once';
 
-plan(tests => 79);
+plan(tests => 95);
 
 @A::ISA = 'B';
 @B::ISA = 'C';
@@ -80,11 +80,16 @@ eval 'no warnings "redefine"; sub B::d {"B::d2"}';	# Import now.
 is(A->d, "B::d2");		# Update hash table;
 
 # What follows is hardly guarantied to work, since the names in scripts
-# are already linked to "pruned" globs. Say, `undef &B::d' if it were
-# after `delete $B::{d}; sub B::d {}' would reach an old subroutine.
+# are already linked to "pruned" globs. Say, 'undef &B::d' if it were
+# after 'delete $B::{d}; sub B::d {}' would reach an old subroutine.
 
 undef &B::d;
 delete $B::{d};
+is(A->d, "C::d");
+
+eval 'sub B::d {"B::d2.5"}';
+A->d;				# Update hash table;
+my $glob = \delete $B::{d};	# non-void context; hang on to the glob
 is(A->d, "C::d");		# Update hash table;
 
 eval 'sub B::d {"B::d3"}';	# Import now.
@@ -167,7 +172,10 @@ is(A->eee(), "new B: In A::eee, 4");	# Which sticks
 
 {
     no strict 'refs';
+    no warnings 'deprecated';
     # this test added due to bug discovery (in 5.004_04, fb73857aa0bfa8ed)
+    # Possibly kill this test now that defined @::array is finally properly
+    # deprecated?
     is(defined(@{"unknown_package::ISA"}) ? "defined" : "undefined", "undefined");
 }
 
@@ -319,3 +327,80 @@ EOT
     );
 }
 
+# Test for calling a method on a packag name return by a magic variable
+sub TIESCALAR{bless[]}
+sub FETCH{"main"}
+my $kalled;
+sub bolgy { ++$kalled; }
+tie my $a, "";
+$a->bolgy;
+is $kalled, 1, 'calling a class method via a magic variable';
+
+{
+    package NulTest;
+    sub method { 1 }
+
+    package main;
+    eval {
+        NulTest->${ \"method\0Whoops" };
+    };
+    like $@, qr/Can't locate object method "method\0Whoops" via package "NulTest" at/,
+            "method lookup is nul-clean";
+
+    *NulTest::AUTOLOAD = sub { our $AUTOLOAD; return $AUTOLOAD };
+
+    like(NulTest->${ \"nul\0test" }, "nul\0test", "AUTOLOAD is nul-clean");
+}
+
+
+{
+    fresh_perl_is(
+    q! sub T::DESTROY { $x = $_[0]; } bless [], "T";!,
+    "DESTROY created new reference to dead object 'T' during global destruction.",
+    {},
+	"DESTROY creating a new reference to the object generates a warning."
+    );
+}
+
+# [perl #43663]
+{
+    $::{"Just"} = \1;
+    sub Just::a_japh { return "$_[0] another Perl hacker," }
+    is eval { "Just"->a_japh }, "Just another Perl hacker,",
+	'constants do not interfere with class methods';
+}
+
+# [perl #109264]
+{
+    no strict 'vars';
+    sub bliggles { 1 }
+    sub lbiggles :lvalue { index "foo", "f" }
+    ok eval { main->bliggles(my($foo,$bar)) },
+      'foo->bar(my($foo,$bar)) is not called in lvalue context';
+    ok eval { main->bliggles(our($foo,$bar)) },
+      'foo->bar(our($foo,$bar)) is not called in lvalue context';
+    ok eval { main->bliggles(local($foo,$bar)) },
+      'foo->bar(local($foo,$bar)) is not called in lvalue context';
+    ok eval { () = main->lbiggles(my($foo,$bar)); 1 },
+      'foo->lv(my($foo,$bar)) is not called in lvalue context';
+    ok eval { () = main->lbiggles(our($foo,$bar)); 1 },
+      'foo->lv(our($foo,$bar)) is not called in lvalue context';
+    ok eval { () = main->lbiggles(local($foo,$bar)); 1 },
+      'foo->lv(local($foo,$bar)) is not called in lvalue context';
+}
+
+{
+   # AUTOLOAD and DESTROY can be declared without a leading sub,
+   # like BEGIN and friends.
+   package NoSub;
+
+   eval 'AUTOLOAD { our $AUTOLOAD; return $AUTOLOAD }';
+   ::ok( !$@, "AUTOLOAD without a leading sub is legal" );
+
+   eval "DESTROY { ::pass( q!DESTROY without a leading sub is legal and gets called! ) }";
+   {
+      ::ok( NoSub->can("AUTOLOAD"), "...and sets up an AUTOLOAD normally" );
+      ::is( eval { NoSub->bluh }, "NoSub::bluh", "...which works as expected" );
+   }
+   { bless {}, "NoSub"; }
+}

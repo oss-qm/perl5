@@ -125,10 +125,8 @@ EXTCONST U8 PL_${varname}_bitmask[] = {
 EOP
 }
 
-my $out = safer_open('regnodes.h-new', 'regnodes.h');
-
-print $out read_only_top(lang => 'C', by => 'regen/regcomp.pl',
-			 from => 'regcomp.sym');
+my $out = open_new('regnodes.h', '>',
+		   { by => 'regen/regcomp.pl', from => 'regcomp.sym' });
 printf $out <<EOP,
 /* Regops and State definitions */
 
@@ -264,6 +262,10 @@ foreach my $file ("op_reg_common.h", "regexp.h") {
             foreach my $key (keys %definitions) {
                 s/\b$key\b/$definitions{$key}/g;
             }
+
+	    # Remove the U suffix from unsigned int literals
+	    s/\b([0-9]+)U\b/$1/g;
+
             my $newval = eval $_;   # Get numeric definition
 
             $definitions{$define} = $newval;

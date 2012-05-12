@@ -195,6 +195,7 @@ See L<perlguts/"Understanding the Magic of Tied Hashes and Arrays"> for
 more information on how to use this function on tied arrays. 
 
 The rough perl equivalent is C<$myarray[$idx]>.
+
 =cut
 */
 
@@ -248,18 +249,12 @@ Perl_av_fetch(pTHX_ register AV *av, I32 key, I32 lval)
 	    return NULL;
     }
 
-    if (key > AvFILLp(av)) {
-	if (!lval)
-	    return NULL;
-	return av_store(av,key,newSV(0));
+    if (key > AvFILLp(av) || AvARRAY(av)[key] == &PL_sv_undef) {
+      emptyness:
+	return lval ? av_store(av,key,newSV(0)) : NULL;
     }
-    if (AvARRAY(av)[key] == &PL_sv_undef) {
-    emptyness:
-	if (lval)
-	    return av_store(av,key,newSV(0));
-	return NULL;
-    }
-    else if (AvREIFY(av)
+
+    if (AvREIFY(av)
 	     && (!AvARRAY(av)[key]	/* eg. @_ could have freed elts */
 		 || SvIS_FREED(AvARRAY(av)[key]))) {
 	AvARRAY(av)[key] = &PL_sv_undef;	/* 1/2 reify */
@@ -274,10 +269,15 @@ Perl_av_fetch(pTHX_ register AV *av, I32 key, I32 lval)
 Stores an SV in an array.  The array index is specified as C<key>.  The
 return value will be NULL if the operation failed or if the value did not
 need to be actually stored within the array (as in the case of tied
-arrays). Otherwise it can be dereferenced to get the original C<SV*>.  Note
-that the caller is responsible for suitably incrementing the reference
+arrays). Otherwise, it can be dereferenced
+to get the C<SV*> that was stored
+there (= C<val>)).
+
+Note that the caller is responsible for suitably incrementing the reference
 count of C<val> before the call, and decrementing it if the function
 returned NULL.
+
+Approximate Perl equivalent: C<$myarray[$key] = $val;>.
 
 See L<perlguts/"Understanding the Magic of Tied Hashes and Arrays"> for
 more information on how to use this function on tied arrays.
@@ -356,13 +356,19 @@ Perl_av_store(pTHX_ register AV *av, I32 key, SV *val)
 	SvREFCNT_dec(ary[key]);
     ary[key] = val;
     if (SvSMAGICAL(av)) {
-	const MAGIC* const mg = SvMAGIC(av);
-	if (val != &PL_sv_undef) {
+	const MAGIC *mg = SvMAGIC(av);
+	bool set = TRUE;
+	for (; mg; mg = mg->mg_moremagic) {
+	  if (!isUPPER(mg->mg_type)) continue;
+	  if (val != &PL_sv_undef) {
 	    sv_magic(val, MUTABLE_SV(av), toLOWER(mg->mg_type), 0, key);
-	}
-	if (PL_delaymagic && mg->mg_type == PERL_MAGIC_isa)
+	  }
+	  if (PL_delaymagic && mg->mg_type == PERL_MAGIC_isa) {
 	    PL_delaymagic |= DM_ARRAY_ISA;
-	else
+	    set = FALSE;
+	  }
+	}
+	if (set)
 	   mg_set(MUTABLE_SV(av));
     }
     return &ary[key];
@@ -414,8 +420,11 @@ Perl_av_make(pTHX_ register I32 size, register SV **strp)
 /*
 =for apidoc av_clear
 
-Clears an array, making it empty.  Does not free the memory used by the
-array itself. Perl equivalent: C<@myarray = ();>.
+Clears an array, making it empty.  Does not free the memory the av uses to
+store its list of scalars.  If any destructors are triggered as a result,
+the av itself may be freed when this function returns.
+
+Perl equivalent: C<@myarray = ();>.
 
 =cut
 */
@@ -425,6 +434,7 @@ Perl_av_clear(pTHX_ register AV *av)
 {
     dVAR;
     I32 extra;
+    bool real;
 
     PERL_ARGS_ASSERT_AV_CLEAR;
     assert(SvTYPE(av) == SVt_PVAV);
@@ -450,9 +460,11 @@ Perl_av_clear(pTHX_ register AV *av)
     if (AvMAX(av) < 0)
 	return;
 
-    if (AvREAL(av)) {
+    if ((real = !!AvREAL(av))) {
 	SV** const ary = AvARRAY(av);
 	I32 index = AvFILLp(av) + 1;
+	ENTER;
+	SAVEFREESV(SvREFCNT_inc_simple_NN(av));
 	while (index) {
 	    SV * const sv = ary[--index];
 	    /* undef the slot before freeing the value, because a
@@ -467,13 +479,15 @@ Perl_av_clear(pTHX_ register AV *av)
 	AvARRAY(av) = AvALLOC(av);
     }
     AvFILLp(av) = -1;
-
+    if (real) LEAVE;
 }
 
 /*
 =for apidoc av_undef
 
-Undefines the array.  Frees the memory used by the array itself.
+Undefines the array.  Frees the memory used by the av to store its list of
+scalars.  If any destructors are triggered as a result, the av itself may
+be freed.
 
 =cut
 */
@@ -481,6 +495,8 @@ Undefines the array.  Frees the memory used by the array itself.
 void
 Perl_av_undef(pTHX_ register AV *av)
 {
+    bool real;
+
     PERL_ARGS_ASSERT_AV_UNDEF;
     assert(SvTYPE(av) == SVt_PVAV);
 
@@ -488,8 +504,10 @@ Perl_av_undef(pTHX_ register AV *av)
     if (SvTIED_mg((const SV *)av, PERL_MAGIC_tied)) 
 	av_fill(av, -1);
 
-    if (AvREAL(av)) {
+    if ((real = !!AvREAL(av))) {
 	register I32 key = AvFILLp(av) + 1;
+	ENTER;
+	SAVEFREESV(SvREFCNT_inc_simple_NN(av));
 	while (key)
 	    SvREFCNT_dec(AvARRAY(av)[--key]);
     }
@@ -500,6 +518,7 @@ Perl_av_undef(pTHX_ register AV *av)
     AvMAX(av) = AvFILLp(av) = -1;
 
     if(SvRMAGICAL(av)) mg_clear(MUTABLE_SV(av));
+    if(real) LEAVE;
 }
 
 /*
@@ -526,7 +545,9 @@ Perl_av_create_and_push(pTHX_ AV **const avp, SV *const val)
 =for apidoc av_push
 
 Pushes an SV onto the end of the array.  The array will grow automatically
-to accommodate the addition. This takes ownership of one reference count.
+to accommodate the addition.  This takes ownership of one reference count.
+
+Perl equivalent: C<push @myarray, $elem;>.
 
 =cut
 */
@@ -556,6 +577,8 @@ Perl_av_push(pTHX_ register AV *av, SV *val)
 
 Pops an SV off the end of the array.  Returns C<&PL_sv_undef> if the array
 is empty.
+
+Perl equivalent: C<pop(@myarray);>
 
 =cut
 */
@@ -616,6 +639,8 @@ Unshift the given number of C<undef> values onto the beginning of the
 array.  The array will grow automatically to accommodate the addition.  You
 must then use C<av_store> to assign values to these new elements.
 
+Perl equivalent: C<unshift @myarray, ( (undef) x $n );>
+    
 =cut
 */
 
@@ -675,8 +700,11 @@ Perl_av_unshift(pTHX_ register AV *av, register I32 num)
 /*
 =for apidoc av_shift
 
-Shifts an SV off the beginning of the array. Returns C<&PL_sv_undef> if the 
+Shifts an SV off the beginning of the
+array.  Returns C<&PL_sv_undef> if the 
 array is empty.
+
+Perl equivalent: C<shift(@myarray);>
 
 =cut
 */
