@@ -1,4 +1,4 @@
-From 169833d8b6c9231b08dac0fc64dc93114fe50331 Mon Sep 17 00:00:00 2001
+From fdb5dfaac274e2a897d8f42f177121deb6a815aa Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 20 Dec 2011 22:19:45 +0000
 Subject: cpan/CPAN: add NAME headings in modules with POD
@@ -33,7 +33,7 @@ index 23c4a36..48e394b 100644
  
  This program is free software; you can redistribute it and/or
 diff --git a/cpan/CPAN/lib/CPAN/HandleConfig.pm b/cpan/CPAN/lib/CPAN/HandleConfig.pm
-index 58ccbe5..bab607d 100644
+index 09c42ef..a03e165 100644
 --- a/cpan/CPAN/lib/CPAN/HandleConfig.pm
 +++ b/cpan/CPAN/lib/CPAN/HandleConfig.pm
 @@ -6,6 +6,12 @@ use File::Spec ();

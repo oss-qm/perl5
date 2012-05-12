@@ -15,7 +15,7 @@
 static I32 num_q (const char *s, STRLEN slen);
 static I32 esc_q (char *dest, const char *src, STRLEN slen);
 static I32 esc_q_utf8 (pTHX_ SV *sv, const char *src, STRLEN slen);
-static I32 needs_quote(register const char *s);
+static I32 needs_quote(register const char *s, STRLEN len);
 static SV *sv_x (pTHX_ SV *sv, const char *str, STRLEN len, I32 n);
 static I32 DD_dump (pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval,
 		    HV *seenhv, AV *postav, I32 *levelp, I32 indent,
@@ -37,17 +37,17 @@ static I32 DD_dump (pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval,
 # endif
 
 UV
-Perl_utf8_to_uvchr(pTHX_ U8 *s, STRLEN *retlen)
+Perl_utf8_to_uvchr_buf(pTHX_ U8 *s, U8 *send, STRLEN *retlen)
 {
-    const UV uv = utf8_to_uv(s, UTF8_MAXLEN, retlen,
+    const UV uv = utf8_to_uv(s, send - s, retlen,
                     ckWARN(WARN_UTF8) ? 0 : UTF8_ALLOW_ANY);
     return UNI_TO_NATIVE(uv);
 }
 
 # if !defined(PERL_IMPLICIT_CONTEXT)
-#  define utf8_to_uvchr	     Perl_utf8_to_uvchr
+#  define utf8_to_uvchr_buf	     Perl_utf8_to_uvchr_buf
 # else
-#  define utf8_to_uvchr(a,b) Perl_utf8_to_uvchr(aTHX_ a,b)
+#  define utf8_to_uvchr_buf(a,b) Perl_utf8_to_uvchr_buf(aTHX_ a,b)
 # endif
 
 #endif /* PERL_VERSION <= 6 */
@@ -63,11 +63,12 @@ Perl_utf8_to_uvchr(pTHX_ U8 *s, STRLEN *retlen)
 
 /* does a string need to be protected? */
 static I32
-needs_quote(register const char *s)
+needs_quote(register const char *s, STRLEN len)
 {
+    const char *send = s+len;
 TOP:
     if (s[0] == ':') {
-	if (*++s) {
+	if (++s<send) {
 	    if (*s++ != ':')
 		return 1;
 	}
@@ -75,7 +76,7 @@ TOP:
 	    return 1;
     }
     if (isIDFIRST(*s)) {
-	while (*++s)
+	while (++s<send)
 	    if (!isALNUM(*s)) {
 		if (*s == ':')
 		    goto TOP;
@@ -146,7 +147,7 @@ esc_q_utf8(pTHX_ SV* sv, register const char *src, register STRLEN slen)
 
     /* this will need EBCDICification */
     for (s = src; s < send; s += increment) {
-        const UV k = utf8_to_uvchr((U8*)s, NULL);
+        const UV k = utf8_to_uvchr_buf((U8*)s, (U8*) send, NULL);
 
         /* check for invalid utf8 */
         increment = (k == 0 && *s != '\0') ? 1 : UTF8SKIP(s);
@@ -183,7 +184,7 @@ esc_q_utf8(pTHX_ SV* sv, register const char *src, register STRLEN slen)
         *r++ = '"';
 
         for (s = src; s < send; s += UTF8SKIP(s)) {
-            const UV k = utf8_to_uvchr((U8*)s, NULL);
+            const UV k = utf8_to_uvchr_buf((U8*)s, (U8*) send, NULL);
 
             if (k == '"' || k == '\\' || k == '$' || k == '@') {
                 *r++ = '\\';
@@ -462,14 +463,17 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
         {
             STRLEN rlen;
 	    const char *rval = SvPV(val, rlen);
-	    const char *slash = strchr(rval, '/');
+	    const char * const rend = rval+rlen;
+	    const char *slash = rval;
 	    sv_catpvn(retval, "qr/", 3);
-	    while (slash) {
+	    for (;slash < rend; slash++) {
+	      if (*slash == '\\') { ++slash; continue; }
+	      if (*slash == '/') {    
 		sv_catpvn(retval, rval, slash-rval);
 		sv_catpvn(retval, "\\/", 2);
 		rlen -= slash-rval+1;
 		rval = slash+1;
-		slash = strchr(rval, '/');
+	      }
 	    }
 	    sv_catpvn(retval, rval, rlen);
 	    sv_catpvn(retval, "/", 1);
@@ -647,7 +651,7 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
 		    (void)hv_iterinit((HV*)ival);
 		    while ((entry = hv_iternext((HV*)ival))) {
 			sv = hv_iterkeysv(entry);
-			SvREFCNT_inc(sv);
+			(void)SvREFCNT_inc(sv);
 			av_push(keys, sv);
 		    }
 # ifdef USE_LOCALE_NUMERIC
@@ -703,11 +707,11 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
 		if (sortkeys) {
 		    char *key;
 		    svp = av_fetch(keys, i, FALSE);
-		    keysv = svp ? *svp : sv_mortalcopy(&PL_sv_undef);
+		    keysv = svp ? *svp : sv_newmortal();
 		    key = SvPV(keysv, keylen);
 		    svp = hv_fetch((HV*)ival, key,
                                    SvUTF8(keysv) ? -(I32)keylen : (I32)keylen, 0);
-		    hval = svp ? *svp : sv_mortalcopy(&PL_sv_undef);
+		    hval = svp ? *svp : sv_newmortal();
 		}
 		else {
 		    keysv = hv_iterkeysv(entry);
@@ -741,7 +745,7 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
                    more common doesn't need quoting case.
                    The code is also smaller (22044 vs 22260) because I've been
                    able to pull the common logic out to both sides.  */
-                if (quotekeys || needs_quote(key)) {
+                if (quotekeys || needs_quote(key,keylen)) {
                     if (do_utf8) {
                         STRLEN ocur = SvCUR(retval);
                         nlen = esc_q_utf8(aTHX_ retval, key, klen);
@@ -814,7 +818,7 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
 		warn("Encountered CODE ref, using dummy placeholder");
 	}
 	else {
-	    warn("cannot handle ref type %ld", realtype);
+	    warn("cannot handle ref type %d", (int)realtype);
 	}
 
 	if (realpack && !no_bless) {  /* free blessed allocs */
@@ -856,6 +860,7 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
     }
     else {
 	STRLEN i;
+	const MAGIC *mg;
 	
 	if (namelen) {
 #ifdef DD_USE_OLD_ID_FORMAT
@@ -916,9 +921,29 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
 	    if(i) ++c, --i;			/* just get the name */
 	    if (i >= 6 && strncmp(c, "main::", 6) == 0) {
 		c += 4;
-		i -= 4;
+#if PERL_VERSION < 7
+		if (i == 6 || (i == 7 && c[6] == '\0'))
+#else
+		if (i == 6)
+#endif
+		    i = 0; else i -= 4;
 	    }
-	    if (needs_quote(c)) {
+	    if (needs_quote(c,i)) {
+#ifdef GvNAMEUTF8
+	      if (GvNAMEUTF8(val)) {
+		sv_grow(retval, SvCUR(retval)+2);
+		r = SvPVX(retval)+SvCUR(retval);
+		r[0] = '*'; r[1] = '{';
+		SvCUR_set(retval, SvCUR(retval)+2);
+		esc_q_utf8(aTHX_ retval, c, i);
+		sv_grow(retval, SvCUR(retval)+2);
+		r = SvPVX(retval)+SvCUR(retval);
+		r[0] = '}'; r[1] = '\0';
+		i = 1;
+	      }
+	      else
+#endif
+	      {
 		sv_grow(retval, SvCUR(retval)+6+2*i);
 		r = SvPVX(retval)+SvCUR(retval);
 		r[0] = '*'; r[1] = '{';	r[2] = '\'';
@@ -926,6 +951,7 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
 		i += 3;
 		r[i++] = '\''; r[i++] = '}';
 		r[i] = '\0';
+	      }
 	    }
 	    else {
 		sv_grow(retval, SvCUR(retval)+i+2);
@@ -981,6 +1007,20 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
 	else if (val == &PL_sv_undef || !SvOK(val)) {
 	    sv_catpvn(retval, "undef", 5);
 	}
+#ifdef SvVOK
+	else if (SvMAGICAL(val) && (mg = mg_find(val, 'V'))) {
+# ifndef PL_vtbl_vstring
+	    SV * const vecsv = sv_newmortal();
+#  if PERL_VERSION < 10
+	    scan_vstring(mg->mg_ptr, vecsv);
+#  else
+	    scan_vstring(mg->mg_ptr, mg->mg_ptr + mg->mg_len, vecsv);
+#  endif
+	    if (!sv_eq(vecsv, val)) goto integer_came_from_string;
+# endif
+	    sv_catpvn(retval, (const char *)mg->mg_ptr, mg->mg_len);
+	}
+#endif
 	else {
         integer_came_from_string:
 	    c = SvPV(val, i);
@@ -1244,3 +1284,21 @@ Data_Dumper_Dumpxs(href, ...)
 	    if (gimme == G_SCALAR)
 		XPUSHs(sv_2mortal(retval));
 	}
+
+SV *
+Data_Dumper__vstring(sv)
+	SV	*sv;
+	PROTOTYPE: $
+	CODE:
+	{
+#ifdef SvVOK
+	    const MAGIC *mg;
+	    RETVAL =
+		SvMAGICAL(sv) && (mg = mg_find(sv, 'V'))
+		 ? newSVpvn((const char *)mg->mg_ptr, mg->mg_len)
+		 : &PL_sv_undef;
+#else
+	    RETVAL = &PL_sv_undef;
+#endif
+	}
+	OUTPUT: RETVAL

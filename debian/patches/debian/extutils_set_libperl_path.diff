@@ -1,4 +1,4 @@
-From 334ac01a8306485ed901f4fb45d79f39a944fe77 Mon Sep 17 00:00:00 2001
+From 9603ac0b1cdf6a94aa00ca838da9d1b43f5d82be Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: EU:MM: Set location of libperl.a to /usr/lib
@@ -9,10 +9,10 @@ Patch-Name: debian/extutils_set_libperl_path.diff
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 4ee6b3f..42bbb83 100644
+index 3ae46b4..9ba1bdd 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -2409,7 +2409,7 @@ MAP_PRELIBS   = $Config{perllibs} $Config{cryptlib}
+@@ -2407,7 +2407,7 @@ MAP_PRELIBS   = $Config{perllibs} $Config{cryptlib}
  	($lperl = $libperl) =~ s/\$\(A\)/$self->{LIB_EXT}/;
      }
      unless ($libperl && -f $lperl) { # Ilya's code...

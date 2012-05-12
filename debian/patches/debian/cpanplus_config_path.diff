@@ -1,4 +1,4 @@
-From b8ab15d6bed9e9155b2524f9c57731f2780872fa Mon Sep 17 00:00:00 2001
+From ff979becf1eebd34704d74339ea0c4e739c25a98 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 6 Jul 2009 22:17:53 +0300
 Subject: Save local versions of CPANPLUS::Config::System into /etc/perl.
@@ -17,7 +17,7 @@ Patch-Name: debian/cpanplus_config_path.diff
  2 files changed, 4 insertions(+), 0 deletions(-)
 
 diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm b/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm
-index ba1ca07..25cbe5f 100644
+index 04a0875..126524a 100644
 --- a/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm
 +++ b/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm
 @@ -280,6 +280,7 @@ Saves the configuration to the package name you provided.
@@ -29,7 +29,7 @@ index ba1ca07..25cbe5f 100644
  If no argument is provided, it will default to your personal
  config.
 diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm b/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm
-index 443d5a4..f7085a8 100644
+index bd48a1d..482d03e 100644
 --- a/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm
 +++ b/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm
 @@ -209,6 +209,9 @@ use constant CONFIG_USER_FILE    => sub {

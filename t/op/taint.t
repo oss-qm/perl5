@@ -17,7 +17,7 @@ BEGIN {
 use strict;
 use Config;
 
-plan tests => 779;
+plan tests => 794;
 
 $| = 1;
 
@@ -98,6 +98,7 @@ sub taint_these (@) {
 
 # How to identify taint when you see it
 sub tainted ($) {
+    local $@;   # Don't pollute caller's value.
     not eval { join("",@_), kill 0; 1 };
 }
 
@@ -137,22 +138,6 @@ my $TEST = 'TEST';
 {
     $ENV{'DCL$PATH'} = '' if $Is_VMS;
 
-    if ($Is_MSWin32 && $Config{ccname} =~ /bcc32/ && ! -f 'cc3250mt.dll') {
-	my $bcc_dir;
-	foreach my $dir (split /$Config{path_sep}/, $ENV{PATH}) {
-	    if (-f "$dir/cc3250mt.dll") {
-		$bcc_dir = $dir and last;
-	    }
-	}
-	if (defined $bcc_dir) {
-	    require File::Copy;
-	    File::Copy::copy("$bcc_dir/cc3250mt.dll", '.') or
-		die "$0: failed to copy cc3250mt.dll: $!\n";
-	    eval q{
-		END { unlink "cc3250mt.dll" }
-	    };
-	}
-    }
     $ENV{PATH} = ($Is_Cygwin) ? '/usr/bin' : '';
     delete @ENV{@MoreEnv};
     $ENV{TERM} = 'dumb';
@@ -2144,6 +2129,30 @@ end
     is_tainted $dest, "ucfirst(tainted) taints its return value";
 }
 
+{
+    # Taintedness of values returned from given()
+    use feature 'switch';
+
+    my @descriptions = ('when', 'given end', 'default');
+
+    for (qw<x y z>) {
+	my $letter = "$_$TAINT";
+
+	my $desc = "tainted value returned from " . shift(@descriptions);
+
+	my $res = do {
+	    given ($_) {
+		when ('x') { $letter }
+		when ('y') { goto leavegiven }
+		default    { $letter }
+		leavegiven:  $letter
+	    }
+	};
+	is         $res, $letter, "$desc is correct";
+	is_tainted $res,          "$desc stays tainted";
+    }
+}
+
 
 # tainted constants and index()
 #  RT 64804; http://bugs.debian.org/291450
@@ -2154,6 +2163,38 @@ end
     ok(!tainted "", "tainting not broken yet");
     index(undef, C);
     ok(!tainted "", "tainting still works after index() of the constant");
+}
+
+# Tainted values with smartmatch
+# [perl #93590] S_do_smartmatch stealing its own string buffers
+ok "M$TAINT" ~~ ['m', 'M'], '$tainted ~~ ["whatever", "match"]';
+ok !("M$TAINT" ~~ ['m', undef]), '$tainted ~~ ["whatever", undef]';
+
+# Tainted values and ref()
+for(1,2) {
+  my $x = bless \"M$TAINT", ref(bless[], "main");
+}
+pass("no death when TARG of ref is tainted");
+
+# $$ should not be tainted by being read in a tainted expression.
+{
+    isnt_tainted $$, "PID not tainted initially";
+    my $x = $ENV{PATH}.$$;
+    isnt_tainted $$, "PID not tainted when read in tainted expression";
+}
+
+{
+    use feature 'fc';
+    use locale;
+    my ($latin1, $utf8) = ("\xDF") x 2;
+    utf8::downgrade($latin1);
+    utf8::upgrade($utf8);
+
+    is_tainted fc($latin1), "under locale, lc(latin1) taints the result";
+    is_tainted fc($utf8), "under locale, lc(utf8) taints the result";
+
+    is_tainted "\F$latin1", "under locale, \\Flatin1 taints the result";
+    is_tainted "\F$utf8", "under locale, \\Futf8 taints the result";
 }
 
 { # 111654

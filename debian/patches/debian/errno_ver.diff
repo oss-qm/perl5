@@ -1,4 +1,4 @@
-From 973bed42db538804179f39d66dab37c82c6ade24 Mon Sep 17 00:00:00 2001
+From 53f4425312b175a7cd93cd94e6a3a11dad55919c Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 16 Dec 2005 01:32:14 +1100
 Subject: Remove Errno version check due to upgrade problems with long-running
@@ -16,10 +16,10 @@ Patch-Name: debian/errno_ver.diff
  1 files changed, 0 insertions(+), 5 deletions(-)
 
 diff --git a/ext/Errno/Errno_pm.PL b/ext/Errno/Errno_pm.PL
-index 56bc815..01f510a 100644
+index 439f254..7fd8920 100644
 --- a/ext/Errno/Errno_pm.PL
 +++ b/ext/Errno/Errno_pm.PL
-@@ -332,13 +332,8 @@ EOF
+@@ -330,13 +330,8 @@ EOF
  
  package Errno;
  require Exporter;
@@ -27,8 +27,8 @@ index 56bc815..01f510a 100644
  use strict;
  
 -"\$Config{'archname'}-\$Config{'osvers'}" eq
--"$Config{'archname'}-$Config{'osvers'}" or
--	die "Errno architecture ($Config{'archname'}-$Config{'osvers'}) does not match executable architecture (\$Config{'archname'}-\$Config{'osvers'})";
+-"$archname-$Config{'osvers'}" or
+-	die "Errno architecture ($archname-$Config{'osvers'}) does not match executable architecture (\$Config{'archname'}-\$Config{'osvers'})";
 -
  our \$VERSION = "$VERSION";
  \$VERSION = eval \$VERSION;

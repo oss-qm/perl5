@@ -1,5 +1,5 @@
 name: perl
-version: 5.014002
+version: 5.016000
 abstract: The Perl 5 language interpreter
 author: perl5-porters@perl.org
 license: perl
@@ -18,6 +18,7 @@ no_index:
     - dist/B-Lint
     - dist/base
     - dist/bignum
+    - dist/Carp
     - dist/constant
     - dist/Cwd
     - dist/Data-Dumper
@@ -42,18 +43,23 @@ no_index:
     - dist/Math-BigRat
     - dist/Module-CoreList
     - dist/Net-Ping
-    - dist/Pod-Perldoc
     - dist/Safe
+    - dist/Search-Dict
     - dist/SelfLoader
     - dist/Storable
+    - dist/Term-Complete
+    - dist/Term-ReadLine
+    - dist/Text-Abbrev
     - dist/Thread-Queue
     - dist/Thread-Semaphore
     - dist/threads
     - dist/threads-shared
+    - dist/Tie-File
     - dist/XSLoader
     - lib/version
     - win32
   file:
+    - autodoc.pl
     - dist/IO/ChangeLog
     - dist/IO/hints/sco.pl
     - dist/IO/IO.pm
@@ -72,6 +78,9 @@ no_index:
     - dist/IO/poll.c
     - dist/IO/poll.h
     - dist/IO/README
+    - dist/IO/t/cachepropagate-tcp.t
+    - dist/IO/t/cachepropagate-udp.t
+    - dist/IO/t/cachepropagate-unix.t
     - dist/IO/t/IO.t
     - dist/IO/t/io_const.t
     - dist/IO/t/io_dir.t
@@ -89,6 +98,7 @@ no_index:
     - dist/IO/t/io_udp.t
     - dist/IO/t/io_unix.t
     - dist/IO/t/io_utf8.t
+    - dist/IO/t/io_utf8argv.t
     - dist/IO/t/io_xs.t
     - dist/lib/lib_pm.PL
     - dist/lib/Makefile.PL
@@ -96,12 +106,11 @@ no_index:
     - lib/Exporter.pm
     - lib/Exporter.t
     - lib/Exporter/Heavy.pm
-    - lib/newgetopt.pl
     - lib/unicore/mktables
     - lib/version.pm
     - lib/version.pod
-    - lib/version.t
     - pod/perlfilter.pod
+    - pod/perlpodstyle.pod
     - Porting/Maintainers.pm
     - Porting/perldelta_template.pod
     - TestInit.pm

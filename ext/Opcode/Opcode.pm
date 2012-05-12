@@ -6,7 +6,7 @@ use strict;
 
 our($VERSION, @ISA, @EXPORT_OK);
 
-$VERSION = "1.18";
+$VERSION = "1.23";
 
 use Carp;
 use Exporter ();
@@ -308,7 +308,7 @@ invert_opset function.
 
     rv2sv sassign
 
-    rv2av aassign aelem aelemfast aslice av2arylen
+    rv2av aassign aelem aelemfast aelemfast_lex aslice av2arylen
 
     rv2hv helem hslice each values keys exists delete aeach akeys avalues
     boolkeys reach rvalues rkeys
@@ -325,7 +325,7 @@ invert_opset function.
 
     substr vec stringify study pos length index rindex ord chr
 
-    ucfirst lcfirst uc lc quotemeta trans transr chop schop chomp schomp
+    ucfirst lcfirst uc lc fc quotemeta trans transr chop schop chomp schomp
 
     match split qr
 
@@ -335,7 +335,7 @@ invert_opset function.
 
     warn die lineseq nextstate scope enter leave
 
-    rv2cv anoncode prototype
+    rv2cv anoncode prototype coreargs
 
     entersub leavesub leavesublv return method method_named -- XXX loops via recursion?
 
@@ -543,7 +543,7 @@ This tag holds opcodes related to loading modules and getting information
 about calling environment and args.
 
     require dofile 
-    caller
+    caller runcv
 
 =item :still_to_be_decided
 

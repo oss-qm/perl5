@@ -11,11 +11,19 @@ BEGIN {
     }
 }
 
-use Test;
-BEGIN { plan tests => 120 };
-
 use strict;
 use warnings;
+BEGIN { $| = 1; print "1..130\n"; }
+my $count = 0;
+sub ok ($;$) {
+    my $p = my $r = shift;
+    if (@_) {
+	my $x = shift;
+	$p = !defined $x ? !defined $r : !defined $r ? 0 : $r eq $x;
+    }
+    print $p ? "ok" : "not ok", ' ', ++$count, "\n";
+}
+
 use Unicode::Collate::Locale;
 
 ok(1);
@@ -25,7 +33,7 @@ ok(1);
 our (@listEs, @listEsT, @listFr);
 
 @listEs = qw(
-    cambio camella camello camelo Camerún 
+    cambio camella camello camelo Camerún
     chico chile Chile CHILE chocolate
     cielo curso espacio espanto español esperanza lama líquido
     llama Llama LLAMA llamar luz nos nueve ñu ojo
@@ -138,3 +146,16 @@ ok("@sortFr" eq "@listFr");
     ok(ref($objEsT  ->{$keyXS}), $UseXS);
 }
 # 120
+
+ok(Unicode::Collate::Locale::_locale('sr'),            'sr');
+ok(Unicode::Collate::Locale::_locale('sr_Cyrl'),       'sr');
+ok(Unicode::Collate::Locale::_locale('sr_Latn'),       'sr_Latn');
+ok(Unicode::Collate::Locale::_locale('sr_LATN'),       'sr_Latn');
+ok(Unicode::Collate::Locale::_locale('sr_latn'),       'sr_Latn');
+ok(Unicode::Collate::Locale::_locale('de'),            'default');
+ok(Unicode::Collate::Locale::_locale('de_phone'),      'de__phonebook');
+ok(Unicode::Collate::Locale::_locale('de__phonebook'), 'de__phonebook');
+ok(Unicode::Collate::Locale::_locale('de-phonebk'),    'de__phonebook');
+ok(Unicode::Collate::Locale::_locale('de--phonebk'),   'de__phonebook');
+
+# 130

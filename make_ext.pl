@@ -211,10 +211,11 @@ elsif ($is_VMS) {
 
 {
     # Cwd needs to be built before Encode recurses into subdirectories.
+    # Pod::Simple needs to be built before Pod::Functions
     # This seems to be the simplest way to ensure this ordering:
     my (@first, @other);
     foreach (@extspec) {
-	if ($_ eq 'Cwd') {
+	if ($_ eq 'Cwd' || $_ eq 'Pod/Simple') {
 	    push @first, $_;
 	} else {
 	    push @other, $_;
@@ -377,6 +378,10 @@ WriteMakefile(
 EOM
 	    close $fh or die "Can't close Makefile.PL: $!";
 	}
+  eval {
+    my $ftime = time - 4;
+    utime $ftime, $ftime, 'Makefile.PL';
+  };
 	print "\nRunning Makefile.PL in $ext_dir\n";
 
 	# Presumably this can be simplified
@@ -388,7 +393,7 @@ EOM
 	    # Inherited from make_ext.pl
 	    @cross = '-MCross';
 	}
-	    
+
 	my @args = ("-I$lib_dir", @cross, 'Makefile.PL');
 	if ($is_VMS) {
 	    my $libd = VMS::Filespec::vmspath($lib_dir);
@@ -453,11 +458,9 @@ EOS
 	# Give makefile an opportunity to rewrite itself.
 	# reassure users that life goes on...
 	my @args = ('config', @$pass_through);
-	_quote_args(\@args) if $is_VMS;
 	system(@run, @make, @args) and print "@run @make @args failed, continuing anyway...\n";
     }
     my @targ = ($target, @$pass_through);
-    _quote_args(\@targ) if $is_VMS;
     print "Making $target in $ext_dir\n@run @make @targ\n";
     my $code = system(@run, @make, @targ);
     die "Unsuccessful make($ext_dir): code=$code" if $code != 0;

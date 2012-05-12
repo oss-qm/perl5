@@ -24,7 +24,7 @@ Due to a bleadperl optimization (Dave Mitchell, circa apr 04), the
 private flags /1, /2 are gone in blead (for the cases covered)
 
 When the optree stuff was integrated into 5.8.6, these tests failed,
-and were todo'd.  Theyre now done, by version-specific tweaking in
+and were todo'd.  They're now done, by version-specific tweaking in
 mkCheckRex(), therefore the skip is removed too.
 
 =head1 Test Notes
@@ -517,7 +517,7 @@ checkOptree(name   => q{Compound sort/map Expression },
 # l  <|> mapwhile(other->m)[t26] lK
 # m      <#> gv[*_] s
 # n      <1> rv2sv sKM/DREFAV,1
-# o      <1> rv2av[t4] sKR/DREFed,1
+# o      <1> rv2av[t4] sKR/1
 # p      <$> const[IV 0] s
 # q      <2> aelem sK/2
 # -      <@> scope lK
@@ -552,7 +552,7 @@ EOT_EOT
 # l  <|> mapwhile(other->m)[t12] lK
 # m      <$> gv(*_) s
 # n      <1> rv2sv sKM/DREFAV,1
-# o      <1> rv2av[t2] sKR/DREFed,1
+# o      <1> rv2av[t2] sKR/1
 # p      <$> const(IV 0) s
 # q      <2> aelem sK/2
 # -      <@> scope lK

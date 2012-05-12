@@ -313,7 +313,7 @@ sub find_configure_requires {
         defaults => $mod->status->$meth || {},
       );
 
-      my @possibles = do { defined $mod->status->extract 
+      my @possibles = do { defined $mod->status->extract
                            ? ( META_JSON->( $mod->status->extract ),
                                META_YML->( $mod->status->extract ) )
                            : ()
@@ -363,7 +363,7 @@ sub find_mymeta_requires {
         defaults => $mod->status->$meth || {},
       );
 
-      my @possibles = do { defined $mod->status->extract 
+      my @possibles = do { defined $mod->status->extract
                            ? ( MYMETA_JSON->( $mod->status->extract ),
                                MYMETA_YML->( $mod->status->extract ) )
                            : ()
@@ -418,6 +418,9 @@ sub _prereqs_from_meta_file {
 
         ### Parse::CPAN::Meta uses exceptions for errors
         ### hash returned in list context!!!
+
+        local $ENV{PERL_JSON_BACKEND};
+
         my ($doc) = eval { Parse::CPAN::Meta::LoadFile( $meta ) };
 
         unless( $doc ) {
@@ -465,6 +468,9 @@ sub _prereqs_from_meta_json {
 
         ### Parse::CPAN::Meta uses exceptions for errors
         ### hash returned in list context!!!
+
+        local $ENV{PERL_JSON_BACKEND};
+
         my ($doc) = eval { Parse::CPAN::Meta->load_file( $meta ) };
 
         unless( $doc ) {
@@ -523,7 +529,7 @@ sub _resolve_prereqs {
     my $conf = $cb->configure_object;
     my %hash = @_;
 
-    my ($prereqs, $format, $verbose, $target, $force, $prereq_build);
+    my ($prereqs, $format, $verbose, $target, $force, $prereq_build,$tolerant);
     my $tmpl = {
         ### XXX perhaps this should not be required, since it may not be
         ### packaged, just installed...
@@ -543,6 +549,8 @@ sub _resolve_prereqs {
         target          => { default => '', store => \$target,
                                 allow => ['',qw[create ignore install]] },
         prereq_build    => { default => 0, store => \$prereq_build },
+        tolerant        => { default => $conf->get_conf('allow_unknown_prereqs'),
+                                store => \$tolerant },
     };
 
     check( $tmpl, \%hash ) or return;
@@ -594,6 +602,8 @@ sub _resolve_prereqs {
     ### list of module objects + desired versions
     my @install_me;
 
+    my $flag;
+
     for my $mod ( @sorted_prereqs ) {
         ( my $version = $prereqs->{$mod} ) =~ s#[^0-9\._]+##g;
 
@@ -626,6 +636,7 @@ sub _resolve_prereqs {
             my $core = $sub->( $mod );
             unless ( defined $core ) {
                error( loc( "No such module '%1' found on CPAN", $mod ) );
+               $flag++ unless $tolerant;
                next;
             }
             if ( $cb->_vcmp( $version, $core ) > 0 ) {
@@ -684,7 +695,6 @@ sub _resolve_prereqs {
         }
     }
 
-    my $flag;
     for my $aref (@install_me) {
         my($modobj,$version) = @$aref;
 

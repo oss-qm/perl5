@@ -9,20 +9,21 @@ BEGIN {
     skip_all_if_miniperl("no dynamic loading on miniperl, no re");
 }
 
-plan 17;
+plan 18;
 
 # Functions for turning to-do-ness on and off (as there are so many
 # to-do tests) 
 sub on { $::TODO = "(?{}) implementation is screwy" }
 sub off { undef $::TODO }
 
-on;
 
 fresh_perl_is <<'CODE', '781745', {}, '(?{}) has its own lexical scope';
  my $x = 7; my $a = 4; my $b = 5;
  print "a" =~ /(?{ print $x; my $x = 8; print $x; my $y })a/;
  print $x,$a,$b;
 CODE
+
+on;
 
 fresh_perl_is <<'CODE',
  for my $x("a".."c") {
@@ -42,6 +43,8 @@ CODE
  '1a82a93a104a85a96a101a 1b82b93b104b85b96b101b 1c82c93c104c85c96c101c ',
   {},
  'multiple (?{})s in loop with lexicals';
+
+off;
 
 fresh_perl_is <<'CODE', '781745', {}, 'run-time re-eval has its own scope';
  use re qw(eval);
@@ -84,6 +87,8 @@ fresh_perl_is <<'CODE', '178279371047857967101745', {},
  print $x,$a,$b
 CODE
  'multiple (?{})s in "foo" =~ /$string/x';
+
+on;
 
 fresh_perl_is <<'CODE', '123123', {},
   for my $x(1..3) {
@@ -150,3 +155,9 @@ CODE
 fresh_perl_is <<'CODE', '45', { stderr => 1 }, '(?{goto})';
   my $a=4; my $b=5; "a" =~ /(?{goto _})a/; die; _: print $a,$b
 CODE
+
+off;
+
+# [perl #92256]
+{ my $y = "a"; $y =~ /a(?{ undef *_ })/ }
+pass "undef *_ in a re-eval does not cause a double free";

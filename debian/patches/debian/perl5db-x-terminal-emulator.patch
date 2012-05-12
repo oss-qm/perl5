@@ -1,4 +1,4 @@
-From caeea3b6ae9cd972a2e18b50a1e52528043bd950 Mon Sep 17 00:00:00 2001
+From a4668c1e813f20f36111b3977dacf039b8f76d92 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 14 Apr 2012 11:34:05 +0100
 Subject: Invoke x-terminal-emulator rather than xterm in perl5db.pl
@@ -15,10 +15,10 @@ Patch-Name: debian/perl5db-x-terminal-emulator.patch
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/lib/perl5db.pl b/lib/perl5db.pl
-index ea0d049..79863e3 100644
+index 889f305..6645f6a 100644
 --- a/lib/perl5db.pl
 +++ b/lib/perl5db.pl
-@@ -6176,7 +6176,7 @@ properly set up.
+@@ -6089,7 +6089,7 @@ properly set up.
  sub xterm_get_fork_TTY {
      ( my $name = $0 ) =~ s,^.*[/\\],,s;
      open XT,

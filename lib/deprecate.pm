@@ -11,8 +11,7 @@ unless (%Config) { require Config; *Config = \%Config::Config; }
 # deprecated modules where available
 
 my %DEBIAN_PACKAGES = (
-    "Shell"		=> "libshell-perl",
-    "Devel::DProf"	=> "libdevel-dprof-perl"
+    # no deprecations to handle in 5.16
 );
 
 # This isn't a public API. It's internal to code maintained by the perl-porters

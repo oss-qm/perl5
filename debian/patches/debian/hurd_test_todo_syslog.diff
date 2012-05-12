@@ -1,4 +1,4 @@
-From 8079d66b449893f2d8ca129bbedf4392e47b3a1b Mon Sep 17 00:00:00 2001
+From 9bfa0adf7c425866884d90f978aca1e08e63fa21 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 15:11:53 +0000
 Subject: Disable failing GNU/Hurd tests in cpan/Sys-Syslog/t/syslog.t
@@ -11,10 +11,10 @@ Patch-Name: debian/hurd_test_todo_syslog.diff
  1 files changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/cpan/Sys-Syslog/t/syslog.t b/cpan/Sys-Syslog/t/syslog.t
-index 0b7a9c4..71ddb7b 100644
+index ee136d5..4a34fee 100644
 --- a/cpan/Sys-Syslog/t/syslog.t
 +++ b/cpan/Sys-Syslog/t/syslog.t
-@@ -163,14 +163,20 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
+@@ -175,14 +175,20 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
          # syslog() with level "info" (as a string), should pass
          $r = eval { syslog('info', "$test_string by connecting to a $sock_type socket") } || 0;
          is( $@, '', "[$sock_type] syslog() called with level 'info' (string)" );
@@ -37,7 +37,7 @@ index 0b7a9c4..71ddb7b 100644
  
          push @passed, $sock_type;
  
-@@ -179,7 +185,10 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
+@@ -191,7 +197,10 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
              # closelog()
              $r = eval { closelog() } || 0;
              is( $@, '', "[$sock_type] closelog()" );

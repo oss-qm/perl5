@@ -1,4 +1,4 @@
-From 11633e598640b02e19329f323623af254fbac451 Mon Sep 17 00:00:00 2001
+From 55b38f5fd5d114381c972518cf635047a794e679 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
@@ -22,10 +22,10 @@ Patch-Name: debian/mod_paths.diff
  1 files changed, 58 insertions(+), 0 deletions(-)
 
 diff --git a/perl.c b/perl.c
-index f756e02..d26dcb0 100644
+index 7f6848e..e61ba8a 100644
 --- a/perl.c
 +++ b/perl.c
-@@ -4219,6 +4219,11 @@ S_init_perllib(pTHX)
+@@ -4277,6 +4277,11 @@ S_init_perllib(pTHX)
  		      INCPUSH_ADD_SUB_DIRS|INCPUSH_CAN_RELOCATE);
  #endif
  
@@ -37,7 +37,7 @@ index f756e02..d26dcb0 100644
  #ifdef SITEARCH_EXP
      /* sitearch is always relative to sitelib on Windows for
       * DLL-based path intuition to work correctly */
-@@ -4336,6 +4341,59 @@ S_init_perllib(pTHX)
+@@ -4394,6 +4399,59 @@ S_init_perllib(pTHX)
  		      INCPUSH_ADD_OLD_VERS|INCPUSH_CAN_RELOCATE);
  #endif
  

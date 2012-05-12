@@ -1,4 +1,4 @@
-From 492e0d6b4e3e0d786fb88b9058d581f6466c4a3e Mon Sep 17 00:00:00 2001
+From 171a11cece4757011c1a2ecefb9d4e938dee42ce Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Set umask approproately for site install directories
@@ -11,10 +11,10 @@ Patch-Name: debian/writable_site_dirs.diff
  1 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 865d36d..4ee6b3f 100644
+index e48d95f..3ae46b4 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -2067,7 +2067,7 @@ pure_perl_install :: all
+@@ -2065,7 +2065,7 @@ pure_perl_install :: all
  
  
  pure_site_install :: all
@@ -23,7 +23,7 @@ index 865d36d..4ee6b3f 100644
  		read }.$self->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').q{ \
  		write }.$self->catfile('$(DESTINSTALLSITEARCH)','auto','$(FULLEXT)','.packlist').q{ \
  		$(INST_LIB) $(DESTINSTALLSITELIB) \
-@@ -2103,8 +2103,8 @@ doc_perl_install :: all
+@@ -2101,8 +2101,8 @@ doc_perl_install :: all
  
  doc_site_install :: all
  	$(NOECHO) $(ECHO) Appending installation info to $(DESTINSTALLARCHLIB)/perllocal.pod

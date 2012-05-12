@@ -1,6 +1,7 @@
 /*    mathoms.c
  *
- *    Copyright (C) 2005, 2006, 2007, 2008 by Larry Wall and others
+ *    Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010,
+ *    2011, 2012 by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -66,7 +67,6 @@ PERL_CALLCONV HE * Perl_hv_iternext(pTHX_ HV *hv);
 PERL_CALLCONV void Perl_hv_magic(pTHX_ HV *hv, GV *gv, int how);
 PERL_CALLCONV bool Perl_do_open(pTHX_ GV *gv, register const char *name, I32 len, int as_raw, int rawmode, int rawperm, PerlIO *supplied_fp);
 PERL_CALLCONV bool Perl_do_aexec(pTHX_ SV *really, register SV **mark, register SV **sp);
-PERL_CALLCONV bool Perl_do_exec(pTHX_ const char *cmd);
 PERL_CALLCONV U8 * Perl_uvuni_to_utf8(pTHX_ U8 *d, UV uv);
 PERL_CALLCONV bool Perl_is_utf8_string_loc(pTHX_ const U8 *s, STRLEN len, const U8 **ep);
 PERL_CALLCONV void Perl_sv_nolocking(pTHX_ SV *sv);
@@ -84,6 +84,10 @@ PERL_CALLCONV I32 Perl_sv_eq(pTHX_ register SV *sv1, register SV *sv2);
 PERL_CALLCONV char * Perl_sv_collxfrm(pTHX_ SV *const sv, STRLEN *const nxp);
 PERL_CALLCONV bool Perl_sv_2bool(pTHX_ register SV *const sv);
 PERL_CALLCONV CV * Perl_newSUB(pTHX_ I32 floor, OP* o, OP* proto, OP* block);
+PERL_CALLCONV UV Perl_to_utf8_lower(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp);
+PERL_CALLCONV UV Perl_to_utf8_title(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp);
+PERL_CALLCONV UV Perl_to_utf8_upper(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp);
+PERL_CALLCONV UV Perl_to_utf8_fold(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp);
 
 /* ref() is now a macro using Perl_doref;
  * this version provided for binary compatibility only.
@@ -117,6 +121,7 @@ Perl_sv_unref(pTHX_ SV *sv)
 =for apidoc sv_taint
 
 Taint an SV. Use C<SvTAINTED_on> instead.
+
 =cut
 */
 
@@ -174,6 +179,7 @@ Perl_sv_2pv(pTHX_ register SV *sv, STRLEN *lp)
 
 Like C<sv_2pv()>, but doesn't return the length too. You should usually
 use the macro wrapper C<SvPV_nolen(sv)> instead.
+
 =cut
 */
 
@@ -604,7 +610,7 @@ Perl_gv_efullname3(pTHX_ SV *sv, const GV *gv, const char *prefix)
 /*
 =for apidoc gv_fetchmethod
 
-See L<gv_fetchmethod_autoload>.
+See L</gv_fetchmethod_autoload>.
 
 =cut
 */
@@ -680,16 +686,6 @@ Perl_do_aexec(pTHX_ SV *really, register SV **mark, register SV **sp)
     PERL_ARGS_ASSERT_DO_AEXEC;
 
     return do_aexec5(really, mark, sp, 0, 0);
-}
-#endif
-
-#ifdef PERL_DEFAULT_DO_EXEC3_IMPLEMENTATION
-bool
-Perl_do_exec(pTHX_ const char *cmd)
-{
-    PERL_ARGS_ASSERT_DO_EXEC;
-
-    return do_exec3(cmd,0,0);
 }
 #endif
 
@@ -1168,6 +1164,39 @@ Perl_newSUB(pTHX_ I32 floor, OP *o, OP *proto, OP *block)
 {
     return Perl_newATTRSUB(aTHX_ floor, o, proto, NULL, block);
 }
+
+UV
+Perl_to_utf8_fold(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp)
+{
+    PERL_ARGS_ASSERT_TO_UTF8_FOLD;
+
+    return _to_utf8_fold_flags(p, ustrp, lenp, FOLD_FLAGS_FULL, NULL);
+}
+
+UV
+Perl_to_utf8_lower(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp)
+{
+    PERL_ARGS_ASSERT_TO_UTF8_LOWER;
+
+    return _to_utf8_lower_flags(p, ustrp, lenp, FALSE, NULL);
+}
+
+UV
+Perl_to_utf8_title(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp)
+{
+    PERL_ARGS_ASSERT_TO_UTF8_TITLE;
+
+    return _to_utf8_title_flags(p, ustrp, lenp, FALSE, NULL);
+}
+
+UV
+Perl_to_utf8_upper(pTHX_ const U8 *p, U8* ustrp, STRLEN *lenp)
+{
+    PERL_ARGS_ASSERT_TO_UTF8_UPPER;
+
+    return _to_utf8_upper_flags(p, ustrp, lenp, FALSE, NULL);
+}
+
 #endif /* NO_MATHOMS */
 
 /*

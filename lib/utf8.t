@@ -435,7 +435,29 @@ SKIP: {
     utf8::decode($k1);
     utf8::decode($k2);
     my $h = { $k1 => 1, $k2 => 2 };
-    is join('', keys %$h), $k2, 'utf8::decode respects copy-on-write';
+    is join('', keys $h), $k2, 'utf8::decode respects copy-on-write';
+}
+
+{
+    # Make sure utf8::decode does not modify read-only scalars
+    # [perl #91850].
+    
+    my $name = "\x{c3}\x{b3}";
+    Internals::SvREADONLY($name, 1);
+    eval { utf8::decode($name) };
+    like $@, qr/^Modification of a read-only/,
+	'utf8::decode respects readonliness';
+}
+
+{
+    # utf8::decode should stringify refs [perl #91850].
+
+    package eieifg { use overload '""'      => sub { "\x{c3}\x{b3}" },
+                                   fallback => 1 }
+
+    my $name = bless[], eieifg::;
+    utf8::decode($name);
+    is $name, "\xf3", 'utf8::decode flattens references';
 }
 
 {

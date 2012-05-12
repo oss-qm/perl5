@@ -260,11 +260,11 @@ if (@ARGV && $ARGV[0] eq "tree")
     exit ;
 }
 
-my $warn = safer_open('warnings.h-new', 'warnings.h');
-my $pm = safer_open('lib/warnings.pm-new', 'lib/warnings.pm');
+my ($warn, $pm) = map {
+    open_new($_, '>', { by => 'regen/warnings.pl' });
+} 'warnings.h', 'lib/warnings.pm';
 
-print $pm read_only_top(lang => 'Perl', by => 'regen/warnings.pl');
-print $warn read_only_top(lang => 'C', by => 'regen/warnings.pl'), <<'EOM';
+print $warn <<'EOM';
 
 #define Off(x)			((x) / 8)
 #define Bit(x)			(1 << ((x) % 8))
@@ -427,7 +427,7 @@ read_only_bottom_close_and_rename($pm);
 __END__
 package warnings;
 
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 
 # Verify that we're called correctly so that warnings will work.
 # see also strict.pm.
@@ -469,7 +469,8 @@ warnings - Perl pragma to control optional warnings
 
 The C<warnings> pragma is a replacement for the command line flag C<-w>,
 but the pragma is limited to the enclosing block, while the flag is global.
-See L<perllexwarn> for more information.
+See L<perllexwarn> for more information and the list of built-in warning
+categories.
 
 If no import list is supplied, all possible warnings are either enabled
 or disabled.
@@ -635,7 +636,7 @@ sub import
 {
     shift;
 
-    my $mask = ${^WARNING_BITS} ;
+    my $mask = ${^WARNING_BITS} // ($^W ? $Bits{all} : $NONE) ;
 
     if (vec($mask, $Offsets{'all'}, 1)) {
         $mask |= $Bits{'all'} ;
@@ -651,7 +652,7 @@ sub unimport
     shift;
 
     my $catmask ;
-    my $mask = ${^WARNING_BITS} ;
+    my $mask = ${^WARNING_BITS} // ($^W ? $Bits{all} : $NONE) ;
 
     if (vec($mask, $Offsets{'all'}, 1)) {
         $mask |= $Bits{'all'} ;

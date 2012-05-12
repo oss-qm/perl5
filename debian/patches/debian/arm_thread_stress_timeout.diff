@@ -1,4 +1,4 @@
-From f624a9f1206cdd44fde99c40d82e2f326db485dd Mon Sep 17 00:00:00 2001
+From 65cf8f336c5e4697139a567a1f7100401bb66421 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 1 Nov 2008 15:10:16 +0200
 Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate
@@ -12,10 +12,10 @@ Patch-Name: debian/arm_thread_stress_timeout.diff
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/dist/threads-shared/t/stress.t b/dist/threads-shared/t/stress.t
-index adfd1ed..652a3e6 100644
+index e126a21..a337df2 100644
 --- a/dist/threads-shared/t/stress.t
 +++ b/dist/threads-shared/t/stress.t
-@@ -34,7 +34,7 @@ use threads::shared;
+@@ -42,7 +42,7 @@ use threads::shared;
  {
      my $cnt = 50;
  

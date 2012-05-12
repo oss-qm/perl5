@@ -2,7 +2,7 @@
  *
  *    regcharclass.h
  *
- *    Copyright (C) 2007 by Larry Wall and others
+ *    Copyright (C) 2007, 2011 by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -359,7 +359,7 @@
 0x2029 == cp ) ) ) ) ) )
 
 /*
-	TRICKYFOLD: Problematic fold case letters.
+	TRICKYFOLD: Problematic fold case letters.  When adding to this list, also should add them to regcomp.c and fold_grind.t
 
 	0x00DF	# LATIN SMALL LETTER SHARP S
 	0x0390	# GREEK SMALL LETTER IOTA WITH DIALYTIKA AND TONOS

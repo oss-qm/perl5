@@ -1,4 +1,4 @@
-From 16ebe1f5232621d8894aa6c6210fdf2fc9b54a84 Mon Sep 17 00:00:00 2001
+From 579eb2b7bfcbb241527df5f8b15d376d6f605cf8 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Replace generic man(1) instructions with Debian-specific
@@ -12,12 +12,12 @@ Patch-Name: debian/doc_info.diff
  1 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/pod/perl.pod b/pod/perl.pod
-index 29cabf1..529ad6f 100644
+index ce39999..43135bc 100644
 --- a/pod/perl.pod
 +++ b/pod/perl.pod
-@@ -261,8 +261,16 @@ For ease of access, the Perl manual has been split up into several sections.
-     perlwin32		Perl notes for Windows
+@@ -266,8 +266,16 @@ aux a2p c2ph h2ph h2xs perlbug pl2pm pod2html pod2man s2p splain xsubpp
  
+ =for buildtoc __END__
  
 -On a Unix-like system, these documentation files will usually also be
 -available as manpages for use with the F<man> program.

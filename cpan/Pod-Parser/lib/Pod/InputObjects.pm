@@ -12,7 +12,7 @@ package Pod::InputObjects;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '1.31';  ## Current version of this package
+$VERSION = '1.51';  ## Current version of this package
 require  5.005;    ## requires this Perl version or later
 
 #############################################################################
@@ -926,6 +926,8 @@ sub DESTROY {
 #############################################################################
 
 =head1 SEE ALSO
+
+B<Pod::InputObjects> is part of the L<Pod::Parser> distribution.
 
 See L<Pod::Parser>, L<Pod::Select>
 

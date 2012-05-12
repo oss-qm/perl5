@@ -1,4 +1,4 @@
-From 5a8a1edbe06af00d76ead497c755c6ac7d4fed21 Mon Sep 17 00:00:00 2001
+From efd75692f301a5cedff45874ea3d0675816b5bbc Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 3 Aug 2011 22:36:24 +0300
 Subject: Use a socket timeout on GNU/kFreeBSD to catch ICMP port unreachable
@@ -19,10 +19,10 @@ Patch-Name: fixes/sys-syslog-socket-timeout-kfreebsd.patch
  1 files changed, 4 insertions(+), 1 deletions(-)
 
 diff --git a/cpan/Sys-Syslog/Syslog.pm b/cpan/Sys-Syslog/Syslog.pm
-index 002e6e4..b445c66 100644
+index a68f817..5a6b26e 100644
 --- a/cpan/Sys-Syslog/Syslog.pm
 +++ b/cpan/Sys-Syslog/Syslog.pm
-@@ -138,7 +138,10 @@ my @fallbackMethods = ();
+@@ -139,7 +139,10 @@ my @fallbackMethods = ();
  # happy, the timeout is now zero by default on all systems 
  # except on OSX where it is set to 250 msec, and can be set 
  # with the infamous setlogsock() function.

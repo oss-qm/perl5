@@ -1,3 +1,9 @@
+perl (5.16.0~rc0-1) UNRELEASED; urgency=low
+
+  * New upstream release candidate
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 12 May 2012 16:54:37 +0100
+
 perl (5.14.2-10) unstable; urgency=low
 
   * Properly propagate tainted errors (Closes: #663158)

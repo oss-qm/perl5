@@ -11,11 +11,19 @@ BEGIN {
     }
 }
 
-use Test;
-BEGIN { plan tests => 56 };
-
 use strict;
 use warnings;
+BEGIN { $| = 1; print "1..60\n"; }
+my $count = 0;
+sub ok ($;$) {
+    my $p = my $r = shift;
+    if (@_) {
+	my $x = shift;
+	$p = !defined $x ? !defined $r : !defined $r ? 0 : $r eq $x;
+    }
+    print $p ? "ok" : "not ok", ' ', ++$count, "\n";
+}
+
 use Unicode::Collate;
 
 ok(1);
@@ -141,4 +149,20 @@ ok( $Collator->cmp("abc", "ABC"), -1);
 ok( $Collator->le("abc", "ABC") );
 ok( $Collator->cmp($hiragana, $katakana), -1);
 ok( $Collator->lt($hiragana, $katakana) );
+
+##### 55..60
+
+$Collator->change(level => 1);
+
+my $SupCyril = Unicode::Collate->new(
+  normalization => undef,
+  suppress => [0x400..0x4FF],
+  level => 1,
+);
+
+# Ka vs Kje
+ok($Collator->gt("\x{45C}", "\x{43A}"));
+ok($Collator->gt("\x{40C}", "\x{41A}"));
+ok($SupCyril->gt("\x{45C}", "\x{43A}"));
+ok($SupCyril->gt("\x{40C}", "\x{41A}"));
 

@@ -1,6 +1,7 @@
 /*    perly.c
  *
- *    Copyright (c) 2004, 2005, 2006, 2007, 2008 by Larry Wall and others
+ *    Copyright (c) 2004, 2005, 2006, 2007, 2008,
+ *    2009, 2010, 2011 by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -135,11 +136,6 @@ yy_stack_print (pTHX_ const yy_parser *parser)
 	    );
 	    break;
 #ifndef PERL_IN_MADLY_C
-	case toketype_p_tkval:
-	    PerlIO_printf(Perl_debug_log, " %8.8s",
-		  ps->val.pval ? ps->val.pval : "(NULL)");
-	    break;
-
 	case toketype_i_tkval:
 #endif
 	case toketype_ival:
