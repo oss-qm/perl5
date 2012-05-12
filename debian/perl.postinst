@@ -19,7 +19,7 @@ then
 
     if which dpkg-trigger >/dev/null 2>&1 && \
        [ -n "$2" ] && \
-       dpkg --compare-versions "$2" lt 5.14.0
+       dpkg --compare-versions "$2" lt 5.16.0~rc0
     then
         dpkg-trigger perl-major-upgrade
     fi
