@@ -123,6 +123,7 @@ Breaks: libpod-parser-perl (<< 1.51),
  libextutils-install-perl (<< 1.58),
  libhttp-tiny-perl (<< 0.017),
  libfile-path-perl (<< 2.08.01),
+ libcpan-meta-requirements-perl (<< 2.120630)
 Replaces: libpod-parser-perl,
  libansicolor-perl,
  libfile-temp-perl,
@@ -170,7 +171,8 @@ Replaces: libpod-parser-perl,
  libdigest-perl,
  libextutils-install-perl,
  libhttp-tiny-perl,
- libfile-path-perl
+ libfile-path-perl,
+ libcpan-meta-requirements-perl
 Provides: libpod-parser-perl,
  libansicolor-perl,
  libfile-temp-perl,
@@ -218,7 +220,8 @@ Provides: libpod-parser-perl,
  libdigest-perl,
  libextutils-install-perl,
  libhttp-tiny-perl,
- libfile-path-perl
+ libfile-path-perl,
+ libcpan-meta-requirements-perl
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
  required if the `perl' package is installed.
