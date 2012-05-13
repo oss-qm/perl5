@@ -32762,7 +32762,7 @@ for my $version ( sort { $a <=> $b } keys %released ) {
 	'warnings'              => '1.13',
 	'warnings::register'    => '1.02',
     },
-    '5.016000' => {
+    5.016000 => {
 	'AnyDBM_File'           => '1.01',
 	'App::Cpan'             => '1.5701',
 	'App::Prove'            => '3.23',
@@ -34687,6 +34687,7 @@ $released{'5.011000'} = $released{5.011};
 $released{'5.012000'} = $released{5.012};
 $released{'5.013000'} = $released{5.013};
 $released{'5.014000'} = $released{5.014};
+$released{'5.016000'} = $released{5.016};
 
 $version{'5.000'} = $version{5};
 $version{'5.010000'} = $version{5.01};
@@ -34694,11 +34695,13 @@ $version{'5.011000'} = $version{5.011};
 $version{'5.012000'} = $version{5.012};
 $version{'5.013000'} = $version{5.013};
 $version{'5.014000'} = $version{5.014};
+$version{'5.016000'} = $version{5.016};
 
 $deprecated{'5.011000'} = $deprecated{5.011};
 $deprecated{'5.012000'} = $deprecated{5.012};
 $deprecated{'5.013000'} = $deprecated{5.013};
 $deprecated{'5.014000'} = $deprecated{5.014};
+$deprecated{'5.016000'} = $deprecated{5.016};
 
 1;
 __END__
