@@ -1,0 +1,27 @@
+From 8c2852bb226dfd2de7bfc59ec5c51d62ba24d1d0 Mon Sep 17 00:00:00 2001
+From: Dominic Hargreaves <dom@earth.li>
+Date: Sun, 13 May 2012 19:10:28 +0100
+Subject: Fix Module::CoreList::version to contain the string value '5.016000'
+
+This is needed for debian/t/control.t and is expected to be fixed in
+the next 5.16 release candidate
+
+Bug: http://www.nntp.perl.org/group/perl.perl5.porters/2012/05/msg186545.html
+Patch-Name: fixes/module_corelist_5.16_string.diff
+---
+ dist/Module-CoreList/lib/Module/CoreList.pm |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/dist/Module-CoreList/lib/Module/CoreList.pm b/dist/Module-CoreList/lib/Module/CoreList.pm
+index 9b5b07a..0d42a13 100644
+--- a/dist/Module-CoreList/lib/Module/CoreList.pm
++++ b/dist/Module-CoreList/lib/Module/CoreList.pm
+@@ -32762,7 +32762,7 @@ for my $version ( sort { $a <=> $b } keys %released ) {
+ 	'warnings'              => '1.13',
+ 	'warnings::register'    => '1.02',
+     },
+-    5.016000 => {
++    '5.016000' => {
+ 	'AnyDBM_File'           => '1.01',
+ 	'App::Cpan'             => '1.5701',
+ 	'App::Prove'            => '3.23',
