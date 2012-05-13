@@ -32762,7 +32762,7 @@ for my $version ( sort { $a <=> $b } keys %released ) {
 	'warnings'              => '1.13',
 	'warnings::register'    => '1.02',
     },
-    5.016000 => {
+    '5.016000' => {
 	'AnyDBM_File'           => '1.01',
 	'App::Cpan'             => '1.5701',
 	'App::Prove'            => '3.23',
