@@ -30,8 +30,6 @@ usr/lib/perl/*/auto/attributes/attributes.so
 usr/lib/perl/*/auto/IO
 usr/lib/perl/*/auto/List/Util
 usr/lib/perl/*/auto/POSIX/POSIX.so
-usr/lib/perl/*/auto/POSIX/autosplit.ix
-usr/lib/perl/*/auto/POSIX/load_imports.al
 usr/*/perl/*/auto/Socket
 usr/*/perl/*/lib.pm
 usr/*/perl/*/re.pm
