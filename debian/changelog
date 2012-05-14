@@ -6,6 +6,7 @@ perl (5.16.0~rc0-1) UNRELEASED; urgency=low
     - remove Provides/Replaces/Breaks for removed modules
       libdevel-dprof-perl, libperl4-corelibs-perl, libshell-perl
     - add Provides/Replaces/Breaks for new libcpan-meta-requirements-perl
+    - add new files to perl-base to keep it self-contained
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 12 May 2012 16:54:37 +0100
 

@@ -60,6 +60,7 @@ usr/*/perl/*/fields.pm
 usr/*/perl/*/integer.pm
 usr/*/perl/*/locale.pm
 usr/*/perl/*/overload.pm
+usr/*/perl/*/overloading.pm
 usr/*/perl/*/strict.pm
 usr/*/perl/*/utf8.pm
 usr/*/perl/*/utf8_heavy.pl
