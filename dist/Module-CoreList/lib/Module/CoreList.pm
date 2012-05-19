@@ -33279,7 +33279,7 @@ for my $version ( sort { $a <=> $b } keys %released ) {
 	'Search::Dict'          => '1.04',
 	'SelectSaver'           => '1.02',
 	'SelfLoader'            => '1.20',
-	'Socket'                => '2.000',
+	'Socket'                => '2.001',
 	'Storable'              => '2.34',
 	'Symbol'                => '1.07',
 	'Sys::Hostname'         => '1.16',
@@ -34687,6 +34687,8 @@ $released{'5.011000'} = $released{5.011};
 $released{'5.012000'} = $released{5.012};
 $released{'5.013000'} = $released{5.013};
 $released{'5.014000'} = $released{5.014};
+$released{'5.015000'} = $released{5.015};
+$released{'5.016000'} = $released{5.016};
 
 $version{'5.000'} = $version{5};
 $version{'5.010000'} = $version{5.01};
@@ -34694,11 +34696,15 @@ $version{'5.011000'} = $version{5.011};
 $version{'5.012000'} = $version{5.012};
 $version{'5.013000'} = $version{5.013};
 $version{'5.014000'} = $version{5.014};
+$version{'5.015000'} = $version{5.015};
+$version{'5.016000'} = $version{5.016};
 
 $deprecated{'5.011000'} = $deprecated{5.011};
 $deprecated{'5.012000'} = $deprecated{5.012};
 $deprecated{'5.013000'} = $deprecated{5.013};
 $deprecated{'5.014000'} = $deprecated{5.014};
+$deprecated{'5.015000'} = $deprecated{5.015};
+$deprecated{'5.016000'} = $deprecated{5.016};
 
 1;
 __END__
