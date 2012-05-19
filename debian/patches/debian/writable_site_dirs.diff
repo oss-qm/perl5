@@ -8,7 +8,7 @@ Policy requires group writable site directories
 Patch-Name: debian/writable_site_dirs.diff
 ---
  cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 index 865d36d..4ee6b3f 100644

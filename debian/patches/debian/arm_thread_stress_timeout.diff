@@ -9,7 +9,7 @@ Bug-Debian: http://bugs.debian.org/501970
 Patch-Name: debian/arm_thread_stress_timeout.diff
 ---
  dist/threads-shared/t/stress.t |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/dist/threads-shared/t/stress.t b/dist/threads-shared/t/stress.t
 index adfd1ed..652a3e6 100644

@@ -14,7 +14,7 @@ Origin: https://rt.perl.org/rt3/Public/Bug/Display.html?id=109262
 Patch-Name: fixes/path_max_fallback.diff
 ---
  perl.h |    6 +-----
- 1 files changed, 1 insertions(+), 5 deletions(-)
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/perl.h b/perl.h
 index facdacf..53f0651 100644

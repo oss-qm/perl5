@@ -14,7 +14,7 @@ Skip the test until the culprit is found.
 Patch-Name: debian/skip-kfreebsd-crash.diff
 ---
  t/op/threads.t |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ 1 file changed, 4 insertions(+)
 
 diff --git a/t/op/threads.t b/t/op/threads.t
 index 24e84e4..6a91366 100644

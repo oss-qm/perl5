@@ -11,7 +11,7 @@ and some of the original list may be present on buildds (see Bug#128355).
 Patch-Name: debian/prune_libs.diff
 ---
  Configure |    5 ++---
- 1 files changed, 2 insertions(+), 3 deletions(-)
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Configure b/Configure
 index d9911f9..f59f75c 100755

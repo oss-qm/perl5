@@ -18,7 +18,7 @@ as the html2text.pl which is expected, but should provide similar
 functionality].
 ---
  cpan/CPAN/lib/CPAN/Distribution.pm |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/CPAN/lib/CPAN/Distribution.pm b/cpan/CPAN/lib/CPAN/Distribution.pm
 index 637ab27..a8193d9 100644

@@ -13,7 +13,7 @@ Bug-Debian: http://bugs.debian.org/290336
 Patch-Name: debian/enc2xs_inc.diff
 ---
  cpan/Encode/bin/enc2xs |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/cpan/Encode/bin/enc2xs b/cpan/Encode/bin/enc2xs
 index 773c0a0..bc1ae1b 100644

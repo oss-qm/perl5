@@ -19,7 +19,7 @@ version than is included in core.
 Patch-Name: debian/mod_paths.diff
 ---
  perl.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 58 insertions(+), 0 deletions(-)
+ 1 file changed, 58 insertions(+)
 
 diff --git a/perl.c b/perl.c
 index f756e02..d26dcb0 100644

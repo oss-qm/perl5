@@ -9,7 +9,7 @@ Patch-Name: fixes/hurd-hints.diff
 ---
  ext/ODBM_File/hints/gnu.pl |    1 +
  hints/gnu.sh               |   12 ++++++++++++
- 2 files changed, 13 insertions(+), 0 deletions(-)
+ 2 files changed, 13 insertions(+)
  create mode 100644 ext/ODBM_File/hints/gnu.pl
 
 diff --git a/ext/ODBM_File/hints/gnu.pl b/ext/ODBM_File/hints/gnu.pl

@@ -13,7 +13,7 @@ on GNU/Hurd.
 Patch-Name: fixes/hurd-ccflags.diff
 ---
  hints/gnu.sh |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/hints/gnu.sh b/hints/gnu.sh
 index 2cfce54..c1ba2db 100644

@@ -13,7 +13,7 @@ compatible, but built on a different machine.
 Patch-Name: debian/errno_ver.diff
 ---
  ext/Errno/Errno_pm.PL |    5 -----
- 1 files changed, 0 insertions(+), 5 deletions(-)
+ 1 file changed, 5 deletions(-)
 
 diff --git a/ext/Errno/Errno_pm.PL b/ext/Errno/Errno_pm.PL
 index 56bc815..01f510a 100644

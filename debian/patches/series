@@ -59,3 +59,4 @@ fixes/path_max_fallback.diff
 debian/makemaker-pasthru.diff
 fixes/propagate_tainted_errors.patch
 debian/perl5db-x-terminal-emulator.patch
+fixes/socket_cache_propagate.diff

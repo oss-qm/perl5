@@ -12,7 +12,7 @@ Origin: http://git.eyrie.org/?p=perl/podlators.git;a=commit;h=0d83c47faa30ebc898
 Patch-Name: fixes/podlators_ae_ligature_fallback.diff
 ---
  cpan/podlators/lib/Pod/Man.pm |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/podlators/lib/Pod/Man.pm b/cpan/podlators/lib/Pod/Man.pm
 index 96f3fcc..376c611 100644

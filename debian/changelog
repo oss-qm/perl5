@@ -1,3 +1,10 @@
+perl (5.14.2-11) UNRELEASED; urgency=low
+
+  * Add patch from Daniel Kahn Gillmor fixing propagation of socket
+    type information (Closes: #659075)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 19 May 2012 17:52:03 +0100
+
 perl (5.14.2-10) unstable; urgency=low
 
   * Properly propagate tainted errors (Closes: #663158)

@@ -10,7 +10,7 @@ Bug-Debian: http://bugs.debian.org/650188
 Patch-Name: debian/hurd_test_skip_sigdispatch.diff
 ---
  t/op/sigdispatch.t |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/t/op/sigdispatch.t b/t/op/sigdispatch.t
 index aa8a6c7..66e2a1e 100644

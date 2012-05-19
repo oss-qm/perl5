@@ -13,7 +13,7 @@ Bug-Debian: http://bugs.debian.org/650175
 Patch-Name: debian/hurd_test_skip_stack.diff
 ---
  dist/threads/t/stack.t |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ 1 file changed, 4 insertions(+)
 
 diff --git a/dist/threads/t/stack.t b/dist/threads/t/stack.t
 index cfd6cf7..84cc527 100644

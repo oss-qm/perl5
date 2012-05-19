@@ -12,7 +12,7 @@ binary interface on some platforms.
 Patch-Name: fixes/document_makemaker_ccflags.diff
 ---
  cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ 1 file changed, 4 insertions(+)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
 index be9624e..c56ca8f 100644

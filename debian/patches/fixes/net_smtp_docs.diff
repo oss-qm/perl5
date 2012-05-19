@@ -9,7 +9,7 @@ Bug: http://rt.cpan.org/Public/Bug/Display.html?id=36038
 Patch-Name: fixes/net_smtp_docs.diff
 ---
  cpan/libnet/Net/SMTP.pm |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ 1 file changed, 1 insertion(+)
 
 diff --git a/cpan/libnet/Net/SMTP.pm b/cpan/libnet/Net/SMTP.pm
 index a28496d..07b2498 100644
