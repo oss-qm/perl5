@@ -1,4 +1,4 @@
-From 65cf8f336c5e4697139a567a1f7100401bb66421 Mon Sep 17 00:00:00 2001
+From fee030f9038858d49a5265bb9172645191269ffe Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 1 Nov 2008 15:10:16 +0200
 Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate
@@ -9,7 +9,7 @@ Bug-Debian: http://bugs.debian.org/501970
 Patch-Name: debian/arm_thread_stress_timeout.diff
 ---
  dist/threads-shared/t/stress.t |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/dist/threads-shared/t/stress.t b/dist/threads-shared/t/stress.t
 index e126a21..a337df2 100644

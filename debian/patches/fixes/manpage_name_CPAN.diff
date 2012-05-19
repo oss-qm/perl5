@@ -1,4 +1,4 @@
-From 778aad076786b2ee83db7c3cacd0e0fdc1ddb4fb Mon Sep 17 00:00:00 2001
+From 13f34e41e92628837495c5d1153d68f4932e2feb Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 20 Dec 2011 22:19:45 +0000
 Subject: cpan/CPAN: add NAME headings in modules with POD
@@ -15,7 +15,7 @@ Patch-Name: fixes/manpage_name_CPAN.diff
  cpan/CPAN/lib/CPAN/HandleConfig.pm |    6 ++++++
  cpan/CPAN/lib/CPAN/Queue.pm        |    4 ++++
  cpan/CPAN/lib/CPAN/Tarzip.pm       |    4 ++++
- 4 files changed, 18 insertions(+), 0 deletions(-)
+ 4 files changed, 18 insertions(+)
 
 diff --git a/cpan/CPAN/lib/CPAN/Debug.pm b/cpan/CPAN/lib/CPAN/Debug.pm
 index 23c4a36..48e394b 100644

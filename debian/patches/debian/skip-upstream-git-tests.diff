@@ -1,4 +1,4 @@
-From 5f43c8d385effac9d84bb235a240f9aa897838d4 Mon Sep 17 00:00:00 2001
+From 1a91ae82631c2a386bd89e7f1603374dc145e3d6 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 22 Apr 2011 11:15:32 +0300
 Subject: Skip tests specific to the upstream Git repository
@@ -11,7 +11,7 @@ Skip the tests altogether even if the .git directory exists.
 Patch-Name: debian/skip-upstream-git-tests.diff
 ---
  t/test.pl |   29 +----------------------------
- 1 files changed, 1 insertions(+), 28 deletions(-)
+ 1 file changed, 1 insertion(+), 28 deletions(-)
 
 diff --git a/t/test.pl b/t/test.pl
 index b33c634..8de2355 100644

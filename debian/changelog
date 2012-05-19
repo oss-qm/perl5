@@ -1,4 +1,4 @@
-perl (5.16.0~rc0-1) UNRELEASED; urgency=low
+perl (5.16.0~rc2-1) UNRELEASED; urgency=low
 
   * New upstream release candidate
     - update debian/copyright 

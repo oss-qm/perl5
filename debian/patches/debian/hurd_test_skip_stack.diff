@@ -1,4 +1,4 @@
-From c26f5b51cad90fd3c4273098d1a8700f134528ef Mon Sep 17 00:00:00 2001
+From add098e01a5dc592aa01d2f027f42a168deb03fd Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 16:27:07 +0000
 Subject: Disable failing GNU/Hurd tests dist/threads/t/stack.t
@@ -13,7 +13,7 @@ Bug-Debian: http://bugs.debian.org/650175
 Patch-Name: debian/hurd_test_skip_stack.diff
 ---
  dist/threads/t/stack.t |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ 1 file changed, 4 insertions(+)
 
 diff --git a/dist/threads/t/stack.t b/dist/threads/t/stack.t
 index cfd6cf7..84cc527 100644

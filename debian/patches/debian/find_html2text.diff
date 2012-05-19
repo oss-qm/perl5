@@ -1,4 +1,4 @@
-From a8434b1462e93b7aa161ea37c7f4212a4737295e Mon Sep 17 00:00:00 2001
+From 48067384865ff5dbf8c2e0431695e3bd5223b43a Mon Sep 17 00:00:00 2001
 From: Andreas Marschke <andreas.marschke@googlemail.com>
 Date: Sat, 17 Sep 2011 11:38:42 +0100
 Subject: Configure CPAN::Distribution with correct name of html2text
@@ -18,7 +18,7 @@ as the html2text.pl which is expected, but should provide similar
 functionality].
 ---
  cpan/CPAN/lib/CPAN/Distribution.pm |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/CPAN/lib/CPAN/Distribution.pm b/cpan/CPAN/lib/CPAN/Distribution.pm
 index 32648ec..5077837 100644

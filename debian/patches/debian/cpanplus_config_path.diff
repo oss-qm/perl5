@@ -1,4 +1,4 @@
-From ff979becf1eebd34704d74339ea0c4e739c25a98 Mon Sep 17 00:00:00 2001
+From 5609ffe3820027866a93ea9940e86a300e51b810 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 6 Jul 2009 22:17:53 +0300
 Subject: Save local versions of CPANPLUS::Config::System into /etc/perl.
@@ -14,7 +14,7 @@ Patch-Name: debian/cpanplus_config_path.diff
 ---
  cpan/CPANPLUS/lib/CPANPLUS/Configure.pm           |    1 +
  cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm |    3 +++
- 2 files changed, 4 insertions(+), 0 deletions(-)
+ 2 files changed, 4 insertions(+)
 
 diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm b/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm
 index 04a0875..126524a 100644

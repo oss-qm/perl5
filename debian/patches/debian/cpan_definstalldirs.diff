@@ -1,4 +1,4 @@
-From 6555e7460d22ea7b519aeb438f37b86df62fb42b Mon Sep 17 00:00:00 2001
+From 64b705212804eb36dc8dd09f25b43c08588281de Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Provide a sensible INSTALLDIRS default for modules installed from
@@ -11,7 +11,7 @@ ordering, but not ours.
 Patch-Name: debian/cpan_definstalldirs.diff
 ---
  cpan/CPAN/lib/CPAN/FirstTime.pm |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/CPAN/lib/CPAN/FirstTime.pm b/cpan/CPAN/lib/CPAN/FirstTime.pm
 index 5030ef9..5953cb7 100644

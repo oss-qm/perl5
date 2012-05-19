@@ -1,4 +1,4 @@
-From c8840c4526b4af485d72dc43735b6f9d468a9d8b Mon Sep 17 00:00:00 2001
+From afbb947858eb31faf7c2e9f3a65c7593f9cf4fd4 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Postpone LD_LIBRARY_PATH evaluation to the binary targets.
@@ -13,7 +13,7 @@ rule where the Makefile is created, but is for the clean/binary* targets.
 Patch-Name: debian/fakeroot.diff
 ---
  Makefile.SH |    9 ++-------
- 1 files changed, 2 insertions(+), 7 deletions(-)
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
 diff --git a/Makefile.SH b/Makefile.SH
 index 2b50033..0018f21 100755

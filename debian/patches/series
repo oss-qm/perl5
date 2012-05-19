@@ -39,4 +39,3 @@ fixes/manpage_name_Test-Harness.diff
 fixes/podlators_ae_ligature_fallback.diff
 debian/makemaker-pasthru.diff
 debian/perl5db-x-terminal-emulator.patch
-fixes/module_corelist_5.16_string.diff

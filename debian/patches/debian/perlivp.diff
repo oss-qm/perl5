@@ -1,4 +1,4 @@
-From 6fbb1f1d67a59eb56dc45e057d45762f1ad0c711 Mon Sep 17 00:00:00 2001
+From d823283b6d7d817a085ae6bea41aaadc02568735 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 9 Jan 2009 18:54:47 +0200
 Subject: Make perlivp skip include directories in /usr/local
@@ -23,7 +23,7 @@ Signed-off-by: Niko Tyni <ntyni@debian.org>
 Patch-Name: debian/perlivp.diff
 ---
  utils/perlivp.PL |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ 1 file changed, 1 insertion(+)
 
 diff --git a/utils/perlivp.PL b/utils/perlivp.PL
 index c2f0a11..cc49f96 100644

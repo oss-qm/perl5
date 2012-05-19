@@ -1,4 +1,4 @@
-From 06af415cdcbd24f15d1761dc56470ab64579ea45 Mon Sep 17 00:00:00 2001
+From df867bd826eabb15a16c1d10a7ecbf2fb0dbeee6 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules
@@ -29,7 +29,7 @@ here at the moment; however this patch will still be useful in future
 Patch-Name: debian/deprecate-with-apt.diff
 ---
  lib/deprecate.pm |   15 ++++++++++++++-
- 1 files changed, 14 insertions(+), 1 deletions(-)
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/lib/deprecate.pm b/lib/deprecate.pm
 index 7562c69..8c53aa6 100644

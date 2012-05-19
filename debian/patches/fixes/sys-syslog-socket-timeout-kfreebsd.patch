@@ -1,4 +1,4 @@
-From 8e907c8a48ee9f75cae42b690c5fbe5c38a21eb2 Mon Sep 17 00:00:00 2001
+From e464556c2b2fa156d6bbd076ca59d6ebca83ca07 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 3 Aug 2011 22:36:24 +0300
 Subject: Use a socket timeout on GNU/kFreeBSD to catch ICMP port unreachable
@@ -16,7 +16,7 @@ same issue, but that's for upstream to decide.
 Patch-Name: fixes/sys-syslog-socket-timeout-kfreebsd.patch
 ---
  cpan/Sys-Syslog/Syslog.pm |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/cpan/Sys-Syslog/Syslog.pm b/cpan/Sys-Syslog/Syslog.pm
 index a68f817..5a6b26e 100644

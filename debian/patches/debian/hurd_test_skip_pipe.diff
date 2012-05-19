@@ -1,4 +1,4 @@
-From fab645aabb508ad9432e8f6d2fa43dccc450e0a1 Mon Sep 17 00:00:00 2001
+From 816047a08d7213953bcfa113ecf22ebe7fb4b050 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 16:43:11 +0000
 Subject: Disable failing GNU/Hurd tests io/pipe.t
@@ -10,7 +10,7 @@ Bug-Debian: http://bugs.debian.org/650187
 Patch-Name: debian/hurd_test_skip_pipe.diff
 ---
  t/io/pipe.t |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ 1 file changed, 3 insertions(+)
 
 diff --git a/t/io/pipe.t b/t/io/pipe.t
 index 9c165a3..d69f1c4 100644

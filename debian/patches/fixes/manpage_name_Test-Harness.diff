@@ -1,4 +1,4 @@
-From 73c9b5fa93972596b7e261d6bf65b6d8c74a0aa5 Mon Sep 17 00:00:00 2001
+From 211380080a85cf4011b1f3b9b6857237696c714d Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 20 Dec 2011 23:28:18 +0000
 Subject: cpan/Test-Harness: add NAME headings in modules with POD
@@ -12,7 +12,7 @@ Bug-Debian: http://bugs.debian.org/650451
 Patch-Name: fixes/manpage_name_Test-Harness.diff
 ---
  cpan/Test-Harness/lib/TAP/Harness/Beyond.pod |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ 1 file changed, 4 insertions(+)
 
 diff --git a/cpan/Test-Harness/lib/TAP/Harness/Beyond.pod b/cpan/Test-Harness/lib/TAP/Harness/Beyond.pod
 index ed77e13..3b7ec89 100644

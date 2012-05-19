@@ -1,4 +1,4 @@
-From 07245411b70bf0f5947b061b8b28ba074c3d417c Mon Sep 17 00:00:00 2001
+From 49637d983eb0af7efb5d49018cfb53b2fc5188e6 Mon Sep 17 00:00:00 2001
 From: Russ Allbery <rra@stanford.edu>
 Date: Tue, 20 Dec 2011 17:13:29 -0800
 Subject: Fix the ASCII fallback string for AE
@@ -12,7 +12,7 @@ Origin: http://git.eyrie.org/?p=perl/podlators.git;a=commit;h=0d83c47faa30ebc898
 Patch-Name: fixes/podlators_ae_ligature_fallback.diff
 ---
  cpan/podlators/lib/Pod/Man.pm |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/podlators/lib/Pod/Man.pm b/cpan/podlators/lib/Pod/Man.pm
 index 96f3fcc..376c611 100644
