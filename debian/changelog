@@ -1,4 +1,4 @@
-perl (5.14.2-11) UNRELEASED; urgency=low
+perl (5.14.2-11) unstable; urgency=low
 
   [ Dominic Hargreaves ]
   * Add patch from Daniel Kahn Gillmor fixing propagation of socket
@@ -10,7 +10,7 @@ perl (5.14.2-11) UNRELEASED; urgency=low
   * Remove empty Copyright lines from debian/copyright to appease
     Config::Model.
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 19 May 2012 17:52:03 +0100
+ -- Niko Tyni <ntyni@debian.org>  Fri, 25 May 2012 10:14:00 +0300
 
 perl (5.14.2-10) unstable; urgency=low
 
