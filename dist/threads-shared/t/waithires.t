@@ -22,6 +22,11 @@ BEGIN {
         exit(0);
     }
 
+    if ($^O eq 'gnukfreebsd') {
+        print("1..0 # Skip: libc problems on kfreebsd <http://bugs.debian.org/672152>\n");
+        exit(0);
+    }
+
 }
 
 use ExtUtils::testlib;

@@ -1,7 +1,12 @@
 perl (5.14.2-11) UNRELEASED; urgency=low
 
+  [ Dominic Hargreaves ]
   * Add patch from Daniel Kahn Gillmor fixing propagation of socket
     type information (Closes: #659075)
+
+  [ Niko Tyni ]
+  * Temporarily disable thread tests on kFreeBSD to work around libc breakage.
+    (See #672152 and #673711)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 19 May 2012 17:52:03 +0100
 

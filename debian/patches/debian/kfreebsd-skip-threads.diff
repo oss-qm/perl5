@@ -1,0 +1,35 @@
+From d205270c863785dad6a2bd5abaaeddb617c24780 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Fri, 25 May 2012 09:21:19 +0300
+Subject: Temporarily disable thread tests on kFreeBSD to work around libc
+ breakage
+
+Something broke in libpthread on kfreebsd between eglibc 2.13-27 and
+2.13-32, causing test failures. The core issue is probably #673711.
+
+Disable the failing test in order not to harm Wheezy release management.
+This is hopefully only temporary until eglibc is fixed.
+
+Bug-Debian: http://bugs.debian.org/672152
+Bug-Debian: http://bugs.debian.org/673711
+Patch-Name: debian/kfreebsd-skip-threads.diff
+---
+ dist/threads-shared/t/waithires.t |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/dist/threads-shared/t/waithires.t b/dist/threads-shared/t/waithires.t
+index 349c5b4..5069c05 100644
+--- a/dist/threads-shared/t/waithires.t
++++ b/dist/threads-shared/t/waithires.t
+@@ -22,6 +22,11 @@ BEGIN {
+         exit(0);
+     }
+ 
++    if ($^O eq 'gnukfreebsd') {
++        print("1..0 # Skip: libc problems on kfreebsd <http://bugs.debian.org/672152>\n");
++        exit(0);
++    }
++
+ }
+ 
+ use ExtUtils::testlib;
