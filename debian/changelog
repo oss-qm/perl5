@@ -7,6 +7,8 @@ perl (5.14.2-11) UNRELEASED; urgency=low
   [ Niko Tyni ]
   * Temporarily disable thread tests on kFreeBSD to work around libc breakage.
     (See #672152 and #673711)
+  * Remove empty Copyright lines from debian/copyright to appease
+    Config::Model.
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 19 May 2012 17:52:03 +0100
 
