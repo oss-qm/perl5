@@ -1,6 +1,6 @@
-perl (5.16.0~rc2-1) UNRELEASED; urgency=low
+perl (5.16.0-1) UNRELEASED; urgency=low
 
-  * New upstream release candidate
+  * New upstream release
     - update debian/copyright 
     - update Breaks versions in debian/control for dual-lived modules
     - remove Provides/Replaces/Breaks for removed modules
