@@ -1,4 +1,4 @@
-From afbb947858eb31faf7c2e9f3a65c7593f9cf4fd4 Mon Sep 17 00:00:00 2001
+From 306efc0fc807b0f021cd78df05d40a3d274cf8ed Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Postpone LD_LIBRARY_PATH evaluation to the binary targets.

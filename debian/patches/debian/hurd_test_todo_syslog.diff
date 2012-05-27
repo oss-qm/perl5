@@ -1,4 +1,4 @@
-From 63503a59fc47b6f49f27dde35ff2ca099ce24b6d Mon Sep 17 00:00:00 2001
+From ba379ee1d3e262159e98f0d099b6909a93be4b82 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 15:11:53 +0000
 Subject: Disable failing GNU/Hurd tests in cpan/Sys-Syslog/t/syslog.t
