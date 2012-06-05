@@ -1,4 +1,4 @@
-From ea68edf8ff492bc11fb306f8301368617eb66a41 Mon Sep 17 00:00:00 2001
+From 35efa7359a2fc84d4cfa6ee231283da202feed91 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 22 Apr 2011 11:15:32 +0300
 Subject: Skip tests specific to the upstream Git repository
@@ -14,7 +14,7 @@ Patch-Name: debian/skip-upstream-git-tests.diff
  1 file changed, 1 insertion(+), 28 deletions(-)
 
 diff --git a/t/test.pl b/t/test.pl
-index b33c634..8de2355 100644
+index b33c634..f6c5c7e 100644
 --- a/t/test.pl
 +++ b/t/test.pl
 @@ -153,34 +153,7 @@ sub skip_all_without_config {
@@ -49,7 +49,7 @@ index b33c634..8de2355 100644
 -    } else {
 -	$reason = 'not being run from a git checkout';
 -    }
-+    # Debian change: skip as we're probably in a different git repository
++    my $reason = 'Debian: we are probably in a different git repository';
      skip_all($reason) if $_[0] && $_[0] eq 'all';
      skip($reason, @_);
  }
