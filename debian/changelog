@@ -1,4 +1,4 @@
-perl (5.16.0-1) UNRELEASED; urgency=low
+perl (5.16.0-1) experimental; urgency=low
 
   * New upstream release
     - update debian/copyright 
@@ -12,7 +12,7 @@ perl (5.16.0-1) UNRELEASED; urgency=low
   * Fix test failure with t/op/getpid.t on kFreeBSD by including a
     linuxthreads version check
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 12 May 2012 16:54:37 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 05 Jun 2012 13:34:00 +0100
 
 perl (5.14.2-10) unstable; urgency=low
 
