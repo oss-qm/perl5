@@ -9,6 +9,8 @@ perl (5.16.0-1) UNRELEASED; urgency=low
     - add new files to perl-base to keep it self-contained
   * Add patch from Daniel Kahn Gillmor fixing propagation of socket
     type information (Closes: #659075)
+  * Fix test failure with t/op/getpid.t on kFreeBSD by including a
+    linuxthreads version check
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 12 May 2012 16:54:37 +0100
 
