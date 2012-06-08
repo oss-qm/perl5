@@ -1,3 +1,10 @@
+perl (5.14.2-12) UNRELEASED; urgency=low
+
+  * Re-enable thread tests on kFreeBSD now that libc breakage has been
+    resolved (Closes: #672152)
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 08 Jun 2012 19:49:43 +0100
+
 perl (5.14.2-11) unstable; urgency=low
 
   [ Dominic Hargreaves ]
