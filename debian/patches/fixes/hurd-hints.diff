@@ -1,4 +1,4 @@
-From cb5f4f3f4dd4fc7319ccf3534d5893e65334e961 Mon Sep 17 00:00:00 2001
+From 7d819801557c814bbd6d2eb357c0ab3ed2b35922 Mon Sep 17 00:00:00 2001
 From: Pino Toscano <pino@debian.org>
 Date: Wed, 10 Aug 2011 08:11:33 +0300
 Subject: Improve general GNU hints, needed for GNU/Hurd.

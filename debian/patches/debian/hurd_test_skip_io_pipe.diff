@@ -1,4 +1,4 @@
-From 200a05eea8fd22d4d516c2f51070ae84b8823c3d Mon Sep 17 00:00:00 2001
+From 3d2c8349068cee391fea4323e9f1599bc6fde6f6 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 16:48:07 +0000
 Subject: Disable failing GNU/Hurd tests dist/IO/t/io_pipe.t

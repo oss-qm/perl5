@@ -342,9 +342,6 @@ threads->create(
 
 EOI
 
-SKIP: {
-    skip "[perl #96272] avoid crash on GNU/kFreeBSD", 1
-        if $^O eq 'gnukfreebsd';
 # [perl #78494] Pipes shared between threads block when closed
 watchdog 10;
 {
@@ -353,7 +350,6 @@ watchdog 10;
   open(my $OUT, "|$perl") || die("ERROR: $!");
   threads->create(sub { })->join;
   ok(1, "Pipes shared between threads do not block when closed");
-}
 }
 
 # EOF

@@ -1,4 +1,4 @@
-From e1db587f6f2db87e743afd26d050239d3e0b142e Mon Sep 17 00:00:00 2001
+From 5d0f379161363f8f9a5aad7701b9140b64af414a Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 15:42:07 +0000
 Subject: Skip interval timer tests in Time::HiRes on GNU/Hurd

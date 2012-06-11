@@ -1,4 +1,4 @@
-From 63b330e8136ec80c3e4f2735e3fb2c620f539a76 Mon Sep 17 00:00:00 2001
+From 1971bffd69270a658346321bb045e8bcbffd2af0 Mon Sep 17 00:00:00 2001
 From: Pino Toscano <pino@debian.org>
 Date: Tue, 1 Nov 2011 18:37:19 +0000
 Subject: enable LFS on GNU/Hurd

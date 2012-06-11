@@ -1,4 +1,4 @@
-From faf58688f14a18f65de0f444eb2bcbcc26406708 Mon Sep 17 00:00:00 2001
+From 2facef4b0bee8ac0ccd433ec9905d999cf6c65e3 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Fri, 3 Feb 2012 19:35:36 +0000
 Subject: Don't use _POSIX_PATH_MAX as a fallback PATH_MAX

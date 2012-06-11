@@ -1,4 +1,4 @@
-From bbbf6ec45853479dc73976db8bafac30b2f4d56a Mon Sep 17 00:00:00 2001
+From d03efbd04445db7e9853ef46a56b990ced9ed4cf Mon Sep 17 00:00:00 2001
 From: Pino Toscano <pino@debian.org>
 Date: Mon, 31 Oct 2011 19:21:27 +0000
 Subject: Add GNU/Hurd hints for NDBM_File

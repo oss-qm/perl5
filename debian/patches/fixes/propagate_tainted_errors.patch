@@ -1,4 +1,4 @@
-From e6d732e0cdea0d6906b732628f6a55f93f91f633 Mon Sep 17 00:00:00 2001
+From 7f3693fe4834750cb1aa82b7f9c7b9e55ba8e1ba Mon Sep 17 00:00:00 2001
 From: Tony Cook <tony@develop-help.com>
 Date: Sun, 11 Mar 2012 14:38:57 +1100
 Subject: properly propagate tainted errors

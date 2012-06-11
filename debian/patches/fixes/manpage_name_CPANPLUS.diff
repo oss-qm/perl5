@@ -1,4 +1,4 @@
-From 9349a01cdc84a2ae49f602eac4428f1c70012f2f Mon Sep 17 00:00:00 2001
+From b7d282c97c13cc8ca6d42abffe2581a5f5bd76da Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 20 Dec 2011 23:26:04 +0000
 Subject: cpan/CPANPLUS: add NAME headings in modules with POD

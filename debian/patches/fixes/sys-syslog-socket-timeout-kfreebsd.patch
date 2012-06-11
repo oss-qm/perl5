@@ -1,4 +1,4 @@
-From 5a8a1edbe06af00d76ead497c755c6ac7d4fed21 Mon Sep 17 00:00:00 2001
+From dc9a1cb04538896ed655e75bc4bc1061268898e6 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 3 Aug 2011 22:36:24 +0300
 Subject: Use a socket timeout on GNU/kFreeBSD to catch ICMP port unreachable

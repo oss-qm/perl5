@@ -1,4 +1,4 @@
-From 6da16d63e8d65f2b80e587f9d70adda949fb001c Mon Sep 17 00:00:00 2001
+From f2ed9951530731ba8ced728a3b26a2a75e6d8bd4 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 20 Dec 2011 23:30:04 +0000
 Subject: cpan/Term-UI: add NAME headings in modules with POD
