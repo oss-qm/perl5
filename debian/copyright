@@ -141,6 +141,7 @@ License: GPL-1+ or Artistic
  at your option, any later version of Perl 5 you may have available.
 
 Files: lib/Exporter.pm
+Copyright: unknown
 License: GPL-1+ or Artistic
  This library is free software. You can redistribute it
  and/or modify it under the same terms as Perl itself.
@@ -251,6 +252,7 @@ License: GPL-1+ or Artistic
  License or the Artistic License, as specified in the README file.
 
 Files: x2p/s2p.PL
+Copyright: unknown
 License: S2P
  This program is free and open software. You may use, modify,
  distribute, and sell this program (and any modified variants) in any
@@ -263,6 +265,7 @@ License: GPL-1+ or Artistic
  This file is a part of Perl itself, licensed as above.
 
 Files: cpan/Archive-Extract/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  This library is free software; you may redistribute and/or modify it
  under the same terms as Perl itself.
@@ -384,6 +387,7 @@ License: ZLIB
  See the end of this file for the full text of this license.
 
 Files: cpan/CPAN/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or
  modify it under the same terms as Perl itself.
@@ -433,6 +437,7 @@ License: GPL-1+ or Artistic
  it under the same terms as Perl itself.
 
 Files: cpan/Devel-DProf/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There are no copyright or license notices in this distribution. It
  is assumed that the copyright and license of Perl itself applies here
@@ -493,6 +498,7 @@ License: GPL-1+ or Artistic
  under the same terms as Perl itself.
 
 Files: cpan/ExtUtils-Constant/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There are no copyright or license notices in this distribution. It
  is assumed that the copyright and license of Perl itself applies here
@@ -663,6 +669,7 @@ License: GPL-1+ or Artistic
  the same terms as Perl itself.
 
 Files: cpan/Log-Message-Simple/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There are no copyright or license notices in this distribution. It
  is assumed that the copyright and license of Perl itself applies here
@@ -678,6 +685,7 @@ License: GPL-1+ or Artistic
   under the same terms as Perl itself.
 
 Files: cpan/Math-Complex/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -903,6 +911,7 @@ License: GPL-1+ or Artistic
   them as you see fit (and at your own risk with no warranty from anyone).
 
 Files: cpan/Shell/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There are no copyright or license notices in this distribution. It
  is assumed that the copyright and license of Perl itself applies here
@@ -939,6 +948,7 @@ License: GPL-1+ or Artistic
  it under the same terms as Perl itself.
 
 Files: cpan/Term-Cap/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There are no copyright or license notices included. The file
  cpan/Term-Cap/Cap.pm refers to a README file, but that has apparently
@@ -1050,6 +1060,7 @@ License: GPL-1+ or Artistic
  modified under the same terms as Perl itself.
 
 Files: cpan/Text-ParseWords/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There are no copyright notices or license information in this distribution.
  It is assumed that the software is licensed under the same terms as
@@ -1098,6 +1109,7 @@ Files:
  dist/Math-BigInt-FastCalc/*
  dist/Math-BigRat/*
  dist/Thread-Queue/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  This program is free software; you may redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -1122,6 +1134,7 @@ License: GPL-1+ or Artistic
  it under the same terms as Perl itself.
 
 Files: cpan/Time-Piece/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  This module is free software, you may distribute it under the same
  terms as Perl.
@@ -1167,6 +1180,7 @@ License: GPL-1+ or Artistic
  the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/Win32/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There are no copyright notices or license information in this distribution.
  It is assumed that the software is licensed under the same terms as
@@ -1213,6 +1227,7 @@ Files:
  ext/Tie-Memoize/*
  ext/VMS-DCLsym/*
  ext/VMS-Stdio/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There is no copyright or license information in these distributions.
  It is assumed that they are licensed under the same terms as Perl itself.
@@ -1405,10 +1420,12 @@ License: GPL-1+ or Artistic
  in the README file that comes with the distribution.
 
 Files: dist/threads/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  threads is released under the same license as Perl.
 
 Files: dist/threads-shared/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  threads::shared is released under the same license as Perl.
 
@@ -1456,6 +1473,7 @@ License: GPL-1+ or Artistic
  modify it under the same terms as Perl itself.
 
 Files: ext/DynaLoader/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There is no license information included that clearly applies to the
  whole of this distribution. It is assumed that it is licensed under
@@ -1490,6 +1508,7 @@ License: GPL-1+ or Artistic
  it under the same terms as Perl itself.
 
 Files: ext/File-Glob/*
+Copyright: unknown
 License: Artistic
  The Perl interface was written by Nathan Torkington <gnat@frii.com>,
  and is released under the artistic license.  Further modifications
@@ -1509,6 +1528,7 @@ License: BSD-3-clause
  See the end of this file for the full text of this license.
 
 Files: ext/Hash-Util/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There is no license information in this distribution.
  It is assumed that it is licensed under the same terms as Perl itself.
@@ -1553,10 +1573,12 @@ License: GPL-1+ or Artistic
  License or the Artistic License, as specified in the README file.
 
 Files: ext/Pod-Html/*
+Copyright: unknown
 License: Artistic
  This program is distributed under the Artistic License.
 
 Files: ext/SDBM_File/*
+Copyright: unknown
 License: GPL-1+ or Artistic
  There is no copyright or license information in this distribution.
  It is assumed that it is licensed under the same terms as Perl itself.
