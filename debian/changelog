@@ -1,6 +1,7 @@
 perl (5.16.3-2) UNRELEASED; urgency=low
 
-  * 
+  * Reorder the packages in debian/control to improve robustness of
+    the installation step.
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 23 Mar 2013 18:34:59 +0200
 

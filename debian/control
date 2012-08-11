@@ -66,6 +66,42 @@ Description: Perl documentation
  Perl manual pages, POD documentation and the `perldoc' program.  If you are
  writing Perl programs, you almost certainly need this.
 
+Package: perl-debug
+Section: debug
+Priority: extra
+Architecture: any
+Depends: perl (= ${binary:Version}), ${shlibs:Depends}
+Description: debug-enabled Perl interpreter
+ debugperl provides a debug-enabled version of Perl which can produce
+ extensive information about the interpreter as it compiles and executes
+ a program (see the -D switch in perlrun(1)).
+ .
+ Note that this package is primarily of use in debugging *Perl* rather
+ than perl programs, which may be traced/debugged using the standard
+ perl binary using the -d switch (see perldebug(1)).
+
+Package: libperl5.16
+Section: libs
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}, perl-base (= ${binary:Version})
+Replaces: perl-base (<= 5.8.7-4)
+Description: shared Perl library
+ This package is required by programs which embed a Perl interpreter to
+ ensure that the correct version of `perl-base' is installed.  It
+ additionally contains the shared Perl library on architectures where the
+ perl binary is linked to libperl.a (currently only i386, for performance
+ reasons).  In other cases the actual library is in the `perl-base' package.
+
+Package: libperl-dev
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: perl (= ${binary:Version}), libperl5.16 (= ${binary:Version}),
+ libc6-dev | libc-dev
+Description: Perl library: development files
+ Files for developing applications which embed a Perl interpreter.
+
 Package: perl-modules
 Priority: standard
 Architecture: all
@@ -227,42 +263,6 @@ Description: Core Perl modules
  considered an internal implementation detail of the `perl' package.
  Other packages should not depend on `perl-modules' directly, they
  should use `perl' (which depends on `perl-modules') instead.
-
-Package: perl-debug
-Section: debug
-Priority: extra
-Architecture: any
-Depends: perl (= ${binary:Version}), ${shlibs:Depends}
-Description: debug-enabled Perl interpreter
- debugperl provides a debug-enabled version of Perl which can produce
- extensive information about the interpreter as it compiles and executes
- a program (see the -D switch in perlrun(1)).
- .
- Note that this package is primarily of use in debugging *Perl* rather
- than perl programs, which may be traced/debugged using the standard
- perl binary using the -d switch (see perldebug(1)).
-
-Package: libperl5.16
-Section: libs
-Priority: optional
-Architecture: any
-Depends: ${shlibs:Depends}, perl-base (= ${binary:Version})
-Replaces: perl-base (<= 5.8.7-4)
-Description: shared Perl library
- This package is required by programs which embed a Perl interpreter to
- ensure that the correct version of `perl-base' is installed.  It
- additionally contains the shared Perl library on architectures where the
- perl binary is linked to libperl.a (currently only i386, for performance
- reasons).  In other cases the actual library is in the `perl-base' package.
-
-Package: libperl-dev
-Section: libdevel
-Priority: optional
-Architecture: any
-Depends: perl (= ${binary:Version}), libperl5.16 (= ${binary:Version}),
- libc6-dev | libc-dev
-Description: Perl library: development files
- Files for developing applications which embed a Perl interpreter.
 
 Package: perl
 Priority: standard
