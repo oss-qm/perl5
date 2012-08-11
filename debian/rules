@@ -229,7 +229,6 @@ endif
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	# Verify that perl-base stays self contained
-	# plain "use IO " and "use re" are deprecated and/or useless
 
 	./perl.static $(srcdir)/debian/check-require $(build)/perl-base \
 	  < debian/perl-base.files
