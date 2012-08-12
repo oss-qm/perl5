@@ -314,10 +314,10 @@ endif
 	cp debian/libnet.cfg $(build)/perl-modules/etc/perl/Net
 
 	# compress
-	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -9
+	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -n9
 	find $(build)/*/usr/share/doc -type f \
 	    \( -name changelog\* -o \( -size +4k ! -name copyright \) \) \
-	    -print | xargs -r gzip -9
+	    -print | xargs -r gzip -n9
 
 ifeq ($(strip),yes)
 	# strip
