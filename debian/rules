@@ -211,7 +211,7 @@ endif
 		    list=../$$p.files$$sfx; \
 		    test -s $$list || continue; \
 		    shopt -s globstar; \
-		    find `cat $$list` ! -type d; \
+		    find `grep -v '^#' $$list` ! -type d; \
 		done) >debian/list.tmp; \
 	    (cd $(tmp); cpio -vdumpl ../build/$$p) <debian/list.tmp 2>&1 | \
 		grep -v ' linked to '; \
@@ -233,7 +233,7 @@ ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	# Verify that perl-base stays self contained
 
 	( shopt -s globstar; cd $(build)/perl-base; \
-	  find `cat $(srcdir)/debian/perl-base.files` ! -type d ) | \
+	  find `grep -v '^#' $(srcdir)/debian/perl-base.files` ! -type d ) | \
 	  ./perl.static $(srcdir)/debian/check-require $(build)/perl-base
 endif
 endif
