@@ -11,6 +11,7 @@
 #
 # <http://lists.alioth.debian.org/pipermail/perl-maintainers/2012-January/002870.html>
 
+# we use bash-specific functionality, at least "shopt -s globstar"
 export SHELL = /bin/bash
 
 fullversion := $(shell /bin/bash debian/config.debian --full-version)
@@ -209,6 +210,7 @@ endif
 		do \
 		    list=../$$p.files$$sfx; \
 		    test -s $$list || continue; \
+		    shopt -s globstar; \
 		    find `cat $$list` ! -type d; \
 		done) >debian/list.tmp; \
 	    (cd $(tmp); cpio -vdumpl ../build/$$p) <debian/list.tmp 2>&1 | \
@@ -230,8 +232,9 @@ ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	# Verify that perl-base stays self contained
 
-	./perl.static $(srcdir)/debian/check-require $(build)/perl-base \
-	  < debian/perl-base.files
+	( shopt -s globstar; cd $(build)/perl-base; \
+	  find `cat $(srcdir)/debian/perl-base.files` ! -type d ) | \
+	  ./perl.static $(srcdir)/debian/check-require $(build)/perl-base
 endif
 endif
 
