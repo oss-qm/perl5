@@ -1,6 +1,7 @@
-perl (5.16.0-2) UNRELEASED; urgency=low
+perl (5.16.1-1) UNRELEASED; urgency=low
 
   * Merge 5.14.2-11 and 5.14.2-12 from unstable
+  * New upstream release
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 18 Aug 2012 18:23:16 +0100
 
