@@ -1,3 +1,9 @@
+perl (5.16.0-2) UNRELEASED; urgency=low
+
+  * Merge 5.14.2-11 and 5.14.2-12 from unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 18 Aug 2012 18:23:16 +0100
+
 perl (5.16.0-1) experimental; urgency=low
 
   * New upstream release
@@ -13,6 +19,31 @@ perl (5.16.0-1) experimental; urgency=low
     linuxthreads version check
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 05 Jun 2012 13:34:00 +0100
+
+perl (5.14.2-12) unstable; urgency=low
+
+  * Re-enable thread tests on kFreeBSD now that libc breakage has been
+    resolved (Closes: #672152, #677045)
+  * Update Standards-Version (no changes)
+  * Add minimal Copyright fields to debian/copyright paragraphs that
+    were missing them, to fix Lintian warnings about missing required
+    fields
+
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 18 Jun 2012 22:44:56 +0100
+
+perl (5.14.2-11) unstable; urgency=low
+
+  [ Dominic Hargreaves ]
+  * Add patch from Daniel Kahn Gillmor fixing propagation of socket
+    type information (Closes: #659075)
+
+  [ Niko Tyni ]
+  * Temporarily disable thread tests on kFreeBSD to work around libc breakage.
+    (See #672152 and #673711)
+  * Remove empty Copyright lines from debian/copyright to appease
+    Config::Model.
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 25 May 2012 10:14:00 +0300
 
 perl (5.14.2-10) unstable; urgency=low
 
