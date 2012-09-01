@@ -1,3 +1,9 @@
+perl (5.14.2-13) UNRELEASED; urgency=low
+
+  * Apply patch fixing IPC::Open3 when command is '-' (Closes: #683894)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 01 Sep 2012 11:11:13 +0100
+
 perl (5.14.2-12) unstable; urgency=low
 
   * Re-enable thread tests on kFreeBSD now that libc breakage has been
