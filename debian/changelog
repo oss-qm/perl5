@@ -1,6 +1,8 @@
 perl (5.14.2-13) UNRELEASED; urgency=low
 
   * Apply patch fixing IPC::Open3 when command is '-' (Closes: #683894)
+  * Add Breaks/Replaces/Provides for new dual-lived libsocket-perl
+    (Closes: #679154)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 01 Sep 2012 11:11:13 +0100
 
