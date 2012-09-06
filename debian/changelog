@@ -1,10 +1,10 @@
-perl (5.14.2-13) UNRELEASED; urgency=low
+perl (5.14.2-13) unstable; urgency=low
 
   * Apply patch fixing IPC::Open3 when command is '-' (Closes: #683894)
   * Add Breaks/Replaces/Provides for new dual-lived libsocket-perl
     (Closes: #679154)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 01 Sep 2012 11:11:13 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 06 Sep 2012 23:24:28 +0100
 
 perl (5.14.2-12) unstable; urgency=low
 
