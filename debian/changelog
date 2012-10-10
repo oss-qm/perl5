@@ -1,6 +1,7 @@
 perl (5.14.2-14) UNRELEASED; urgency=low
 
-  * 
+  * [SECURITY] CVE-2012-5195: fix a heap buffer overrun with
+    the 'x' string repeat operator. (Closes: #689314)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 10 Oct 2012 21:16:06 +0300
 

@@ -60,3 +60,4 @@ fixes/propagate_tainted_errors.patch
 debian/perl5db-x-terminal-emulator.patch
 fixes/socket_cache_propagate.diff
 fixes/ipc_open3.diff
+fixes/string_repeat_overrun.diff
