@@ -61,3 +61,6 @@ debian/perl5db-x-terminal-emulator.patch
 fixes/socket_cache_propagate.diff
 fixes/ipc_open3.diff
 fixes/string_repeat_overrun.diff
+debian/cpan-missing-site-dirs.diff
+fixes/kfreebsd-overrides.diff
+fixes/tainted-smartmatch

@@ -1,6 +1,10 @@
 perl (5.14.2-15) UNRELEASED; urgency=low
 
-  * 
+  * Fix CPAN::FirstTime defaults with nonexisting site dirs if a parent
+    is writable. (Closes: #688842)
+  * Don't overwrite $Config{lddlflags} or ccdlflags on GNU/kFreeBSD.
+    (Closes: #689713)
+  * Fix tainted smart matching. (Closes: #690571)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 16 Oct 2012 22:33:13 +0300
 
