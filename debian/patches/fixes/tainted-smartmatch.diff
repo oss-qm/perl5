@@ -1,4 +1,4 @@
-From 549be542fcfda28aa4229a4b8117597dfd914735 Mon Sep 17 00:00:00 2001
+From bbcc2ed685e887c153554b86f2bbbd53e7e9b06d Mon Sep 17 00:00:00 2001
 From: Father Chrysostomos <sprout@cpan.org>
 Date: Tue, 20 Sep 2011 08:55:09 -0700
 Subject: $tainted ~~ [...] failing
@@ -57,10 +57,10 @@ need to be checked.  The $scalar~~@array case sets that parameter for
 the recursive calls.  That avoids the whole string-stealing problem
 *and* avoids extra unnecessary SVs.
 
-Origin: upstream, http://perl5.git.perl.org/perl.git/commit/be88a5c3cc8efc0dbee86240eabf0050554fc717
 Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=93590
 Bug-Debian: http://bugs.debian.org/690571
-Patch-Name: fixes/tainted-smartmatch
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/be88a5c3cc8efc0dbee86240eabf0050554fc717
+Patch-Name: fixes/tainted-smartmatch.diff
 
 (Backported to 5.14 by Niko Tyni.)
 ---

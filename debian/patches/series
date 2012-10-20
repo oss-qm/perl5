@@ -63,4 +63,8 @@ fixes/ipc_open3.diff
 fixes/string_repeat_overrun.diff
 debian/cpan-missing-site-dirs.diff
 fixes/kfreebsd-overrides.diff
-fixes/tainted-smartmatch
+fixes/tainted-smartmatch.diff
+fixes/regexp-matching-starter.diff
+fixes/regexp-matching-fold.diff
+fixes/regexp-matching-opposite-case.diff
+fixes/reading-glob-copy-handle.diff
