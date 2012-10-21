@@ -1,4 +1,4 @@
-From 4cc4d2616374842fee407a5abe705354074659a6 Mon Sep 17 00:00:00 2001
+From 79336c812d09ba475bff661f849514b3876a73dd Mon Sep 17 00:00:00 2001
 From: Father Chrysostomos <sprout@cpan.org>
 Date: Sun, 5 Jun 2011 22:37:54 -0700
 Subject: <$fh> hangs on a glob copy
@@ -13,8 +13,8 @@ debugging. This might even crash in some cases.
 It never really worked properly, but it didn’t start hanging
 apparently until 5.12.2 and 5.14.0.
 
-Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=101970
-Bug-Debian: http://bugs.debian.org/690979
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=92258
+Bug-Debian: http://bugs.debian.org/629363
 Origin: upstream, http://perl5.git.perl.org/perl.git/commit/fd1564b91b0e38f6c270a1bb7d144762ab1aea5c
 Patch-Name: fixes/reading-glob-copy-handle.diff
 ---
