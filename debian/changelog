@@ -5,13 +5,15 @@ perl (5.14.2-15) UNRELEASED; urgency=low
   * Don't overwrite $Config{lddlflags} or ccdlflags on GNU/kFreeBSD.
     (Closes: #689713)
   * Fix tainted smart matching. (Closes: #690571)
-  * Cherry-pick regression fixes from 5.14.3:
+  * Cherry-pick fixes from 5.14.3:
     + /i regexps match correctly with latin1 characters again (Closes: #690975)
     + /i regexps match beyond the start of the string with multi-char folds
     again. (Closes: #690976)
     + /[[:lower:]]/i and /[[:upper:]]/i match the opposite cases again
     (Closes: #690979)
     + <$fh> no longer hangs or eats memory on a glob copy (Closes: #629363)
+    + enforce Any ~~ Object smartmatch precedence (Closes: #691102)
+    + update perlcheat.pod to 5.14. (Closes: #691112)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 16 Oct 2012 22:33:13 +0300
 

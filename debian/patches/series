@@ -68,3 +68,5 @@ fixes/regexp-matching-starter.diff
 fixes/regexp-matching-fold.diff
 fixes/regexp-matching-opposite-case.diff
 fixes/reading-glob-copy-handle.diff
+fixes/smartmatch-rhs-precedence.diff
+fixes/perlcheat-update.diff
