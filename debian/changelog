@@ -1,6 +1,10 @@
 perl (5.16.2-2) UNRELEASED; urgency=low
 
+  [ Dominic Hargreaves ]
   * Merge 5.14.2-15 from unstable
+
+  [ Niko Tyni ]
+  * Present Debian bugs consistently in patchlevel.h.
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 04 Nov 2012 14:29:09 +0000
 
