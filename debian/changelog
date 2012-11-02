@@ -1,11 +1,11 @@
-perl (5.16.2-1) UNRELEASED; urgency=low
+perl (5.16.2-1) experimental; urgency=low
 
   * New upstream release
     - update debian/copyright version (no changes)
     - update Breaks version for libmodule-corelist-perl
   * Merge 5.14.2-13 and 5.14.2-14 from unstable
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 02 Nov 2012 19:20:37 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 02 Nov 2012 19:33:13 +0000
 
 perl (5.16.1-1) experimental; urgency=low
 
