@@ -3,6 +3,7 @@ perl (5.16.2-1) UNRELEASED; urgency=low
   * New upstream release
     - update debian/copyright version (no changes)
     - update Breaks version for libmodule-corelist-perl
+  * Merge 5.14.2-13 and 5.14.2-14 from unstable
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 02 Nov 2012 19:20:37 +0000
 
@@ -31,6 +32,21 @@ perl (5.16.0-1) experimental; urgency=low
     linuxthreads version check
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 05 Jun 2012 13:34:00 +0100
+
+perl (5.14.2-14) unstable; urgency=high
+
+  * [SECURITY] CVE-2012-5195: fix a heap buffer overrun with
+    the 'x' string repeat operator. (Closes: #689314)
+
+ -- Niko Tyni <ntyni@debian.org>  Wed, 10 Oct 2012 21:17:36 +0300
+
+perl (5.14.2-13) unstable; urgency=low
+
+  * Apply patch fixing IPC::Open3 when command is '-' (Closes: #683894)
+  * Add Breaks/Replaces/Provides for new dual-lived libsocket-perl
+    (Closes: #679154)
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 06 Sep 2012 23:24:28 +0100
 
 perl (5.14.2-12) unstable; urgency=low
 
