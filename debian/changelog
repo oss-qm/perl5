@@ -1,3 +1,9 @@
+perl (5.16.2-1) UNRELEASED; urgency=low
+
+  * New upstream release
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 02 Nov 2012 19:20:37 +0000
+
 perl (5.16.1-1) experimental; urgency=low
 
   * Merge 5.14.2-11 and 5.14.2-12 from unstable
