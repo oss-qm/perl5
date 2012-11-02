@@ -1,6 +1,7 @@
 perl (5.16.2-1) UNRELEASED; urgency=low
 
   * New upstream release
+    - update debian/copyright version (no changes)
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 02 Nov 2012 19:20:37 +0000
 
