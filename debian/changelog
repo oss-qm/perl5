@@ -4,7 +4,12 @@ perl (5.16.2-2) UNRELEASED; urgency=low
   * Merge 5.14.2-15 from unstable
 
   [ Niko Tyni ]
-  * Present Debian bugs consistently in patchlevel.h.
+  * Minor packaging improvements:
+    + present Debian bugs consistently in patchlevel.h.
+    + use gzip -n for reproducible results
+    + support comments in file lists
+    + fix a syntax error in debian/copyright
+    + support the '**' notation in file lists for matching subdirectories
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 04 Nov 2012 14:29:09 +0000
 
