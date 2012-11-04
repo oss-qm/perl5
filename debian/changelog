@@ -1,3 +1,9 @@
+perl (5.16.2-2) UNRELEASED; urgency=low
+
+  * Merge 5.14.2-15 from unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 04 Nov 2012 14:29:09 +0000
+
 perl (5.16.2-1) experimental; urgency=low
 
   * New upstream release
@@ -32,6 +38,25 @@ perl (5.16.0-1) experimental; urgency=low
     linuxthreads version check
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 05 Jun 2012 13:34:00 +0100
+
+perl (5.14.2-15) unstable; urgency=low
+
+  * Fix CPAN::FirstTime defaults with nonexisting site dirs if a parent
+    is writable. (Closes: #688842)
+  * Don't overwrite $Config{lddlflags} or ccdlflags on GNU/kFreeBSD.
+    (Closes: #689713)
+  * Fix tainted smart matching. (Closes: #690571)
+  * Cherry-pick fixes from 5.14.3:
+    + /i regexps match correctly with latin1 characters again (Closes: #690975)
+    + /i regexps match beyond the start of the string with multi-char folds
+    again. (Closes: #690976)
+    + /[[:lower:]]/i and /[[:upper:]]/i match the opposite cases again
+    (Closes: #690979)
+    + <$fh> no longer hangs or eats memory on a glob copy (Closes: #629363)
+    + enforce Any ~~ Object smartmatch precedence (Closes: #691102)
+    + update perlcheat.pod to 5.14. (Closes: #691112)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 04 Nov 2012 12:37:46 +0200
 
 perl (5.14.2-14) unstable; urgency=high
 
