@@ -1,4 +1,4 @@
-perl (5.14.2-15) UNRELEASED; urgency=low
+perl (5.14.2-15) unstable; urgency=low
 
   * Fix CPAN::FirstTime defaults with nonexisting site dirs if a parent
     is writable. (Closes: #688842)
@@ -15,7 +15,7 @@ perl (5.14.2-15) UNRELEASED; urgency=low
     + enforce Any ~~ Object smartmatch precedence (Closes: #691102)
     + update perlcheat.pod to 5.14. (Closes: #691112)
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 16 Oct 2012 22:33:13 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 04 Nov 2012 12:37:46 +0200
 
 perl (5.14.2-14) unstable; urgency=high
 
