@@ -54,4 +54,5 @@ fixes/encode-heap-overflow.diff -p1
 fixes/digest_eval_hole.diff
 fixes/unregister_signal_handler.diff
 fixes/CVE-2012-5195.diff
+fixes/CVE-2012-5526.diff
 patchlevel -p1

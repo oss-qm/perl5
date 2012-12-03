@@ -187,6 +187,7 @@ static const char * const local_patches[] = {
 	,"DEBPKG:fixes/digest_eval_hole - Close the eval \"require $module\" security hole in"
 	,"DEBPKG:fixes/unregister_signal_handler - [PATCH] main: Unregister signal handler before destroying my_perl"
 	,"DEBPKG:fixes/CVE-2012-5195 - avoid calling memset with a negative count"
+	,"DEBPKG:fixes/CVE-2012-5526 - [PATCH 1/4] CR escaping for P3P header"
 	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-17squeeze4 in patchlevel.h"
 	,NULL
 };
