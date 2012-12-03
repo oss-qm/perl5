@@ -3075,6 +3075,9 @@ Perl_repeatcpy(pTHX_ register char *to, register const char *from, I32 len, regi
 
     PERL_ARGS_ASSERT_REPEATCPY;
 
+    if (count < 0)
+       Perl_croak_nocontext("%s",PL_memory_wrap);
+
     if (len == 1) {
 	register const char c = *from;
 	while (count-- > 0)

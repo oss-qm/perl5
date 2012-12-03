@@ -53,4 +53,5 @@ fixes/safe-reval-rdo-cve-2010-1447.diff -p1
 fixes/encode-heap-overflow.diff -p1
 fixes/digest_eval_hole.diff
 fixes/unregister_signal_handler.diff
+fixes/CVE-2012-5195.diff
 patchlevel -p1
