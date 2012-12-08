@@ -1,4 +1,4 @@
-perl (5.10.1-17squeeze4) stable-security; urgency=low
+perl (5.10.1-17squeeze4) UNRELEASED; urgency=low
 
   * [SECURITY] CVE-2012-5195: fix a heap buffer overrun with
     the 'x' string repeat operator. (Closes: #689314)
