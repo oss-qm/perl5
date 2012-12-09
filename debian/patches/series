@@ -71,3 +71,4 @@ fixes/reading-glob-copy-handle.diff
 fixes/smartmatch-rhs-precedence.diff
 fixes/perlcheat-update.diff
 0073-CR-escaping-for-P3P-and-Set-Cookie-headers.patch
+0074-Fix-misparsing-of-maketext-strings.patch

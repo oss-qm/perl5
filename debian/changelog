@@ -2,6 +2,9 @@ perl (5.14.2-16) UNRELEASED; urgency=low
 
   * [SECURITY] CVE-2012-5526: CGI.pm improper cookie and p3p
     CRLF escaping (Closes: #693420)
+  * [SECURITY] Fix misparsing of maketext strings which could allow
+    arbitrary code execution from untrusted maketext templates
+    (Closes: #695224)
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 09 Dec 2012 00:06:09 +0000
 
