@@ -1,4 +1,4 @@
-perl (5.14.2-16) UNRELEASED; urgency=low
+perl (5.14.2-16) UNRELEASED; urgency=medium
 
   * [SECURITY] CVE-2012-5526: CGI.pm improper cookie and p3p
     CRLF escaping (Closes: #693420)
