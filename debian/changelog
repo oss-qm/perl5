@@ -5,6 +5,9 @@ perl (5.14.2-16) UNRELEASED; urgency=low
   * [SECURITY] Fix misparsing of maketext strings which could allow
     arbitrary code execution from untrusted maketext templates
     (Closes: #695224)
+  * [SECURITY] add warning to Storable documentation that Storable
+    documents should not be accepted from untrusted sources
+    (Closes: #695223)
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 09 Dec 2012 00:06:09 +0000
 
