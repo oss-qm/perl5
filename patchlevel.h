@@ -188,6 +188,7 @@ static const char * const local_patches[] = {
 	,"DEBPKG:fixes/unregister_signal_handler - [PATCH] main: Unregister signal handler before destroying my_perl"
 	,"DEBPKG:fixes/CVE-2012-5195 - avoid calling memset with a negative count"
 	,"DEBPKG:fixes/CVE-2012-5526 - [PATCH 1/4] CR escaping for P3P header"
+	,"DEBPKG:fixes/storable-security-warning - [PATCH] add a note about security concerns in Storable"
 	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-17squeeze4 in patchlevel.h"
 	,NULL
 };
