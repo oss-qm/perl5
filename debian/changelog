@@ -1,4 +1,4 @@
-perl (5.14.2-16) UNRELEASED; urgency=medium
+perl (5.14.2-16) unstable; urgency=medium
 
   * [SECURITY] CVE-2012-5526: CGI.pm improper cookie and p3p
     CRLF escaping (Closes: #693420)
@@ -9,7 +9,7 @@ perl (5.14.2-16) UNRELEASED; urgency=medium
     documents should not be accepted from untrusted sources
     (Closes: #695223)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 09 Dec 2012 00:06:09 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 10 Dec 2012 12:47:14 +0000
 
 perl (5.14.2-15) unstable; urgency=low
 
