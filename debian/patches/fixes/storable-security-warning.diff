@@ -1,4 +1,4 @@
-From 4d351bb141e3c014e8be4f01f68af54ecdde7369 Mon Sep 17 00:00:00 2001
+From 41d3609d4a091d21891059a2f44930c8a8c461fe Mon Sep 17 00:00:00 2001
 From: Steffen Mueller <smueller@cpan.org>
 Date: Fri, 30 Nov 2012 23:03:09 -0500
 Subject: add a note about security concerns in Storable
@@ -14,6 +14,10 @@ The original version of this patch included a recommendation to use
 Sereal in its most stringent configuration, but that text was removed
 for the time being by Ricardo Signes, who hopes to add it back once
 Sereal has been in public use for just a bit longer.
+
+Bug-Debian: http://bugs.debian.org/695223
+Origin: http://perl5.git.perl.org/perl.git/commit/664f237a84176c09b20b62dbfe64dd736a7ce05e
+Patch-Name: fixes/storable-security-warning.diff
 ---
  dist/Storable/Storable.pm |   32 ++++++++++++++++++++++++++++++++
  1 file changed, 32 insertions(+)

@@ -1,4 +1,4 @@
-From 8b0df3b772e5d6a75a467758b4953386b2b1aae6 Mon Sep 17 00:00:00 2001
+From 9da6928f4cbc7cfa3c2c474b00042a51083e12af Mon Sep 17 00:00:00 2001
 From: Brian Carlson <brian.carlson@cpanel.net>
 Date: Wed, 28 Nov 2012 08:54:33 -0500
 Subject: Fix misparsing of maketext strings.
@@ -9,6 +9,10 @@ bracket notation into functions, but neglected to escape backslashes
 inside the content or die on fully-qualified method names when
 generating the code.  This change escapes all such backslashes and dies
 when a method name with a colon or apostrophe is specified.
+
+Bug-Debian: http://bugs.debian.org/695224
+Origin: http://perl5.git.perl.org/perl.git/commit/1735f6f53ca19f99c6e9e39496c486af323ba6a8
+Patch-Name: fixes/maketext-code-execution.diff
 ---
  dist/Locale-Maketext/lib/Locale/Maketext.pm |   24 ++++++++----------------
  1 file changed, 8 insertions(+), 16 deletions(-)

@@ -70,6 +70,6 @@ fixes/regexp-matching-opposite-case.diff
 fixes/reading-glob-copy-handle.diff
 fixes/smartmatch-rhs-precedence.diff
 fixes/perlcheat-update.diff
-0073-CR-escaping-for-P3P-and-Set-Cookie-headers.patch
-0074-Fix-misparsing-of-maketext-strings.patch
-0075-add-a-note-about-security-concerns-in-Storable.patch
+fixes/cgi-cr-escaping.diff
+fixes/maketext-code-execution.diff
+fixes/storable-security-warning.diff
