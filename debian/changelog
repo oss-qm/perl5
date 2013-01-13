@@ -1,4 +1,4 @@
-perl (5.16.2-2) UNRELEASED; urgency=low
+perl (5.16.2-2) experimental; urgency=low
 
   [ Dominic Hargreaves ]
   * Merge 5.14.2-15 and 5.14.2-16 from unstable
@@ -23,7 +23,7 @@ perl (5.16.2-2) UNRELEASED; urgency=low
     + fix a syntax error in debian/copyright
     + support the '**' notation in file lists for matching subdirectories
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 04 Nov 2012 14:29:09 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 13 Jan 2013 17:54:46 +0000
 
 perl (5.16.2-1) experimental; urgency=low
 
