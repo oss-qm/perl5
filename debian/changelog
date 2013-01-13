@@ -2,6 +2,18 @@ perl (5.16.2-2) UNRELEASED; urgency=low
 
   [ Dominic Hargreaves ]
   * Merge 5.14.2-15 and 5.14.2-16 from unstable
+    + [SECURITY] CVE-2012-5526: CGI.pm improper cookie and p3p
+      CRLF escaping (Closes: #693420)
+    + [SECURITY] Fix misparsing of maketext strings which could allow
+      arbitrary code execution from untrusted maketext templates
+      (Closes: #695224)
+    + [SECURITY] add warning to Storable documentation that Storable
+      documents should not be accepted from untrusted sources
+      (Closes: #695223)
+    + Fix CPAN::FirstTime defaults with nonexisting site dirs if a parent
+      is writable. (Closes: #688842)
+    + Don't overwrite $Config{lddlflags} or ccdlflags on GNU/kFreeBSD.
+      (Closes: #689713)
 
   [ Niko Tyni ]
   * Minor packaging improvements:
