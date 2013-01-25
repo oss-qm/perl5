@@ -2,6 +2,8 @@ perl (5.14.2-17) UNRELEASED; urgency=low
 
   * Fix a double-free bug in Digest::SHA. (Closes: #698174)
     + update the Breaks: entry accordingly.
+  * Avoid wraparound when casting unsigned size_t to signed ssize_t.
+    (Closes: #698320)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 25 Jan 2013 14:53:05 +0200
 

@@ -74,3 +74,4 @@ fixes/cgi-cr-escaping.diff
 fixes/maketext-code-execution.diff
 fixes/storable-security-warning.diff
 fixes/digest-sha-doublefree.diff
+fixes/64bitint-signedness-wraparound.diff
