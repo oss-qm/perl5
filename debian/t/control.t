@@ -46,6 +46,9 @@ my %ok = (
 	"libautodie-perl" => {
 		"2.1001" => "2.10.01",
 	},
+	"libdigest-sha-perl" => {
+		"5.61"  =>  "5.71",
+	},
 );
 
 # list special cases where a Breaks entry doesn't need to imply
