@@ -1,6 +1,6 @@
 perl (5.14.2-17) UNRELEASED; urgency=low
 
-  * 
+  * Fix a double-free bug in Digest::SHA. (Closes: #698174)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 25 Jan 2013 14:53:05 +0200
 

@@ -73,3 +73,4 @@ fixes/perlcheat-update.diff
 fixes/cgi-cr-escaping.diff
 fixes/maketext-code-execution.diff
 fixes/storable-security-warning.diff
+fixes/digest-sha-doublefree.diff
