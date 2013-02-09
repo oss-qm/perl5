@@ -1,9 +1,9 @@
-perl (5.14.2-18) UNRELEASED; urgency=low
+perl (5.14.2-18) unstable; urgency=low
 
   * Fix a squeeze regression with STDIN and signal handlers.
     (Closes: #700171)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 09 Feb 2013 14:54:21 +0200
+ -- Niko Tyni <ntyni@debian.org>  Sat, 09 Feb 2013 15:31:33 +0200
 
 perl (5.14.2-17) unstable; urgency=low
 
