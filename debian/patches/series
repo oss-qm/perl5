@@ -56,4 +56,5 @@ fixes/unregister_signal_handler.diff
 fixes/CVE-2012-5195.diff
 fixes/CVE-2012-5526.diff
 fixes/storable-security-warning.diff
+fixes/maketext-code-execution.diff
 patchlevel -p1

@@ -1,3 +1,11 @@
+perl (5.10.1-17squeeze5) UNRELEASED; urgency=low
+
+  * [SECURITY] Fix misparsing of maketext strings which could allow
+    arbitrary code execution from untrusted maketext templates
+    (Closes: #695224)
+
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 13 Feb 2013 21:49:19 +0000
+
 perl (5.10.1-17squeeze4) stable-security; urgency=low
 
   * [SECURITY] CVE-2012-5195: fix a heap buffer overrun with

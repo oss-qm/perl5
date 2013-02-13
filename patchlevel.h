@@ -189,7 +189,8 @@ static const char * const local_patches[] = {
 	,"DEBPKG:fixes/CVE-2012-5195 - avoid calling memset with a negative count"
 	,"DEBPKG:fixes/CVE-2012-5526 - [PATCH 1/4] CR escaping for P3P header"
 	,"DEBPKG:fixes/storable-security-warning - [PATCH] add a note about security concerns in Storable"
-	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-17squeeze4 in patchlevel.h"
+	,"DEBPKG:fixes/maketext-code-execution - Fix misparsing of maketext strings."
+	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-17squeeze5 in patchlevel.h"
 	,NULL
 };
 
