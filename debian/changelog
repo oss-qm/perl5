@@ -1,3 +1,11 @@
+perl (5.10.1-17squeeze6) stable-security; urgency=low
+
+  * [SECURITY] CVE-2013-1667: fix a rehashing DoS opportunity
+    against code that uses arbitrary user input as hash keys.
+    (Closes: #702296)
+
+ -- Niko Tyni <ntyni@debian.org>  Tue, 05 Mar 2013 21:50:01 +0200
+
 perl (5.10.1-17squeeze5) stable; urgency=low
 
   * [SECURITY] CVE-2012-6329: Fix misparsing of maketext strings which

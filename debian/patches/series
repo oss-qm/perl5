@@ -57,4 +57,5 @@ fixes/CVE-2012-5195.diff
 fixes/CVE-2012-5526.diff
 fixes/storable-security-warning.diff
 fixes/maketext-code-execution.diff
+fixes/CVE-2013-1667.diff
 patchlevel -p1
