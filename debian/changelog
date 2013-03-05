@@ -1,6 +1,8 @@
 perl (5.14.2-19) UNRELEASED; urgency=low
 
-  * 
+  * [SECURITY] CVE-2013-1667: fix a rehashing DoS opportunity
+    against code that uses arbitrary user input as hash keys.
+    (Closes: #702296)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 04 Mar 2013 20:06:18 +0200
 

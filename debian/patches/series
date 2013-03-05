@@ -76,3 +76,4 @@ fixes/storable-security-warning.diff
 fixes/digest-sha-doublefree.diff
 fixes/64bitint-signedness-wraparound.diff
 fixes/stdin-sigchld.diff
+fixes/hsplit-rehash.diff
