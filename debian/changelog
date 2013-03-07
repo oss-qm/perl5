@@ -2,6 +2,8 @@ perl (5.14.2-20) UNRELEASED; urgency=low
 
   * Fix an Encode memory leak that occurred in the UTF-8 encoding.
     (Closes: #702416)
+    + upgrade the Broken versions of the separate libencode-perl
+      package accordingly.
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 07 Mar 2013 18:55:31 +0200
 

@@ -49,6 +49,9 @@ my %ok = (
 	"libdigest-sha-perl" => {
 		"5.61"  =>  "5.71",
 	},
+	"libencode-perl" => {
+		"2.42_01" => "2.44-1+deb7u1",
+	},
 );
 
 # list special cases where a Breaks entry doesn't need to imply
