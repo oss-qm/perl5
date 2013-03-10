@@ -2,6 +2,8 @@ perl (5.16.2-3) UNRELEASED; urgency=low
 
   * Remove Depends/Recommends/Suggests on modules deprecated in 5.12 and
     5.14 (Closes: #702094)
+  * Fix FTBFS with findutils from experimental by not using deprecated
+    permissions check syntax; thanks to Roland Stigge (Closes: #702562)
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 10 Mar 2013 16:33:33 +0000
 

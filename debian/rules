@@ -322,7 +322,7 @@ endif
 ifeq ($(strip),yes)
 	# strip
 	find $(build)/*/usr/bin $(build)/*/usr/lib -type f \
-	    \( -name \*.so\* -o -name \*.a -o -perm +111 \) -print | \
+	    \( -name \*.so\* -o -name \*.a -o -perm /111 \) -print | \
 	    grep -v ^$(build)/perl-debug/ | \
 	    while read f; \
 	    do \
@@ -442,7 +442,7 @@ endif
 	    and /^Package:\s+(.*)/m' debian/control`; \
 	do \
 	    find $(build)/$$p/usr -type f \
-		\( -perm +111 -o -name \*.so\* \) -print | \
+		\( -perm /111 -o -name \*.so\* \) -print | \
 		fgrep -v /usr/lib/debug/ | \
 		xargs -r dpkg-shlibdeps -S$(srcdir)/$(build)/libperl$(version) \
 		                        -S$(srcdir)/$(build)/perl-base 2>&1 | \
