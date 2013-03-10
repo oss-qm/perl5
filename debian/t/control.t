@@ -52,19 +52,16 @@ my %ok = (
 	"libencode-perl" => {
 		"2.44" => "2.44-1+deb7u1",
 	},
+    # Module::CoreList lists its own version incorrectly in 2.70
+    "libmodule-corelist-perl" => {
+        "2.70" => "2.76",
+    },
 );
 
 # list special cases where a Breaks entry doesn't need to imply
 # Replaces+Provides
 my %triplet_check_skip = (
 	"perl-base" => [ "libfile-spec-perl" ],
-	"perl-modules" => [ qw(
-		libswitch-perl
-		libpod-plainer-perl
-		libclass-isa-perl
-		libshell-perl
-		libdevel-dprof-perl
-	)],
 );
 
 # list special cases where the name of the Debian package does not

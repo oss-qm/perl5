@@ -16,6 +16,8 @@ perl (5.16.2-3) UNRELEASED; urgency=low
       (Closes: #702416)
       + upgrade the Broken versions of the separate libencode-perl
         package accordingly.
+  * Update debian/t/control.t to reflect Module::CoreList version
+    inconsistency and to remove references to non-existent Breaks
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 10 Mar 2013 16:33:33 +0000
 
