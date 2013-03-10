@@ -272,7 +272,7 @@ void sharewind(SHA *s)
 /* shaopen: creates a new digest object */
 SHA *shaopen(int alg)
 {
-	SHA *s;
+	SHA *s = NULL;
 
 	if (alg != SHA1 && alg != SHA224 && alg != SHA256 &&
 		alg != SHA384    && alg != SHA512 &&
