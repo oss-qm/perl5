@@ -70,12 +70,7 @@ Description: Perl documentation
 Package: perl-modules
 Priority: standard
 Architecture: all
-Depends: perl (>= ${Upstream-Version}-1),
- libswitch-perl,
- libclass-isa-perl
-Recommends: libshell-perl,
- libperl4-corelibs-perl
-Suggests: libpod-plainer-perl
+Depends: perl (>= ${Upstream-Version}-1)
 Conflicts: defoma (<< 0.11.12),
  mono-gac (<< 2.10.8.1-3)
 Breaks: libpod-parser-perl (<< 1.51),
@@ -344,7 +339,7 @@ Provides: data-dumper, perl5,
  libthreads-shared-perl,
  libtime-piece-perl,
  libencode-perl,
-Recommends: netbase, libdevel-dprof-perl
+Recommends: netbase
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
  make
 Description: Larry Wall's Practical Extraction and Report Language
