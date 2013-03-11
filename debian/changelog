@@ -18,6 +18,8 @@ perl (5.16.2-3) UNRELEASED; urgency=low
         package accordingly.
   * Update debian/t/control.t to reflect Module::CoreList version
     inconsistency and to remove references to non-existent Breaks
+  * Remove unneeded versioned dependencies on gcc and cpio
+    (Closes: #678138)
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 10 Mar 2013 16:33:33 +0000
 
