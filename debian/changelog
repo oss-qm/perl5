@@ -20,6 +20,7 @@ perl (5.16.2-3) UNRELEASED; urgency=low
     inconsistency and to remove references to non-existent Breaks
   * Remove unneeded versioned dependencies on gcc and cpio
     (Closes: #678138)
+  * Fix debian/copyright syntax (thanks, Lintian)
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 10 Mar 2013 16:33:33 +0000
 

@@ -938,7 +938,6 @@ Copyright:
  Copyright 1996, 1997, 1998, 2000, 2001, 2002, 2005, 2006, 2007, 2009, 2010,
  2011 Russ Allbery <rra@stanford.edu> and Zenin.
  Copyright 2011 Revilo Reegiles
-
 License: GPL-1+ or Artistic
  This program is free software; you may redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -1765,6 +1764,7 @@ License: DONT-CHANGE-THE-GPL
  of this license document, but changing it is not allowed.
 
 Files: t/io/shm.t
+Copyright:
  Copyright (C) 1999, Graham Barr <gbarr@pobox.com>.
  Copyright (C) 2007-2010, Marcus Holland-Moritz <mhx@cpan.org>.
 License: GPL-1+ or Artistic
