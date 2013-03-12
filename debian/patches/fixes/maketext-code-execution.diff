@@ -1,4 +1,4 @@
-From f3e8078bc9fa21b1685c028c767e5d0b5544eed1 Mon Sep 17 00:00:00 2001
+From a06a2aabd0052f2983dd3278f207bbbb5f366b5e Mon Sep 17 00:00:00 2001
 From: Brian Carlson <brian.carlson@cpanel.net>
 Date: Wed, 28 Nov 2012 08:54:33 -0500
 Subject: Fix misparsing of maketext strings.

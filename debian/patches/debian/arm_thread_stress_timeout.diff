@@ -1,4 +1,4 @@
-From 7bdd422c3cf7efbafc9cbe42b7724e6b3319de6d Mon Sep 17 00:00:00 2001
+From 3f1dad069015eec80a2cc611b580a416214ea645 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 1 Nov 2008 15:10:16 +0200
 Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate

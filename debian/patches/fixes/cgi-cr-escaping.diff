@@ -1,4 +1,4 @@
-From e6cce02f96d15ffa2f601357c87f4e5b27f7eaaf Mon Sep 17 00:00:00 2001
+From 622f6d362e6470c686dfbfd540fdfa4b88e55946 Mon Sep 17 00:00:00 2001
 From: Ryo Anazawa <anazawa@cpan.org>
 Date: Wed, 14 Nov 2012 09:47:32 +0900
 Subject: CR escaping for P3P and Set-Cookie headers

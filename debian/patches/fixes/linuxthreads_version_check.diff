@@ -1,4 +1,4 @@
-From b1b4db018642ff8fb030c8a49307f34af6ff0e0d Mon Sep 17 00:00:00 2001
+From 5f32c115ced5c8c77553efd0eb363393d7c32256 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 4 Jun 2012 15:09:00 +0100
 Subject: Check for linuxthreads with POSIX semantics

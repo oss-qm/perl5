@@ -1,4 +1,4 @@
-From 147b49ad5ab28847e42233b2d285cc139130f384 Mon Sep 17 00:00:00 2001
+From 4ccedae515b34f4d0380ccdb3657582b6ea9f2a4 Mon Sep 17 00:00:00 2001
 From: Daniel Kahn Gillmor <dkg@fifthhorseman.net>
 Date: Fri, 17 Feb 2012 14:29:14 -0800
 Subject: sockdomain and socktype undef on newly accepted sockets
@@ -34,7 +34,7 @@ Patch-Name: fixes/socket_cache_propagate.diff
  create mode 100644 dist/IO/t/cachepropagate-unix.t
 
 diff --git a/MANIFEST b/MANIFEST
-index 6982c11..add28e5 100644
+index 173b966..16829dd 100644
 --- a/MANIFEST
 +++ b/MANIFEST
 @@ -3240,6 +3240,9 @@ dist/IO/Makefile.PL		IO extension makefile writer
@@ -48,7 +48,7 @@ index 6982c11..add28e5 100644
  dist/IO/t/io_dir.t		See if directory-related methods from IO work
  dist/IO/t/io_dup.t		See if dup()-related methods from IO work
 diff --git a/META.yml b/META.yml
-index a057e07..426a0a6 100644
+index 0ff1ac4..55d32ef 100644
 --- a/META.yml
 +++ b/META.yml
 @@ -78,6 +78,9 @@ no_index:

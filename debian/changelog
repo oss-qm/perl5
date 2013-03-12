@@ -1,4 +1,4 @@
-perl (5.16.2-3) UNRELEASED; urgency=low
+perl (5.16.3-1) UNRELEASED; urgency=low
 
   * Remove Depends/Recommends/Suggests on modules deprecated in 5.12 and
     5.14 (Closes: #702094)
@@ -22,8 +22,9 @@ perl (5.16.2-3) UNRELEASED; urgency=low
     (Closes: #678138)
   * Fix debian/copyright syntax (thanks, Lintian)
   * Include correct branch name in Vcs-Git field
+  * New upstream release
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 10 Mar 2013 16:33:33 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 12 Mar 2013 22:47:27 +0000
 
 perl (5.16.2-2) experimental; urgency=low
 

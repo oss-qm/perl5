@@ -1,4 +1,4 @@
-From 8ee3dfa698181f737b18e7facb5e6c2834669c40 Mon Sep 17 00:00:00 2001
+From ccf08671621cc998434217fb6aec8471d0004505 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 17 Oct 2012 12:56:43 -0400
 Subject: Remove unnecessary overrides in gnukfreebsd and gnuknetbsd hints.
