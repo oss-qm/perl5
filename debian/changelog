@@ -1,3 +1,10 @@
+perl (5.14.2-21) UNRELEASED; urgency=low
+
+  * Update the Locale::Maketext fix by importing 1.23, to avoid
+    double-escaping problems (see: #695224)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 31 Mar 2013 13:58:59 +0100
+
 perl (5.14.2-20) unstable; urgency=low
 
   * Fix an Encode memory leak that occurred in the UTF-8 encoding.

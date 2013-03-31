@@ -1,4 +1,4 @@
-From e36d65ba661bd0f9c9ae741c8f18d2e08682e97a Mon Sep 17 00:00:00 2001
+From 3e75c3189622c59ded9070bf678ef42f8185961a Mon Sep 17 00:00:00 2001
 From: Andy Dougherty <doughera@lafayette.edu>
 Date: Wed, 16 Jan 2013 12:30:43 -0500
 Subject: Avoid wraparound when casting unsigned size_t to signed ssize_t.

@@ -1,4 +1,4 @@
-From 89405c8ebc5bf8ae4ed6479de2bc0f311c1f6fe1 Mon Sep 17 00:00:00 2001
+From 93f6c83c7454de33df00a0e3fde3a890d6c87e91 Mon Sep 17 00:00:00 2001
 From: chansen <chansen@cpan.org>
 Date: Sun, 3 Mar 2013 22:43:53 +0100
 Subject: Encode: Fixed a memory leak that occurred in the UTF-8 encoding.

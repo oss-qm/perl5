@@ -1,4 +1,4 @@
-From 417f9aa4b23699c6214978eef4c71f5c0ac1fd68 Mon Sep 17 00:00:00 2001
+From 1d95aa96823a930a9c4aa54baa4f23e956b145b8 Mon Sep 17 00:00:00 2001
 From: Chip <chip@pobox.com>
 Date: Mon, 19 Sep 2011 23:51:49 -0700
 Subject: add a couple missing LEAVEs in perlio_async_run()

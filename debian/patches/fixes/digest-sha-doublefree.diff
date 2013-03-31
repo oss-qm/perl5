@@ -1,4 +1,4 @@
-From d2d9e1560afaeb402dda69eba1d6e808d80c0c96 Mon Sep 17 00:00:00 2001
+From 0c6c3e57ab9ee86fbce162071dce1c2748a494b5 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 25 Jan 2013 15:00:00 +0200
 Subject: Fix a double-free bug in Digest::SHA
