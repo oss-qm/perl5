@@ -1,9 +1,10 @@
-perl (5.14.2-21) UNRELEASED; urgency=low
+perl (5.14.2-21) unstable; urgency=low
 
+  [ Dominic Hargreaves ]
   * Update the Locale::Maketext fix by importing 1.23, to avoid
     double-escaping problems (see: #695224)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 31 Mar 2013 13:58:59 +0100
+ -- Niko Tyni <ntyni@debian.org>  Wed, 10 Apr 2013 19:11:35 +0300
 
 perl (5.14.2-20) unstable; urgency=low
 
