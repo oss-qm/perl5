@@ -1,4 +1,4 @@
-From a06a2aabd0052f2983dd3278f207bbbb5f366b5e Mon Sep 17 00:00:00 2001
+From 4c5b19fbf95fdb452db5d9f1767837b1cac6b89a Mon Sep 17 00:00:00 2001
 From: Brian Carlson <brian.carlson@cpanel.net>
 Date: Wed, 28 Nov 2012 08:54:33 -0500
 Subject: Fix misparsing of maketext strings.
@@ -10,17 +10,52 @@ inside the content or die on fully-qualified method names when
 generating the code.  This change escapes all such backslashes and dies
 when a method name with a colon or apostrophe is specified.
 
+This is an updated version of the patch which upgrades Locale::Maketext to
+1.23, to avoid double-escaping problems for callers who work around the
+problem with older versions.
+
 Bug-Debian: http://bugs.debian.org/695224
 Origin: http://perl5.git.perl.org/perl.git/commit/1735f6f53ca19f99c6e9e39496c486af323ba6a8
 Patch-Name: fixes/maketext-code-execution.diff
 ---
- dist/Locale-Maketext/lib/Locale/Maketext.pm |   24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ dist/Locale-Maketext/ChangeLog              |    6 ++++++
+ dist/Locale-Maketext/lib/Locale/Maketext.pm |   26 +++++++++-----------------
+ dist/Locale-Maketext/t/00_load.t            |   11 +++++++++++
+ dist/Locale-Maketext/t/09_compile.t         |   11 +++++++----
+ dist/Locale-Maketext/t/pod.t                |    8 ++++++++
+ 5 files changed, 41 insertions(+), 21 deletions(-)
+ create mode 100644 dist/Locale-Maketext/t/00_load.t
+ create mode 100644 dist/Locale-Maketext/t/pod.t
 
+diff --git a/dist/Locale-Maketext/ChangeLog b/dist/Locale-Maketext/ChangeLog
+index fb52acc..aaa0eb8 100644
+--- a/dist/Locale-Maketext/ChangeLog
++++ b/dist/Locale-Maketext/ChangeLog
+@@ -1,5 +1,11 @@
+ Revision history for Perl suite Locale::Maketext
+ 
++2012-12-04
++    * Fix misparsing of maketext strings.
++
++2012-11-22
++    * Fix hash order dependcy bug in tests
++
+ 2012-01-14
+     * Minor POD documentation update to sync with upstream blead.
+ 
 diff --git a/dist/Locale-Maketext/lib/Locale/Maketext.pm b/dist/Locale-Maketext/lib/Locale/Maketext.pm
-index 7e06b30..25c303b 100644
+index 7e06b30..63e5fba 100644
 --- a/dist/Locale-Maketext/lib/Locale/Maketext.pm
 +++ b/dist/Locale-Maketext/lib/Locale/Maketext.pm
+@@ -27,7 +27,7 @@ BEGIN {
+ }
+ 
+ 
+-$VERSION = '1.22';
++$VERSION = '1.23';
+ @ISA = ();
+ 
+ $MATCH_SUPERS = 1;
 @@ -625,21 +625,9 @@ sub _compile {
                          # 0-length method name means to just interpolate:
                          push @code, ' (';
@@ -67,3 +102,58 @@ index 7e06b30..25c303b 100644
              }
          }
      }
+diff --git a/dist/Locale-Maketext/t/00_load.t b/dist/Locale-Maketext/t/00_load.t
+new file mode 100644
+index 0000000..19abdba
+--- /dev/null
++++ b/dist/Locale-Maketext/t/00_load.t
+@@ -0,0 +1,11 @@
++#!perl -Tw
++
++use warnings;
++use strict;
++use Test::More tests => 3;
++
++use_ok( 'Locale::Maketext' );
++use_ok( 'Locale::Maketext::Guts' );
++use_ok( 'Locale::Maketext::GutsLoader' );
++
++diag( "Testing Locale::Maketext $Locale::Maketext::VERSION with Perl $], $^X" );
+diff --git a/dist/Locale-Maketext/t/09_compile.t b/dist/Locale-Maketext/t/09_compile.t
+index 06db484..93988e5 100644
+--- a/dist/Locale-Maketext/t/09_compile.t
++++ b/dist/Locale-Maketext/t/09_compile.t
+@@ -8,12 +8,15 @@ use Test::More tests => 2;
+ use Scalar::Util qw(tainted);
+ use Locale::Maketext;
+ 
+-my @ENV_values = values %ENV;
+-my $tainted_value;
+-do { $tainted_value = shift @ENV_values  } while(!$tainted_value || ref $tainted_value);
++my @ENV_values = map { !/^PERL/ && defined($ENV{$_}) && !ref($ENV{$_}) && $ENV{$_} ? $ENV{$_} : () } sort keys %ENV;
++die "No %ENV vars to test?" if !@ENV_values;
++
++my ($tainted_value)= @ENV_values;
+ $tainted_value =~ s/([\[\]])/~$1/g;
+ 
+-ok(tainted($tainted_value), "\$tainted_value is tainted") or die('huh... %ENV has no entries? I don\'t know how to test taint without it');
++# If ${^TAINT} is not set despite -T, this perl doesn't have taint support
++ok(!${^TAINT} || tainted($tainted_value), "\$tainted_value is tainted")
++    or die("Could not find tainted value to use for testing (maybe fix the test?)");
+ 
+ my $result = Locale::Maketext::_compile("hello [_1]", $tainted_value);
+ 
+diff --git a/dist/Locale-Maketext/t/pod.t b/dist/Locale-Maketext/t/pod.t
+new file mode 100644
+index 0000000..a0f6a50
+--- /dev/null
++++ b/dist/Locale-Maketext/t/pod.t
+@@ -0,0 +1,8 @@
++#!perl -Tw
++
++use warnings;
++use strict;
++use Test::More;
++eval 'use Test::Pod 1.14';
++plan skip_all => 'Test::Pod 1.14 required for testing POD' if $@;
++all_pod_files_ok();

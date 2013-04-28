@@ -1,4 +1,4 @@
-From 851b17b42293a44451533e07c0a66eb28233cb3d Mon Sep 17 00:00:00 2001
+From 5905fc4a1cc11cde15e5421d72154e6f568a17a2 Mon Sep 17 00:00:00 2001
 From: Steffen Mueller <smueller@cpan.org>
 Date: Fri, 30 Nov 2012 23:03:09 -0500
 Subject: add a note about security concerns in Storable
