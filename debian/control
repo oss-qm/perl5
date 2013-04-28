@@ -342,11 +342,14 @@ Recommends: netbase
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
  make
 Description: Larry Wall's Practical Extraction and Report Language
- An interpreted scripting language, known among some as "Unix's Swiss
- Army Chainsaw".
+ Perl is a highly capable, feature-rich programming language with over
+ 20 years of development. Perl 5 runs on over 100 platforms from
+ portables to mainframes. Perl is suitable for both rapid prototyping
+ and large scale development projects.
  .
- Perl is optimised for scanning arbitrary text files and system
- administration.  It has built-in extended regular expression matching
- and replacement, a data-flow mechanism to improve security with
- setuid scripts and is extensible via modules that can interface to C
- libraries.
+ Perl 5 supports many programming styles, including procedural,
+ functional, and object-oriented. In addition to this, it is supported
+ by an ever-growing collection of reusable modules which accelerate
+ development. Some of these modules include Web frameworks, database
+ integration, networking protocols, and encryption. Perl provides
+ interfaces to C and C++ for custom extension development.
