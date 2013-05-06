@@ -26,36 +26,6 @@ use lib "dist/Module-CoreList/lib";
 # list special cases of version numbers that are OK here
 # version numbering discontinuities (epochs, added digits) cause these
 my %ok = (
-	"libcgi-pm-perl" => {
-		"3.49" => "3.49-1squeeze1",
-	},
-	"libextutils-parsexs-perl" => {
-		"2.2002" => "2.2002",
-	},
-	"libextutils-cbuilder-perl" => {
-		"0.2602" => "0.2602",
-		"0.27"   => "0.2700",
-	},
-	"libparse-cpan-meta-perl" => {
-		"1.39" => "1.39",
-		"1.40" => "1.40",
-	},
-	"libmath-bigint-perl" => {
-		"1.89" => "1.89",
-	},
-	"libautodie-perl" => {
-		"2.1001" => "2.10.01",
-	},
-	"libdigest-sha-perl" => {
-		"5.61"  =>  "5.71",
-	},
-	"libencode-perl" => {
-		"2.44" => "2.44-1+deb7u1",
-	},
-    # Module::CoreList lists its own version incorrectly in 2.70
-    "libmodule-corelist-perl" => {
-        "2.70" => "2.76",
-    },
 );
 
 # list special cases where a Breaks entry doesn't need to imply
