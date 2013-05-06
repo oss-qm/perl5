@@ -125,4 +125,5 @@ eval /bin/bash Configure			\
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
     $extra_path					\
-    $opts -des
+    $opts -des \
+    -Dusedevel
