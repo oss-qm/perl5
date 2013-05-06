@@ -50,7 +50,7 @@ Introduced in Perl 5.6.0
 
 Accepted in Perl 5.8.0 XXX
 
-=item -Dusemultiplicity -Dusethreads
+=item -Dusemultiplicity -Duseithreads
 
 Introduced in Perl 5.6.0
 
@@ -72,13 +72,13 @@ Removed in Perl 5.10 XXX
 
 =item Test::Harness::Straps
 
-Removed in Perl 5.10.1
+Moved from Perl 5.10.1 to CPAN
 
 =item perlcc
 
 Introduced in Perl 5.005
 
-Removed in Perl 5.9.0
+Moved from Perl 5.9.0 to CPAN
 
 =item C<our> can now have an experimental optional attribute C<unique>
 
@@ -232,15 +232,6 @@ See also: L<perlre/"Special Backtracking Control Verbs">
 
 =item Code expressions, conditional expressions, and independent expressions in regexes
 
-=item The C<\N> regex character class
-
-The C<\N> character class, not to be confused with the named character
-sequence C<\N{NAME}>, denotes any non-newline character in a regular
-expression.
-
-Introduced in: Perl 5.12
-
-See also: 
 
 =item gv_try_downgrade
 
@@ -256,6 +247,12 @@ See L<perlapi/PL_keyword_plugin> for the mechanism.
 
 Introduced in: Perl 5.11.2
 
+=item Lexical subroutines
+
+Introduced in: Perl 5.18
+
+See also: L<perlsub/Lexical Subroutines>
+
 =back
 
 =head2 Accepted features
@@ -267,7 +264,13 @@ They are also awarded +5 Stability and +3 Charisma.
 
 =over 8
 
-=item (none yet identified)
+=item The C<\N> regex character class
+
+The C<\N> character class, not to be confused with the named character
+sequence C<\N{NAME}>, denotes any non-newline character in a regular
+expression.
+
+Introduced in: Perl 5.12
 
 =back
 

@@ -18,7 +18,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple::BlackBox');
-$VERSION = '3.20';
+$VERSION = '3.26';
 
 @Known_formatting_codes = qw(I B C L E F S X Z); 
 %Known_formatting_codes = map(($_=>1), @Known_formatting_codes);
@@ -87,6 +87,8 @@ __PACKAGE__->_accessorize(
   'preserve_whitespace', # whether to try to keep whitespace as-is
   'strip_verbatim_indent', # What indent to strip from verbatim
 
+  'parse_characters',  # Whether parser should expect chars rather than octets
+
  'content_seen',      # whether we've seen any real Pod content
  'errors_seen',       # TODO: document.  whether we've seen any errors (fatal or not)
 
@@ -109,6 +111,35 @@ __PACKAGE__->_accessorize(
 
 sub any_errata_seen {  # good for using as an exit() value...
   return shift->{'errors_seen'} || 0;
+}
+
+# Returns the encoding only if it was recognized as being handled and set
+sub detected_encoding {
+  return shift->{'detected_encoding'};
+}
+
+sub encoding {
+  my $this = shift;
+  return $this->{'encoding'} unless @_;  # GET.
+
+  $this->_handle_encoding_line("=encoding $_[0]");
+  if ($this->{'_processed_encoding'}) {
+    delete $this->{'_processed_encoding'};
+    if(! $this->{'encoding_command_statuses'} ) {
+      DEBUG > 2 and print " CRAZY ERROR: encoding wasn't really handled?!\n";
+    } elsif( $this->{'encoding_command_statuses'}[-1] ) {
+      $this->scream( "=encoding $_[0]",
+         sprintf "Couldn't do %s: %s",
+         $this->{'encoding_command_reqs'  }[-1],
+         $this->{'encoding_command_statuses'}[-1],
+      );
+    } else {
+      DEBUG > 2 and print " (encoding successfully handled.)\n";
+    }
+    return $this->{'encoding'};
+  } else {
+    return undef;
+  }
 }
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1092,7 +1123,7 @@ sub _treat_Ls {  # Process our dear dear friends, the L<...> sequences
       # Catch some very simple and/or common cases
       if(@{$ell} == 3 and ! ref $ell->[2]) {
         my $it = $ell->[2];
-        if($it =~ m/^[-a-zA-Z0-9]+\([-a-zA-Z0-9]+\)$/s) { # man sections
+        if($it =~ m{^[^/|]+[(][-a-zA-Z0-9]+[)]$}s) { # man sections
           # Hopefully neither too broad nor too restrictive a RE
           DEBUG > 1 and print "Catching \"$it\" as manpage link.\n";
           $ell->[1]{'type'} = 'man';
@@ -1251,7 +1282,7 @@ sub _treat_Ls {  # Process our dear dear friends, the L<...> sequences
       # And the E resolver will have to deal with all our treeletty things:
 
       if(@ell_content == 1 and !ref($ell_content[0])
-         and $ell_content[0] =~ m/^[-a-zA-Z0-9]+\([-a-zA-Z0-9]+\)$/s
+         and $ell_content[0] =~ m{^[^/]+[(][-a-zA-Z0-9]+[)]$}s
       ) {
         $ell->[1]{'type'}    = 'man';
         DEBUG > 3 and print "Considering this ($ell_content[0]) a man link.\n";

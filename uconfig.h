@@ -527,7 +527,7 @@
  *	This symbol, if defined, indicates that the strtol routine is available
  *	to provide better numeric string conversion than atoi() and friends.
  */
-/*#define HAS_STRTOL	/ **/
+#define HAS_STRTOL	/**/
 
 /* HAS_STRXFRM:
  *	This symbol, if defined, indicates that the strxfrm() routine is
@@ -916,13 +916,10 @@
 /* MEM_ALIGNBYTES:
  *	This symbol contains the number of bytes required to align a
  *	double, or a long double when applicable. Usual values are 2,
- *	4 and 8. The default is eight, for safety.
+ *	4 and 8. The default is eight, for safety.  For cross-compiling
+ *  	or multiarch support, Configure will set a minimum of 8.
  */
-#if defined(USE_CROSS_COMPILE) || defined(MULTIARCH)
-#  define MEM_ALIGNBYTES 8
-#else
 #define MEM_ALIGNBYTES 4
-#endif
 
 /* ARCHLIB:
  *	This variable, if defined, holds the name of the directory in
@@ -937,8 +934,8 @@
  *	This symbol contains the ~name expanded version of ARCHLIB, to be used
  *	in programs that are not prepared to deal with ~ expansion at run-time.
  */
-/*#define ARCHLIB "/usr/local/lib/perl5/5.16/unknown"		/ **/
-/*#define ARCHLIB_EXP "/usr/local/lib/perl5/5.16/unknown"		/ **/
+/*#define ARCHLIB "/usr/local/lib/perl5/5.17/unknown"		/ **/
+/*#define ARCHLIB_EXP "/usr/local/lib/perl5/5.17/unknown"		/ **/
 
 /* ARCHNAME:
  *	This symbol holds a string representing the architecture name.
@@ -962,7 +959,7 @@
  */
 #define BIN "/usr/local/bin"	/**/
 #define BIN_EXP "/usr/local/bin"	/**/
-/*#define PERL_RELOCATABLE_INC  		/ **/
+#define PERL_RELOCATABLE_INC "undef" 		/**/
 
 /* INTSIZE:
  *	This symbol contains the value of sizeof(int) so that the C
@@ -2359,9 +2356,21 @@
  *	This symbol, if defined, indicates that the struct sockaddr_in6
  *	structure has a member called sin6_scope_id.
  */
+/* HAS_IP_MREQ:
+ *	This symbol, if defined, indicates the availability of
+ *	struct ip_mreq;
+ */
+/* HAS_IP_MREQ_SOURCE:
+ *	This symbol, if defined, indicates the availability of
+ *	struct ip_mreq_source;
+ */
 /* HAS_IPV6_MREQ:
  *	This symbol, if defined, indicates the availability of
  *	struct ipv6_mreq;
+ */
+/* HAS_IPV6_MREQ_SOURCE:
+ *	This symbol, if defined, indicates the availability of
+ *	struct ipv6_mreq_source;
  */
 /*#define	HAS_SOCKET		/ **/
 /*#define	HAS_SOCKETPAIR	/ **/
@@ -2374,7 +2383,10 @@
 /*#define	HAS_SCM_RIGHTS	/ **/
 /*#define	HAS_SOCKADDR_IN6	/ **/
 /*#define	HAS_SIN6_SCOPE_ID	/ **/
+/*#define	HAS_IP_MREQ	/ **/
+/*#define	HAS_IP_MREQ_SOURCE	/ **/
 /*#define	HAS_IPV6_MREQ	/ **/
+/*#define	HAS_IPV6_MREQ_SOURCE	/ **/
 
 /* HAS_SRAND48_R:
  *	This symbol, if defined, indicates that the srand48_r routine
@@ -2664,7 +2676,12 @@
  *     This symbol, if defined, indicates that this system uses
  *	EBCDIC encoding.
  */
+/* BOOTSTRAP_CHARSET:
+ *     This symbol, if defined, indicates that this system uses
+ *	BOOTSTRAP_CHARSET
+ */
 /*#define	EBCDIC 		/ **/
+/*#define	BOOTSTRAP_CHARSET	/ **/
 
 /* Fpos_t:
  *	This symbol holds the type used to declare file positions in libc.
@@ -3026,8 +3043,8 @@
  *	This symbol contains the ~name expanded version of PRIVLIB, to be used
  *	in programs that are not prepared to deal with ~ expansion at run-time.
  */
-#define PRIVLIB "/usr/local/lib/perl5/5.16"		/**/
-#define PRIVLIB_EXP "/usr/local/lib/perl5/5.16"		/**/
+#define PRIVLIB "/usr/local/lib/perl5/5.17"		/**/
+#define PRIVLIB_EXP "/usr/local/lib/perl5/5.17"		/**/
 
 /* CAN_PROTOTYPE:
  *	If defined, this macro indicates that the C compiler can handle
@@ -3170,8 +3187,8 @@
  *	This symbol contains the ~name expanded version of SITEARCH, to be used
  *	in programs that are not prepared to deal with ~ expansion at run-time.
  */
-/*#define SITEARCH "/usr/local/lib/perl5/5.16/unknown"		/ **/
-/*#define SITEARCH_EXP "/usr/local/lib/perl5/5.16/unknown"		/ **/
+/*#define SITEARCH "/usr/local/lib/perl5/5.17/unknown"		/ **/
+/*#define SITEARCH_EXP "/usr/local/lib/perl5/5.17/unknown"		/ **/
 
 /* SITELIB:
  *	This symbol contains the name of the private library for this package.
@@ -3193,8 +3210,8 @@
  *	removed.  The elements in inc_version_list (inc_version_list.U) can
  *	be tacked onto this variable to generate a list of directories to search.
  */
-#define SITELIB "/usr/local/lib/perl5/5.16"		/**/
-#define SITELIB_EXP "/usr/local/lib/perl5/5.16"		/**/
+#define SITELIB "/usr/local/lib/perl5/5.17"		/**/
+#define SITELIB_EXP "/usr/local/lib/perl5/5.17"		/**/
 #define SITELIB_STEM "/usr/local/lib/perl5"		/**/
 
 /* Size_t_size:
@@ -4734,6 +4751,6 @@
 #endif
 
 /* Generated from:
- * d9b6a68b192c72c0695b560fae6e4916b381f55df5fdf7911b0ef434840f092e config_h.SH
- * 2678333a6d6676f8aa39b7011bf5133dce5be453df10a8d04cb3187103a10caf uconfig.sh
+ * b1b92e181a028e2513e7dbdbd34635c03c0fe82f5e8bbd12e21ed36fc88f91b3 config_h.SH
+ * 6075986ce77cfbce5db9b3b166eff3cbbcdd86773430ccf51391da95b06f51af uconfig.sh
  * ex: set ro: */

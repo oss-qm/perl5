@@ -131,7 +131,7 @@ while (my $line = <$makedefs>) {
   # makedef.pl loses distinction between vars and funcs, so
   # use the start of the name to guess and add specific
   # exceptions when we know about them.
-  if ($line =~ m/^PL_/
+  if ($line =~ m/^(PL_|MallocCfg)/
       || $line eq 'PerlIO_perlio'
       || $line eq 'PerlIO_pending') {
     $vars{$line}++;
@@ -170,6 +170,7 @@ unless ($isgcc) {
     print OPTBLD "PSECT_ATTR=\$GLOBAL_RO_VARS,PIC,NOEXE,RD,NOWRT,SHR\n";
     print OPTBLD "PSECT_ATTR=\$GLOBAL_RW_VARS,PIC,NOEXE,RD,WRT,NOSHR\n";
   }
+  print OPTBLD "PSECT_ATTR=LIB\$INITIALIZE,GBL,NOEXE,NOWRT,NOSHR,LONG\n";
 }
 print OPTBLD "case_sensitive=yes\n" if $care_about_case;
 my $count = 0;
