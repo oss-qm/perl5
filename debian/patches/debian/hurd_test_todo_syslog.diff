@@ -1,4 +1,4 @@
-From 3a2ef3f5110b1246e8da6ef955eac5adf42f5fb4 Mon Sep 17 00:00:00 2001
+From b05daf32a8eebc3deca2fa9e8e3e206ea8274c8b Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 15:11:53 +0000
 Subject: Disable failing GNU/Hurd tests in cpan/Sys-Syslog/t/syslog.t
@@ -8,14 +8,14 @@ Bug-Debian: http://bugs.debian.org/650093
 Patch-Name: debian/hurd_test_todo_syslog.diff
 ---
  cpan/Sys-Syslog/t/syslog.t |   15 ++++++++++++---
- t/porting/customized.dat   |    2 +-
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ t/porting/customized.dat   |    1 +
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/cpan/Sys-Syslog/t/syslog.t b/cpan/Sys-Syslog/t/syslog.t
-index ee136d5..4a34fee 100644
+index 8774677..00743cd 100644
 --- a/cpan/Sys-Syslog/t/syslog.t
 +++ b/cpan/Sys-Syslog/t/syslog.t
-@@ -175,14 +175,20 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
+@@ -177,14 +177,20 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
          # syslog() with level "info" (as a string), should pass
          $r = eval { syslog('info', "$test_string by connecting to a $sock_type socket") } || 0;
          is( $@, '', "[$sock_type] syslog() called with level 'info' (string)" );
@@ -38,7 +38,7 @@ index ee136d5..4a34fee 100644
  
          push @passed, $sock_type;
  
-@@ -191,7 +197,10 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
+@@ -193,7 +199,10 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
              # closelog()
              $r = eval { closelog() } || 0;
              is( $@, '', "[$sock_type] closelog()" );
@@ -51,12 +51,11 @@ index ee136d5..4a34fee 100644
      }
  }
 diff --git a/t/porting/customized.dat b/t/porting/customized.dat
-index f962044..1440435 100644
+index bdb8eb2..edaac53 100644
 --- a/t/porting/customized.dat
 +++ b/t/porting/customized.dat
-@@ -10,4 +10,4 @@ podlators pod/perlpodstyle.pod 4f1ba65eddc5576267954b948556e16a9686c411
- CPANPLUS cpan/CPANPLUS/Makefile.PL 5d533f6722af6aae73204755beb8d6c008fc0d4a
- Text-Tabs+Wrap cpan/Text-Tabs/t/fill.t a960d2c4f66b7e30557b5479e0da2da1bf7a7f45
- Text-Tabs+Wrap cpan/Text-Tabs/t/tabs.t 63a67b3a319c858d7e66306b8a653de1951153dc
--Sys::Syslog cpan/Sys-Syslog/t/syslog.t 647571fc90918883b871ff7e005ed7ab8a223784
-+Sys::Syslog cpan/Sys-Syslog/t/syslog.t cf77a7f20920fa84796b90451afad65661588986
+@@ -14,3 +14,4 @@ libnet cpan/libnet/Makefile.PL 5554b71464b45f5cc002e55f2464f7ff4abd05b6
+ podlators cpan/podlators/scripts/pod2man.PL f81acf53f3ff46cdcc5ebdd661c5d13eb35d20d6
+ podlators cpan/podlators/scripts/pod2text.PL b4693fcfe4a0a1b38a215cfb8985a65d5d025d69
+ Module::Pluggable cpan/Module-Pluggable/Makefile.PL 72062c1a01ed7c62d16c55122c163b2d89f0d739
++Sys::Syslog cpan/Sys-Syslog/t/syslog.t c19ed717821be049fb77a916e3049c1b07f99179

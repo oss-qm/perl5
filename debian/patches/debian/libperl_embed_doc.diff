@@ -1,4 +1,4 @@
-From add884ee99881e97ca6859559b0a6b0f362f10a7 Mon Sep 17 00:00:00 2001
+From 0c4b029ffd98315b07ef7c00572fdbc4891c182a Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Note that libperl-dev package is required for embedded linking

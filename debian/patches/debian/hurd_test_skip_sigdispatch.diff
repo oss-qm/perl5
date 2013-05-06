@@ -1,4 +1,4 @@
-From 4909cd165afe7bfaec5b002e7f0d9a93410e184c Mon Sep 17 00:00:00 2001
+From 967f0662729b660c414a3aec4845290ea2d65191 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 16:15:42 +0000
 Subject: Disable failing GNU/Hurd tests op/sigdispatch.t
@@ -9,22 +9,24 @@ Bug-Debian: http://bugs.debian.org/650188
 
 Patch-Name: debian/hurd_test_skip_sigdispatch.diff
 ---
- t/op/sigdispatch.t |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ t/op/sigdispatch.t |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/t/op/sigdispatch.t b/t/op/sigdispatch.t
-index 8161a71..39c6383 100644
+index 1ce047d..93b1e00 100644
 --- a/t/op/sigdispatch.t
 +++ b/t/op/sigdispatch.t
-@@ -9,7 +9,11 @@ BEGIN {
+@@ -9,8 +9,12 @@ BEGIN {
  use strict;
  use Config;
  
--plan tests => 26;
+-plan tests => 29;
+-$| = 1;
 +if ($^O eq 'gnu') {
 +    skip_all 'fails on GNU/Hurd (Debian #650188)' if $^O eq 'gnu';
 +} else {
-+    plan tests => 26;
++    plan tests => 29;
++    $| = 1;
 +}
  
  watchdog(15);

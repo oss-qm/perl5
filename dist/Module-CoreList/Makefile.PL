@@ -9,9 +9,11 @@ WriteMakefile
     'VERSION_FROM' => 'lib/Module/CoreList.pm',
     'ABSTRACT_FROM' => 'lib/Module/CoreList.pod',
     'PREREQ_PM' => {
-	'Test::More' => '0',
+        'Test::More' => '0',
+        'List::Util' => 0,
     },
     'EXE_FILES' => [ _scripts() ],
+    'INSTALLDIRS' => ($] < 5.011 ? 'perl' : 'site'),
     'PL_FILES' => {},
     LICENSE => 'perl',
     @extra,

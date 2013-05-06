@@ -28,7 +28,7 @@
 # See Porting/pumpkin.pod for more information on metaconfig.
 #
 
-# Generated on Sun Apr  1 12:00:35 CEST 2012 [metaconfig 3.5 PL0]
+# Generated on Sat Mar  9 20:33:06 CET 2013 [metaconfig 3.5 PL0]
 # (with additional metaconfig patches by perlbug@perl.org)
 
 cat >c1$$ <<EOF
@@ -332,6 +332,7 @@ d_archlib=''
 installarchlib=''
 archname=''
 myarchname=''
+useversionedarchname=''
 d_atolf=''
 d_atoll=''
 baserev=''
@@ -723,7 +724,10 @@ d_snprintf=''
 d_vsnprintf=''
 d_sockatmark=''
 d_sockatmarkproto=''
+d_ip_mreq=''
+d_ip_mreq_source=''
 d_ipv6_mreq=''
+d_ipv6_mreq_source=''
 d_msg_ctrunc=''
 d_msg_dontroute=''
 d_msg_oob=''
@@ -847,6 +851,7 @@ ld_can_script=''
 lddlflags=''
 usedl=''
 doublesize=''
+bootstrap_charset=''
 ebcdic=''
 fflushNULL=''
 fflushall=''
@@ -3096,9 +3101,13 @@ case "$config_sh" in
 '')
 myuname=`$uname -a 2>/dev/null`
 $test -z "$myuname" && myuname=`hostname 2>/dev/null`
+# Downcase everything to avoid ambiguity.
+# Remove slashes and single quotes so we can use parts of this in 
+# directory and file names.
+# Remove newlines so myuname is sane to use elsewhere.
 # tr '[A-Z]' '[a-z]' would not work in EBCDIC
 # because the A-Z/a-z are not consecutive.
-myuname=`echo $myuname | $sed -e 's/^[^=]*=//' -e "s,['/],,g" | \
+myuname=`echo $myuname | $sed -e "s,['/],,g" | \
 	./tr '[A-Z]' '[a-z]' | $tr $trnl ' '`
 newmyuname="$myuname"
 dflt=n
@@ -6013,6 +6022,32 @@ esac
 rp='What is your architecture name'
 . ./myread
 archname="$ans"
+
+: optionally add api version to the architecture for versioned archlibs
+case "$useversionedarchname" in
+$define|true|[yY]*) dflt='y';;
+*)                  dflt='n';;
+esac
+rp='Add the Perl API version to your archname?'
+. ./myread
+case "$ans" in
+y|Y)	useversionedarchname="$define" ;;
+*)      useversionedarchname="$undef" ;;
+esac
+case "$useversionedarchname" in
+$define)
+        case "$archname" in
+        *-$api_versionstring)
+                echo "...and architecture name already has -$api_versionstring" >&4
+                ;;
+        *)
+                archname="$archname-$api_versionstring"
+                echo "...setting architecture name to $archname." >&4
+                ;;
+        esac
+        ;;
+esac
+
 case "$usethreads" in
 $define)
 	echo "Threads selected." >&4
@@ -8004,7 +8039,6 @@ use no flags, say "none".
 EOM
     case "$lddlflags" in
     '') case "$osname" in
-  			beos) dflt='-nostart' ;;
   			haiku) dflt='-shared' ;;
 			hpux) dflt='-b';
 			      case "$gccversion" in
@@ -8127,7 +8161,7 @@ $undef)
 	;;
 *)	case "$useshrplib" in
 	'')	case "$osname" in
-		svr4*|nonstopux|dgux|dynixptx|esix|powerux|beos|haiku|cygwin*)
+		svr4*|nonstopux|dgux|dynixptx|esix|powerux|haiku|cygwin*)
 			dflt=y
 			also='Building a shared libperl is required for dynamic loading to work on your system.'
 			;;
@@ -8297,9 +8331,6 @@ if "$useshrplib"; then
 		;;
 	next)
 		# next doesn't like the default...
-		;;
-	beos)
-		# beos doesn't like the default, either.
 		;;
 	haiku)
 		# Haiku doesn't like the default, either.
@@ -8835,9 +8866,13 @@ your organization...
 EOM
 cont=x
 while test "$cont"; do
+	case "$MAILDOMAIN" in
+	'') maildomain="$myhostname$mydomain";;
+	*)  maildomain="$MAILDOMAIN";;
+	esac
 	case "$cf_email" in
-	'') dflt="$cf_by@$myhostname$mydomain";;
-	*) dflt="$cf_email";;
+	'') dflt="$cf_by@$maildomain";;
+	*)  dflt="$cf_email";;
 	esac
 	rp='What is your e-mail address?'
 	. ./myread
@@ -10847,6 +10882,7 @@ chmod +x varargs
 : now check which varargs header should be included
 echo " "
 i_varhdr=''
+val=''
 case "$valstd" in
 "$define")
 	if `./varargs I_STDARG`; then
@@ -10863,6 +10899,15 @@ case "$valstd" in
 esac
 case "$val" in
 '')
+	echo " "
+	echo "*** WHOA THERE!!! ***" >&4
+	echo "    Your C compiler \"$cc\" doesn't seem to support stdarg or varargs!" >&4
+	case "$knowitall" in
+	'')
+	echo "    I'm giving up; maybe you can try again with a different compiler?" >&4
+		exit 1
+		;;
+	esac
 echo "I could not find the definition for va_dcl... You have problems..." >&4
 	val="$undef"; set i_stdarg; eval $setvar
 	val="$undef"; set i_varargs; eval $setvar
@@ -11370,6 +11415,42 @@ set d_sin6_scope_id; eval $setvar
 $rm_try
 
 echo " "
+echo "Checking the availability struct ip_mreq ..." >&4
+$cat >try.c <<EOF
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main() {
+struct ip_mreq mreq;
+return (mreq.imr_multiaddr.s_addr);
+}
+EOF
+val="$undef"
+set try; if eval $compile; then
+       val="$define"
+fi
+set d_ip_mreq; eval $setvar
+$rm_try
+
+echo " "
+echo "Checking the availability struct ip_mreq_source ..." >&4
+$cat >try.c <<EOF
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main() {
+struct ip_mreq_source mreq;
+return (mreq.imr_multiaddr.s_addr);
+}
+EOF
+val="$undef"
+set try; if eval $compile; then
+       val="$define"
+fi
+set d_ip_mreq_source; eval $setvar
+$rm_try
+
+echo " "
 echo "Checking the availability struct ipv6_mreq ..." >&4
 $cat >try.c <<EOF
 #include <sys/types.h>
@@ -11385,6 +11466,24 @@ set try; if eval $compile; then
 	val="$define"
 fi
 set d_ipv6_mreq; eval $setvar
+$rm_try
+
+echo " "
+echo "Checking the availability struct ipv6_mreq_source ..." >&4
+$cat >try.c <<EOF
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main() {
+struct ipv6_mreq_source mreq;
+return (mreq.imr_multiaddr.s_addr);
+}
+EOF
+val="$undef"
+set try; if eval $compile; then
+       val="$define"
+fi
+set d_ipv6_mreq_source; eval $setvar
 $rm_try
 
 echo " "
@@ -15010,9 +15109,9 @@ $cat >isblank.c <<'EOCP'
 int main() {
 	int c = ' ';
 	if (isblank(c))
-		exit(0);
+		return 0 ;
 	else
-		exit(1);
+		return 1 ;
 }
 EOCP
 if $cc $ccflags $ldflags -o isblank isblank.c $libs >/dev/null 2>&1 ; then
@@ -18654,7 +18753,7 @@ eval $setvar
 
 : Check if is a multiplatform env
 case "$osname" in
-next|rhapsody|darwin) multiarch="$define" ;;
+next|darwin) multiarch="$define" ;;
 esac
 case "$multiarch" in
 ''|[nN]*) multiarch="$undef" ;;
@@ -18964,11 +19063,10 @@ Revision='$Revision'
 
 : check for alignment requirements
 echo " "
-case "$usecrosscompile$multiarch" in
+case "$usecrosscompile" in
 *$define*)
 	$cat <<EOM
-You seem to be either cross-compiling or doing a multiarchitecture build,
-skipping the memory alignment check.
+You seem to be cross-compiling.  Skipping the memory alignment check.
 
 EOM
 	case "$alignbytes" in
@@ -19006,6 +19104,17 @@ EOCP
 			dflt='8'
 			echo "(I can't seem to compile the test program...)"
 		fi
+		case "$multiarch" in
+		*$define*)
+			: The usual safe value is 8, but Darwin with -Duselongdouble
+			: needs 16.  Hence, we will take 8 as a minimum, but allow
+			: Configure to pick a larger value if needed.
+			if $test "$dflt" -lt 8; then
+			    dflt='8'
+				echo "Setting alignment to 8 for multiarch support.">&4
+			fi
+			;;
+		esac
 		;;
 	*) dflt="$alignbytes"
 		;;
@@ -19020,6 +19129,39 @@ esac
 
 : set the base revision
 baserev=5.0
+
+: Determine if this is an EBCDIC system
+echo " "
+echo "Determining whether or not we are on an EBCDIC system..." >&4
+$cat >try.c <<'EOM'
+int main()
+{
+  if ('M'==0xd4) return 0;
+  return 1;
+}
+EOM
+
+case "$BOOTSTRAP_CHARSET" in
+    Y|y|define) bootstrap_charset=$define	;;
+    *)		bootstrap_charset=$undef	;;
+esac
+
+val=$undef
+set try
+if eval $compile_ok; then
+	if $run ./try; then
+		echo "You seem to speak EBCDIC." >&4
+		val="$define"
+	else
+		echo "Nope, no EBCDIC, probably ASCII or some ISO Latin. Or UTF-8." >&4
+	fi
+else
+	echo "I'm unable to compile the test program." >&4
+	echo "I'll assume ASCII or some ISO Latin. Or UTF8." >&4
+fi
+$rm_try
+set ebcdic
+eval $setvar
 
 : length of character in bytes. Is always 1, otherwise it isnt C
 : This used to be a test using sizeof
@@ -19365,9 +19507,9 @@ echo "Checking to see how many bits your $randfunc() function produces..." >&4
 #endif
 int main()
 {
-	register int i;
-	register unsigned long tmp;
-	register unsigned long max = 0L;
+	int i;
+	unsigned long tmp;
+	unsigned long max = 0L;
 
 	for (i = 1000; i; i--) {
 		tmp = (unsigned long) $randfunc();
@@ -19417,34 +19559,6 @@ EOCP
 		;;
 	esac
 done
-
-: Determine if this is an EBCDIC system
-echo " "
-echo "Determining whether or not we are on an EBCDIC system..." >&4
-$cat >try.c <<'EOM'
-int main()
-{
-  if ('M'==0xd4) return 0;
-  return 1;
-}
-EOM
-
-val=$undef
-set try
-if eval $compile_ok; then
-	if $run ./try; then
-		echo "You seem to speak EBCDIC." >&4
-		val="$define"
-	else
-		echo "Nope, no EBCDIC, probably ASCII or some ISO Latin. Or UTF-8." >&4
-	fi
-else
-	echo "I'm unable to compile the test program." >&4
-	echo "I'll assume ASCII or some ISO Latin. Or UTF8." >&4
-fi
-$rm_try
-set ebcdic
-eval $setvar
 
 : Check how to flush
 echo " "
@@ -20247,6 +20361,7 @@ EOCP
 	$rm_try
 	;;
 *)	echo "You don't have <stdarg.h>, not checking for va_copy()." >&4
+	need_va_copy="$undef"
 	;;
 esac
 
@@ -20404,9 +20519,9 @@ case "$pager" in
 	esac
 	;;
 *)	dflt="$pager"
-	fn="f/($pager)"
 	;;
 esac
+fn="f/($dflt)"
 echo " "
 rp='What pager is used on your system?'
 . ./getfile
@@ -21534,7 +21649,7 @@ EOM
 
 val=$undef
 set try
-if eval $compile_ok; then
+if eval $compile; then
 	if $run ./try; then
 		echo "You can use sysctl with KERN_PROC_PATHNAME to find the executing program." >&4
 		val="$define"
@@ -21636,7 +21751,7 @@ EOM
 
 val=$undef
 set try
-if eval $compile_ok; then
+if eval $compile; then
 	if $run ./try; then
 		echo "You can use _NSGetExecutablePath to find the executing program." >&4
 		val="$define"
@@ -21935,15 +22050,16 @@ $cc -o try -Dcpp_stuff=$cpp_stuff $optimize \$ccflags $ldflags try.c $libs && $r
 EOSH
 chmod +x Cppsym.try
 $eunicefix Cppsym.try
-./Cppsym < Cppsym.know > Cppsym.true
+./Cppsym < Cppsym.know | $sort | $uniq > Cppsym.true
 : Add in any linux cpp "predefined macros":
 case "$osname::$gccversion" in
   *linux*::*.*|*gnukfreebsd*::*.*|gnu::*.*)
     tHdrH=_tmpHdr
     rm -f $tHdrH'.h' $tHdrH
     touch $tHdrH'.h'
+    # Filter out macro arguments, such as Linux's __INT8_C(c)
     if $cpp -dM $tHdrH'.h' > $tHdrH'_cppsym.h' && [ -s $tHdrH'_cppsym.h' ]; then
-       sed 's/#define[\ \  ]*//;s/[\ \     ].*$//' <$tHdrH'_cppsym.h' >$tHdrH'_cppsym.real'
+       sed -e 's/#define[\ \  ]*//;s/[\ \     ].*$//' -e 's/(.*//' <$tHdrH'_cppsym.h' >$tHdrH'_cppsym.real'
        if [ -s $tHdrH'_cppsym.real' ]; then
 	  cat $tHdrH'_cppsym.real' Cppsym.know | sort | uniq | ./Cppsym | sort | uniq > Cppsym.true
        fi
@@ -22383,12 +22499,7 @@ for xxx in $known_extensions ; do
 		;;
 	Socket|socket)
 		case "$d_socket" in
-		true|$define|y)
-		    case "$osname" in
-		    beos) ;; # not unless BONE
-		    *) avail_ext="$avail_ext $xxx" ;;
-		    esac
-		    ;;
+		true|$define|y) avail_ext="$avail_ext $xxx" ;;
 		esac
 		;;
 	Sys/Syslog|sys/syslog)
@@ -22784,6 +22895,7 @@ bin='$bin'
 bin_ELF='$bin_ELF'
 binexp='$binexp'
 bison='$bison'
+bootstrap_charset='$bootstrap_charset'
 byacc='$byacc'
 byteorder='$byteorder'
 c='$c'
@@ -23021,7 +23133,10 @@ d_inetaton='$d_inetaton'
 d_inetntop='$d_inetntop'
 d_inetpton='$d_inetpton'
 d_int64_t='$d_int64_t'
+d_ip_mreq='$d_ip_mreq'
+d_ip_mreq_source='$d_ip_mreq_source'
 d_ipv6_mreq='$d_ipv6_mreq'
+d_ipv6_mreq_source='$d_ipv6_mreq_source'
 d_isascii='$d_isascii'
 d_isblank='$d_isblank'
 d_isfinite='$d_isfinite'
@@ -23792,6 +23907,7 @@ usesitecustomize='$usesitecustomize'
 usesocks='$usesocks'
 usethreads='$usethreads'
 usevendorprefix='$usevendorprefix'
+useversionedarchname='$useversionedarchname'
 usevfork='$usevfork'
 usrinc='$usrinc'
 uuname='$uuname'

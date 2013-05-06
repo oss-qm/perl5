@@ -12,7 +12,7 @@ BEGIN {
     skip_all_without_config('d_fork');
 }
 
-plan tests => 84;
+plan tests => 94;
 
 my $STDOUT = tempfile();
 my $STDERR = tempfile();
@@ -53,7 +53,7 @@ sub runperl_and_capture {
     }
     open STDOUT, '>', $STDOUT or exit $FAILURE_CODE;
     open STDERR, '>', $STDERR and do { exec $PERL, @$args };
-    # it didn't_work:
+    # it did not work:
     print STDOUT "IWHCWJIHCI\cNHJWCJQWKJQJWCQW\n";
     exit $FAILURE_CODE;
   }
@@ -63,8 +63,21 @@ sub try {
   my ($env, $args, $stdout, $stderr) = @_;
   my ($actual_stdout, $actual_stderr) = runperl_and_capture($env, $args);
   local $::Level = $::Level + 1;
-  is ($stdout, $actual_stdout);
-  is ($stderr, $actual_stderr);
+  my @envpairs = ();
+  for my $k (sort keys %$env) {
+    push @envpairs, "$k => $env->{$k}";
+  }
+  my $label = join(',' => (@envpairs, @$args));
+  if (ref $stdout) {
+    ok ( $actual_stdout =~/$stdout/, $label . ' stdout' );
+  } else {
+    is ( $actual_stdout, $stdout, $label . ' stdout' );
+  }
+  if (ref $stderr) {
+    ok ( $actual_stderr =~/$stderr/, $label . ' stderr' );
+  } else {
+    is ( $actual_stderr, $stderr, $label . ' stderr' );
+  }
 }
 
 #  PERL5OPT    Command-line options (switches).  Switches in
@@ -191,6 +204,30 @@ try({PERL5LIB => "foo",
     '',
     '');
 
+try({PERL_HASH_SEED_DEBUG => 1},
+    ['-e','1'],
+    '',
+    qr/HASH_FUNCTION =/);
+
+try({PERL_HASH_SEED_DEBUG => 1},
+    ['-e','1'],
+    '',
+    qr/HASH_SEED =/);
+
+try({PERL_HASH_SEED_DEBUG => 1, PERL_HASH_SEED => "12345678"},
+    ['-e','1'],
+    '',
+    qr/HASH_SEED = 0x12345678/);
+
+try({PERL_HASH_SEED_DEBUG => 1, PERL_HASH_SEED => "12"},
+    ['-e','1'],
+    '',
+    qr/HASH_SEED = 0x12000000/);
+
+try({PERL_HASH_SEED_DEBUG => 1, PERL_HASH_SEED => "123456789"},
+    ['-e','1'],
+    '',
+    qr/HASH_SEED = 0x12345678/);
 # Tests for S_incpush_use_sep():
 
 my @dump_inc = ('-e', 'print "$_\n" foreach @INC');

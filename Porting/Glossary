@@ -164,6 +164,10 @@ bison (Loc.U):
 	full pathname (if any) of the bison program.  After Configure runs,
 	the value is reset to a plain "bison" and is not useful.
 
+bootstrap_charset (ebcdic.U):
+	This variable conditionally defines BOOTSTRAP_CHARSET if
+	this system uses non-ASCII encoding.
+
 byacc (Loc.U):
 	This variable is used internally by Configure to determine the
 	full pathname (if any) of the byacc program.  After Configure runs,
@@ -1271,9 +1275,21 @@ d_inetpton (d_inetpton.U):
 d_int64_t (d_int64_t.U):
 	This symbol will be defined if the C compiler supports int64_t.
 
+d_ip_mreq (d_socket.U):
+	This variable conditionally defines the HAS_IP_MREQ symbol, which
+	indicates the availability of a struct ip_mreq.
+
+d_ip_mreq_source (d_socket.U):
+	This variable conditionally defines the HAS_IP_MREQ_SOURCE symbol,
+	which indicates the availability of a struct ip_mreq_source.
+
 d_ipv6_mreq (d_socket.U):
 	This variable conditionally defines the HAS_IPV6_MREQ symbol, which
 	indicates the availability of a struct ipv6_mreq.
+
+d_ipv6_mreq_source (d_socket.U):
+	This variable conditionally defines the HAS_IPV6_MREQ_SOURCE symbol,
+	which indicates the availability of a struct ipv6_mreq_source.
 
 d_isascii (d_isascii.U):
 	This variable conditionally defines the HAS_ISASCII constant,
@@ -5135,6 +5151,10 @@ usethreads (usethreads.U):
 usevendorprefix (vendorprefix.U):
 	This variable tells whether the vendorprefix
 	and consequently other vendor* paths are in use.
+
+useversionedarchname (archname.U):
+	This variable indicates whether to include the $api_versionstring
+	as a component of the $archname.
 
 usevfork (d_vfork.U):
 	This variable is set to true when the user accepts to use vfork.

@@ -1,4 +1,4 @@
-From ff514131ad8d18fd1bdefc8a0f569f9cbd4fe5d8 Mon Sep 17 00:00:00 2001
+From c569c461afbe126e99bcbbdf3d0844a82695d472 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts
@@ -20,7 +20,7 @@ Patch-Name: debian/squelch-locale-warnings.diff
  2 files changed, 12 insertions(+)
 
 diff --git a/locale.c b/locale.c
-index b7a78fb..8fbd7b1 100644
+index c10228d..5e171d0 100644
 --- a/locale.c
 +++ b/locale.c
 @@ -356,6 +356,10 @@ Perl_init_i18nl10n(pTHX_ int printwarn)
@@ -35,10 +35,10 @@ index b7a78fb..8fbd7b1 100644
  
  	if (locwarn) {
 diff --git a/pod/perllocale.pod b/pod/perllocale.pod
-index 90543ef..6358629 100644
+index 052db49..39a9f2a 100644
 --- a/pod/perllocale.pod
 +++ b/pod/perllocale.pod
-@@ -964,6 +964,14 @@ B<NOTE>: PERL_BADLANG only gives you a way to hide the warning message.
+@@ -965,6 +965,14 @@ B<NOTE>: PERL_BADLANG only gives you a way to hide the warning message.
  The message tells about some problem in your system's locale support,
  and you should investigate what the problem is.
  

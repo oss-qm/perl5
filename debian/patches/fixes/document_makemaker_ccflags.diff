@@ -1,4 +1,4 @@
-From a8c6d3e5d7081bbd8454a0778e7eb6924392fd49 Mon Sep 17 00:00:00 2001
+From ba53c22fadd06326e7c32b94cae886d3c6ab92d7 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 30 May 2011 22:54:24 +0300
 Subject: Document that CCFLAGS should include $Config{ccflags}
@@ -15,10 +15,10 @@ Patch-Name: fixes/document_makemaker_ccflags.diff
  1 file changed, 4 insertions(+)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
-index 3885ab0..8d22ca0 100644
+index f271ef7..e593aa4 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
-@@ -1550,6 +1550,10 @@ currently used by MakeMaker but may be handy in Makefile.PLs.
+@@ -1571,6 +1571,10 @@ currently used by MakeMaker but may be handy in Makefile.PLs.
  String that will be included in the compiler call command line between
  the arguments INC and OPTIMIZE.
  

@@ -1,4 +1,4 @@
-From dce844dc86f9bb782bf1c9e3c2e91009dd89a9a0 Mon Sep 17 00:00:00 2001
+From 8b280bf8d03e08d097eae111e13655280b90ce58 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Postpone LD_LIBRARY_PATH evaluation to the binary targets.
@@ -12,28 +12,26 @@ rule where the Makefile is created, but is for the clean/binary* targets.
 
 Patch-Name: debian/fakeroot.diff
 ---
- Makefile.SH |    9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ Makefile.SH |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/Makefile.SH b/Makefile.SH
-index d1da0a0..55f8cbd 100755
+index 93c7385..8f713b1 100755
 --- a/Makefile.SH
 +++ b/Makefile.SH
-@@ -36,12 +36,7 @@ case "$useshrplib" in
+@@ -47,10 +47,7 @@ case "$useshrplib" in
  true)
  	# Prefix all runs of 'miniperl' and 'perl' with
  	# $ldlibpth so that ./perl finds *this* shared libperl.
 -	case "$LD_LIBRARY_PATH" in
--	'')
--		ldlibpth="LD_LIBRARY_PATH=`pwd`";;
--	*)
--		ldlibpth="LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}";;
+-	'')  ldlibpth="LD_LIBRARY_PATH=$( quote "`pwd`" )" ;;
+-	*)   ldlibpth="LD_LIBRARY_PATH=$( quote "`pwd`" ):$( quote "$LD_LIBRARY_PATH" )" ;;
 -	esac
 +	ldlibpth=LD_LIBRARY_PATH=`pwd`'$${LD_LIBRARY_PATH:+:}$$LD_LIBRARY_PATH'
  
  	pldlflags="$cccdlflags"
  	static_ldflags=''
-@@ -112,7 +107,7 @@ true)
+@@ -121,7 +118,7 @@ true)
  	    ;;
  	esac
  	case "$ldlibpthname" in

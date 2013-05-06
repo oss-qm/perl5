@@ -1,4 +1,4 @@
-From 0174b46cdf5f79093e5164799ce7680e2fe36577 Mon Sep 17 00:00:00 2001
+From 5471ed66eee2932da8f0e3be7a810e8657070b78 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Fiddle with *PREFIX and variables written to the makefile
@@ -17,7 +17,7 @@ Patch-Name: debian/prefix_changes.diff
  4 files changed, 13 insertions(+), 16 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
-index fd85612..909a78d 100644
+index b37ee43..1df9b87 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 @@ -758,8 +758,6 @@ all POD files in MAN1PODS and MAN3PODS.
@@ -38,7 +38,7 @@ index fd85612..909a78d 100644
  CMD
      }
  
-@@ -1681,9 +1679,11 @@ sub init_INSTALL_from_PREFIX {
+@@ -1718,9 +1716,11 @@ sub init_INSTALL_from_PREFIX {
          $self->{SITEPREFIX}   ||= $sprefix;
          $self->{VENDORPREFIX} ||= $vprefix;
  
@@ -54,19 +54,19 @@ index fd85612..909a78d 100644
  
      my $arch    = $Config{archname};
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index f66720f..24a80e9 100644
+index 5c592c3..02b1f97 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -2984,8 +2984,7 @@ sub prefixify {
-     print STDERR "  prefixify $var => $path\n" if $Verbose >= 2;
-     print STDERR "    from $sprefix to $rprefix\n" if $Verbose >= 2;
+@@ -2945,8 +2945,7 @@ sub prefixify {
+     warn "  prefixify $var => $path\n" if $Verbose >= 2;
+     warn "    from $sprefix to $rprefix\n" if $Verbose >= 2;
  
 -    if( $self->{ARGS}{PREFIX} &&
 -        $path !~ s{^\Q$sprefix\E\b}{$rprefix}s ) 
 +    if( $path !~ s{^\Q$sprefix\E\b}{$rprefix}s && $self->{ARGS}{PREFIX} )
      {
  
-         print STDERR "    cannot prefix, using default.\n" if $Verbose >= 2;
+         warn "    cannot prefix, using default.\n" if $Verbose >= 2;
 diff --git a/cpan/ExtUtils-MakeMaker/t/INST.t b/cpan/ExtUtils-MakeMaker/t/INST.t
 index b5ece3e..83fa699 100644
 --- a/cpan/ExtUtils-MakeMaker/t/INST.t

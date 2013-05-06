@@ -24,7 +24,7 @@ require IO::Socket::UNIX if ($^O ne 'epoc' && $^O ne 'symbian');
 
 @ISA = qw(IO::Handle);
 
-$VERSION = "1.34";
+$VERSION = "1.35";
 
 @EXPORT_OK = qw(sockatmark);
 
@@ -249,6 +249,8 @@ sub accept {
     $peer = accept($new,$sock)
 	or return;
 
+    ${*$new}{$_} = ${*$sock}{$_} for qw( io_socket_domain io_socket_type io_socket_proto );
+
     return wantarray ? ($new, $peer)
     	      	     : $new;
 }
@@ -352,7 +354,7 @@ sub sockdomain {
     if (!defined(${*$sock}{'io_socket_domain'})) {
 	my $addr = $sock->sockname();
 	${*$sock}{'io_socket_domain'} = sockaddr_family($addr)
-	   if (defined($addr));
+	    if (defined($addr));
     }
     ${*$sock}{'io_socket_domain'};
 }
@@ -537,6 +539,12 @@ called with an argument the current setting is changed and the previous
 value returned.
 
 =back
+
+=head1 LIMITATIONS
+
+On some systems, for an IO::Socket object created with new_from_fd(),
+or created with accept() from such an object, the protocol(),
+sockdomain() and socktype() methods may return undef.
 
 =head1 SEE ALSO
 

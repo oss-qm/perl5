@@ -93,7 +93,7 @@ The keys of a hash are B<never> tainted.
 For example:
 
     $arg = shift;		# $arg is tainted
-    $hid = $arg, 'bar';		# $hid is also tainted
+    $hid = $arg . 'bar';	# $hid is also tainted
     $line = <>;			# Tainted
     $line = <STDIN>;		# Also tainted
     open FOO, "/home/me/bar" or die $!;
@@ -134,10 +134,8 @@ For example:
     @files = <*.c>;		# insecure (uses readdir() or similar)
     @files = glob('*.c');	# insecure (uses readdir() or similar)
 
-    # In Perl releases older than 5.6.0 the <*.c> and glob('*.c') would
-    # have used an external program to do the filename expansion; but in
-    # either case the result is tainted since the list of filenames comes
-    # from outside of the program.
+    # In either case, the results of glob are tainted, since the list of
+    # filenames comes from outside of the program.
 
     $bad = ($arg, 23);		# $bad will be tainted
     $arg, `true`;		# Insecure (although it isn't really)
@@ -478,6 +476,22 @@ One possible reason for wanting to emulate the old behaviour is that in the
 new behaviour consecutive runs of Perl will order hash keys differently,
 which may confuse some applications (like Data::Dumper: the outputs of two
 different runs are no longer identical).
+
+In Perl 5.18.0 the rehash mechanism has been removed, and replaced by
+true randomization similar to that used in 5.8.1. Additionally measures
+have been taken to ensure that C<keys>, C<values>, and C<each> return items
+in a per-hash randomized order. Modifying a hash by insertion is
+guaranteed to change the iteration order. Combined with a hardened
+hash function we believe that discovery attacks on the hash seed
+are very unlikely.  This traversal randomization cannot be disabled,
+and is unaffected by the value of PERL_HASH_SEED.
+
+In addition to these measures, as of Perl 5.18.0 the source code includes
+multiple hash algorithms to choose from.  While we believe that the
+default perl hash is robust to attack we have included the hash function
+Siphash as a fallback option; at the time of release of Perl 5.18.0 Siphash
+is believed to be of cryptographic strength.  This is not the default as it
+is much slower than the default hash.
 
 B<Perl has never guaranteed any ordering of the hash keys>, and the
 ordering has already changed several times during the lifetime of

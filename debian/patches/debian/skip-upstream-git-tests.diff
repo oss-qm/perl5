@@ -1,4 +1,4 @@
-From 5d6ccc4dc28929d4ac79f3c02b2ada39da3be259 Mon Sep 17 00:00:00 2001
+From 1953fb74b5efdcf0b4516baca3d20b0ee0090587 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 22 Apr 2011 11:15:32 +0300
 Subject: Skip tests specific to the upstream Git repository
@@ -10,20 +10,20 @@ Skip the tests altogether even if the .git directory exists.
 
 Patch-Name: debian/skip-upstream-git-tests.diff
 ---
- t/test.pl |   29 +----------------------------
- 1 file changed, 1 insertion(+), 28 deletions(-)
+ t/test.pl |   33 +--------------------------------
+ 1 file changed, 1 insertion(+), 32 deletions(-)
 
 diff --git a/t/test.pl b/t/test.pl
-index b33c634..f6c5c7e 100644
+index e141b91..0593443 100644
 --- a/t/test.pl
 +++ b/t/test.pl
-@@ -153,34 +153,7 @@ sub skip_all_without_config {
+@@ -158,38 +158,7 @@ sub skip_all_without_config {
  }
  
  sub find_git_or_skip {
--    my ($found_dir, $reason);
+-    my ($source_dir, $reason);
 -    if (-d '.git') {
--	$found_dir = 1;
+-	$source_dir = '.';
 -    } elsif (-l 'MANIFEST' && -l 'AUTHORS') {
 -	my $where = readlink 'MANIFEST';
 -	die "Can't readling MANIFEST: $!" unless defined $where;
@@ -31,16 +31,20 @@ index b33c634..f6c5c7e 100644
 -	    unless $where =~ s!/MANIFEST\z!!;
 -	if (-d "$where/.git") {
 -	    # Looks like we are in a symlink tree
--	    chdir $where or die "Can't chdir '$where': $!";
--	    note("Found source tree at $where");
--	    $found_dir = 1;
+-	    if (exists $ENV{GIT_DIR}) {
+-		diag("Found source tree at $where, but \$ENV{GIT_DIR} is $ENV{GIT_DIR}. Not changing it");
+-	    } else {
+-		note("Found source tree at $where, setting \$ENV{GIT_DIR}");
+-		$ENV{GIT_DIR} = "$where/.git";
+-	    }
+-	    $source_dir = $where;
 -	}
 -    }
--    if ($found_dir) {
+-    if ($source_dir) {
 -	my $version_string = `git --version`;
 -	if (defined $version_string
 -	      && $version_string =~ /\Agit version (\d+\.\d+\.\d+)(.*)/) {
--	    return if eval "v$1 ge v1.5.0";
+-	    return $source_dir if eval "v$1 ge v1.5.0";
 -	    # If you have earlier than 1.5.0 and it works, change this test
 -	    $reason = "in git checkout, but git version '$1$2' too old";
 -	} else {
