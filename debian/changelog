@@ -15,6 +15,7 @@ perl (5.17.11-1) UNRELEASED; urgency=low
 
   [ Niko Tyni ]
   * Update debian/copyright for 5.17.11.
+  * Fix a few false positive format-security warnings from gcc.
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 23 Mar 2013 18:34:59 +0200
 

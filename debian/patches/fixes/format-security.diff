@@ -1,0 +1,94 @@
+From 23f39505b32db1c0ecf3f3cfa3445dc915ac1fa3 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Thu, 9 May 2013 16:23:57 +0300
+Subject: Fix -Wformat-security issues
+
+Building with -Accflags="-Wformat -Werror=format-security"
+triggers format string warnings from gcc.
+
+As gcc can't tell that all the strings are constant here,
+explicitly pass separate format strings to make it happy.
+
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=117893
+Patch-Name: fixes/format-security.diff
+---
+ doio.c   |    4 ++--
+ pp.c     |    4 ++--
+ pp_ctl.c |    6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/doio.c b/doio.c
+index 4e8d48a..674f634 100644
+--- a/doio.c
++++ b/doio.c
+@@ -1339,7 +1339,7 @@ Perl_my_lstat_flags(pTHX_ const U32 flags)
+     if (PL_op->op_flags & OPf_REF) {
+ 	if (cGVOP_gv == PL_defgv) {
+ 	    if (PL_laststype != OP_LSTAT)
+-		Perl_croak(aTHX_ no_prev_lstat);
++		Perl_croak(aTHX_ "%s", no_prev_lstat);
+ 	    return PL_laststatval;
+ 	}
+ 	PL_laststatval = -1;
+@@ -1353,7 +1353,7 @@ Perl_my_lstat_flags(pTHX_ const U32 flags)
+     if ((PL_op->op_private & (OPpFT_STACKED|OPpFT_AFTER_t))
+ 	     == OPpFT_STACKED) {
+       if (PL_laststype != OP_LSTAT)
+-	Perl_croak(aTHX_ no_prev_lstat);
++	Perl_croak(aTHX_ "%s", no_prev_lstat);
+       return PL_laststatval;
+     } 
+ 
+diff --git a/pp.c b/pp.c
+index 6da9970..ed6fd5f 100644
+--- a/pp.c
++++ b/pp.c
+@@ -1654,7 +1654,7 @@ PP(pp_repeat)
+ 	MEM_WRAP_CHECK_1(max, SV*, oom_list_extend);
+ 	/* Did the max computation overflow? */
+ 	if (items > 0 && max > 0 && (max < items || max < count))
+-	   Perl_croak(aTHX_ oom_list_extend);
++	   Perl_croak(aTHX_ "%s", oom_list_extend);
+ 	MEXTEND(MARK, max);
+ 	if (count > 1) {
+ 	    while (SP > MARK) {
+@@ -1712,7 +1712,7 @@ PP(pp_repeat)
+ 	    else {
+ 		const STRLEN max = (UV)count * len;
+ 		if (len > MEM_SIZE_MAX / count)
+-		     Perl_croak(aTHX_ oom_string_extend);
++		     Perl_croak(aTHX_ "%s", oom_string_extend);
+ 	        MEM_WRAP_CHECK_1(max, char, oom_string_extend);
+ 		SvGROW(TARG, max + 1);
+ 		repeatcpy(SvPVX(TARG) + len, SvPVX(TARG), len, count - 1);
+diff --git a/pp_ctl.c b/pp_ctl.c
+index bdbd75a..d1a75d3 100644
+--- a/pp_ctl.c
++++ b/pp_ctl.c
+@@ -2712,7 +2712,7 @@ S_dofindlabel(pTHX_ OP *o, const char *label, STRLEN len, U32 flags, OP **opstac
+     PERL_ARGS_ASSERT_DOFINDLABEL;
+ 
+     if (ops >= oplimit)
+-	Perl_croak(aTHX_ too_deep);
++	Perl_croak(aTHX_ "%s", too_deep);
+     if (o->op_type == OP_LEAVE ||
+ 	o->op_type == OP_SCOPE ||
+ 	o->op_type == OP_LEAVELOOP ||
+@@ -2721,7 +2721,7 @@ S_dofindlabel(pTHX_ OP *o, const char *label, STRLEN len, U32 flags, OP **opstac
+     {
+ 	*ops++ = cUNOPo->op_first;
+ 	if (ops >= oplimit)
+-	    Perl_croak(aTHX_ too_deep);
++	    Perl_croak(aTHX_ "%s", too_deep);
+     }
+     *ops = 0;
+     if (o->op_flags & OPf_KIDS) {
+@@ -2979,7 +2979,7 @@ PP(pp_goto)
+         label_flags = (cPVOP->op_private & OPpPV_IS_UTF8) ? SVf_UTF8 : 0;
+         label_len   = strlen(label);
+     }
+-    if (!(do_dump || label_len)) DIE(aTHX_ must_have_label);
++    if (!(do_dump || label_len)) DIE(aTHX_ "%s", must_have_label);
+ 
+     PERL_ASYNC_CHECK();
+ 
