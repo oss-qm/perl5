@@ -126,4 +126,5 @@ eval /bin/bash Configure			\
     -Doptimize=\"$optimize\"			\
     $extra_path					\
     $opts -des \
+	-Uversiononly \
     -Dusedevel
