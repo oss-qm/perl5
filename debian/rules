@@ -125,10 +125,9 @@ install-stamp: build-stamp
 	$(checkperl)
 	rm -rf $(tmp) $(build)
 
-	$(MAKE) install
-	# remove temporary prefix on install vars and switch man
-	# extensions to 1p and 3pm for vendor module installs
-	SRCDIR="$(srcdir)" ./perl.static -i -pe 's!\Q$$ENV{SRCDIR}\E/$(tmp)/!/! if /install/;' \
+	$(MAKE) install DESTDIR="$(tmp)"
+	# switch man extensions to 1p and 3pm for vendor module installs
+	./perl.static -i -p \
 	    -e 's/^(man1ext=).*/$$1'\''1p'\''/;' \
 	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
 		$(lib)/Config.pm $(lib)/Config_heavy.pl

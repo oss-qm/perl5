@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# convert install paths
-eval $(set | sed -n 's!^\(install.*\)=/usr/!\1='$(pwd)'/debian/tmp/usr/!p')
-
 # we use a different method to get old site versions into @INC
 sitelib_stem=
 
