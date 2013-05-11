@@ -1,4 +1,4 @@
-From a94772f32d8561415b400cfdb1c7cadf762ebf4c Mon Sep 17 00:00:00 2001
+From 46d7d25d5f434f1bac491ee8609ff5dda226a1f8 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.
@@ -14,7 +14,7 @@ Patch-Name: debian/prune_libs.diff
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Configure b/Configure
-index bb497b1..dd06205 100755
+index 30ab78a..0a1356e 100755
 --- a/Configure
 +++ b/Configure
 @@ -1381,8 +1381,7 @@ libswanted_uselargefiles=''
@@ -27,12 +27,12 @@ index bb497b1..dd06205 100755
  : We probably want to search /usr/shlib before most other libraries.
  : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
  glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
-@@ -22771,7 +22770,7 @@ sunos*X4*)
+@@ -22790,7 +22789,7 @@ sunos*X4*)
      ;;
  *) case "$usedl" in
      $define|true|[yY]*)
--	    set X `echo " $libs " | sed -e 's@ -lndbm @ @' -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldbm @ @' -e 's@ -ldb @ @'` 
-+	    set X `echo " $libs " | sed -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldb @ @'` 
+-	    set X `echo " $libs " | sed -e 's@ -lndbm @ @' -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldbm @ @' -e 's@ -ldb @ @'`
++	    set X `echo " $libs " | sed -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldb @ @'`
  	    shift
  	    perllibs="$*"
  	    ;;

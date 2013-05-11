@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # quote() - Creates a shell literal
-# Usage:  echo "...$( quote "..." )..."
+# Usage:  echo "...` quote "..." `..."
 quote() {
 	case "$1" in
 	'') echo "''" ;;
@@ -37,6 +37,7 @@ case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
 
+pwd="`pwd`"
 linklibperl='$(LIBPERL)'
 linklibperl_nonshr=''
 shrpldflags='$(LDDLFLAGS)'
@@ -47,7 +48,7 @@ case "$useshrplib" in
 true)
 	# Prefix all runs of 'miniperl' and 'perl' with
 	# $ldlibpth so that ./perl finds *this* shared libperl.
-	ldlibpth=LD_LIBRARY_PATH=`pwd`'$${LD_LIBRARY_PATH:+:}$$LD_LIBRARY_PATH'
+	ldlibpth="LD_LIBRARY_PATH=` quote "$pwd" `"'$${LD_LIBRARY_PATH:+:}$$LD_LIBRARY_PATH'
 
 	pldlflags="$cccdlflags"
 	static_ldflags=''
@@ -128,8 +129,8 @@ true)
 		eval "ldlibpthval=\"\$$ldlibpthname\""
 
 		case "$ldlibpthval" in
-		'')  ldlibpth="$ldlibpthname=$( quote "`pwd`" )" ;;
-		*)   ldlibpth="$ldlibpthname=$( quote "`pwd`" ):$( quote "$ldlibpthval" )" ;;
+		'')  ldlibpth="$ldlibpthname=` quote "$pwd" `" ;;
+		*)   ldlibpth="$ldlibpthname=` quote "$pwd" `:` quote "$ldlibpthval" `" ;;
 		esac
 
 		;;
@@ -488,7 +489,7 @@ mini_obj = $(minindt_obj) $(MINIDTRACE_O)
 ndt_obj = $(obj0) $(obj1) $(obj2) $(obj3) $(ARCHOBJS)
 obj = $(ndt_obj) $(DTRACE_O)
 
-perltoc_pod_prereqs = extra.pods pod/perl51711delta.pod pod/perlapi.pod pod/perlintern.pod pod/perlmodlib.pod pod/perluniprops.pod
+perltoc_pod_prereqs = extra.pods pod/perl5180delta.pod pod/perlapi.pod pod/perlintern.pod pod/perlmodlib.pod pod/perluniprops.pod
 generated_pods = pod/perltoc.pod $(perltoc_pod_prereqs)
 generated_headers = uudmap.h bitcount.h mg_data.h
 
@@ -1064,9 +1065,9 @@ pod/perlintern.pod: $(MINIPERL_EXE) autodoc.pl embed.fnc
 pod/perlmodlib.pod: $(MINIPERL_EXE) pod/perlmodlib.PL MANIFEST
 	$(MINIPERL) $(Icwd) pod/perlmodlib.PL -q
 
-pod/perl51711delta.pod: pod/perldelta.pod
-	$(RMS) pod/perl51711delta.pod
-	$(LNS) perldelta.pod pod/perl51711delta.pod
+pod/perl5180delta.pod: pod/perldelta.pod
+	$(RMS) pod/perl5180delta.pod
+	$(LNS) perldelta.pod pod/perl5180delta.pod
 
 extra.pods: $(MINIPERL_EXE)
 	-@test ! -f extra.pods || rm -f `cat extra.pods`

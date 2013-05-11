@@ -1,4 +1,4 @@
-perl (5.17.11-1) UNRELEASED; urgency=low
+perl (5.18.0~rc1-1) UNRELEASED; urgency=low
 
   [ Niko Tyni ]
   * Reorder the packages in debian/control to improve robustness of
@@ -18,8 +18,9 @@ perl (5.17.11-1) UNRELEASED; urgency=low
   * Fix a few false positive format-security warnings from gcc.
   * Use the DESTDIR mechanism for installation instead of mangling the
     install paths before and after.
+  * New upstream release candidate.
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 23 Mar 2013 18:34:59 +0200
+ -- Niko Tyni <ntyni@debian.org>  Sat, 11 May 2013 16:44:37 +0300
 
 perl (5.16.3-1) experimental; urgency=low
 

@@ -1,4 +1,4 @@
-From 967f0662729b660c414a3aec4845290ea2d65191 Mon Sep 17 00:00:00 2001
+From 1321a5011b48d651522986fad7ec9bb8f8767bd1 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 16:15:42 +0000
 Subject: Disable failing GNU/Hurd tests op/sigdispatch.t

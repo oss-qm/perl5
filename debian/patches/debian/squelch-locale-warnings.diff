@@ -1,4 +1,4 @@
-From c569c461afbe126e99bcbbdf3d0844a82695d472 Mon Sep 17 00:00:00 2001
+From 34228e18488583057c66b22d79d3407fbf0845aa Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts
@@ -35,7 +35,7 @@ index c10228d..5e171d0 100644
  
  	if (locwarn) {
 diff --git a/pod/perllocale.pod b/pod/perllocale.pod
-index 052db49..39a9f2a 100644
+index ad8e64b..f7a699f 100644
 --- a/pod/perllocale.pod
 +++ b/pod/perllocale.pod
 @@ -965,6 +965,14 @@ B<NOTE>: PERL_BADLANG only gives you a way to hide the warning message.
