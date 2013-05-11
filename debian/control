@@ -8,7 +8,7 @@ Homepage: http://dev.perl.org/perl5/
 Build-Depends: file, cpio, libdb-dev, libgdbm-dev, netbase [!hurd-any],
  procps [!hurd-any], zlib1g-dev | libz-dev, libbz2-dev, dpkg-dev (>= 1.16.0)
 Build-Conflicts: libterm-readline-gnu-perl (<< 1.17), libfile-sharedir-perl
-Vcs-Git: git://anonscm.debian.org/perl/perl.git -b debian-5.17
+Vcs-Git: git://anonscm.debian.org/perl/perl.git -b debian-5.18
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=perl/perl.git
 
 Package: perl-base
@@ -80,7 +80,7 @@ Description: debug-enabled Perl interpreter
  than perl programs, which may be traced/debugged using the standard
  perl binary using the -d switch (see perldebug(1)).
 
-Package: libperl5.17
+Package: libperl5.18
 Section: libs
 Priority: optional
 Architecture: any
@@ -97,7 +97,7 @@ Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: perl (= ${binary:Version}), libperl5.17 (= ${binary:Version}),
+Depends: perl (= ${binary:Version}), libperl5.18 (= ${binary:Version}),
  libc6-dev | libc-dev
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter.
@@ -121,7 +121,7 @@ Breaks: libpod-parser-perl (<< 1.60),
  libtest-harness-perl (<< 3.26),
  libtest-simple-perl (<< 0.98),
  liblocale-codes-perl (<< 3.25),
- libmodule-corelist-perl (<< 2.87),
+ libmodule-corelist-perl (<< 2.89),
  libio-zlib-perl (<< 1.10),
  libarchive-tar-perl (<< 1.90),
  libextutils-cbuilder-perl (<< 0.280210),
