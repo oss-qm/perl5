@@ -66,11 +66,12 @@ Description: Perl documentation
  Perl manual pages, POD documentation and the `perldoc' program.  If you are
  writing Perl programs, you almost certainly need this.
 
-Package: perl-debug
+Package: perl-dbg
 Section: debug
-Priority: extra
 Architecture: any
 Depends: perl (= ${binary:Version}), ${shlibs:Depends}
+Replaces: perl-debug (<< 5.18.0-1~)
+Breaks: perl-debug (<< 5.18.0-1~)
 Description: debug-enabled Perl interpreter
  debugperl provides a debug-enabled version of Perl which can produce
  extensive information about the interpreter as it compiles and executes
@@ -79,6 +80,15 @@ Description: debug-enabled Perl interpreter
  Note that this package is primarily of use in debugging *Perl* rather
  than perl programs, which may be traced/debugged using the standard
  perl binary using the -d switch (see perldebug(1)).
+ .
+ Debugging symbols are also provided in this package.
+
+Package: perl-debug
+Depends: perl-dbg, ${misc:Depends}
+Architecture: all
+Section: oldlibs
+Description: transitional dummy package
+ This is a transitional dummy package. It can safely be removed.
 
 Package: libperl5.18
 Section: libs

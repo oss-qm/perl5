@@ -28,7 +28,7 @@ man         = $(tmp)/usr/share/man
 lib         = $(tmp)/usr/lib/perl/$(version)
 share       = $(tmp)/usr/share/perl/$(version)
 build	    = debian/build
-debug       = $(build)/perl-debug/usr/lib/debug
+debug       = $(build)/perl-dbg/usr/lib/debug
 patches     = debian/patches/series
 patchlevel  = patchlevel-debian.h
 
@@ -323,7 +323,7 @@ ifeq ($(strip),yes)
 	# strip
 	find $(build)/*/usr/bin $(build)/*/usr/lib -type f \
 	    \( -name \*.so\* -o -name \*.a -o -perm /111 \) -print | \
-	    grep -v ^$(build)/perl-debug/ | \
+	    grep -v ^$(build)/perl-dbg/ | \
 	    while read f; \
 	    do \
 		type=`file $$f`; \
@@ -367,9 +367,9 @@ endif
 	    -print | xargs -r chmod 644
 
 	# links
-	mkdir -p $(build)/perl-debug/usr/share/man/man1
+	mkdir -p $(build)/perl-dbg/usr/share/man/man1
 
-	ln -s perl.1.gz $(build)/perl-debug/usr/share/man/man1/debugperl.1.gz
+	ln -s perl.1.gz $(build)/perl-dbg/usr/share/man/man1/debugperl.1.gz
 	ln -s perl.1.gz $(build)/perl-base/usr/share/man/man1/perl$(fullversion).1.gz
 	ln -s c2ph.1.gz $(build)/perl/usr/share/man/man1/pstruct.1.gz
 	ln -s s2p.1.gz $(build)/perl/usr/share/man/man1/psed.1.gz
