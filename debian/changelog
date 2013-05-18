@@ -1,6 +1,7 @@
 perl (5.18.0-1) UNRELEASED; urgency=low
 
   * New upstream release
+    - update Breaks version for libpod-simple-perl 
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 18 May 2013 23:21:46 +0100
 
