@@ -2,6 +2,38 @@ perl (5.18.0-1) UNRELEASED; urgency=low
 
   * New upstream release
     - update Breaks version for libpod-simple-perl 
+  * Additional bugs fixed since 5.14:
+    - pending signals are processed in both the parent and child process
+      after a fork() (Closes: 495788)
+    - occasional test failures from Time-HiRes (Closes: #637470)
+    - Storing shared_clone with overload in shared_clone strips off
+      overload (Closes: #677588)
+    - segfaults when freeing deeply nested structures (Closes: #624759)
+    - creating and destroying threads with perl results in memory leak
+      (Closes: #700624)
+    - double free or corruption crash after thread->join when POE::Kernel
+      is loaded (Closes: #707206)
+    - Behaviour changed in Text::Wrap (Closes: #101933)
+    - pod2html doesn't remove temporary files (Closes: #378328)
+    - Syslog.pm adds newline and later EOL whitespace to spamassassin
+      /var/log/syslog messages (Closes: #496254)
+    - Pod::PlainText doesn't recognize =encoding (Closes: #587733)
+    - libdate-manip-perl: Memory Leak (Closes: #600231)
+    - perlembed.pod and perlmodinstall.pod contain invariant sections
+      (Closes: #630149)
+    - perl debugger dies for PDL scripts with "Can't return a temporary
+      from lvalue subroutine" (Closes: #654387)
+    - pod2man: no exit code & empty files left behind (Closes: #659939)
+    - Man.pm: Undefined strings and a number register in groff
+      (Closes: #674206)
+    - perlcall(1) incorrectly refers to "X windows" (Closes: #233214)
+    - perl-base: IO::Handle manual lies about write() (Closes: #335694)
+    - perl-doc: be more explicit about how to use $! (Closes: #484021)
+    - perl-base: Doesn't throw an error if first parameter is a directory
+      (Closes: #689412)
+    - mention "use diagnostics" on perldiag (Closes: #485467)
+    - Please don't pollute manpages with "POD ERRORS" sections
+      (Closes: #497866)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 18 May 2013 23:21:46 +0100
 
