@@ -34,6 +34,8 @@ perl (5.18.0-1) UNRELEASED; urgency=low
     - mention "use diagnostics" on perldiag (Closes: #485467)
     - Please don't pollute manpages with "POD ERRORS" sections
       (Closes: #497866)
+  * Override lintian warning doc-package-depends-on-main-package
+    as perl-doc really depends on perl
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 18 May 2013 23:21:46 +0100
 
