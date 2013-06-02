@@ -36,3 +36,5 @@ fixes/manpage_name_Test-Harness.diff
 debian/makemaker-pasthru.diff
 debian/perl5db-x-terminal-emulator.patch
 debian/cpan-missing-site-dirs.diff
+fixes/pmop_alignment.diff
+fixes/pmop_alignment_more.diff
