@@ -24,12 +24,21 @@ open OUT, ">$file" or die "Can't create $file: $!";
 
 # extract patchlevel.h information
 
-open PATCH_LEVEL, "<" . catfile(updir, "patchlevel.h")
-    or die "Can't open patchlevel.h: $!";
+my $cpp = $Config{cpp};
+my $cppflags = $Config{cppflags};
 
-my $patchlevel_date = (stat PATCH_LEVEL)[9];
+my $patchfile = catfile(updir, "patchlevel.h");
 
-while (<PATCH_LEVEL>) {
+my $in;
+if (!open $in, "$cpp $cppflags $patchfile|") {
+    warn "Warning: can't run cpp ('$cpp $cppflags $patchfile'): $!";
+    open $in, "<$patchfile"
+        or die "Can't open patchlevel.h: $!";
+}
+
+my $patchlevel_date = (stat $patchfile)[9];
+
+while (<$in>) {
     last if $_ =~ /^\s*static\s+(?:const\s+)?char.*?local_patches\[\]\s*=\s*{\s*$/;
 }
 
@@ -38,9 +47,10 @@ if (! defined($_)) {
 }
 
 my @patches;
-while (<PATCH_LEVEL>) {
+while (<$in>) {
     last if /^\s*}/;
-    next if /^\s*#/;  # preprocessor stuff
+    next if /^\s*$/;
+    next if /^\s*#/;  # preprocessor stuff in case cpp failed
     next if /PERL_GIT_UNPUSHED_COMMITS/;    # XXX expand instead
     next if /"uncommitted-changes"/;        # XXX determine if active instead
     chomp;
@@ -52,7 +62,7 @@ while (<PATCH_LEVEL>) {
 my $patch_desc = "'" . join("',\n    '", @patches) . "'";
 my $patch_tags = join "", map /(\S+)/ ? "+$1 " : (), @patches;
 
-close(PATCH_LEVEL) or die "Error closing patchlevel.h: $!";
+close($in) or die "Error closing handle to patchlevel.h: $!";
 
 # TO DO (prehaps): store/embed $Config::config_sh into perlbug. When perlbug is
 # used, compare $Config::config_sh with the stored version. If they differ then
