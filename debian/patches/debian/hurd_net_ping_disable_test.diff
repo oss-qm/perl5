@@ -1,4 +1,4 @@
-From 3b7e3bf97605d1cdc92949be18ee4cf5ffdf023c Mon Sep 17 00:00:00 2001
+From de73d6ae95902a6d9fb6140a2f64f76185b5da10 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 9 Jun 2013 11:38:52 +0100
 Subject: Disable failing Net-Ping tests for GNU/Hurd
@@ -8,7 +8,7 @@ GNU/Hurd for now.
 
 Bug-Debian: http://bugs.debian.org/709385
 Forwarded: no
-Patch-Name: fixes/hurd_net_ping_disable_test.diff
+Patch-Name: debian/hurd_net_ping_disable_test.diff
 ---
  dist/Net-Ping/t/450_service.t  |    2 +-
  dist/Net-Ping/t/510_ping_udp.t |    1 +
