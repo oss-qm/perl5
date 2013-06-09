@@ -4,6 +4,7 @@ perl (5.18.0-2) UNRELEASED; urgency=low
     pmop alignment (Closes: #708792)
   * Update the deprecation warning to point to the Debian packages for
     modules deprecated in 5.18
+  * Disable failing Net-Ping tests for GNU/Hurd (see: 709385)
 
  -- Dominic Hargreaves <dom@earth.li>  Sun, 02 Jun 2013 22:32:47 +0100
 
