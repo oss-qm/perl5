@@ -1,6 +1,6 @@
-From 8dedbba9f8cbc4292e2abfdf27780d98e649464a Mon Sep 17 00:00:00 2001
+From 651040ad50cf05e83212d483f8b3a450c6152d85 Mon Sep 17 00:00:00 2001
 From: Jonathan Nieder <jrnieder@gmail.com>
-Date: Sun, 9 Jun 2013 11:49:00 +0100
+Date: Fri, 27 Jul 2012 10:35:07 -0500
 Subject: Memoize::Storable: respect 'nstore' option not respected
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

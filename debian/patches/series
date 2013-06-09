@@ -40,3 +40,4 @@ fixes/pmop_alignment.diff
 fixes/pmop_alignment_more.diff
 debian/hurd_net_ping_disable_test.diff
 0042-Memoize-Storable-respect-nstore-option-not-respected.patch
+fixes/net_ftp_failed_command.diff
