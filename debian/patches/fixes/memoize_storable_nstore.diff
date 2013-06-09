@@ -1,4 +1,4 @@
-From 651040ad50cf05e83212d483f8b3a450c6152d85 Mon Sep 17 00:00:00 2001
+From 7aaa3df0293dcb0e94e2eb3ce965d7b85dc1f7da Mon Sep 17 00:00:00 2001
 From: Jonathan Nieder <jrnieder@gmail.com>
 Date: Fri, 27 Jul 2012 10:35:07 -0500
 Subject: Memoize::Storable: respect 'nstore' option not respected
@@ -46,7 +46,7 @@ Reported by Tim Retout (RT#77790)
 Bug-Debian: http://bugs.debian.org/587650
 Bug: https://rt.cpan.org/Public/Bug/Display.html?id=77790
 Forwarded: https://rt.cpan.org/Public/Bug/Display.html?id=77790
-Patches: fixes/memoize_storable_nstore.diff
+Patch-Name: fixes/memoize_storable_nstore.diff
 ---
  cpan/Memoize/Memoize/Storable.pm |    2 +-
  cpan/Memoize/t/tie_storable.t    |   24 ++++++++++++++++++++----
