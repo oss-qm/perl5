@@ -22,6 +22,13 @@ use lib "dist/Module-CoreList/lib";
 # See the the hashes below for hardcoded special cases that will probably
 # need to be updated in the future.
 
+# get the list of deprecated packages
+my %deprecated;
+require 'lib/deprecate.pm';
+{ 
+	no warnings 'once';
+	%deprecated = reverse %deprecate::DEBIAN_PACKAGES;
+}
 
 # list special cases of version numbers that are OK here
 # version numbering discontinuities (epochs, added digits) cause these
@@ -153,9 +160,15 @@ for my $perl_package_name (keys %deps_found) {
 				if $triplet_check_skip{$perl_package_name} &&
 					grep { $_ eq $broken } @{$triplet_check_skip{$perl_package_name}};
 
-			for my $dep (qw(Replaces Provides)) {
-				ok(exists $dep_found->{$dep}{$broken},
-					"Breaks for $broken in $perl_package_name implies $dep");
+			ok(exists $dep_found->{Replaces}{$broken},
+				"Breaks for $broken in $perl_package_name implies Replaces");
+
+			if (exists $deprecated{$broken}) {
+				ok(!exists $dep_found->{Provides}{$broken},
+					"Breaks for deprecated package $broken in $perl_package_name does not imply Provides");
+			} else {
+				ok(exists $dep_found->{Provides}{$broken},
+					"Breaks for $broken in $perl_package_name implies Provides");
 			}
 		}
 	}
