@@ -1,4 +1,4 @@
-From de73d6ae95902a6d9fb6140a2f64f76185b5da10 Mon Sep 17 00:00:00 2001
+From c6cf971d3f1876ca18176cfa70d4a2a6dc4e69be Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 9 Jun 2013 11:38:52 +0100
 Subject: Disable failing Net-Ping tests for GNU/Hurd

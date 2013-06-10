@@ -1,4 +1,4 @@
-From 54177de6d624b8bab57f7cf795ca5a7ca73b1376 Mon Sep 17 00:00:00 2001
+From 02a1a536d6a71b2db2cbd1af0644d6ae1ca5342b Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 15 May 2011 19:35:58 +0300
 Subject: List packaged patches in patchlevel.h

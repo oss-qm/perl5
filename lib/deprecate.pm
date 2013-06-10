@@ -10,7 +10,7 @@ unless (%Config) { require Config; *Config = \%Config::Config; }
 # Debian-specific change: recommend the separate Debian packages of
 # deprecated modules where available
 
-my %DEBIAN_PACKAGES = (
+our %DEBIAN_PACKAGES = (
     'Archive::Extract' => 'libarchive-extract-perl',
     'B::Lint' => 'libb-lint-perl',
     'B::Lint::Debug' => 'libb-lint-perl',

@@ -1,4 +1,4 @@
-From b6b02c08cc5c5396151b09c70a7d1a235d4c9265 Mon Sep 17 00:00:00 2001
+From e4249fbbcfa4abb688f6a88e0d429ff310c1bea6 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules
@@ -20,7 +20,7 @@ Patch-Name: debian/deprecate-with-apt.diff
  1 file changed, 71 insertions(+), 1 deletion(-)
 
 diff --git a/lib/deprecate.pm b/lib/deprecate.pm
-index 7562c69..a80eca4 100644
+index 7562c69..f2ed24e 100644
 --- a/lib/deprecate.pm
 +++ b/lib/deprecate.pm
 @@ -7,6 +7,70 @@ our $VERSION = 0.02;
@@ -30,7 +30,7 @@ index 7562c69..a80eca4 100644
 +# Debian-specific change: recommend the separate Debian packages of
 +# deprecated modules where available
 +
-+my %DEBIAN_PACKAGES = (
++our %DEBIAN_PACKAGES = (
 +    'Archive::Extract' => 'libarchive-extract-perl',
 +    'B::Lint' => 'libb-lint-perl',
 +    'B::Lint::Debug' => 'libb-lint-perl',
