@@ -3,6 +3,7 @@ perl (5.18.0-3) UNRELEASED; urgency=low
   * Remove the Provides entries for the deprecated core modules. (See #702096)
   * Make perlbug.PL run patchlevel.h through cpp where possible.
     (Closes: #710842)
+  * Migrate the maintainer tests from 'config-edit' to 'cme'.
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 10 Jun 2013 23:14:44 +0300
 
