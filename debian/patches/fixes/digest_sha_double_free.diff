@@ -1,4 +1,4 @@
-From bd19e66d0d3fb06a21f40d27e596436346c3c024 Mon Sep 17 00:00:00 2001
+From 165ebcf13319c3c5f687232ee74f8bef7b6ecbd3 Mon Sep 17 00:00:00 2001
 From: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
 Date: Fri, 28 Jun 2013 13:07:34 +0100
 Subject: maint-5.18: Digest-SHA crash fix in 5.85

@@ -41,5 +41,5 @@ fixes/pmop_alignment_more.diff
 debian/hurd_net_ping_disable_test.diff
 fixes/memoize_storable_nstore.diff
 fixes/net_ftp_failed_command.diff
-fixes/perlbug-cpp.diff
 fixes/digest_sha_double_free.diff
+fixes/perlbug-patchlist.diff
