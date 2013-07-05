@@ -7,6 +7,8 @@ perl (5.18.0-4) UNRELEASED; urgency=low
   [ Niko Tyni ]
   * Amend the perlbug patchlevel fix for #710842 so that the list
     of local patches is looked up at perlbug run time.
+  * Fix the permissions of the md5sums control files in the binary
+    packages. (Closes: #714408)
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 28 Jun 2013 22:36:57 +0100
 

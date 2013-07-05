@@ -402,6 +402,7 @@ binary-indep: build-stamp install-stamp
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
+	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
 	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_upstream) $(subst_next_upstream); \
 	    dpkg --build $(build)/$$p ..; \
 	done
@@ -436,6 +437,7 @@ endif
 	    ! test -f $(build)/$$p/DEBIAN/shlibs || chmod 644 $(build)/$$p/DEBIAN/shlibs; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
+	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
 	done
 	# dpkg-shlibdeps needs to be run only after all the shlibs are present
 	for p in `./perl.static -l -00ne 'print $$1 if /^Architecture:\s+any/m \
