@@ -12,6 +12,8 @@ perl (5.18.1-1) UNRELEASED; urgency=low
   * Import new upstream release.
   * Apply upstream patches to (partially) fix qr// precompilation
     and the /p flag. (Closes: #718209)
+  * Add Breaks and Replaces entries for older versions of the (deprecated)
+    libobject-accessor-perl package.
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 28 Jun 2013 22:36:57 +0100
 
