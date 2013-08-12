@@ -1,4 +1,4 @@
-perl (5.18.1-1) UNRELEASED; urgency=low
+perl (5.18.1-1) experimental; urgency=low
 
   [ Dominic Hargreaves ]
   * Apply patch from upstream fixing Digest::SHA double-free
@@ -17,7 +17,7 @@ perl (5.18.1-1) UNRELEASED; urgency=low
   * Add Breaks and Replaces entries for older versions of the (deprecated)
     libobject-accessor-perl package.
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 28 Jun 2013 22:36:57 +0100
+ -- Niko Tyni <ntyni@debian.org>  Mon, 12 Aug 2013 18:26:06 +0300
 
 perl (5.18.0-3) experimental; urgency=low
 
