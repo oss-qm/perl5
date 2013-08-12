@@ -1,4 +1,4 @@
-From 387dc30b9310fa83a05b249d5ec8eefae912f887 Mon Sep 17 00:00:00 2001
+From 23c56df1d155c2d63b7ec491fdf06553150bb875 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Tue, 16 Oct 2012 23:07:56 +0300
 Subject: Fix CPAN::FirstTime defaults with nonexisting site dirs if a parent
@@ -14,7 +14,7 @@ explicitly tell CPAN not to touch those with INSTALLDIRS=site.
 Bug-Debian: http://bugs.debian.org/688842
 Patch-Name: debian/cpan-missing-site-dirs.diff
 ---
- cpan/CPAN/lib/CPAN/FirstTime.pm |   31 +++++++++++++++++++++++++++----
+ cpan/CPAN/lib/CPAN/FirstTime.pm | 31 +++++++++++++++++++++++++++----
  1 file changed, 27 insertions(+), 4 deletions(-)
 
 diff --git a/cpan/CPAN/lib/CPAN/FirstTime.pm b/cpan/CPAN/lib/CPAN/FirstTime.pm

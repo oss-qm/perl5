@@ -1,4 +1,4 @@
-From 762af52d0a24f7251addb32f367f82c7de18ce58 Mon Sep 17 00:00:00 2001
+From 906407a7e02922f1090d5a1460caa140b09c4250 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 16:15:42 +0000
 Subject: Disable failing GNU/Hurd tests op/sigdispatch.t
@@ -9,7 +9,7 @@ Bug-Debian: http://bugs.debian.org/650188
 
 Patch-Name: debian/hurd_test_skip_sigdispatch.diff
 ---
- t/op/sigdispatch.t |    8 ++++++--
+ t/op/sigdispatch.t | 8 ++++++--
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/t/op/sigdispatch.t b/t/op/sigdispatch.t

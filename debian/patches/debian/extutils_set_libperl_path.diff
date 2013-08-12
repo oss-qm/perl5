@@ -1,11 +1,11 @@
-From a34834cdabe6e551e88a0783d37e11701305b69e Mon Sep 17 00:00:00 2001
+From 1c2d6d55043d1a8bfd552146ffb6cad407a6e453 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: EU:MM: Set location of libperl.a to /usr/lib
 
 Patch-Name: debian/extutils_set_libperl_path.diff
 ---
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm |    2 +-
+ cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm

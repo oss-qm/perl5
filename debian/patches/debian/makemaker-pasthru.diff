@@ -1,4 +1,4 @@
-From 1bf1a4de34b3cc9851bc4a14d0ded0407312b0db Mon Sep 17 00:00:00 2001
+From 709e9fdef39e844b681a66695bc22d58fccce39b Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 25 Feb 2012 19:41:27 +0200
 Subject: Make EU::MM pass LD through to recursive Makefile.PL invocations
@@ -19,7 +19,7 @@ Bug: http://rt.cpan.org/Public/Bug/Display.html?id=28632
 Bug-Debian: http://bugs.debian.org/660195
 Patch-Name: debian/makemaker-pasthru.diff
 ---
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm |    2 +-
+ cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm

@@ -1,4 +1,4 @@
-From 1f456f4a4cc82d2a38ac99c2823569c198f9747b Mon Sep 17 00:00:00 2001
+From eeac070f100f545d51d6ad1d5c0a59b39ca902b4 Mon Sep 17 00:00:00 2001
 From: Andreas Marschke <andreas.marschke@googlemail.com>
 Date: Sat, 17 Sep 2011 11:38:42 +0100
 Subject: Configure CPAN::Distribution with correct name of html2text
@@ -17,7 +17,7 @@ Please see the attached patch for a quick fix of this issue.
 as the html2text.pl which is expected, but should provide similar
 functionality].
 ---
- cpan/CPAN/lib/CPAN/Distribution.pm |    2 +-
+ cpan/CPAN/lib/CPAN/Distribution.pm | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/CPAN/lib/CPAN/Distribution.pm b/cpan/CPAN/lib/CPAN/Distribution.pm

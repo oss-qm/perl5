@@ -1,4 +1,4 @@
-From e209e980c59005009566113d766c9dd74e68cc45 Mon Sep 17 00:00:00 2001
+From 932f30961368dce0b1e437f5c881ae5b7d37d27f Mon Sep 17 00:00:00 2001
 From: Jonathan Nieder <jrnieder@gmail.com>
 Date: Fri, 27 Jul 2012 10:35:07 -0500
 Subject: Memoize::Storable: respect 'nstore' option not respected
@@ -48,8 +48,8 @@ Bug: https://rt.cpan.org/Public/Bug/Display.html?id=77790
 Forwarded: https://rt.cpan.org/Public/Bug/Display.html?id=77790
 Patch-Name: fixes/memoize_storable_nstore.diff
 ---
- cpan/Memoize/Memoize/Storable.pm |    2 +-
- cpan/Memoize/t/tie_storable.t    |   24 ++++++++++++++++++++----
+ cpan/Memoize/Memoize/Storable.pm |  2 +-
+ cpan/Memoize/t/tie_storable.t    | 24 ++++++++++++++++++++----
  2 files changed, 21 insertions(+), 5 deletions(-)
 
 diff --git a/cpan/Memoize/Memoize/Storable.pm b/cpan/Memoize/Memoize/Storable.pm

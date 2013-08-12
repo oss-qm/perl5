@@ -1,4 +1,4 @@
-From ef9d50901782fb718877d02fed38ad5c055c9273 Mon Sep 17 00:00:00 2001
+From 7502f5856584439e25150a7f218e4a2859ebe445 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.
@@ -10,7 +10,7 @@ and some of the original list may be present on buildds (see Bug#128355).
 
 Patch-Name: debian/prune_libs.diff
 ---
- Configure |    5 ++---
+ Configure | 5 ++---
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Configure b/Configure

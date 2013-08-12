@@ -1,4 +1,4 @@
-perl (5.18.0-4) UNRELEASED; urgency=low
+perl (5.18.1-1) UNRELEASED; urgency=low
 
   [ Dominic Hargreaves ]
   * Apply patch from upstream fixing Digest::SHA double-free
@@ -9,6 +9,7 @@ perl (5.18.0-4) UNRELEASED; urgency=low
     of local patches is looked up at perlbug run time.
   * Fix the permissions of the md5sums control files in the binary
     packages. (Closes: #714408)
+  * Import new upstream release.
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 28 Jun 2013 22:36:57 +0100
 

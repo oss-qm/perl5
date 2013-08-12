@@ -1,4 +1,4 @@
-From 891bfd149b02b1219f9b363dbde9485da1037958 Mon Sep 17 00:00:00 2001
+From b14097a794cbfbde43997960d1470f9e5638287c Mon Sep 17 00:00:00 2001
 From: Peter Pentchev <roam@ringlet.net>
 Date: Wed, 16 Jul 2008 12:34:39 +0300
 Subject: Net::FTP: cope gracefully with a failed command
@@ -27,8 +27,8 @@ Bug: https://rt.cpan.org/Public/Bug/Display.html?id=37700
 Origin: https://rt.cpan.org/Public/Bug/Display.html?id=37700
 Patch-Name: fixes/net_ftp_failed_command.diff
 ---
- cpan/libnet/Net/FTP.pm          |    4 +++-
- cpan/libnet/Net/FTP/dataconn.pm |    3 ++-
+ cpan/libnet/Net/FTP.pm          | 4 +++-
+ cpan/libnet/Net/FTP/dataconn.pm | 3 ++-
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/libnet/Net/FTP.pm b/cpan/libnet/Net/FTP.pm

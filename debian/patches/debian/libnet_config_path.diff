@@ -1,4 +1,4 @@
-From e96fdb8f11344e4772c8b7cc3f29953af5e67ad9 Mon Sep 17 00:00:00 2001
+From 83eec7835a87d9317c421d0d685a798f934945a0 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Set location of libnet.cfg to /etc/perl/Net as /usr may not be
@@ -6,7 +6,7 @@ Subject: Set location of libnet.cfg to /etc/perl/Net as /usr may not be
 
 Patch-Name: debian/libnet_config_path.diff
 ---
- cpan/libnet/Net/Config.pm |    7 +++----
+ cpan/libnet/Net/Config.pm | 7 +++----
  1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/cpan/libnet/Net/Config.pm b/cpan/libnet/Net/Config.pm

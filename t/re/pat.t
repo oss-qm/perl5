@@ -20,7 +20,7 @@ BEGIN {
     require './test.pl';
 }
 
-plan tests => 467;  # Update this when adding/deleting tests.
+plan tests => 472;  # Update this when adding/deleting tests.
 
 run_tests() unless caller;
 
@@ -1349,6 +1349,36 @@ EOP
         like("ab", qr/a( ?#foo)b/x);
     }
 
+    { # 118297: Mixing up- and down-graded strings in regex
+        utf8::upgrade(my $u = "\x{e5}");
+        utf8::downgrade(my $d = "\x{e5}");
+        my $warned;
+        local $SIG{__WARN__} = sub { $warned++ if $_[0] =~ /\AMalformed UTF-8/ };
+        my $re = qr/$u$d/;
+        ok(!$warned, "no warnings when interpolating mixed up-/downgraded strings in pattern");
+        my $c = "\x{e5}\x{e5}";
+        utf8::downgrade($c);
+        like($c, $re, "mixed up-/downgraded pattern matches downgraded string");
+        utf8::upgrade($c);
+        like($c, $re, "mixed up-/downgraded pattern matches upgraded string");
+    }
+
+    {
+	# RT #119125
+	# the earlier fix for /[#](?{})/x, although correct, as a
+	# side-effect fixed another long-standing bug where /[#$x]/x
+	# didn't interpolate the var $x. Although fixing that is good,
+	# it's too big a change for maint, so keep the old buggy behaviour
+	# for now.
+
+	my $b = 'cd';
+	my $s = 'abcd$%#&';
+	$s =~ s/[a#$b%]/X/g;
+	is ($s, 'XbXX$XX&', 'RT #119125 without /x');
+	$s = 'abcd$%#&';
+	$s =~ s/[a#$b%]/X/gx;
+	is ($s, 'XXcdXXX&', 'RT #119125 with /x');
+    }
 
 } # End of sub run_tests
 

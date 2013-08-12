@@ -1,4 +1,4 @@
-From 8b16ad869d58d31f23f3ac266c313f37ccbac9d2 Mon Sep 17 00:00:00 2001
+From ed5f92f94ae2633a2217142180f0a0044741a11d Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 6 Jul 2009 21:58:41 +0300
 Subject: Configure CPANPLUS to use the site directories by default.
@@ -13,7 +13,7 @@ See also the sister patch, debian/cpan_definstalldirs .
 
 Patch-Name: debian/cpanplus_definstalldirs.diff
 ---
- cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm |   30 +++++++++++++++++++++++++++
+ cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm | 30 +++++++++++++++++++++++++++++
  1 file changed, 30 insertions(+)
  create mode 100644 cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm
 

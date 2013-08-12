@@ -1,4 +1,4 @@
-From 8dd01652e65b7aceac1074d5334a6cb0f136d462 Mon Sep 17 00:00:00 2001
+From 4a275398032518cabbe4b8fee86cc41a75a06f24 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
@@ -18,7 +18,7 @@ version than is included in core.
 
 Patch-Name: debian/mod_paths.diff
 ---
- perl.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ perl.c | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 58 insertions(+)
 
 diff --git a/perl.c b/perl.c

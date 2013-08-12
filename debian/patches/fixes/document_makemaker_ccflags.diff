@@ -1,4 +1,4 @@
-From f63ac5dbefc5945ece75e806293f16902cbcc395 Mon Sep 17 00:00:00 2001
+From d896d30508b33cc31cfeef8194f113df17c99b5f Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 30 May 2011 22:54:24 +0300
 Subject: Document that CCFLAGS should include $Config{ccflags}
@@ -11,7 +11,7 @@ binary interface on some platforms.
 
 Patch-Name: fixes/document_makemaker_ccflags.diff
 ---
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm |    4 ++++
+ cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm

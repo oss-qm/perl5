@@ -1,4 +1,4 @@
-From 4f26c184f8e8af8fb7042db5d71cfd65f9f83013 Mon Sep 17 00:00:00 2001
+From 0d0eeadbd6258a95511d2b9d77920532304a497d Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 8 May 2008 14:32:33 +0300
 Subject: Adjust Module::Build manual page extensions for the Debian Perl
@@ -8,7 +8,7 @@ Bug-Debian: http://bugs.debian.org/479460
 
 Patch-Name: debian/module_build_man_extensions.diff
 ---
- cpan/Module-Build/lib/Module/Build/Base.pm |    4 ++--
+ cpan/Module-Build/lib/Module/Build/Base.pm | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/Module-Build/lib/Module/Build/Base.pm b/cpan/Module-Build/lib/Module/Build/Base.pm

@@ -1,4 +1,4 @@
-From 4100924c6e2c76a84a0b3dc72ce566d52625ea80 Mon Sep 17 00:00:00 2001
+From d900157031ec499aea8b87af5d1bc8cb1afa4eca Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 27 Jun 2013 14:37:01 +0300
 Subject: Make perlbug look up the list of local patches at run time
@@ -14,7 +14,7 @@ Bug-Debian: http://bugs.debian.org/710842
 Origin: http://perl5.git.perl.org/perl.git/commit/3541c11ab9be01478a51881e3972abb78481726e
 Patch-Name: fixes/perlbug-patchlist.diff
 ---
- utils/perlbug.PL |   39 ++++++---------------------------------
+ utils/perlbug.PL | 39 ++++++---------------------------------
  1 file changed, 6 insertions(+), 33 deletions(-)
 
 diff --git a/utils/perlbug.PL b/utils/perlbug.PL

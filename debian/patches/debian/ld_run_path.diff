@@ -1,11 +1,11 @@
-From 064cdc1a2024337ce11aad8da097bc5f583585b2 Mon Sep 17 00:00:00 2001
+From 172d552f3823b6883076e0b6d6e2bbcdd6d9359c Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Remove standard libs from LD_RUN_PATH as per Debian policy.
 
 Patch-Name: debian/ld_run_path.diff
 ---
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm |    3 +++
+ cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm | 3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
