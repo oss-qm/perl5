@@ -40,3 +40,5 @@ debian/hurd_net_ping_disable_test.diff
 fixes/memoize_storable_nstore.diff
 fixes/net_ftp_failed_command.diff
 fixes/perlbug-patchlist.diff
+fixes/regexp-preserve.diff
+fixes/regexp-preserve-testcases.diff

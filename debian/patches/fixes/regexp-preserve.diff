@@ -1,0 +1,238 @@
+From ef42ae1c617de542fc4a65f2d4371e9c9c3fb0db Mon Sep 17 00:00:00 2001
+From: David Mitchell <davem@iabyn.com>
+Date: Tue, 30 Jul 2013 16:16:35 +0100
+Subject: RT #118213: handle $r=qr/.../; /$r/p properly
+
+(cherry-picked from 5b0e71e9d506. Some of the new tests are unsuitable for
+5.18.x and fail with this commit; they'll be disabled in the next commit)
+
+In the case where a qr// regex is directly used by PMOP (rather than being
+interpolated with some other stuff and a new regex created, such as
+/a$r/p), then the PMf_KEEPCOPY flag will be set on the PMOP, but the
+corresponding RXf_PMf_KEEPCOPY flag *won't* be set on the regex.
+
+Since most of the regex handling for copying the string and extracting out
+${^PREMATCH} etc is done based on the RXf_PMf_KEEPCOPY flag in the regex,
+this is a bit of a problem.
+
+Prior to 5.18.0 this wasn't so noticeable, since various other bugs around
+//p handling meant that ${$PREMATCH} etc often accidentally got set
+anyway. 5.18.0 fixed these bugs, and so as a side-effect, exposed the
+PMOP verses regex flag issue. In particular, this stopped working in
+5.18.0:
+
+    my $pat = qr/a/;
+    'aaaa' =~ /$pat/gp or die;
+    print "MATCH=[${^MATCH}]\n";
+
+(prints 'a' in 5.16.0, undef in 5.18.0).
+The presence /g caused the engine to copy the string anyway by luck.
+
+We can't just set the RXf_PMf_KEEPCOPY flag on the regex if we see the
+PMf_KEEPCOPY flag on the PMOP, otherwise stuff like this will be wrong:
+
+    $r = qr/..../;
+    /$r/p; 		# set RXf_PMf_KEEPCOPY on $r
+    /$r/;		# does a /p match by mistake
+
+Since for 5.19.x onwards COW is enabled by default (and cheap copies are
+always made regardless of /p), then this fix is mainly for PERL_NO_COW
+builds and for backporting to 5.18.x. (Although it still applies to
+strings that can't be COWed for whatever reason).
+
+Since we can't set a flag in the rx, we fix this by:
+
+1) when calling the regex engine (which may attempt to copy part or all of
+the capture string), make sure we pass REXEC_COPY_STR, but neither of
+REXEC_COPY_SKIP_PRE, REXEC_COPY_SKIP_POST when we call regexec() from
+pp_match or pp_subst when the corresponding PMOP has PMf_KEEPCOPY set.
+
+2) in Perl_reg_numbered_buff_fetch() etc, check for PMf_KEEPCOPY in
+PL_curpm as well as for RXf_PMf_KEEPCOPY in the current rx before deciding
+whether to process ${^PREMATCH} etc.
+
+As well as adding new tests to t/re/reg_pmod.t, I also changed the
+string to be matched against from being '12...' to '012...', to ensure that
+the lengths of ${^PREMATCH}, ${^MATCH}, ${^POSTMATCH} would all be
+different.
+
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/f4194b23d4abd4f267681d848ba761ec1888a998
+Bug: https://rt.perl.org/rt3/Public/Bug/Display.html?id=118213
+Bug-Debian: http://bugs.debian.org/718209
+Patch-Name: fixes/regexp-preserve.diff
+---
+ pp_hot.c        |  7 +++++++
+ regcomp.c       | 52 ++++++++++++++++++++++++++++++++++------------------
+ t/re/reg_pmod.t | 13 +++++++++----
+ 3 files changed, 50 insertions(+), 22 deletions(-)
+
+diff --git a/pp_hot.c b/pp_hot.c
+index 31ce429..94a0c3f 100644
+--- a/pp_hot.c
++++ b/pp_hot.c
+@@ -1414,6 +1414,7 @@ PP(pp_match)
+     if (       RX_NPARENS(rx)
+             || PL_sawampersand
+             || (RX_EXTFLAGS(rx) & (RXf_EVAL_SEEN|RXf_PMf_KEEPCOPY))
++            || (dynpm->op_pmflags & PMf_KEEPCOPY)
+     )
+ #endif
+     {
+@@ -1425,6 +1426,11 @@ PP(pp_match)
+         if (! (global && gimme == G_ARRAY))
+             r_flags |= REXEC_COPY_SKIP_POST;
+     };
++#ifdef PERL_SAWAMPERSAND
++    if (dynpm->op_pmflags & PMf_KEEPCOPY)
++        /* handle KEEPCOPY in pmop but not rx, eg $r=qr/a/; /$r/p */
++        r_flags &= ~(REXEC_COPY_SKIP_PRE|REXEC_COPY_SKIP_POST);
++#endif
+ 
+   play_it_again:
+     if (global && RX_OFFS(rx)[0].start != -1) {
+@@ -2247,6 +2253,7 @@ PP(pp_subst)
+     r_flags = (    RX_NPARENS(rx)
+                 || PL_sawampersand
+                 || (RX_EXTFLAGS(rx) & (RXf_EVAL_SEEN|RXf_PMf_KEEPCOPY))
++                || (rpm->op_pmflags & PMf_KEEPCOPY)
+               )
+           ? REXEC_COPY_STR
+           : 0;
+diff --git a/regcomp.c b/regcomp.c
+index b2cf3e6..fd1f4c6 100644
+--- a/regcomp.c
++++ b/regcomp.c
+@@ -6688,13 +6688,23 @@ Perl_reg_numbered_buff_fetch(pTHX_ REGEXP * const r, const I32 paren,
+ 
+     PERL_ARGS_ASSERT_REG_NUMBERED_BUFF_FETCH;
+         
+-    if ( (    n == RX_BUFF_IDX_CARET_PREMATCH
++    if (      n == RX_BUFF_IDX_CARET_PREMATCH
+            || n == RX_BUFF_IDX_CARET_FULLMATCH
+            || n == RX_BUFF_IDX_CARET_POSTMATCH
+-         )
+-         && !(rx->extflags & RXf_PMf_KEEPCOPY)
+-    )
+-        goto ret_undef;
++       )
++    {
++        bool keepcopy = cBOOL(rx->extflags & RXf_PMf_KEEPCOPY);
++        if (!keepcopy) {
++            /* on something like
++             *    $r = qr/.../;
++             *    /$qr/p;
++             * the KEEPCOPY is set on the PMOP rather than the regex */
++            if (PL_curpm && r == PM_GETRE(PL_curpm))
++                 keepcopy = cBOOL(PL_curpm->op_pmflags & PMf_KEEPCOPY);
++        }
++        if (!keepcopy)
++            goto ret_undef;
++    }
+ 
+     if (!rx->subbeg)
+         goto ret_undef;
+@@ -6800,13 +6810,27 @@ Perl_reg_numbered_buff_length(pTHX_ REGEXP * const r, const SV * const sv,
+ 
+     PERL_ARGS_ASSERT_REG_NUMBERED_BUFF_LENGTH;
+ 
++    if (   paren == RX_BUFF_IDX_CARET_PREMATCH
++        || paren == RX_BUFF_IDX_CARET_FULLMATCH
++        || paren == RX_BUFF_IDX_CARET_POSTMATCH
++    )
++    {
++        bool keepcopy = cBOOL(rx->extflags & RXf_PMf_KEEPCOPY);
++        if (!keepcopy) {
++            /* on something like
++             *    $r = qr/.../;
++             *    /$qr/p;
++             * the KEEPCOPY is set on the PMOP rather than the regex */
++            if (PL_curpm && r == PM_GETRE(PL_curpm))
++                 keepcopy = cBOOL(PL_curpm->op_pmflags & PMf_KEEPCOPY);
++        }
++        if (!keepcopy)
++            goto warn_undef;
++    }
++
+     /* Some of this code was originally in C<Perl_magic_len> in F<mg.c> */
+     switch (paren) {
+       case RX_BUFF_IDX_CARET_PREMATCH: /* ${^PREMATCH} */
+-         if (!(rx->extflags & RXf_PMf_KEEPCOPY))
+-            goto warn_undef;
+-        /*FALLTHROUGH*/
+-
+       case RX_BUFF_IDX_PREMATCH:       /* $` */
+         if (rx->offs[0].start != -1) {
+ 			i = rx->offs[0].start;
+@@ -6819,8 +6843,6 @@ Perl_reg_numbered_buff_length(pTHX_ REGEXP * const r, const SV * const sv,
+         return 0;
+ 
+       case RX_BUFF_IDX_CARET_POSTMATCH: /* ${^POSTMATCH} */
+-         if (!(rx->extflags & RXf_PMf_KEEPCOPY))
+-            goto warn_undef;
+       case RX_BUFF_IDX_POSTMATCH:       /* $' */
+ 	    if (rx->offs[0].end != -1) {
+ 			i = rx->sublen - rx->offs[0].end;
+@@ -6832,13 +6854,7 @@ Perl_reg_numbered_buff_length(pTHX_ REGEXP * const r, const SV * const sv,
+ 	    }
+         return 0;
+ 
+-      case RX_BUFF_IDX_CARET_FULLMATCH: /* ${^MATCH} */
+-         if (!(rx->extflags & RXf_PMf_KEEPCOPY))
+-            goto warn_undef;
+-        /*FALLTHROUGH*/
+-
+-      /* $& / ${^MATCH}, $1, $2, ... */
+-      default:
++      default: /* $& / ${^MATCH}, $1, $2, ... */
+ 	    if (paren <= (I32)rx->nparens &&
+             (s1 = rx->offs[paren].start) != -1 &&
+             (t1 = rx->offs[paren].end) != -1)
+diff --git a/t/re/reg_pmod.t b/t/re/reg_pmod.t
+index a766a69..1db0bed 100644
+--- a/t/re/reg_pmod.t
++++ b/t/re/reg_pmod.t
+@@ -11,9 +11,10 @@ use warnings;
+ 
+ our @tests = (
+     # /p      Pattern   PRE     MATCH   POST
+-    [ '/p',   "345",    "12-", "345",  "-6789"],
+-    [ '(?p)', "345",    "12-", "345",  "-6789"],
+-    [ '(?p:)',"345",    "12-", "345",  "-6789"],
++    [ '/p',   "345",    "012-", "345",  "-6789"],
++    [ '/$r/p',"345",    "012-", "345",  "-6789"],
++    [ '(?p)', "345",    "012-", "345",  "-6789"],
++    [ '(?p:)',"345",    "012-", "345",  "-6789"],
+     [ '',     "(345)",  undef,  undef,  undef ],
+     [ '',     "345",    undef,  undef,  undef ],
+ );
+@@ -26,8 +27,10 @@ sub _u($$) { "$_[0] is ".(defined $_[1] ? "'$_[1]'" : "undef") }
+ 
+ foreach my $test (@tests) {
+     my ($p, $pat,$l,$m,$r) = @$test;
++    my $qr = qr/$pat/;
+     for my $sub (0,1) {
+ 	my $test_name = $p eq '/p'   ? "/$pat/p"
++		      : $p eq '/$r/p'? $p
+ 		      : $p eq '(?p)' ? "/(?p)$pat/"
+ 		      : $p eq '(?p:)'? "/(?p:$pat)/"
+ 		      :                "/$pat/";
+@@ -36,16 +39,18 @@ foreach my $test (@tests) {
+ 	#
+ 	# Cannot use if/else due to the scope invalidating ${^MATCH} and friends.
+ 	#
+-	$_ = '12-345-6789';
++	$_ = '012-345-6789';
+ 	my $ok =
+ 		$sub ?
+ 			(   $p eq '/p'   ? s/$pat/abc/p
++			  : $p eq '/$r/p'? s/$qr/abc/p
+ 			  : $p eq '(?p)' ? s/(?p)$pat/abc/
+ 			  : $p eq '(?p:)'? s/(?p:$pat)/abc/
+ 			  :                s/$pat/abc/
+ 			)
+ 		     :
+ 			(   $p eq '/p'   ? /$pat/p
++			  : $p eq '/$r/p'? /$qr/p
+ 			  : $p eq '(?p)' ? /(?p)$pat/
+ 			  : $p eq '(?p:)'? /(?p:$pat)/
+ 			  :                /$pat/
