@@ -9,7 +9,7 @@ Comment:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
  .
- Last checked against: Perl 5.18.0
+ Last checked against: Perl 5.18.1
 
 Files: *
 Copyright:
@@ -1487,6 +1487,13 @@ Copyright:
  Copyright (c) 2002-2007 by D.H. aka PodMaster
 License: GPL-1+ or Artistic
  This program is distributed under the same terms as perl itself.
+
+Files: dist/Module-CoreList/lib/Module/CoreList/Utils.pm
+Copyright:
+ Copyright (C) 2013 Chris Williams.  All Rights Reserved.
+License: GPL-1+ or Artistic
+ This module is free software; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
 
 Files: dist/Net-Ping/*
 Copyright:
