@@ -10,6 +10,7 @@ perl (5.18.1-1) UNRELEASED; urgency=low
   * Fix the permissions of the md5sums control files in the binary
     packages. (Closes: #714408)
   * Import new upstream release.
+    + update Breaks version for libmodule-corelist-perl
   * Apply upstream patches to (partially) fix qr// precompilation
     and the /p flag. (Closes: #718209)
   * Add Breaks and Replaces entries for older versions of the (deprecated)
