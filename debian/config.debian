@@ -106,10 +106,10 @@ eval /bin/bash Configure			\
     -Darchlib=/usr/lib/$archtriplet/perl/$ver		\
     -Dvendorprefix=/usr				\
     -Dvendorlib=/usr/share/perl5		\
-    -Dvendorarch=/usr/lib/perl5			\
+    -Dvendorarch=/usr/lib/$archtriplet/perl5			\
     -Dsiteprefix=/usr/local			\
     -Dsitelib=/usr/local/share/perl/$fullver	\
-    -Dsitearch=/usr/local/lib/perl/$fullver	\
+    -Dsitearch=/usr/local/lib/$archtriplet/perl/$fullver	\
     -Dman1dir=/usr/share/man/man1		\
     -Dman3dir=/usr/share/man/man3		\
     -Dsiteman1dir=/usr/local/man/man1		\
