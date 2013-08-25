@@ -1,4 +1,4 @@
-perl (5.18.1-2) experimental; urgency=low
+perl (5.18.1-2) UNRELEASED; urgency=low
 
   * Remove redundant Provides: perlapi-5.18.0
   * Update Module::Metadata documentation to fix CVE-2013-1437
