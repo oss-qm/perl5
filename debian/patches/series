@@ -42,3 +42,4 @@ fixes/net_ftp_failed_command.diff
 fixes/perlbug-patchlist.diff
 fixes/regexp-preserve.diff
 fixes/regexp-preserve-testcases.diff
+fixes/module_metadata_security_doc.diff
