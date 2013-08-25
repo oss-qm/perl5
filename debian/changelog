@@ -1,3 +1,9 @@
+perl (5.18.1-2) experimental; urgency=low
+
+  * Remove redundant Provides: perlapi-5.18.0
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 25 Aug 2013 15:55:03 +0100
+
 perl (5.18.1-1) experimental; urgency=low
 
   [ Dominic Hargreaves ]
