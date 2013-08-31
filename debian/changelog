@@ -1,6 +1,8 @@
 perl (5.18.1-3) UNRELEASED; urgency=low
 
-  * 
+  * Make perl-base conflict with all versions of libscalar-list-utils-perl,
+    which overrides Essential functionality in a way that breaks during
+    upgrades. (Closes: #721364)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 31 Aug 2013 18:30:44 +0300
 
