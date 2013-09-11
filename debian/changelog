@@ -2,6 +2,7 @@ perl (5.18.1-4) UNRELEASED; urgency=low
 
   * Add Breaks on versions of libcommon-sense-perl which were built
     with earlier version of perl (Closes: #722460)
+  * Add Module::Metadata fix for use in taint mode (Closes: #722210)
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 11 Sep 2013 22:55:06 +0100
 

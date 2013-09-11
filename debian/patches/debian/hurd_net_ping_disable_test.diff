@@ -10,8 +10,8 @@ Bug-Debian: http://bugs.debian.org/709385
 Forwarded: no
 Patch-Name: debian/hurd_net_ping_disable_test.diff
 ---
- dist/Net-Ping/t/450_service.t  | 2 +-
- dist/Net-Ping/t/510_ping_udp.t | 1 +
+ dist/Net-Ping/t/450_service.t  |    2 +-
+ dist/Net-Ping/t/510_ping_udp.t |    1 +
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/dist/Net-Ping/t/450_service.t b/dist/Net-Ping/t/450_service.t

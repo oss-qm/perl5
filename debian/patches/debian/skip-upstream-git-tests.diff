@@ -10,7 +10,7 @@ Skip the tests altogether even if the .git directory exists.
 
 Patch-Name: debian/skip-upstream-git-tests.diff
 ---
- t/test.pl | 33 +--------------------------------
+ t/test.pl |   33 +--------------------------------
  1 file changed, 1 insertion(+), 32 deletions(-)
 
 diff --git a/t/test.pl b/t/test.pl

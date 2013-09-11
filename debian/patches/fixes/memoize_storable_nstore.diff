@@ -48,8 +48,8 @@ Bug: https://rt.cpan.org/Public/Bug/Display.html?id=77790
 Forwarded: https://rt.cpan.org/Public/Bug/Display.html?id=77790
 Patch-Name: fixes/memoize_storable_nstore.diff
 ---
- cpan/Memoize/Memoize/Storable.pm |  2 +-
- cpan/Memoize/t/tie_storable.t    | 24 ++++++++++++++++++++----
+ cpan/Memoize/Memoize/Storable.pm |    2 +-
+ cpan/Memoize/t/tie_storable.t    |   24 ++++++++++++++++++++----
  2 files changed, 21 insertions(+), 5 deletions(-)
 
 diff --git a/cpan/Memoize/Memoize/Storable.pm b/cpan/Memoize/Memoize/Storable.pm

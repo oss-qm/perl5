@@ -27,8 +27,8 @@ Bug: https://rt.cpan.org/Public/Bug/Display.html?id=37700
 Origin: https://rt.cpan.org/Public/Bug/Display.html?id=37700
 Patch-Name: fixes/net_ftp_failed_command.diff
 ---
- cpan/libnet/Net/FTP.pm          | 4 +++-
- cpan/libnet/Net/FTP/dataconn.pm | 3 ++-
+ cpan/libnet/Net/FTP.pm          |    4 +++-
+ cpan/libnet/Net/FTP/dataconn.pm |    3 ++-
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/libnet/Net/FTP.pm b/cpan/libnet/Net/FTP.pm

@@ -16,7 +16,7 @@ separate packages instead.
 
 Patch-Name: debian/deprecate-with-apt.diff
 ---
- lib/deprecate.pm | 72 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ lib/deprecate.pm |   72 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
  1 file changed, 71 insertions(+), 1 deletion(-)
 
 diff --git a/lib/deprecate.pm b/lib/deprecate.pm
