@@ -1,4 +1,4 @@
-perl (5.18.1-4) UNRELEASED; urgency=low
+perl (5.18.1-4) unstable; urgency=low
 
   * Add Breaks on versions of libcommon-sense-perl which were built
     with earlier version of perl (Closes: #722460)
@@ -6,7 +6,7 @@ perl (5.18.1-4) UNRELEASED; urgency=low
   * Update Lintian override for wrong-path-for-interpreter false
     positive
 
- -- Dominic Hargreaves <dom@earth.li>  Wed, 11 Sep 2013 22:55:06 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 11 Sep 2013 23:30:25 +0100
 
 perl (5.18.1-3) unstable; urgency=low
 
