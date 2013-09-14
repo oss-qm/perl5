@@ -1,3 +1,14 @@
+perl (5.18.1-5) UNRELEASED; urgency=low
+
+  * Revert patches disabling GNU/Hurd tests which now succeed:
+    - debian/hurd_net_ping_disable_test.diff (Closes: #709385)
+    - debian/hurd_test_skip_io_pipe.diff (Closes: #650096)
+    - debian/hurd_test_skip_pipe.diff (Closes: #650187)
+    - debian/hurd_test_skip_sigdispatch.diff (Closes: #650188)
+    - debian/hurd_test_todo_syslog.diff (Closes: #650093)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 14 Sep 2013 18:58:15 +0100
+
 perl (5.18.1-4) unstable; urgency=low
 
   * Add Breaks on versions of libcommon-sense-perl which were built

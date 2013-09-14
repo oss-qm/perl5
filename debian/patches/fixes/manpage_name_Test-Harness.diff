@@ -1,4 +1,4 @@
-From 14931838ed111dd4f561a44146bff7ca4af63220 Mon Sep 17 00:00:00 2001
+From 7e4310de36f0054e58a70ea0fc0b3b9c231ff1e2 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 20 Dec 2011 23:28:18 +0000
 Subject: cpan/Test-Harness: add NAME headings in modules with POD

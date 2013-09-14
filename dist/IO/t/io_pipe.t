@@ -24,9 +24,6 @@ BEGIN {
     elsif ($^O eq 'MSWin32' && !$ENV{TEST_IO_PIPE}) {
 	$reason = 'Win32 testing environment not set';
     }
-    elsif ($^O eq 'gnu') {
-        $reason = 'fails on GNU/Hurd (Debian #650096)';
-    }
     if ($reason) {
 	print "1..0 # Skip: $reason\n";
 	exit 0;

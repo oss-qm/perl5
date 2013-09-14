@@ -1,4 +1,4 @@
-From bc0fa2826359617bb5e4762f8dc8985ff8cc3861 Mon Sep 17 00:00:00 2001
+From f151b9c40623efced2fc552018b2283b5cc0c927 Mon Sep 17 00:00:00 2001
 From: David Mitchell <davem@iabyn.com>
 Date: Tue, 30 Jul 2013 20:14:37 +0100
 Subject: Disable new //p tests

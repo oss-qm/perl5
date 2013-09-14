@@ -1,4 +1,4 @@
-From ef42ae1c617de542fc4a65f2d4371e9c9c3fb0db Mon Sep 17 00:00:00 2001
+From 6513c478284e33a3c66ab27259e55e6917c3e34b Mon Sep 17 00:00:00 2001
 From: David Mitchell <davem@iabyn.com>
 Date: Tue, 30 Jul 2013 16:16:35 +0100
 Subject: RT #118213: handle $r=qr/.../; /$r/p properly

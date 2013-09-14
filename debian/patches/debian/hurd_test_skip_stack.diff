@@ -1,4 +1,4 @@
-From 716310c89033be21eb8c0ed0abc2345e2708d68e Mon Sep 17 00:00:00 2001
+From cff9020822bdf0563c8f7087673723ac00cf8d03 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 27 Nov 2011 16:27:07 +0000
 Subject: Disable failing GNU/Hurd tests dist/threads/t/stack.t

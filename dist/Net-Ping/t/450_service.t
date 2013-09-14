@@ -73,7 +73,7 @@ $p->{port_num} = $port2;
 
 {
     local $TODO;
-    $TODO = "Believed not to work on $^O" if $^O eq 'hpux' || $^O eq 'gnu';
+    $TODO = "Believed not to work on $^O" if $^O eq 'hpux';
     is($p->ping("127.0.0.1"), 1, 'second port is reachable');
 }
 

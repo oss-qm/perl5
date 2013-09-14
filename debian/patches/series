@@ -27,16 +27,11 @@ debian/patchlevel.diff
 debian/skip-kfreebsd-crash.diff
 fixes/document_makemaker_ccflags.diff
 debian/find_html2text.diff
-debian/hurd_test_todo_syslog.diff
-debian/hurd_test_skip_sigdispatch.diff
 debian/hurd_test_skip_stack.diff
-debian/hurd_test_skip_pipe.diff
-debian/hurd_test_skip_io_pipe.diff
 fixes/manpage_name_Test-Harness.diff
 debian/makemaker-pasthru.diff
 debian/perl5db-x-terminal-emulator.patch
 debian/cpan-missing-site-dirs.diff
-debian/hurd_net_ping_disable_test.diff
 fixes/memoize_storable_nstore.diff
 fixes/net_ftp_failed_command.diff
 fixes/perlbug-patchlist.diff

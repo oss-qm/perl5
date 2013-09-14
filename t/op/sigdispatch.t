@@ -9,12 +9,8 @@ BEGIN {
 use strict;
 use Config;
 
-if ($^O eq 'gnu') {
-    skip_all 'fails on GNU/Hurd (Debian #650188)' if $^O eq 'gnu';
-} else {
-    plan tests => 29;
-    $| = 1;
-}
+plan tests => 29;
+$| = 1;
 
 watchdog(15);
 

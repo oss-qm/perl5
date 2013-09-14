@@ -1,4 +1,4 @@
-From e66fc563d82260258df95f659d1c7c2cf1adedfa Mon Sep 17 00:00:00 2001
+From 7d8b2c296d062c3a0ebe0d916fdd5226ffb8b42b Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Wed, 11 Sep 2013 23:10:23 +0100
 Subject: untaint version, if needed, in Module::Metadata
