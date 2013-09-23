@@ -80,3 +80,4 @@ fixes/hsplit-rehash.diff
 fixes/encode-memleak.diff
 fixes/threads_shared_elements_crash.diff
 fixes/perlbug-patchlist.diff
+fixes/digest_sha_double_free.diff
