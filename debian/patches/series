@@ -79,3 +79,4 @@ fixes/stdin-sigchld.diff
 fixes/hsplit-rehash.diff
 fixes/encode-memleak.diff
 fixes/threads_shared_elements_crash.diff
+fixes/perlbug-patchlist.diff
