@@ -25,7 +25,7 @@ License: GPL-1+ or Artistic
     b) the "Artistic License" which comes with Perl.
  .
  On Debian GNU/Linux systems, the complete text of the GNU General
- Public License can be found in `/usr/share/common-licenses/GPL' and
+ Public License can be found in `/usr/share/common-licenses/GPL-1' and
  the Artistic Licence in `/usr/share/common-licenses/Artistic'.
 Comment:
  The directories ext/, dist/, and cpan/ contain separate distributions
@@ -87,7 +87,6 @@ Copyright:
  .
  This software originally derived from Paul Sheer's pivotal_gmtime_r.c.
 License: Expat
- See the end of this file for the full text of this license.
 
 Files:
  regcomp.c
@@ -104,8 +103,7 @@ Copyright:
  NOTE: this is derived from Henry Spencer's regexp code, and should not
  confused with the original package (see point 3 below).  Thanks, Henry!
 License: REGCOMP, and GPL-1+ or Artistic
- See the end of this file for the full text of the "REGCOMP" license.
- .
+Comment:
  The "alterations to Henry's code" have the following license information:
  .
   You may distribute under the terms of either the GNU General Public
@@ -115,15 +113,14 @@ Files: hv_func.h
 Copyright:
  Paul Hsieh (c) 2004
 License: HSIEH-DERIVATIVE or HSIEH-BSD or LGPL-2.1
- See the comment below.
- .
+Comment:
  The first two alternative licenses, as retrieved at
   Thu, 09 May 2013 00:00:38 +0300
  are included at the end of this file.
  .
  On Debian GNU/Linux systems, the complete text of the LGPL 2.1
  license can be found in `/usr/share/common-licenses/LGPL-2.1'.
-Comment:
+ .
  Part of this file carries the following comment:
  .
   FYI: This is the "Super-Fast" algorithm mentioned by Bob Jenkins in
@@ -202,9 +199,6 @@ Files: perly.h
 Copyright:
  Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
 License: GPL-3+-WITH-BISON-EXCEPTION
- See the end of this file for this license, which is the standard
- GPL-3+ with a special exception for relicensing derived files
- in certain circumstances.
 
 Files: mkppport
 Copyright:
@@ -323,9 +317,6 @@ License: GPL-1+ or Artistic
 Files: x2p/s2p.PL
 Copyright: unknown
 License: S2P
- This program is free and open software. You may use, modify,
- distribute, and sell this program (and any modified variants) in any
- way you wish, provided you do not restrict others from doing the same.
 
 Files: win32/fcrypt.c
 Copyright:
@@ -389,10 +380,6 @@ License: GPL-1+ or Artistic
 Files: cpan/CGI/*
 Copyright: 1995-2000 Lincoln D. Stein.  All rights reserved.
 License: GPL-1+ or Artistic-2
- The CGI.pm distribution is copyright 1995-2007, Lincoln D. Stein.  It is
- distributed under GPL and the Artistic License 2.0.
- .
- See the end of this file for the full text of the Artistic License 2.0.
 
 Files:
  cpan/CGI/lib/CGI/Carp.pm
@@ -440,8 +427,6 @@ Comment:
  but the patch has apparently been filtered out when including the software
  into the Perl core distribution.
 License: BZIP
- See the end of this file for the full text of this license, similar
- to the BSD 4-clause one.
 
 Files: cpan/Compress-Raw-Zlib/*
 Copyright: Copyright (c) 2005-2013 Paul Marquess. All rights reserved.
@@ -453,7 +438,6 @@ Files: cpan/Compress-Raw-Zlib/zlib-src/*
 Copyright:
  Copyright (C) 1995-2012 Jean-loup Gailly and Mark Adler
 License: ZLIB
- See the end of this file for the full text of this license.
 
 Files: cpan/Config-Perl-V/*
 Copyright:
@@ -1038,7 +1022,6 @@ Copyright:
  Copyright (c) 1982, 1986, 1988, 1993
       The Regents of the University of California.  All rights reserved.
 License: BSD-4-clause
- See the end of this file for the full text of this license.
 
 Files: cpan/Term-ANSIColor/*
 Copyright:
@@ -1186,13 +1169,6 @@ Files: cpan/Text-Soundex/*
 Copyright:
  (c) Copyright 1998-2007 by Mark Mielke
 License: TEXT-SOUNDEX
- Freedom to use these sources for whatever you want, as long as credit
- is given where credit is due, is hereby granted. You may make modifications
- where you see fit but leave this copyright somewhere visible. As well, try
- to initial any changes you make so that if I like the changes I can
- incorporate them into later versions.
- .
- - Mark Mielke <mark@mielke.cc>
 
 Files: cpan/Text-Tabs/*
 Copyright:
@@ -1200,8 +1176,6 @@ Copyright:
  Copyright (C) 2005 Aristotle Pagaltzis
  Copyright (C) 2012 Google, Inc.
 License: TEXT-TABS
- This module may be modified, used, copied, and redistributed at your own risk.
- Publicly redistributed modified versions must use a different name.
 
 Files: cpan/Tie-File/*
 Copyright:
@@ -1260,6 +1234,7 @@ Copyright:
  strptime copied from freebsd with the following copyright:
  Copyright (c) 1994 Powerdog Industries.  All rights reserved.
 License: GPL-1+ or Artistic, and BSD-4-clause-POWERDOG
+Comment:
  The strptime function is licensed under the BSD-like license included
  below. It is assumed that the other parts are licensed under the same
  terms as the rest of the distribution.
@@ -1369,6 +1344,7 @@ Copyright:
  Copyright (c) 2004 by the Perl 5 Porters.  All rights reserved.
  Copyright (c) 2003 Constantin S. Svintsoff <kostik@iclub.nsu.ru>
 License: GPL-1+ or Artistic, and BSD-3-clause-GENERIC
+Comment:
  The main license applies to most of the code:
  .
   This program is free software; you can redistribute it and/or modify
@@ -1376,7 +1352,7 @@ License: GPL-1+ or Artistic, and BSD-3-clause-GENERIC
  .
  but portions of it have been taken from a BSD variant and are licensed
  under the terms of the "BSD-3-clause-GENERIC" license included in this file.
-Comment:
+ .
  dist/Cwd/Cwd.pm states:
  .
   Portions of the C code in this library are copyright (c) 1994 by the
@@ -1654,7 +1630,6 @@ Copyright:
  This code is derived from software contributed to Berkeley by
  Guido van Rossum.
 License: BSD-3-clause
- See the end of this file for the full text of this license.
 
 Files: ext/Hash-Util/*
 Copyright: unknown
@@ -1715,9 +1690,6 @@ License: GPL-1+ or Artistic
 Files: ext/SDBM_File/sdbm/*
 Copyright: none
 License: SDBM-PUBLIC-DOMAIN
- The entire sdbm  library package is  placed in the public domain.
- .
- See the end of this file for the full notice from ext/SDBM_File/sdbm/README.
 
 Files: ext/Win32CORE/*
 Copyright:
@@ -1880,8 +1852,6 @@ Copyright:
   Copyright (C) 1989 Free Software Foundation, Inc.
                  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 License: DONT-CHANGE-THE-GPL
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
 
 Files: t/io/shm.t
 Copyright:
