@@ -81,3 +81,8 @@ fixes/encode-memleak.diff
 fixes/threads_shared_elements_crash.diff
 fixes/perlbug-patchlist.diff
 fixes/digest_sha_double_free.diff
+fixes/pl_eval_start_use_after_free.diff
+fixes/regcomp_fix_segv.diff
+fixes/list_util_off_by_two.diff
+fixes/sdbm_off_by_one.diff
+fixes/socket_unpack_sockaddr_un_heap_buffer_overflow.diff

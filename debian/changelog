@@ -5,6 +5,12 @@ perl (5.14.2-21+deb7u1) UNRELEASED; urgency=low
   * Make perlbug.PL look up local patches at runtime (Closes: #710842)
   * Apply patch from upstream fixing Digest::SHA double-free
     crash (Closes: #711206)
+  * Apply correctness patches from 5.14.4:
+    - fixes/pl_eval_start_use_after_free.diff
+    - fixes/regcomp_fix_segv.diff
+    - list_util_off_by_two.diff
+    - sdbm_off_by_one.diff
+    - socket_unpack_sockaddr_un_heap_buffer_overflow.diff
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 23 Sep 2013 20:40:20 +0100
 
