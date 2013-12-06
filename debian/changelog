@@ -1,4 +1,4 @@
-perl (5.18.1-5) UNRELEASED; urgency=low
+perl (5.18.1-5) unstable; urgency=medium
 
   [ Dominic Hargreaves ]
   * Revert patches disabling GNU/Hurd tests which now succeed:
@@ -17,7 +17,7 @@ perl (5.18.1-5) UNRELEASED; urgency=low
     (Closes: #731365)
   * Fix spelling of IPC_CREAT in IPC-SysV documentation. (Closes: #730558)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 14 Sep 2013 18:58:15 +0100
+ -- Niko Tyni <ntyni@debian.org>  Fri, 06 Dec 2013 20:05:55 +0200
 
 perl (5.18.1-4) unstable; urgency=low
 
