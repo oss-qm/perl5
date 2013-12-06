@@ -15,6 +15,7 @@ perl (5.18.1-5) UNRELEASED; urgency=low
   [ Niko Tyni ]
   * Include upstream fix for regex \8 and \9 after literals.
     (Closes: #731365)
+  * Fix spelling of IPC_CREAT in IPC-SysV documentation. (Closes: #730558)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 14 Sep 2013 18:58:15 +0100
 
