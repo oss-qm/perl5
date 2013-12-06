@@ -12,14 +12,14 @@ Bug-Debian: http://bugs.debian.org/722210
 Origin: http://perl5.git.perl.org/perl.git/commit/bff978faaae3c8c03edc7cf579be6660fdc89fb3
 Patch-Name: fixes/module_metadata_taint_fix.diff
 ---
- cpan/Module-Metadata/lib/Module/Metadata.pm |    4 +++-
- cpan/Module-Metadata/t/encoding.t           |    1 +
- cpan/Module-Metadata/t/lib/DistGen.pm       |    4 ++++
- cpan/Module-Metadata/t/lib/MBTest.pm        |    1 +
- cpan/Module-Metadata/t/lib/Tie/CPHash.pm    |    1 +
- cpan/Module-Metadata/t/metadata.t           |    1 +
- cpan/Module-Metadata/t/taint.t              |   29 +++++++++++++++++++++++++++
- cpan/Module-Metadata/t/version.t            |    1 +
+ cpan/Module-Metadata/lib/Module/Metadata.pm |  4 +++-
+ cpan/Module-Metadata/t/encoding.t           |  1 +
+ cpan/Module-Metadata/t/lib/DistGen.pm       |  4 ++++
+ cpan/Module-Metadata/t/lib/MBTest.pm        |  1 +
+ cpan/Module-Metadata/t/lib/Tie/CPHash.pm    |  1 +
+ cpan/Module-Metadata/t/metadata.t           |  1 +
+ cpan/Module-Metadata/t/taint.t              | 29 +++++++++++++++++++++++++++++
+ cpan/Module-Metadata/t/version.t            |  1 +
  8 files changed, 41 insertions(+), 1 deletion(-)
  create mode 100644 cpan/Module-Metadata/t/taint.t
 

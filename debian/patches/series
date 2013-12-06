@@ -39,3 +39,4 @@ fixes/regexp-preserve.diff
 fixes/regexp-preserve-testcases.diff
 fixes/module_metadata_security_doc.diff
 fixes/module_metadata_taint_fix.diff
+fixes/regex-8-9.diff

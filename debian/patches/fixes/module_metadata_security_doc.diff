@@ -12,7 +12,7 @@ unsafe code.
 Origin: http://perl5.git.perl.org/perl.git/commit/68cdd4b5a461cacf43edfbc09b5490356b4a0fd0
 Patch-Name: fixes/module_metadata_security_doc.diff
 ---
- cpan/Module-Metadata/lib/Module/Metadata.pm |    6 ++++--
+ cpan/Module-Metadata/lib/Module/Metadata.pm | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/Module-Metadata/lib/Module/Metadata.pm b/cpan/Module-Metadata/lib/Module/Metadata.pm

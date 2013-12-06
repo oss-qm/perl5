@@ -1,0 +1,86 @@
+From 05001625d0793ccb92102584ada03ad1b9bf443c Mon Sep 17 00:00:00 2001
+From: Karl Williamson <public@khwilliamson.com>
+Date: Tue, 26 Nov 2013 20:43:44 -0700
+Subject: PATCH [perl #119713] Regex \8 and \9 after literals no longer work
+
+Commit 726ee55d introduced a regression that has been fixed in blead by
+commit f1e1b256.  However the later commit changed some buggy behavior
+into errors instead of warnings, and so is contraindicated in a
+maintenance release.  This current commit attempts to fix the regression
+without changing other behavior.  It includes the pat.t tests from f1e1b256.
+
+Bug: https://rt.perl.org/Public/Bug/Display.html?id=119713
+Bug-Debian: http://bugs.debian.org/731365
+Origin: http://perl5.git.perl.org/perl.git/commit/7deb06abad0c3fe4d258bf8117d4c0e5f30fc595
+Patch-Name: fixes/regex-8-9.diff
+---
+ regcomp.c  |  7 +++++++
+ t/re/pat.t | 23 ++++++++++++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/regcomp.c b/regcomp.c
+index fd1f4c6..2a8ce8e 100644
+--- a/regcomp.c
++++ b/regcomp.c
+@@ -10966,6 +10966,12 @@ tryagain:
+ 			if (PL_encoding && ender < 0x100)
+ 			    goto recode_encoding;
+ 			break;
++                    case '8': case '9': /* These are illegal unless backrefs */
++                        if (atoi(p) <= RExC_npar) {
++                            --p;   /* backup to backslash; handle as backref */
++                            goto loopdone;
++                        }
++                        goto unrecognized;
+ 		    recode_encoding:
+ 			if (! RExC_override_recoding) {
+ 			    SV* enc = PL_encoding;
+@@ -10980,6 +10986,7 @@ tryagain:
+ 			    FAIL("Trailing \\");
+ 			/* FALL THROUGH */
+ 		    default:
++                    unrecognized:
+ 			if (!SIZE_ONLY&& isALPHANUMERIC(*p)) {
+ 			    /* Include any { following the alpha to emphasize
+ 			     * that it could be part of an escape at some point
+diff --git a/t/re/pat.t b/t/re/pat.t
+index b1ee6f3..edb78ca 100644
+--- a/t/re/pat.t
++++ b/t/re/pat.t
+@@ -20,7 +20,7 @@ BEGIN {
+     require './test.pl';
+ }
+ 
+-plan tests => 472;  # Update this when adding/deleting tests.
++plan tests => 672;  # Update this when adding/deleting tests.
+ 
+ run_tests() unless caller;
+ 
+@@ -1364,6 +1364,27 @@ EOP
+     }
+ 
+     {
++        # if we have 87 capture buffers defined then \87 should refer to the
++        # 87th.  test that this is true for 1..100
++        # Note that this test causes the engine to recurse at runtime, and
++        # hence use a lot of C stack.
++        for my $i (1..100) {
++            my $capture= "a";
++            $capture= "($capture)" for 1 .. $i;
++            for my $mid ("","b") {
++                my $str= "a${mid}a";
++                my $backref= "\\$i";
++                eval {
++                    ok($str=~/$capture$mid$backref/,"\\$i works with $i buffers '$str'=~/...$mid$backref/");
++                    1;
++                } or do {
++                    is("$@","","\\$i works with $i buffers works with $i buffers '$str'=~/...$mid$backref/");
++                };
++            }
++        }
++    }
++
++    {
+ 	# RT #119125
+ 	# the earlier fix for /[#](?{})/x, although correct, as a
+ 	# side-effect fixed another long-standing bug where /[#$x]/x

@@ -25,7 +25,7 @@ Bug: https://rt.perl.org/rt3/Public/Bug/Display.html?id=118213
 Bug-Debian: Bug-Debian: http://bugs.debian.org/718209
 Patch-Name: fixes/regexp-preserve-testcases.diff
 ---
- t/re/reg_pmod.t |    3 ++-
+ t/re/reg_pmod.t | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/t/re/reg_pmod.t b/t/re/reg_pmod.t

@@ -61,9 +61,9 @@ Bug: https://rt.perl.org/rt3/Public/Bug/Display.html?id=118213
 Bug-Debian: http://bugs.debian.org/718209
 Patch-Name: fixes/regexp-preserve.diff
 ---
- pp_hot.c        |    7 +++++++
- regcomp.c       |   52 ++++++++++++++++++++++++++++++++++------------------
- t/re/reg_pmod.t |   13 +++++++++----
+ pp_hot.c        |  7 +++++++
+ regcomp.c       | 52 ++++++++++++++++++++++++++++++++++------------------
+ t/re/reg_pmod.t | 13 +++++++++----
  3 files changed, 50 insertions(+), 22 deletions(-)
 
 diff --git a/pp_hot.c b/pp_hot.c

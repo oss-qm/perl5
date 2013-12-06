@@ -12,7 +12,7 @@ rule where the Makefile is created, but is for the clean/binary* targets.
 
 Patch-Name: debian/fakeroot.diff
 ---
- Makefile.SH |    7 ++-----
+ Makefile.SH | 7 ++-----
  1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/Makefile.SH b/Makefile.SH

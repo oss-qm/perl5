@@ -1,5 +1,6 @@
 perl (5.18.1-5) UNRELEASED; urgency=low
 
+  [ Dominic Hargreaves ]
   * Revert patches disabling GNU/Hurd tests which now succeed:
     - debian/hurd_net_ping_disable_test.diff (Closes: #709385)
     - debian/hurd_test_skip_io_pipe.diff (Closes: #650096)
@@ -10,6 +11,10 @@ perl (5.18.1-5) UNRELEASED; urgency=low
   * Override Lintian tag spelling-error-in-copyright for an upstream error
   * Override Lintian tag empty-binary-package for libperl5.18 as it
     is a dummy package on some architectures
+
+  [ Niko Tyni ]
+  * Include upstream fix for regex \8 and \9 after literals.
+    (Closes: #731365)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 14 Sep 2013 18:58:15 +0100
 
