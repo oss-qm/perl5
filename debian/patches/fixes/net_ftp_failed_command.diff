@@ -1,4 +1,4 @@
-From 68efb5e1a4266eee0fd5eea517912e053a88490d Mon Sep 17 00:00:00 2001
+From 3a73ad9ae2d2a48312ddd0ff7d0f24708fff3533 Mon Sep 17 00:00:00 2001
 From: Peter Pentchev <roam@ringlet.net>
 Date: Wed, 16 Jul 2008 12:34:39 +0300
 Subject: Net::FTP: cope gracefully with a failed command

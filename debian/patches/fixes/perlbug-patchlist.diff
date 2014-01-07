@@ -1,4 +1,4 @@
-From bcd36b5fa3f0bbde9328673de25b38fd7013101f Mon Sep 17 00:00:00 2001
+From 491efa67f03291bc6502b0fc937081af2c93166d Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 27 Jun 2013 14:37:01 +0300
 Subject: Make perlbug look up the list of local patches at run time

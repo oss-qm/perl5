@@ -1,4 +1,4 @@
-From d23aa3cb4eee4ae777bf691dc560fd6f5790800b Mon Sep 17 00:00:00 2001
+From 146be92c51771b84670911f5100936f1bdbcb8c6 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 25 Feb 2012 19:41:27 +0200
 Subject: Make EU::MM pass LD through to recursive Makefile.PL invocations
