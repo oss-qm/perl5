@@ -1,8 +1,8 @@
-perl (5.18.2-1) UNRELEASED; urgency=low
+perl (5.18.2-1) experimental; urgency=low
 
   * New upstream release.
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 07 Jan 2014 18:26:52 +0200
+ -- Niko Tyni <ntyni@debian.org>  Wed, 08 Jan 2014 21:17:36 +0200
 
 perl (5.18.1-5) unstable; urgency=medium
 
