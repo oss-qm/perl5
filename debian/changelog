@@ -1,3 +1,9 @@
+perl (5.18.2-2) UNRELEASED; urgency=low
+
+  * Update debian/copyright to include the year 2013.
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 12 Jan 2014 18:43:59 +0200
+
 perl (5.18.2-1) experimental; urgency=low
 
   * New upstream release.
