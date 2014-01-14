@@ -1,8 +1,12 @@
-perl (5.18.2-2) UNRELEASED; urgency=low
+perl (5.18.2-2) unstable; urgency=medium
 
+  [ Niko Tyni ]
   * Update debian/copyright to include the year 2013.
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 12 Jan 2014 18:43:59 +0200
+  [ Dominic Hargreaves ]
+  * Upload to unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 14 Jan 2014 19:47:33 +0000
 
 perl (5.18.2-1) experimental; urgency=low
 
