@@ -38,3 +38,4 @@ fixes/perlbug-patchlist.diff
 fixes/module_metadata_security_doc.diff
 fixes/module_metadata_taint_fix.diff
 fixes/IPC-SysV-spelling.diff
+fixes/goto-sub-crash.diff
