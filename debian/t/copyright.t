@@ -33,6 +33,8 @@ SKIP: {
         skip('no cme or config-edit or available', 2) if $?;
         $cmd = 'config-edit -application dpkg-copyright -ui none';
     } else {
+        skip('no cme dpkg-copyright application available (try installing libconfig-model-dpkg-perl)', 2)
+            if qx/cme list/ !~ /dpkg-copyright/;
         $cmd = 'cme check dpkg-copyright';
     }
     diag("checking debian/copyright which copyright checker '$cmd'");
