@@ -3,7 +3,7 @@ Section: perl
 Priority: standard
 Maintainer: Niko Tyni <ntyni@debian.org>
 Uploaders: Dominic Hargreaves <dom@earth.li>
-Standards-Version: 3.9.3
+Standards-Version: 3.9.5
 Homepage: http://dev.perl.org/perl5/
 Build-Depends: file, cpio, libdb-dev, libgdbm-dev, netbase [!hurd-any],
  procps [!hurd-any], zlib1g-dev | libz-dev, libbz2-dev, dpkg-dev (>= 1.16.0)
