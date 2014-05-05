@@ -9,6 +9,7 @@ perl (5.18.2-3) UNRELEASED; urgency=medium
   [ Dominic Hargreaves ]
   * Add Recommends on rename to perl (see #735134)
   * Update Standards-Version (no changes)
+  * Fix typo in debian/t/copyright.t
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 14 Feb 2014 16:55:33 +0200
 
