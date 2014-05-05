@@ -1,9 +1,13 @@
 perl (5.18.2-3) UNRELEASED; urgency=medium
 
+  [ Niko Tyni ]
   * Small changes to debian/copyright to placate Config::Model::Dpkg.
     (Closes: #731570)
   * Backport upstream patch fixing crashes with 'undef *_, goto &sub'.
     (Closes: #736187)
+
+  [ Dominic Hargreaves ]
+  * Add Recommends on rename to perl (see #735134)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 14 Feb 2014 16:55:33 +0200
 

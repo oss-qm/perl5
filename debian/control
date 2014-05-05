@@ -369,7 +369,7 @@ Provides: data-dumper, perl5,
  libthreads-shared-perl,
  libtime-piece-perl,
  libencode-perl,
-Recommends: netbase
+Recommends: netbase, rename
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
  make
 Description: Larry Wall's Practical Extraction and Report Language
