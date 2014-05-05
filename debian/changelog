@@ -1,4 +1,4 @@
-perl (5.18.2-3) UNRELEASED; urgency=medium
+perl (5.18.2-3) unstable; urgency=medium
 
   [ Niko Tyni ]
   * Small changes to debian/copyright to placate Config::Model::Dpkg.
@@ -11,7 +11,7 @@ perl (5.18.2-3) UNRELEASED; urgency=medium
   * Update Standards-Version (no changes)
   * Fix typo in debian/t/copyright.t
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 14 Feb 2014 16:55:33 +0200
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 05 May 2014 17:15:59 +0100
 
 perl (5.18.2-2) unstable; urgency=medium
 
