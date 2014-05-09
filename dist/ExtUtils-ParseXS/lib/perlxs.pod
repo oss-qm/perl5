@@ -110,8 +110,12 @@ This XSUB will be invoked from Perl with the usage shown
 above.  Note that the first three #include statements, for
 C<EXTERN.h>, C<perl.h>, and C<XSUB.h>, will always be present at the
 beginning of an XS file.  This approach and others will be
-expanded later in this document.
+expanded later in this document.  A #define for C<PERL_NO_GET_CONTEXT>
+should be present to fetch the interpreter context more efficiently,
+see L<perlguts|perlguts/How multiple interpreters and concurrency are
+supported> for details.
 
+     #define PERL_NO_GET_CONTEXT
      #include "EXTERN.h"
      #include "perl.h"
      #include "XSUB.h"
@@ -556,7 +560,7 @@ not care about its initial contents.
 Starting with Perl 5.16, you can embed typemaps into your XS code
 instead of or in addition to typemaps in a separate file.  Multiple
 such embedded typemaps will be processed in order of appearance in
-the XS code and like local typemap files take precendence over the
+the XS code and like local typemap files take precedence over the
 default typemap, the embedded typemaps may overwrite previous
 definitions of TYPEMAP, INPUT, and OUTPUT stanzas.  The syntax for
 embedded typemaps is
@@ -1691,7 +1695,7 @@ called and C<THIS> will be given as its parameter.  The generated C++ code for
 
 will look like this:
 
-     color *THIS = ...;	// Initialized as in typemap
+     color *THIS = ...;  // Initialized as in typemap
 
      delete THIS;
 
@@ -1711,22 +1715,23 @@ The following is an example of a typemap that could be used for this C++
 example.
 
     TYPEMAP
-    color *		O_OBJECT
+    color *  O_OBJECT
 
     OUTPUT
     # The Perl object is blessed into 'CLASS', which should be a
     # char* having the name of the package for the blessing.
     O_OBJECT
-	sv_setref_pv( $arg, CLASS, (void*)$var );
+        sv_setref_pv( $arg, CLASS, (void*)$var );
 
     INPUT
     O_OBJECT
-	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) )
-		$var = ($type)SvIV((SV*)SvRV( $arg ));
-	else{
-		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
-		XSRETURN_UNDEF;
-	}
+        if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) )
+            $var = ($type)SvIV((SV*)SvRV( $arg ));
+        else{
+            warn("${Package}::$func_name() -- " .
+                "$var is not a blessed SV reference");
+            XSRETURN_UNDEF;
+        }
 
 =head2 Interface Strategy
 
@@ -1869,6 +1874,7 @@ the C<-g> (C<--global>) option with h2xs (see L<h2xs>).
 
 Below is an example module that makes use of the macros.
 
+    #define PERL_NO_GET_CONTEXT
     #include "EXTERN.h"
     #include "perl.h"
     #include "XSUB.h"
@@ -1897,7 +1903,6 @@ Below is an example module that makes use of the macros.
 
     int
     newMouse(char * name)
-        char * name;
         PREINIT:
           dMY_CXT;
         CODE:
@@ -1909,24 +1914,28 @@ Below is an example module that makes use of the macros.
               RETVAL = ++ MY_CXT.count;
               strcpy(MY_CXT.name[MY_CXT.count - 1], name);
           }
+        OUTPUT:
+          RETVAL
 
     char *
     get_mouse_name(index)
-      int index
-      CODE:
-        dMY_CXT;
-        RETVAL = MY_CXT.lives ++;
-        if (index > MY_CXT.count)
-          croak("There are only 3 blind mice.");
-        else
-          RETVAL = newSVpv(MY_CXT.name[index - 1]);
+          int index
+        PREINIT:
+          dMY_CXT;
+        CODE:
+          if (index > MY_CXT.count)
+            croak("There are only 3 blind mice.");
+          else
+            RETVAL = MY_CXT.name[index - 1];
+        OUTPUT:
+          RETVAL
 
     void
     CLONE(...)
 	CODE:
-	MY_CXT_CLONE;
+	  MY_CXT_CLONE;
 
-B<REFERENCE>
+=head3 MY_CXT REFERENCE
 
 =over 5
 
@@ -1958,7 +1967,7 @@ of C<my_cxt_t>.
 
 =item MY_CXT_INIT
 
-The MY_CXT_INIT macro initialises storage for the C<my_cxt_t> struct.
+The MY_CXT_INIT macro initializes storage for the C<my_cxt_t> struct.
 
 It I<must> be called exactly once, typically in a BOOT: section. If you
 are maintaining multiple interpreters, it should be called once in each
@@ -2046,6 +2055,7 @@ or even crashes become more likely), nor is it very portable.
 
 File C<RPC.xs>: Interface to some ONC+ RPC bind library functions.
 
+     #define PERL_NO_GET_CONTEXT
      #include "EXTERN.h"
      #include "perl.h"
      #include "XSUB.h"

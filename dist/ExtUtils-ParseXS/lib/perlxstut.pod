@@ -79,6 +79,21 @@ instead of saying "C<make test>", you should say "C<make test_static>".
 On systems that cannot build dynamically-loadable libraries at all, simply
 saying "C<make test>" is sufficient.
 
+=head2 Threads and PERL_NO_GET_CONTEXT
+
+For threaded builds, perl requires the context pointer for the current
+thread, without C<PERL_NO_GET_CONTEXT>, perl will call a function to
+retrieve the context.
+
+For improved performance, include:
+
+  #define PERL_NO_GET_CONTEXT
+
+as shown below.
+
+For more details, see L<perlguts|perlguts/How multiple interpreters
+and concurrency are supported>.
+
 =head1 TUTORIAL
 
 Now let's go on with the show!
@@ -146,6 +161,7 @@ the extension.
 
 Finally, the Mytest.xs file should look something like this:
 
+    #define PERL_NO_GET_CONTEXT
     #include "EXTERN.h"
     #include "perl.h"
     #include "XSUB.h"
@@ -265,7 +281,8 @@ We will be calling the test script through the command "C<make test>".  You
 should see output that looks something like this:
 
     %make test
-    PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+    PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-e"
+    "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
     t/Mytest....ok
     All tests successful.
     Files=1, Tests=4,  0 wallclock secs ( 0.03 cusr +  0.00 csys =  0.03 CPU)
@@ -614,7 +631,7 @@ Now we also need to create a typemap because the default Perl doesn't
 currently support the C<const char *> type.  Include a new TYPEMAP
 section in your XS code before the above function:
 
-        TYPEMAP: <<END;
+        TYPEMAP: <<END
 	const char *	T_PV
         END
 
@@ -1088,8 +1105,8 @@ Mytest.xs:
 	    SV * paths
 	INIT:
 	    AV * results;
-	    I32 numpaths = 0;
-	    int i, n;
+	    SSize_t numpaths = 0, n;
+	    int i;
 	    struct statfs buf;
 
 	    SvGETMAGIC(paths);
@@ -1226,6 +1243,7 @@ Suppose that for some strange reason we need a wrapper around the
 standard C library function C<fputs()>. This is all we need:
 
 	#define PERLIO_NOT_STDIO 0
+	#define PERL_NO_GET_CONTEXT
 	#include "EXTERN.h"
 	#include "perl.h"
 	#include "XSUB.h"

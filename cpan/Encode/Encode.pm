@@ -1,16 +1,15 @@
 #
-# $Id: Encode.pm,v 2.49 2013/03/05 03:13:47 dankogai Exp dankogai $
+# $Id: Encode.pm,v 2.57 2014/01/03 04:51:39 dankogai Exp $
 #
 package Encode;
 use strict;
 use warnings;
-our $VERSION = sprintf "%d.%02d", q$Revision: 2.49 $ =~ /(\d+)/g;
+our $VERSION = sprintf "%d.%02d", q$Revision: 2.57 $ =~ /(\d+)/g;
 use constant DEBUG => !!$ENV{PERL_ENCODE_DEBUG};
 use XSLoader ();
 XSLoader::load( __PACKAGE__, $VERSION );
 
-require Exporter;
-use base qw/Exporter/;
+use Exporter 5.57 'import';
 
 # Public, encouraged API is exported by default
 
@@ -53,7 +52,7 @@ our %ExtModule;
 require Encode::Config;
 #  See
 #  https://bugzilla.redhat.com/show_bug.cgi?id=435505#c2
-#  to find why sig handers inside eval{} are disabled.
+#  to find why sig handlers inside eval{} are disabled.
 eval {
     local $SIG{__DIE__};
     local $SIG{__WARN__};
@@ -209,9 +208,8 @@ my $utf8enc;
 
 sub decode_utf8($;$) {
     my ( $octets, $check ) = @_;
-    return $octets if is_utf8($octets);
     return undef unless defined $octets;
-    $octets .= '' if ref $octets;
+    $octets .= '';
     $check   ||= 0;
     $utf8enc ||= find_encoding('utf8');
     my $string = $utf8enc->decode( $octets, $check );
@@ -471,8 +469,7 @@ internal format:
 
 B<CAVEAT>: When you run C<$string = decode("utf8", $octets)>, then $string
 I<might not be equal to> $octets.  Though both contain the same data, the
-UTF8 flag for $string is on unless $octets consists entirely of ASCII data
-on ASCII machines or EBCDIC on EBCDIC machines.  See L</"The UTF8 flag">
+UTF8 flag for $string is on.  See L</"The UTF8 flag">
 below.
 
 If the $string is C<undef>, then C<undef> is returned.
@@ -1021,7 +1018,7 @@ who submitted code to the project.
 
 =head1 COPYRIGHT
 
-Copyright 2002-2012 Dan Kogai I<< <dankogai@cpan.org> >>.
+Copyright 2002-2013 Dan Kogai I<< <dankogai@cpan.org> >>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
