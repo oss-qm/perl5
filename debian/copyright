@@ -9,7 +9,7 @@ Comment:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
  .
- Last checked against: Perl 5.18.2
+ Last checked against: Perl 5.19.11
 
 Files: *
 Copyright:
@@ -423,7 +423,7 @@ License: GPL-1+ or Artistic
 
 Files: cpan/Compress-Raw-Zlib/zlib-src/*
 Copyright:
- Copyright (C) 1995-2012 Jean-loup Gailly and Mark Adler
+ Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler
 License: ZLIB
 
 Files: cpan/Config-Perl-V/*
@@ -468,7 +468,7 @@ License: GPL-1+ or Artistic
  the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/DB_File/*
-Copyright: Copyright (c) 1995-2012 Paul Marquess. All rights reserved.
+Copyright: Copyright (c) 1995-2013 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -534,6 +534,13 @@ License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or modify it
  under the same terms as Perl itself.
 
+Files: cpan/experimental/*
+Copyright:
+ This software is copyright (c) 2013 by Leon Timmermans.
+License: GPL-1+ or Artistic
+ This is free software; you can redistribute it and/or modify it under
+ the same terms as the Perl 5 programming language system itself.
+
 Files: cpan/ExtUtils-Constant/*
 Copyright: unknown
 License: GPL-1+ or Artistic
@@ -575,12 +582,11 @@ License: GPL-1+ or Artistic
 
 Files: cpan/File-Temp/*
 Copyright:
- Copyright (C) 2007-2009 Tim Jenness.
- Copyright (C) 1999-2007 Tim Jenness and the UK Particle Physics and
- Astronomy Research Council. All Rights Reserved.
+ This software is copyright (c) 2013 by Tim Jenness and the UK Particle
+ Physics and Astronomy Research Council.
 License: GPL-1+ or Artistic
- This program is free software; you can redistribute it and/or modify
- it under the same terms as Perl itself.
+ This is free software; you can redistribute it and/or modify it under
+ the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/Filter-Util-Call/*
 Copyright:
@@ -601,7 +607,7 @@ License: GPL-2+ or Artistic
 
 Files: cpan/HTTP-Tiny/*
 Copyright:
- This software is copyright (c) 2011 by Christian Hansen.
+ This software is copyright (c) 2014 by Christian Hansen.
 License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under
  the same terms as the Perl 5 programming language system itself.
@@ -612,6 +618,13 @@ Copyright:
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it
  and/or modify it under the same terms as Perl itself.
+
+Files: cpan/IO-Socket-IP/*
+Copyright:
+ This software is copyright (c) 2014 by Paul Evans <leonerd@leonerd.org.uk>.
+License:
+ This is free software; you can redistribute it and/or modify it under
+ the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/IO-Zlib/*
 Copyright:
@@ -788,10 +801,10 @@ License: GPL-1+ or Artistic
 
 Files: cpan/Parse-CPAN-Meta/*
 Copyright:
- Copyright 2006 - 2010 Adam Kennedy.
+ This software is copyright (c) 2014 by Adam Kennedy and Contributors.
 License: GPL-1+ or Artistic
- This program is free software; you can redistribute
- it and/or modify it under the same terms as Perl itself.
+ This is free software; you can redistribute it and/or modify it under
+ the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/PerlIO-via-QuotedPrint/*
 Copyright:
@@ -802,7 +815,7 @@ License: GPL-1+ or Artistic
 
 Files: cpan/Perl-OSType/*
 Copyright:
- This software is copyright (c) 2013 by David Golden.
+ This software is copyright (c) 2014 by David Golden.
 License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under
  the same terms as the Perl 5 programming language system itself.
@@ -955,10 +968,7 @@ Copyright:
  Copyright 2012 Kurt Starsinic <kstarsinic@gmail.com>
 License: GPL-1+ or Artistic
  This program is free software; you may redistribute it and/or modify
- it under the same terms as Perl itself.  This means that you may
- choose between the two licenses that Perl is released under: the GNU
- GPL and the Artistic License.  Please see your Perl distribution for
- the details and copies of the licenses.
+ it under the same terms as Perl itself.
 
 Files: cpan/Term-ANSIColor/t/stringify.t
 Copyright:
@@ -1085,7 +1095,7 @@ Files: cpan/Text-Tabs/*
 Copyright:
  Copyright (C) 1996-2009 David Muir Sharnoff.
  Copyright (C) 2005 Aristotle Pagaltzis
- Copyright (C) 2012 Google, Inc.
+ Copyright (C) 2012-2013 Google, Inc.
 License: TEXT-TABS
 
 Files: cpan/Tie-File/*
@@ -1241,40 +1251,6 @@ License: GPL-1+ or Artistic
  This module is free software. It may be used, redistributed
  and/or modified under the same terms as Perl itself.
 
-Files: dist/Cwd/*
-Copyright:
- Copyright (c) 2004 by the Perl 5 Porters.  All rights reserved.
-License: GPL-1+ or Artistic
- This program is free software; you can redistribute it and/or modify
- it under the same terms as Perl itself.
-
-Files: dist/Cwd/Cwd.xs
-Copyright:
- Copyright (c) 2004 by the Perl 5 Porters.  All rights reserved.
- Copyright (c) 2003 Constantin S. Svintsoff <kostik@iclub.nsu.ru>
-License: GPL-1+ or Artistic, and BSD-3-clause-GENERIC
-Comment:
- The main license applies to most of the code:
- .
-  This program is free software; you can redistribute it and/or modify
-  it under the same terms as Perl itself.
- .
- but portions of it have been taken from a BSD variant and are licensed
- under the terms of the "BSD-3-clause-GENERIC" license included in this file.
- .
- dist/Cwd/Cwd.pm states:
- .
-  Portions of the C code in this library are copyright (c) 1994 by the
-  Regents of the University of California.  All rights reserved.  The
-  license on this code is compatible with the licensing of the rest of
-  the distribution - please see the source code in F<Cwd.xs> for the
-  details.
- .
- but, as discussed in
-  http://rt.cpan.org/Public/Bug/Display.html?id=64116
- this is outdated and dist/Cwd/Cwd.xs itself contains the correct
- information.
-
 Files: dist/Data-Dumper/*
 Copyright:
  Copyright (c) 1996-98 Gurusamy Sarathy. All rights reserved.
@@ -1387,6 +1363,40 @@ Copyright:
 License: GPL-1+ or Artistic
  This program is free software; you may redistribute it and/or
  modify it under the same terms as Perl itself.
+
+Files: dist/PathTools/*
+Copyright:
+ Copyright (c) 2004 by the Perl 5 Porters.  All rights reserved.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself.
+
+Files: dist/PathTools/Cwd.xs
+Copyright:
+ Copyright (c) 2004 by the Perl 5 Porters.  All rights reserved.
+ Copyright (c) 2003 Constantin S. Svintsoff <kostik@iclub.nsu.ru>
+License: GPL-1+ or Artistic, and BSD-3-clause-GENERIC
+Comment:
+ The main license applies to most of the code:
+ .
+  This program is free software; you can redistribute it and/or modify
+  it under the same terms as Perl itself.
+ .
+ but portions of it have been taken from a BSD variant and are licensed
+ under the terms of the "BSD-3-clause-GENERIC" license included in this file.
+ .
+ dist/PathTools/Cwd.pm states:
+ .
+  Portions of the C code in this library are copyright (c) 1994 by the
+  Regents of the University of California.  All rights reserved.  The
+  license on this code is compatible with the licensing of the rest of
+  the distribution - please see the source code in F<Cwd.xs> for the
+  details.
+ .
+ but, as discussed in
+  http://rt.cpan.org/Public/Bug/Display.html?id=64116
+ this is outdated and dist/PathTools/Cwd.xs itself contains the correct
+ information.
 
 Files: dist/Pod-Perldoc/*
 Copyright:
@@ -2230,7 +2240,10 @@ License: REGCOMP
 
 License: TEXT-TABS
  This module may be modified, used, copied, and redistributed at your own risk.
- Publicly redistributed modified versions must use a different name.
+ .
+ Although allowed by the preceding license, please do not publicly
+ redistribute modified versions of this code with the name "Text::Tabs"
+ unless it passes the unmodified Text::Tabs test suite.
 
 License: S2P
  This program is free and open software. You may use, modify,
