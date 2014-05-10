@@ -20,12 +20,13 @@ version     := $(shell /bin/bash debian/config.debian --version)
 installtype := $(shell /bin/bash debian/config.debian --install-type)
 test_target := $(shell /bin/bash debian/config.debian --test-target)
 strip	    := $(shell /bin/bash debian/config.debian --strip)
+archtriplet := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 srcdir      := $(shell pwd)
 packages    := $(shell sed -n 's/^Package: *\(.*\)/\1/p' debian/control)
 tmp	    = debian/tmp
 bin         = $(tmp)/usr/bin
 man         = $(tmp)/usr/share/man
-lib         = $(tmp)/usr/lib/perl/$(version)
+lib         = $(tmp)/usr/lib/$(archtriplet)/perl/$(version)
 share       = $(tmp)/usr/share/perl/$(version)
 build	    = debian/build
 debug       = $(build)/perl-debug/usr/lib/debug
@@ -199,14 +200,14 @@ endif
 	rm -f $(bin)/perl$(fullversion)
 
 	# relocate perl libraries and create links
-	cp libperl-static $(tmp)/usr/lib/libperl.a
-	mv $(lib)/CORE/libperl.so.$(fullversion) $(tmp)/usr/lib
+	cp libperl-static $(tmp)/usr/lib/$(archtriplet)/libperl.a
+	mv $(lib)/CORE/libperl.so.$(fullversion) $(tmp)/usr/lib/$(archtriplet)
 
-	ln -s libperl.so.$(fullversion) $(tmp)/usr/lib/libperl.so.$(version)
-	ln -s libperl.so.$(version) $(tmp)/usr/lib/libperl.so
+	ln -s libperl.so.$(fullversion) $(tmp)/usr/lib/$(archtriplet)/libperl.so.$(version)
+	ln -s libperl.so.$(version) $(tmp)/usr/lib/$(archtriplet)/libperl.so
 
 	# move to full version (symlinks created in perl-base below)
-	mv $(lib) $(tmp)/usr/lib/perl/$(fullversion)
+	mv $(lib) $(tmp)/usr/lib/$(archtriplet)/perl/$(fullversion)
 	mv $(share) $(tmp)/usr/share/perl/$(fullversion)
 
 ifeq ($(installtype),static)
@@ -241,7 +242,7 @@ endif
 	./perl.static debian/splitdoc $(build)/perl-base
 
 	# create symlinks to match @INC
-	ln -s $(fullversion) $(build)/perl-base/usr/lib/perl/$(version)
+	ln -s $(fullversion) $(build)/perl-base/usr/lib/$(archtriplet)/perl/$(version)
 	ln -s $(fullversion) $(build)/perl-base/usr/share/perl/$(version)
 
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))

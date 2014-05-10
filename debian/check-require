@@ -45,7 +45,8 @@ sub canonicalize {
 	# usr/*/perl/*/auto/File/Glob/Glob.so and the like should be ignored
 	return () if m|/| && !/\.p[hlm]$/;
 
-	s|usr/[^/]+/perl/[^/]+/||;
+	s|usr/share/perl/[^/]+/||;
+	s|usr/lib/[^/]+/perl/[^/]+/||;
 
 	s|/|::|g if s/\.pm$//;
 	return ($_);

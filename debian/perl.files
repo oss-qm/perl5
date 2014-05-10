@@ -2,4 +2,4 @@
 # this package needs to come after any other packages with more
 # specific recipes for the directories
 usr/bin
-usr/lib/perl
+usr/lib/*/perl
