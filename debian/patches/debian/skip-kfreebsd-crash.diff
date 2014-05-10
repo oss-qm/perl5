@@ -1,4 +1,4 @@
-From b2ba2d8e5a54419d36d33659be69227ec3a3b166 Mon Sep 17 00:00:00 2001
+From d7e1e06e362be3ae670f6de9c32d5165f3807999 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 5 Aug 2011 10:50:18 +0300
 Subject: Skip a crashing test case in t/op/threads.t on GNU/kFreeBSD
@@ -17,7 +17,7 @@ Patch-Name: debian/skip-kfreebsd-crash.diff
  1 file changed, 4 insertions(+)
 
 diff --git a/t/op/threads.t b/t/op/threads.t
-index 2a52efc..9e33b31 100644
+index 6fb2410..67b5f4a 100644
 --- a/t/op/threads.t
 +++ b/t/op/threads.t
 @@ -376,6 +376,9 @@ EOF

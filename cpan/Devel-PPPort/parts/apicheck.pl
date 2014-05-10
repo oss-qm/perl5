@@ -5,13 +5,7 @@
 #
 ################################################################################
 #
-#  $Revision: 37 $
-#  $Author: mhx $
-#  $Date: 2010/03/07 13:15:43 +0100 $
-#
-################################################################################
-#
-#  Version 3.x, Copyright (C) 2004-2010, Marcus Holland-Moritz.
+#  Version 3.x, Copyright (C) 2004-2013, Marcus Holland-Moritz.
 #  Version 2.x, Copyright (C) 2001, Paul Marquess.
 #  Version 1.x, Copyright (C) 1999, Kenneth Albanowski.
 #
@@ -152,6 +146,7 @@ print OUT <<HEAD;
 #define NEED_load_module
 #define NEED_my_snprintf
 #define NEED_my_sprintf
+#define NEED_mg_findext
 #define NEED_my_strlcat
 #define NEED_my_strlcpy
 #define NEED_newCONSTSUB
@@ -320,4 +315,3 @@ END
 }
 
 @ARGV and close OUT;
-

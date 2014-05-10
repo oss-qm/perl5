@@ -1,6 +1,6 @@
 =head1 NAME
 
-TAP::Harness::Beyond - Beyond make test
+Test::Harness::Beyond - Beyond make test
 
 =head1 Beyond make test
 
@@ -227,7 +227,8 @@ document:
 
   package My::TAP::Harness;
 
-  use base qw( TAP::Harness ); use YAML;
+  use base 'TAP::Harness';
+  use YAML;
 
   sub summary {
     my ( $self, $aggregate ) = @_; 

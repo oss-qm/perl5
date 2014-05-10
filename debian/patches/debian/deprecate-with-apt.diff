@@ -1,14 +1,14 @@
-From bfb42eb4a2502373c9d8e338eb4485090261e92e Mon Sep 17 00:00:00 2001
+From 9a5f5377f64bc4137e8e0b1548f9f0773c64602c Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules
 
-Bug-Debian: http://bugs.debian.org/702096
+Bug-Debian: http://bugs.debian.org/747628
 
-Several modules are being deprecated with perl 5.18.
+Several modules are being deprecated with perl 5.20.
 To get a clean transition, perl/perl-modules is going to recommend the
 separate Debian packages of these for one release cycle so that they will be
-pulled in by default on upgrades. This is taking place for perl 5.18/jessie.
+pulled in by default on upgrades. This is taking place for perl 5.20/jessie.
 
 However, on systems configured to ignore recommendations the deprecation
 warnings will still be useful, so modify them slightly to point to the
@@ -16,14 +16,14 @@ separate packages instead.
 
 Patch-Name: debian/deprecate-with-apt.diff
 ---
- lib/deprecate.pm | 72 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 71 insertions(+), 1 deletion(-)
+ lib/deprecate.pm | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/lib/deprecate.pm b/lib/deprecate.pm
-index 7562c69..f2ed24e 100644
+index 47bc112..c0cc6ce 100644
 --- a/lib/deprecate.pm
 +++ b/lib/deprecate.pm
-@@ -7,6 +7,70 @@ our $VERSION = 0.02;
+@@ -7,6 +7,23 @@ our $VERSION = 0.03;
  our %Config;
  unless (%Config) { require Config; *Config = \%Config::Config; }
  
@@ -31,70 +31,23 @@ index 7562c69..f2ed24e 100644
 +# deprecated modules where available
 +
 +our %DEBIAN_PACKAGES = (
-+    'Archive::Extract' => 'libarchive-extract-perl',
-+    'B::Lint' => 'libb-lint-perl',
-+    'B::Lint::Debug' => 'libb-lint-perl',
-+    'CPANPLUS::Dist::Build' => 'libcpanplus-dist-build-perl',
-+    'CPANPLUS::Dist::Build::Constants' => 'libcpanplus-dist-build-perl',
-+    'CPANPLUS' => 'libcpanplus-perl',
-+    'CPANPLUS::Backend' => 'libcpanplus-perl',
-+    'CPANPLUS::Backend::RV' => 'libcpanplus-perl',
-+    'CPANPLUS::Config' => 'libcpanplus-perl',
-+    'CPANPLUS::Config::HomeEnv' => 'libcpanplus-perl',
-+    'CPANPLUS::Configure' => 'libcpanplus-perl',
-+    'CPANPLUS::Configure::Setup' => 'libcpanplus-perl',
-+    'CPANPLUS::Dist' => 'libcpanplus-perl',
-+    'CPANPLUS::Dist::Autobundle' => 'libcpanplus-perl',
-+    'CPANPLUS::Dist::Base' => 'libcpanplus-perl',
-+    'CPANPLUS::Dist::MM' => 'libcpanplus-perl',
-+    'CPANPLUS::Dist::Sample' => 'libcpanplus-perl',
-+    'CPANPLUS::Error' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Constants' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Constants::Report' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Extract' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Fetch' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Report' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Search' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Source' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Source::Memory' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Source::SQLite' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Source::SQLite::Tie' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Utils' => 'libcpanplus-perl',
-+    'CPANPLUS::Internals::Utils::Autoflush' => 'libcpanplus-perl',
-+    'CPANPLUS::Module' => 'libcpanplus-perl',
-+    'CPANPLUS::Module::Author' => 'libcpanplus-perl',
-+    'CPANPLUS::Module::Author::Fake' => 'libcpanplus-perl',
-+    'CPANPLUS::Module::Checksums' => 'libcpanplus-perl',
-+    'CPANPLUS::Module::Fake' => 'libcpanplus-perl',
-+    'CPANPLUS::Module::Signature' => 'libcpanplus-perl',
-+    'CPANPLUS::Selfupdate' => 'libcpanplus-perl',
-+    'CPANPLUS::Shell' => 'libcpanplus-perl',
-+    'CPANPLUS::Shell::Classic' => 'libcpanplus-perl',
-+    'CPANPLUS::Shell::Default' => 'libcpanplus-perl',
-+    'CPANPLUS::Shell::Default::Plugins::CustomSource' => 'libcpanplus-perl',
-+    'CPANPLUS::Shell::Default::Plugins::Remote' => 'libcpanplus-perl',
-+    'CPANPLUS::Shell::Default::Plugins::Source' => 'libcpanplus-perl',
-+    'File::CheckTree' => 'libfile-checktree-perl',
-+    'Log::Message::Simple' => 'liblog-message-simple-perl',
-+    'Log::Message' => 'liblog-message-perl',
-+    'Log::Message::Config' => 'liblog-message-perl',
-+    'Log::Message::Handlers' => 'liblog-message-perl',
-+    'Log::Message::Item' => 'liblog-message-perl',
-+    'Devel::InnerPackage' => 'libmodule-pluggable-perl',
-+    'Module::Pluggable' => 'libmodule-pluggable-perl',
-+    'Module::Pluggable::Object' => 'libmodule-pluggable-perl',
-+    'Object::Accessor' => 'libobject-accessor-perl',
-+    'Pod::LaTeX' => 'libpod-latex-perl',
-+    'Term::UI' => 'libterm-ui-perl',
-+    'Term::UI::History' => 'libterm-ui-perl',
-+    'Text::Soundex' => 'libtext-soundex-perl',
++    'CGI' => 'libcgi-pm-perl',
++    'CGI::Apache' => 'libcgi-pm-perl',
++    'CGI::Carp' => 'libcgi-pm-perl',
++    'CGI::Cookie' => 'libcgi-pm-perl',
++    'CGI::Fast' => 'libcgi-pm-perl',
++    'CGI::Pretty' => 'libcgi-pm-perl',
++    'CGI::Push' => 'libcgi-pm-perl',
++    'CGI::Switch' => 'libcgi-pm-perl',
++    'CGI::Util' => 'libcgi-pm-perl',
++    'Module::Build' => 'libmodule-build-perl',
++    'Package::Constants' => 'libpackage-constants-perl',
 +);
 +
  # This isn't a public API. It's internal to code maintained by the perl-porters
  # If you would like it to be a public API, please send a patch with
  # documentation and tests. Until then, it may change without warning.
-@@ -58,9 +122,15 @@ EOM
+@@ -58,9 +75,15 @@ EOM
  	if (defined $callers_bitmask
  	    && (vec($callers_bitmask, $warnings::Offsets{deprecated}, 1)
  		|| vec($callers_bitmask, $warnings::Offsets{all}, 1))) {

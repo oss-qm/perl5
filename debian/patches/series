@@ -18,8 +18,6 @@ debian/module_build_man_extensions.diff
 debian/prune_libs.diff
 fixes/net_smtp_docs.diff
 debian/perlivp.diff
-debian/cpanplus_definstalldirs.diff
-debian/cpanplus_config_path.diff
 debian/deprecate-with-apt.diff
 debian/squelch-locale-warnings.diff
 debian/skip-upstream-git-tests.diff
@@ -28,14 +26,6 @@ debian/skip-kfreebsd-crash.diff
 fixes/document_makemaker_ccflags.diff
 debian/find_html2text.diff
 debian/hurd_test_skip_stack.diff
-fixes/manpage_name_Test-Harness.diff
-debian/makemaker-pasthru.diff
 debian/perl5db-x-terminal-emulator.patch
 debian/cpan-missing-site-dirs.diff
 fixes/memoize_storable_nstore.diff
-fixes/net_ftp_failed_command.diff
-fixes/perlbug-patchlist.diff
-fixes/module_metadata_security_doc.diff
-fixes/module_metadata_taint_fix.diff
-fixes/IPC-SysV-spelling.diff
-fixes/goto-sub-crash.diff

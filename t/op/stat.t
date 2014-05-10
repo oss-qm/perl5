@@ -36,8 +36,8 @@ $Is_NetWare = $^O eq 'NetWare';
 $Is_OS2     = $^O eq 'os2';
 $Is_Solaris = $^O eq 'solaris';
 $Is_VMS     = $^O eq 'VMS';
-$Is_DGUX    = $^O eq 'dgux';
 $Is_MPRAS   = $^O =~ /svr4/ && -f '/etc/.relid';
+$Is_Android = $^O =~ /android/;
 
 $Is_Dosish  = $Is_Dos || $Is_OS2 || $Is_MSWin32 || $Is_NetWare;
 
@@ -93,8 +93,17 @@ close(FOO);
 
 sleep 2;
 
+my $has_link = 1;
+my $inaccurate_atime = 0;
+if (defined &Win32::IsWinNT && Win32::IsWinNT()) {
+    if (Win32::FsType() ne 'NTFS') {
+        $has_link            = 0;
+	$inaccurate_atime    = 1;
+    }
+}
 
 SKIP: {
+    skip "No link on this filesystem", 6 unless $has_link;
     unlink $tmpfile_link;
     my $lnk_result = eval { link $tmpfile, $tmpfile_link };
     skip "link() unimplemented", 6 if $@ =~ /unimplemented/;
@@ -251,7 +260,7 @@ SKIP: {
       if $Is_VMS;
 
     delete $ENV{CLICOLOR_FORCE};
-    my $LS  = $Config{d_readlink} ? "ls -lL" : "ls -l";
+    my $LS  = $Config{d_readlink} && !$Is_Android ? "ls -lL" : "ls -l";
     my $CMD = "$LS /dev 2>/dev/null";
     my $DEV = qx($CMD);
 
@@ -294,13 +303,10 @@ SKIP: {
 	is($c1, $c2, "ls and $_[1] agreeing on /dev ($c1 $c2)");
     };
 
-SKIP: {
-    skip("DG/UX ls -L broken", 3) if $Is_DGUX;
-
+{
     $try->('b', '-b');
     $try->('c', '-c');
     $try->('s', '-S');
-
 }
 
 ok(! -b $Curdir,    '!-b cwd');
@@ -377,12 +383,7 @@ SKIP: {
 my $statfile = './op/stat.t';
 ok(  -T $statfile,    '-T');
 ok(! -B $statfile,    '!-B');
-
-SKIP: {
-     skip("DG/UX", 1) if $Is_DGUX;
 ok(-B $Perl,      '-B');
-}
-
 ok(! -T $Perl,    '!-T');
 
 open(FOO,$statfile);
@@ -509,7 +510,11 @@ SKIP: {
     my @b = (-M _, -A _, -C _);
     print "# -MAC=(@b)\n";
     ok( (-M _) < 0, 'negative -M works');
-    ok( (-A _) < 0, 'negative -A works');
+  SKIP:
+    {
+        skip "Access timestamps inaccurate", 1 if $inaccurate_atime;
+        ok( (-A _) < 0, 'negative -A works');
+    }
     ok( (-C _) < 0, 'negative -C works');
     ok(unlink($f), 'unlink tmp file');
 }

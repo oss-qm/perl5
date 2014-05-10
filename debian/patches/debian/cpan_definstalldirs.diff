@@ -1,4 +1,4 @@
-From 498784f9833f23b5a577aeb06f67437a6bc1d51c Mon Sep 17 00:00:00 2001
+From 2d66f00761e43481ee4e7dd5f25cc669a7f42440 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Provide a sensible INSTALLDIRS default for modules installed from
@@ -14,10 +14,10 @@ Patch-Name: debian/cpan_definstalldirs.diff
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/CPAN/lib/CPAN/FirstTime.pm b/cpan/CPAN/lib/CPAN/FirstTime.pm
-index b099b04..1c49ca3 100644
+index d1a8eef..4416072 100644
 --- a/cpan/CPAN/lib/CPAN/FirstTime.pm
 +++ b/cpan/CPAN/lib/CPAN/FirstTime.pm
-@@ -990,7 +990,7 @@ sub init {
+@@ -1023,7 +1023,7 @@ sub init {
      my_prompt_loop(prefer_installer => 'MB', $matcher, 'MB|EUMM|RAND');
  
      if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
@@ -26,7 +26,7 @@ index b099b04..1c49ca3 100644
          my_dflt_prompt(make_arg => "", $matcher);
          if ( $CPAN::Config->{makepl_arg} =~ /LIBS=|INC=/ ) {
              $CPAN::Frontend->mywarn(
-@@ -1022,7 +1022,7 @@ sub init {
+@@ -1055,7 +1055,7 @@ sub init {
      my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "",
                     $matcher);
  

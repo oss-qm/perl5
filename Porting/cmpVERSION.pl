@@ -32,21 +32,15 @@ unless (GetOptions('diffs' => \$diffs,
 die "$0: This does not look like a Perl directory\n"
     unless -f "perl.h" && -d "Porting";
 die "$0: 'This is a Perl directory but does not look like Git working directory\n"
-    unless -d ".git";
+    unless (-d ".git" || (exists $ENV{GIT_DIR} && -d $ENV{GIT_DIR}));
 
 my $null = devnull();
 
 unless (defined $tag_to_compare) {
-    my $check = 'HEAD';
-    while(1) {
-        $check = `git describe --abbrev=0 $check 2>$null`;
-        chomp $check;
-        last unless $check =~ /-RC/;
-        $check .= '^';
-    }
-    $tag_to_compare = $check;
     # Thanks to David Golden for this suggestion.
 
+    $tag_to_compare = `git describe --abbrev=0 2>$null`;
+    chomp $tag_to_compare;
 }
 
 unless (length $tag_to_compare) {
@@ -81,9 +75,12 @@ if ($exclude_upstream) {
 # usually because they pull in their version from some other file.
 my %skip;
 @skip{
+    'cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/Setup/BFD.pm', # just a test module
+    'cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/Setup/XS.pm',  # just a test module
+    'dist/Attribute-Handlers/demo/MyClass.pm', # it's just demonstration code
+    'dist/Exporter/lib/Exporter/Heavy.pm',
     'lib/Carp/Heavy.pm',
     'lib/Config.pm',		# no version number but contents will vary
-    'lib/Exporter/Heavy.pm',
     'win32/FindExt.pm',
 } = ();
 
@@ -198,6 +195,8 @@ foreach my $pm_file (sort keys %module_diffs) {
 sub get_file_from_git {
     my ($file, $tag) = @_;
     local $/;
+
+    use open IN => ':raw';
     return scalar `git --no-pager show $tag:$file 2>$null`;
 }
 

@@ -1,7 +1,7 @@
 package deprecate;
 use strict;
 use warnings;
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 
 # our %Config can ignore %Config::Config, e.g. for testing
 our %Config;
@@ -11,64 +11,17 @@ unless (%Config) { require Config; *Config = \%Config::Config; }
 # deprecated modules where available
 
 our %DEBIAN_PACKAGES = (
-    'Archive::Extract' => 'libarchive-extract-perl',
-    'B::Lint' => 'libb-lint-perl',
-    'B::Lint::Debug' => 'libb-lint-perl',
-    'CPANPLUS::Dist::Build' => 'libcpanplus-dist-build-perl',
-    'CPANPLUS::Dist::Build::Constants' => 'libcpanplus-dist-build-perl',
-    'CPANPLUS' => 'libcpanplus-perl',
-    'CPANPLUS::Backend' => 'libcpanplus-perl',
-    'CPANPLUS::Backend::RV' => 'libcpanplus-perl',
-    'CPANPLUS::Config' => 'libcpanplus-perl',
-    'CPANPLUS::Config::HomeEnv' => 'libcpanplus-perl',
-    'CPANPLUS::Configure' => 'libcpanplus-perl',
-    'CPANPLUS::Configure::Setup' => 'libcpanplus-perl',
-    'CPANPLUS::Dist' => 'libcpanplus-perl',
-    'CPANPLUS::Dist::Autobundle' => 'libcpanplus-perl',
-    'CPANPLUS::Dist::Base' => 'libcpanplus-perl',
-    'CPANPLUS::Dist::MM' => 'libcpanplus-perl',
-    'CPANPLUS::Dist::Sample' => 'libcpanplus-perl',
-    'CPANPLUS::Error' => 'libcpanplus-perl',
-    'CPANPLUS::Internals' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Constants' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Constants::Report' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Extract' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Fetch' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Report' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Search' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Source' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Source::Memory' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Source::SQLite' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Source::SQLite::Tie' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Utils' => 'libcpanplus-perl',
-    'CPANPLUS::Internals::Utils::Autoflush' => 'libcpanplus-perl',
-    'CPANPLUS::Module' => 'libcpanplus-perl',
-    'CPANPLUS::Module::Author' => 'libcpanplus-perl',
-    'CPANPLUS::Module::Author::Fake' => 'libcpanplus-perl',
-    'CPANPLUS::Module::Checksums' => 'libcpanplus-perl',
-    'CPANPLUS::Module::Fake' => 'libcpanplus-perl',
-    'CPANPLUS::Module::Signature' => 'libcpanplus-perl',
-    'CPANPLUS::Selfupdate' => 'libcpanplus-perl',
-    'CPANPLUS::Shell' => 'libcpanplus-perl',
-    'CPANPLUS::Shell::Classic' => 'libcpanplus-perl',
-    'CPANPLUS::Shell::Default' => 'libcpanplus-perl',
-    'CPANPLUS::Shell::Default::Plugins::CustomSource' => 'libcpanplus-perl',
-    'CPANPLUS::Shell::Default::Plugins::Remote' => 'libcpanplus-perl',
-    'CPANPLUS::Shell::Default::Plugins::Source' => 'libcpanplus-perl',
-    'File::CheckTree' => 'libfile-checktree-perl',
-    'Log::Message::Simple' => 'liblog-message-simple-perl',
-    'Log::Message' => 'liblog-message-perl',
-    'Log::Message::Config' => 'liblog-message-perl',
-    'Log::Message::Handlers' => 'liblog-message-perl',
-    'Log::Message::Item' => 'liblog-message-perl',
-    'Devel::InnerPackage' => 'libmodule-pluggable-perl',
-    'Module::Pluggable' => 'libmodule-pluggable-perl',
-    'Module::Pluggable::Object' => 'libmodule-pluggable-perl',
-    'Object::Accessor' => 'libobject-accessor-perl',
-    'Pod::LaTeX' => 'libpod-latex-perl',
-    'Term::UI' => 'libterm-ui-perl',
-    'Term::UI::History' => 'libterm-ui-perl',
-    'Text::Soundex' => 'libtext-soundex-perl',
+    'CGI' => 'libcgi-pm-perl',
+    'CGI::Apache' => 'libcgi-pm-perl',
+    'CGI::Carp' => 'libcgi-pm-perl',
+    'CGI::Cookie' => 'libcgi-pm-perl',
+    'CGI::Fast' => 'libcgi-pm-perl',
+    'CGI::Pretty' => 'libcgi-pm-perl',
+    'CGI::Push' => 'libcgi-pm-perl',
+    'CGI::Switch' => 'libcgi-pm-perl',
+    'CGI::Util' => 'libcgi-pm-perl',
+    'Module::Build' => 'libmodule-build-perl',
+    'Package::Constants' => 'libpackage-constants-perl',
 );
 
 # This isn't a public API. It's internal to code maintained by the perl-porters
@@ -145,9 +98,9 @@ deprecate - Perl pragma for deprecating the core version of a module
 
 =head1 SYNOPSIS
 
-    use deprecate;	# always deprecate the module in which this occurs
+    use deprecate;  # always deprecate the module in which this occurs
 
-    use if $] > 5.010, 'deprecate';	# conditionally deprecate the module
+    use if $] > 5.010, 'deprecate'; # conditionally deprecate the module
 
 
 =head1 DESCRIPTION

@@ -1,4 +1,4 @@
-From 214d8f84bf4c08bcb78cd4333d7694a1278d203a Mon Sep 17 00:00:00 2001
+From dd4bda1467f5b48576bcf83cc518c9111b3edf29 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Tweak enc2xs to follow symlinks and ignore missing @INC directories.
@@ -16,7 +16,7 @@ Patch-Name: debian/enc2xs_inc.diff
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/cpan/Encode/bin/enc2xs b/cpan/Encode/bin/enc2xs
-index 773c0a0..bc1ae1b 100644
+index c5f788d..22905e7 100644
 --- a/cpan/Encode/bin/enc2xs
 +++ b/cpan/Encode/bin/enc2xs
 @@ -924,11 +924,11 @@ use vars qw(

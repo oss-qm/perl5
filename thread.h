@@ -91,10 +91,6 @@
 #  endif
 #endif
 
-#ifdef DGUX
-#  define THREAD_CREATE_NEEDS_STACK (32*1024)
-#endif
-
 #ifdef __VMS
   /* Default is 1024 on VAX, 8192 otherwise */
 #  ifdef __ia64
@@ -340,7 +336,9 @@
 #  define ALLOC_THREAD_KEY \
     STMT_START {						\
 	if (pthread_key_create(&PL_thr_key, 0)) {		\
-            write(2, STR_WITH_LEN("panic: pthread_key_create failed\n")); \
+            int rc;                                             \
+            rc = write(2, STR_WITH_LEN("panic: pthread_key_create failed\n")); \
+            PERL_UNUSED_VAR(rc);                                \
 	    exit(1);						\
 	}							\
     } STMT_END
