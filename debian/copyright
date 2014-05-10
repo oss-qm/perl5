@@ -317,12 +317,6 @@ Copyright:
 License: GPL-1+ or Artistic
  This file is a part of Perl itself, licensed as above.
 
-Files: cpan/Archive-Extract/*
-Copyright: unknown
-License: GPL-1+ or Artistic
- This library is free software; you may redistribute and/or modify it
- under the same terms as Perl itself.
-
 Files: cpan/Archive-Tar/*
 Copyright: 2002 - 2009 Jos Boumans <kane@cpan.org>. All rights reserved.
 License: GPL-1+ or Artistic
@@ -473,31 +467,6 @@ License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under
  the same terms as the Perl 5 programming language system itself.
 
-Files: cpan/CPANPLUS/*
-Copyright:
- The CPAN++ interface (of which this module is a part of) is copyright (c)
- 2001 - 2007, Jos Boumans <kane@cpan.org>. All rights reserved.
-License: GPL-1+ or Artistic
- This library is free software; you may redistribute and/or modify it
- under the same terms as Perl itself.
-
-Files: cpan/CPANPLUS/lib/CPANPLUS/Config/HomeEnv.pm
-Copyright:
- Copyright © Chris Williams and Jos Boumans.
-License: GPL-1+ or Artistic
- This module may be used, modified, and distributed under the same
- terms as Perl itself. Please see the license that came with your Perl
- distribution for details.
-
-Files: cpan/cpan/CPANPLUS-Dist-Build/*
-Copyright:
- The CPAN++ interface (of which this module is a part of) is
- copyright (c) 2001, 2002, 2003, 2004, 2005 Jos Boumans <kane@cpan.orgE>.
- All rights reserved.
-License: GPL-1+ or Artistic
- This library is free software; you may redistribute and/or modify it
- under the same terms as Perl itself.
-
 Files: cpan/DB_File/*
 Copyright: Copyright (c) 1995-2012 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
@@ -587,7 +556,6 @@ Files:
  cpan/Module-Load/*
  cpan/Module-Load-Conditional/*
  cpan/Module-Loaded/*
- cpan/Object-Accessor/*
  cpan/Package-Constants/*
  cpan/Params-Check/*
 Copyright:
@@ -721,30 +689,6 @@ License: Expat or GPL-1+ or Artistic
  It is assumed that these translations are licensed under the same terms as
  the rest of the Locale-Maketext-Simple distribution.
 
-Files: cpan/Log-Message/*
-Copyright:
- This module is copyright (c) 2002 Jos Boumans <kane@cpan.org>.
- All rights reserved.
-License: GPL-1+ or Artistic
- This library is free software; you may redistribute and/or modify it under
- the same terms as Perl itself.
-
-Files: cpan/Log-Message-Simple/*
-Copyright: unknown
-License: GPL-1+ or Artistic
- There are no copyright or license notices in this distribution. It
- is assumed that the copyright and license of Perl itself applies here
- as well.
- .
- This is supported by the README of the separate CPAN distribution at
- <http://search.cpan.org/~bingos/Log-Message-Simple-0.08/>, which states:
- .
-  This module is copyright (c) 2002 Jos Boumans <kane@cpan.org>. All
-  rights reserved.
- .
-  This library is free software; you may redistribute and/or modify it
-  under the same terms as Perl itself.
-
 Files: cpan/Math-Complex/*
 Copyright: unknown
 License: GPL-1+ or Artistic
@@ -829,11 +773,6 @@ License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or
  modify it under the same terms as Perl itself.
 
-Files: cpan/Module-Pluggable/*
-Copyright: 2005-2006 Simon Wistow
-License: GPL-1+ or Artistic
- Distributed under the same terms as Perl itself.
-
 Files: cpan/NEXT/*
 Copyright:
  Copyright (c) 2000-2001, Damian Conway. All Rights Reserved.
@@ -881,14 +820,6 @@ Copyright:
  Copyright (c) 2001-2004 Sean M. Burke.  All rights reserved.
 License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or modify
- it under the same terms as Perl itself.
-
-Files: cpan/Pod-LaTex/*
-Copyright:
- Copyright (C) 2011 Tim Jenness.
- Copyright (C) 2000-2004 Tim Jenness. All Rights Reserved.
-License: GPL-1+ or Artistic
- This program is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
 
 Files: cpan/podlators/*
@@ -1054,14 +985,6 @@ License: GPL-1+ or Artistic
   This software is free software and can be modified and distributed under
   the same terms as Perl itself.
 
-Files: cpan/Term-UI/*
-Copyright:
- This module is copyright (c) 2005 Jos Boumans E<lt>kane@cpan.orgE<gt>.
- All rights reserved.
-License: GPL-1+ or Artistic
- This library is free software; you may redistribute and/or modify it
- under the same terms as Perl itself.
-
 Files: cpan/Test/*
 Copyright:
  Copyright (c) 1998-2000 Joshua Nathaniel Pritikin.
@@ -1157,11 +1080,6 @@ License: GPL-1+ or Artistic
  Perl itself. This is supported by the Makefile.PL file of the separate
  CPAN distribution at
  <http://cpansearch.perl.org/src/CHORNY/Text-ParseWords-3.27/Makefile.PL>.
-
-Files: cpan/Text-Soundex/*
-Copyright:
- (c) Copyright 1998-2007 by Mark Mielke
-License: TEXT-SOUNDEX
 
 Files: cpan/Text-Tabs/*
 Copyright:
@@ -1274,14 +1192,12 @@ License: GPL-1+ or Artistic
 Files:
  dist/autouse/*
  dist/base/*
- dist/B-Lint/*
  dist/constant/*
  dist/Devel-SelfStubber/*
  dist/Dumpvalue/*
  dist/Env/*
  dist/ExtUtils-Command/*
  dist/ExtUtils-Manifest/*
- dist/File-Checktree/*
  dist/I18N-Collate/*
  dist/if/*
  dist/Safe/*
@@ -2315,15 +2231,6 @@ License: REGCOMP
 License: TEXT-TABS
  This module may be modified, used, copied, and redistributed at your own risk.
  Publicly redistributed modified versions must use a different name.
-
-License: TEXT-SOUNDEX
- Freedom to use these sources for whatever you want, as long as credit
- is given where credit is due, is hereby granted. You may make modifications
- where you see fit but leave this copyright somewhere visible. As well, try
- to initial any changes you make so that if I like the changes I can
- incorporate them into later versions.
- .
- - Mark Mielke <mark@mielke.cc>
 
 License: S2P
  This program is free and open software. You may use, modify,
