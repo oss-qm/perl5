@@ -24,6 +24,7 @@ usr/*/perl/*/XSLoader.pm
 usr/*/perl/*/auto/Cwd
 usr/*/perl/*/auto/Fcntl
 usr/*/perl/*/auto/File/Glob
+usr/*/perl/*/IO/Socket/IP.pm
 usr/lib/perl/*/auto/Hash/Util/Util.so
 usr/lib/perl/*/auto/re/re.so
 usr/lib/perl/*/auto/attributes/attributes.so
