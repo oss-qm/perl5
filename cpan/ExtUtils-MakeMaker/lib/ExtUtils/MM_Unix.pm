@@ -2462,7 +2462,7 @@ MAP_PRELIBS   = $Config{perllibs} $Config{cryptlib}
 	($lperl = $libperl) =~ s/\$\(A\)/$self->{LIB_EXT}/;
     }
     unless ($libperl && -f $lperl) { # Ilya's code...
-	my $dir = $self->{PERL_SRC} || "$self->{PERL_ARCHLIB}/CORE";
+	my $dir = $self->{PERL_SRC} || "$self->{PERL_ARCHLIB}/../..";
 	$dir = "$self->{PERL_ARCHLIB}/.." if $self->{UNINSTALLED_PERL};
 	$libperl ||= "libperl$self->{LIB_EXT}";
 	$libperl   = "$dir/$libperl";
