@@ -7,7 +7,9 @@ SETsubver= PERL_SUBVERSION' | gcc -E -DPERL_PATCHLEVEL_H_IMPLICIT - \
 
 fullver="$ver.$subver"
 nextver="$ver."$(($subver+1))
-ccflags=-DDEBIAN
+# -fwrapv is a short-term fix for #746890; to be removed once GCC-4.9
+# is supported upstream
+ccflags="-DDEBIAN -fwrapv"
 ldflags=
 arch_cpu=${DEB_BUILD_ARCH_CPU:-$(dpkg-architecture -qDEB_BUILD_ARCH_CPU)}
 gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
