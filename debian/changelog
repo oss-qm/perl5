@@ -1,11 +1,11 @@
-perl (5.18.2-4) UNRELEASED; urgency=low
+perl (5.18.2-4) unstable; urgency=medium
 
   * Build with -fwrapv to fix build failures with GCC 4.9
     (Closes: #746890)
   * Add Provides/Breaks/Replaces for libpackage-constants-perl which
     will be deprecated in 5.20 (see #747628)
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 12 May 2014 00:12:41 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 12 May 2014 23:53:26 +0100
 
 perl (5.18.2-3) unstable; urgency=medium
 
