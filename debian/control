@@ -180,6 +180,7 @@ Breaks: libpod-parser-perl (<< 1.60),
  libb-lint-perl (<< 1.17),
  liblog-message-perl (<< 0.06),
  libobject-accessor-perl (<< 0.46),
+ libpackage-constants-perl (<< 0.02),
 Replaces: libpod-parser-perl,
  libansicolor-perl,
  libfile-temp-perl,
@@ -238,7 +239,8 @@ Replaces: libpod-parser-perl,
  libtext-soundex-perl,
  libb-lint-perl,
  liblog-message-perl,
- libobject-accessor-perl
+ libobject-accessor-perl,
+ libpackage-constants-perl,
 Provides: libpod-parser-perl,
  libansicolor-perl,
  libfile-temp-perl,
@@ -285,7 +287,8 @@ Provides: libpod-parser-perl,
  libextutils-install-perl,
  libhttp-tiny-perl,
  libfile-path-perl,
- libcpan-meta-requirements-perl
+ libcpan-meta-requirements-perl,
+ libpackage-constants-perl,
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
  required if the `perl' package is installed.
