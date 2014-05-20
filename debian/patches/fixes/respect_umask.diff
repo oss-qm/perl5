@@ -1,4 +1,4 @@
-From 436946e7e8e06d7235a44ada8a8ec905f7f33f3f Mon Sep 17 00:00:00 2001
+From f2d9e005409ff68d5daa7db40877d07526bcf58e Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Respect umask during installation
@@ -13,7 +13,7 @@ Patch-Name: fixes/respect_umask.diff
  2 files changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index bc3a6dc..29ac594 100644
+index 4140432..8fdb67c 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -2075,7 +2075,7 @@ doc__install : doc_site_install

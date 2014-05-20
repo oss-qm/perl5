@@ -1,4 +1,4 @@
-From 16cf2fbc2a381d8367fb9272e657105d997651d4 Mon Sep 17 00:00:00 2001
+From 28eeb60680cd3a99710d83ca441b18683198aa11 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Don't install .packlist or perllocal.pod for perl or vendor
@@ -9,7 +9,7 @@ Patch-Name: debian/no_packlist_perllocal.diff
  1 file changed, 4 insertions(+), 32 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 54c518b..dad731e 100644
+index f977476..0a6797f 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -2079,11 +2079,6 @@ pure_perl_install :: all

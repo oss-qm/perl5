@@ -1,4 +1,4 @@
-From 9b09ac43c4753db857fb5f03e714c09614d1912c Mon Sep 17 00:00:00 2001
+From a3727a9345580f352c89a505314df9b4662a9500 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Fiddle with *PREFIX and variables written to the makefile
@@ -17,7 +17,7 @@ Patch-Name: debian/prefix_changes.diff
  4 files changed, 13 insertions(+), 16 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
-index 5e1459e..5804c60 100644
+index 2066311..0a1fb49 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 @@ -765,8 +765,6 @@ all POD files in MAN1PODS and MAN3PODS.
@@ -54,7 +54,7 @@ index 5e1459e..5804c60 100644
  
      my $arch    = $Config{archname};
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index dad731e..4b15832 100644
+index 0a6797f..c19a5f9 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -3029,8 +3029,7 @@ sub prefixify {

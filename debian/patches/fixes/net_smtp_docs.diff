@@ -1,4 +1,4 @@
-From db6282037b276077e064eb4f075d3153249c646e Mon Sep 17 00:00:00 2001
+From 24807a6ebaa368907e82ee41437cb3a197b287eb Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Thu, 20 Sep 2007 19:47:14 +1000
 Subject: Document the Net::SMTP 'Port' option

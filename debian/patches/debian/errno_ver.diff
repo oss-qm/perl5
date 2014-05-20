@@ -1,4 +1,4 @@
-From 39862033cba8aa3cdddb5db8a4546a6b96e07f2d Mon Sep 17 00:00:00 2001
+From 47ce37c4d78f26ef9c7f535ec7d28856881dbd4f Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 16 Dec 2005 01:32:14 +1100
 Subject: Remove Errno version check due to upgrade problems with long-running
@@ -16,7 +16,7 @@ Patch-Name: debian/errno_ver.diff
  1 file changed, 5 deletions(-)
 
 diff --git a/ext/Errno/Errno_pm.PL b/ext/Errno/Errno_pm.PL
-index db8ada7..2f72dd8 100644
+index 55ad01a..e4a31ef 100644
 --- a/ext/Errno/Errno_pm.PL
 +++ b/ext/Errno/Errno_pm.PL
 @@ -277,13 +277,8 @@ sub write_errno_pm {

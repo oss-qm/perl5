@@ -1,4 +1,4 @@
-From 7775001670d6f4452fb0b1a4f2a7fbf9afddc7c0 Mon Sep 17 00:00:00 2001
+From 8006be00231e1d9f4b9dc5b9726268a2f9d29d20 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts
@@ -20,7 +20,7 @@ Patch-Name: debian/squelch-locale-warnings.diff
  2 files changed, 12 insertions(+)
 
 diff --git a/locale.c b/locale.c
-index 3fc55a8..d8accdc 100644
+index 6e8728c..f55c4b2 100644
 --- a/locale.c
 +++ b/locale.c
 @@ -512,6 +512,10 @@ Perl_init_i18nl10n(pTHX_ int printwarn)
