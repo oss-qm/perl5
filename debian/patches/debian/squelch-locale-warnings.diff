@@ -1,4 +1,4 @@
-From 8006be00231e1d9f4b9dc5b9726268a2f9d29d20 Mon Sep 17 00:00:00 2001
+From 73e44811092680473f9b799ba2ecb6b8b8b9a21e Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts

@@ -1,4 +1,4 @@
-From 50469805705a8cee263fa1c8edc6ebfbbb3cbce3 Mon Sep 17 00:00:00 2001
+From 060d839d68339b980c6fc97ed423e2e26d2718d2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 5 Aug 2011 10:50:18 +0300
 Subject: Skip a crashing test case in t/op/threads.t on GNU/kFreeBSD

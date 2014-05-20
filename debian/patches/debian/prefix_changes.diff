@@ -1,4 +1,4 @@
-From a3727a9345580f352c89a505314df9b4662a9500 Mon Sep 17 00:00:00 2001
+From eeea5d4b20d9cc12a05ab69000f2ee446f4a67e2 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Fiddle with *PREFIX and variables written to the makefile
