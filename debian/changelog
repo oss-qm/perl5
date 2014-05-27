@@ -1,6 +1,7 @@
 perl (5.20.0-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * Move @INC to multiarch enabled paths. (See #748380)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 May 2014 22:29:09 +0300
 
