@@ -7,6 +7,7 @@ perl (5.20.0-1) UNRELEASED; urgency=low
     + break libalien-wxwidgets-perl, libjcode-perl, and libanyevent-perl,
       which use /usr/lib/perl5 without a dependency on perlapi-* or the
       current perl version.
+  * debian/rules: clean: no need to remove DB_File .bak files anymore.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 May 2014 22:29:09 +0300
 
