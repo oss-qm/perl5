@@ -2,6 +2,8 @@ perl (5.20.0-1) UNRELEASED; urgency=low
 
   * New upstream release.
   * Move @INC to multiarch enabled paths. (See #748380)
+    + provide perlapi-5.20.0-exp1 for now (and set $Config{debian_abi}
+      accordingly), because @INC might still change.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 May 2014 22:29:09 +0300
 
