@@ -8,6 +8,9 @@ perl (5.20.0-1) UNRELEASED; urgency=low
       which use /usr/lib/perl5 without a dependency on perlapi-* or the
       current perl version.
   * debian/rules: clean: no need to remove DB_File .bak files anymore.
+  * Include the ABI version in the vendorarch directory.
+    (See https://lists.debian.org/debian-perl/2014/05/msg00139.html)
+    + solves the problem with dual life modules in perl-base (Closes: #743690)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 May 2014 22:29:09 +0300
 

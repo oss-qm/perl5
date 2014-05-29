@@ -106,7 +106,7 @@ eval /bin/bash Configure			\
     -Darchlib=/usr/lib/$archtriplet/perl/$ver		\
     -Dvendorprefix=/usr				\
     -Dvendorlib=/usr/share/perl5		\
-    -Dvendorarch=/usr/lib/$archtriplet/perl5			\
+    -Dvendorarch=/usr/lib/$archtriplet/perl5/$ver			\
     -Dsiteprefix=/usr/local			\
     -Dsitelib=/usr/local/share/perl/$fullver	\
     -Dsitearch=/usr/local/lib/$archtriplet/perl/$fullver	\
