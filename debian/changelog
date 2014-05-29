@@ -12,6 +12,7 @@ perl (5.20.0-1) UNRELEASED; urgency=low
     (See https://lists.debian.org/debian-perl/2014/05/msg00139.html)
     + solves the problem with dual life modules in perl-base (Closes: #743690)
     + libscalar-list-utils-perl can be made installable again (Closes: #725899)
+    + no need for the ABI skew induced Build-Conflicts anymore
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 09 May 2014 22:29:09 +0300
 
