@@ -1,10 +1,10 @@
-perl (5.18.2-5) UNRELEASED; urgency=medium
+perl (5.18.2-5) unstable; urgency=medium
 
   * Additionally provide perlapi-5.18.2d on s390x as preparation for
     fixing partial upgrades due to jmp_buf ABI changes in glibc 2.19.
     (See: #753444)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 16 May 2014 00:39:51 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 05 Jul 2014 21:06:13 +0300
 
 perl (5.18.2-4) unstable; urgency=medium
 
