@@ -36,6 +36,9 @@ my %ok = (
        "libtest-simple-perl" => {
                "0.98" => "0.98",
        },
+       "libmodule-corelist-perl" => {
+               "3.03" => "3.03",
+       },
 );
 
 # list special cases where a Breaks entry doesn't need to imply
