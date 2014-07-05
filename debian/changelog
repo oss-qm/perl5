@@ -1,6 +1,8 @@
 perl (5.18.2-5) UNRELEASED; urgency=medium
 
-  * 
+  * Additionally provide perlapi-5.18.2d on s390x as preparation for
+    fixing partial upgrades due to jmp_buf ABI changes in glibc 2.19.
+    (See: #753444)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 16 May 2014 00:39:51 +0300
 
