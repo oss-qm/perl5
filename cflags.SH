@@ -275,6 +275,11 @@ for file do
     : or customize here
 
     case "$file" in
+    regcomp) : work around http://bugs.debian.org/754054
+        case $archname in
+        mips-*)
+            optimize=-O0;;
+        esac;;
     *) ;;
 
     *) : Customization examples follow: ;;
