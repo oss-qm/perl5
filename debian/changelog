@@ -1,6 +1,7 @@
 perl (5.18.2-6) UNRELEASED; urgency=medium
 
-  * 
+  * Downgrade the optimization of regcomp.c on mips due to a gcc-4.9 bug.
+    (Closes: #754054)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 08 Jul 2014 22:36:33 +0300
 
