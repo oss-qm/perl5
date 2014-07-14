@@ -62,9 +62,7 @@ subst_next_upstream = -VNext-Upstream-Version=$(nextversion)
 ifeq (,$(perlabi))
 subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`"
 else
-# temporarily append instead of overriding, see #753444 / #753542
-#subst_perlapi  = -Vperlapi:Provides="perlapi-$(perlabi)"
-subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`, perlapi-$(perlabi)"
+subst_perlapi  = -Vperlapi:Provides="perlapi-$(perlabi)"
 endif
 
 # for cpan/Compress-Raw-Zlib
