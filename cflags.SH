@@ -278,7 +278,7 @@ for file do
     regcomp) : work around http://bugs.debian.org/754054
         case $archname in
         mips-*)
-            optimize=-O0;;
+            optimize="$optimize -fno-tree-vrp";;
         esac;;
     *) ;;
 
