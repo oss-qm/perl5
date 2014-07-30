@@ -2,6 +2,8 @@ perl (5.20.0-2) UNRELEASED; urgency=medium
 
   * Adjust the Breaks versions of libalien-wxwidgets-perl, libjcode-perl, and
     libanyevent-perl now that fixed versions are in the archive. (See #750017)
+  * Break older versions of libgtk2-perl-doc, which installed documentation
+    in /usr/lib/perl5.
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 15 Jun 2014 21:27:31 +0300
 
