@@ -1,4 +1,4 @@
-perl (5.20.0-2) UNRELEASED; urgency=medium
+perl (5.20.0-2) experimental; urgency=medium
 
   * Adjust the Breaks versions of libalien-wxwidgets-perl, libjcode-perl, and
     libanyevent-perl now that fixed versions are in the archive. (See #750017)
@@ -7,7 +7,7 @@ perl (5.20.0-2) UNRELEASED; urgency=medium
   * update maintainer tests in debian/t/control.t to accommodate added
     digits in libmodule-corelist-perl versioning
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 15 Jun 2014 21:27:31 +0300
+ -- Niko Tyni <ntyni@debian.org>  Thu, 07 Aug 2014 13:55:42 +0300
 
 perl (5.20.0-1) experimental; urgency=low
 
