@@ -1,6 +1,8 @@
 perl (5.20.0-3) UNRELEASED; urgency=medium
 
-  * 
+  * Disable the gcc -ftree-vrp optimization of regcomp.c on mips and
+    mipsel to work around a possible gcc-4.9 bug.
+    Thanks to Aurelien Jarno. (Closes: #754054)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 07 Aug 2014 23:21:33 +0300
 

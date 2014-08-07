@@ -30,3 +30,4 @@ debian/perl5db-x-terminal-emulator.patch
 debian/cpan-missing-site-dirs.diff
 fixes/memoize_storable_nstore.diff
 debian/regen-skip.diff
+debian/regcomp-mips-optim.diff
