@@ -1,11 +1,12 @@
-perl (5.20.0-4) UNRELEASED; urgency=medium
+perl (5.20.0-4) unstable; urgency=medium
 
   * Drop the -exp1 suffix from perlapi-5.20.0: no further changes
     to @INC are planned in this cycle.
   * Build-depend on libc6-dev (>= 2.19-9) on s390x to make sure we
     build against the "new" reverted jmp_buf ABI. (Closes: #753444)
+  * Upload to unstable.
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 09 Aug 2014 13:41:38 +0300
+ -- Niko Tyni <ntyni@debian.org>  Thu, 14 Aug 2014 21:47:11 +0300
 
 perl (5.20.0-3) experimental; urgency=medium
 
