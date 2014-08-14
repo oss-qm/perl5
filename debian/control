@@ -6,7 +6,8 @@ Uploaders: Dominic Hargreaves <dom@earth.li>
 Standards-Version: 3.9.5
 Homepage: http://dev.perl.org/perl5/
 Build-Depends: file, cpio, libdb-dev, libgdbm-dev, netbase [!hurd-any],
- procps [!hurd-any], zlib1g-dev | libz-dev, libbz2-dev, dpkg-dev (>= 1.16.0)
+ procps [!hurd-any], zlib1g-dev | libz-dev, libbz2-dev, dpkg-dev (>= 1.16.0),
+ libc6-dev (>= 2.19-9) [s390x]
 Vcs-Git: git://anonscm.debian.org/perl/perl.git -b debian-5.20
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=perl/perl.git
 
