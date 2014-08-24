@@ -1892,6 +1892,9 @@ sub page {  # apply a pager to the output file
             if ($self->is_vms) {
                 last if system("$pager $output") == 0;
             } else {
+                # fix visible escape codes in ToTerm output
+                # https://bugs.debian.org/758689
+                local $ENV{LESS} = defined $ENV{LESS} ? "$ENV{LESS} -R" : "-R";
                 last if system("$pager \"$output\"") == 0;
             }
         }
