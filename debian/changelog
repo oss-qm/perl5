@@ -1,6 +1,9 @@
 perl (5.20.0-5) UNRELEASED; urgency=medium
 
-  * 
+  * Fix visible escape sequences in perldoc output by passing the "-R"
+    option to the "less" pager. (Closes: #758689)
+  * Pass explicit LD settings through to subdirectories again even if
+    the build system sets LD. (Closes: #758471)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 23 Aug 2014 19:21:42 -0700
 
