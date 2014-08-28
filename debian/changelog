@@ -1,3 +1,9 @@
+perl (5.20.0-5) UNRELEASED; urgency=low
+
+  * Note simplified developer tools requirements
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 28 Aug 2014 12:27:13 -0700
+
 perl (5.20.0-4) unstable; urgency=medium
 
   * Drop the -exp1 suffix from perlapi-5.20.0: no further changes
