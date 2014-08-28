@@ -139,6 +139,9 @@ install-stamp: build-stamp
 	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
 		$(lib)/Config.pm $(lib)/Config_heavy.pl
 
+	# rip away CGI::Fast, which has a separate source package now
+	rm -f $(share)/CGI/Fast.pm $(man)/man3/CGI::Fast.3perl
+
 ifeq (,$(perlabi))
 else
 	# add \$Config{debian_abi}
@@ -390,8 +393,6 @@ endif
 	ln -s perlbug.1.gz $(build)/perl/usr/share/man/man1/perlthanks.1.gz
 
 	ln -s changelog.gz $(build)/perl/usr/share/doc/perl/Changes.gz
-	ln -s ../perl/changelog.gz \
-	    $(build)/libcgi-fast-perl/usr/share/doc/libcgi-fast-perl/changelog.gz
 
 	touch $@
 

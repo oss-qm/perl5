@@ -52,18 +52,6 @@ Description: minimal Perl system
  Perl installation, install "perl" (and its dependencies, "perl-modules"
  and "perl-doc").
 
-Package: libcgi-fast-perl
-Priority: optional
-Architecture: all
-Depends: perl (>= ${source:Version}), perl (<< ${Next-Upstream-Version}~), libfcgi-perl
-Description: CGI::Fast Perl module
- CGI::Fast is a subclass of the CGI object created by CGI.pm.  It is
- specialized to work well with the Open Market FastCGI standard, which
- greatly speeds up CGI scripts by turning them into persistently running
- server processes.  Scripts that perform time-consuming initialization
- processes, such as loading large modules or opening persistent database
- connections, will see large performance improvements.
-
 Package: perl-doc
 Section: doc
 Priority: optional

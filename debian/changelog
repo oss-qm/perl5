@@ -4,6 +4,8 @@ perl (5.20.0-5) UNRELEASED; urgency=medium
     option to the "less" pager. (Closes: #758689)
   * Pass explicit LD settings through to subdirectories again even if
     the build system sets LD. (Closes: #758471)
+  * Drop the libcgi-fast-perl binary package, which is moving to
+    a source package of its own. (Closes: #759187)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 23 Aug 2014 19:21:42 -0700
 
