@@ -1,4 +1,4 @@
-perl (5.20.0-5) UNRELEASED; urgency=medium
+perl (5.20.0-5) unstable; urgency=medium
 
   [ Niko Tyni ]
   * Fix visible escape sequences in perldoc output by passing the "-R"
@@ -11,7 +11,7 @@ perl (5.20.0-5) UNRELEASED; urgency=medium
   [ Dominic Hargreaves ]
   * Note simplified developer tools requirements
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 23 Aug 2014 19:21:42 -0700
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 28 Aug 2014 21:25:34 -0700
 
 perl (5.20.0-4) unstable; urgency=medium
 
