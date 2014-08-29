@@ -1,11 +1,15 @@
 perl (5.20.0-5) UNRELEASED; urgency=medium
 
+  [ Niko Tyni ]
   * Fix visible escape sequences in perldoc output by passing the "-R"
     option to the "less" pager. (Closes: #758689)
   * Pass explicit LD settings through to subdirectories again even if
     the build system sets LD. (Closes: #758471)
   * Drop the libcgi-fast-perl binary package, which is moving to
     a source package of its own. (Closes: #759187)
+
+  [ Dominic Hargreaves ]
+  * Note simplified developer tools requirements
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 23 Aug 2014 19:21:42 -0700
 
