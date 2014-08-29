@@ -1,4 +1,4 @@
-From 414597a2b943d7c1d1271fb5d547f9dc1b9aaf36 Mon Sep 17 00:00:00 2001
+From 6ec80ea3574a990f02aebbeed5cf051b96cb939d Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 23 Aug 2014 18:46:43 -0700
 Subject: Tell the 'less' pager to allow terminal escape sequences

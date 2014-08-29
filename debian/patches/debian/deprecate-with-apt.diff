@@ -1,4 +1,4 @@
-From 63dc3b0cf54828520e0876adc4612836bc32a888 Mon Sep 17 00:00:00 2001
+From b50d2ceb76ae7a5801cbcd1792e3ad061ce2075d Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Mon, 17 May 2010 13:23:07 +0300
 Subject: Point users to Debian packages of deprecated core modules
@@ -20,7 +20,7 @@ Patch-Name: debian/deprecate-with-apt.diff
  1 file changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/lib/deprecate.pm b/lib/deprecate.pm
-index 47bc112..c0cc6ce 100644
+index 47bc112..742c06d 100644
 --- a/lib/deprecate.pm
 +++ b/lib/deprecate.pm
 @@ -7,6 +7,23 @@ our $VERSION = 0.03;
@@ -35,7 +35,7 @@ index 47bc112..c0cc6ce 100644
 +    'CGI::Apache' => 'libcgi-pm-perl',
 +    'CGI::Carp' => 'libcgi-pm-perl',
 +    'CGI::Cookie' => 'libcgi-pm-perl',
-+    'CGI::Fast' => 'libcgi-pm-perl',
++    'CGI::Fast' => 'libcgi-fast-perl',
 +    'CGI::Pretty' => 'libcgi-pm-perl',
 +    'CGI::Push' => 'libcgi-pm-perl',
 +    'CGI::Switch' => 'libcgi-pm-perl',
