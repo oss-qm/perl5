@@ -1,9 +1,9 @@
-perl (5.20.0-6) UNRELEASED; urgency=low
+perl (5.20.0-6) unstable; urgency=medium
 
   * Explicitly set mode of DEBIAN/conffiles to fix a Lintian error
     in certain build environments
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 29 Aug 2014 21:31:07 -0700
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 29 Aug 2014 21:32:22 -0700
 
 perl (5.20.0-5) unstable; urgency=medium
 
