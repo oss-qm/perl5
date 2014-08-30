@@ -415,6 +415,7 @@ binary-indep: build-stamp install-stamp
 	    done; \
 	    test -d $(build)/$$p/etc && find $(build)/$$p/etc -type f \
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
+	    chmod 644 $(build)/$$p/DEBIAN/conffiles; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
