@@ -1081,6 +1081,7 @@ S_is_cur_LC_category_utf8(pTHX_ int category)
                 Safefree(save_input_locale);
                 return is_utf8;
             }
+            Safefree(codeset);
         }
 
 #   endif
@@ -1109,9 +1110,7 @@ S_is_cur_LC_category_utf8(pTHX_ int category)
          * result */
         if (is_utf8) {
             wchar_t wc;
-            GCC_DIAG_IGNORE(-Wunused-result);
-            (void) mbtowc(&wc, NULL, 0);    /* Reset any shift state */
-            GCC_DIAG_RESTORE;
+            PERL_UNUSED_RESULT(mbtowc(&wc, NULL, 0));/* Reset any shift state */
             errno = 0;
             if (mbtowc(&wc, HYPHEN_UTF8, strlen(HYPHEN_UTF8))
                                                         != strlen(HYPHEN_UTF8)

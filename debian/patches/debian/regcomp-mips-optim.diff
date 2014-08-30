@@ -1,4 +1,4 @@
-From 6fade3e999b12510ae36c4a61c1e6a11d962f9d6 Mon Sep 17 00:00:00 2001
+From eac45f56874a8e43c90bbc801c73638cf234b81f Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Tue, 8 Jul 2014 23:04:30 +0300
 Subject: Downgrade the optimization of regcomp.c on mips and mipsel due to a
