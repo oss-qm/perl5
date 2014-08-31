@@ -102,8 +102,12 @@ SKIP: {
 	    my $buf;
 	    my $recv_peer = recv($child, $buf, 1000, 0);
 	    # [perl #118843]
-	    ok_child($recv_peer eq '' || $recv_peer eq $bind_name,
-	       "peer from recv() should be empty or the remote name");
+	    if ($^O eq 'gnu') {
+		skip('fails on GNU/Hurd (Debian #758718)', 1);
+	    } else {
+		ok_child($recv_peer eq '' || $recv_peer eq $bind_name,
+	           "peer from recv() should be empty or the remote name");
+	    }
 	    while(defined recv($child, my $tmp, 1000, 0)) {
 		last if length $tmp == 0;
 		$buf .= $tmp;
