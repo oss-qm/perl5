@@ -32,3 +32,4 @@ debian/regen-skip.diff
 debian/regcomp-mips-optim.diff
 debian/makemaker-pasthru.diff
 debian/perldoc-less-R.diff
+debian/hurd_test_todo_socket.t
