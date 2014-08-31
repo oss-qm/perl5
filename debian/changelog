@@ -6,6 +6,8 @@ perl (5.20.1~rc1-1) UNRELEASED; urgency=low
   * Disable failing test in t/io/socket.t on GNU/Hurd (see: #758718)
   * Modify $Config{libperl} to avoid exposing the full version
     (Closes: #759989)
+  * Ensure that all manpage directories are installed with
+    appropriate permissions, fixing Lintian warnings
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Aug 2014 17:28:47 -0700
 

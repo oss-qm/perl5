@@ -380,16 +380,6 @@ endif
 	ln $(build)/perl-base/usr/bin/perl \
 	    $(build)/perl-base/usr/bin/perl$(fullversion)
 
-
-	# fixperms
-	find $(build) -print | xargs -r chown -h root:root
-	find $(build) -type d -print | xargs -r chmod 755
-	find $(build) -type f -print | xargs -r chmod go=rX,u+rw,a-s
-	find $(build)/*/usr/bin -type f -print | xargs -r chmod a+x
-	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs -r chmod a-x
-	find $(build)/*/usr/share/doc $(build)/*/usr/share/man -type f \
-	    -print | xargs -r chmod 644
-
 	# links
 	mkdir -p $(build)/perl-debug/usr/share/man/man1
 
@@ -400,6 +390,15 @@ endif
 	ln -s perlbug.1.gz $(build)/perl/usr/share/man/man1/perlthanks.1.gz
 
 	ln -s changelog.gz $(build)/perl/usr/share/doc/perl/Changes.gz
+
+	# fixperms
+	find $(build) -print | xargs -r chown -h root:root
+	find $(build) -type d -print | xargs -r chmod 755
+	find $(build) -type f -print | xargs -r chmod go=rX,u+rw,a-s
+	find $(build)/*/usr/bin -type f -print | xargs -r chmod a+x
+	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs -r chmod a-x
+	find $(build)/*/usr/share/doc $(build)/*/usr/share/man -type f \
+	    -print | xargs -r chmod 644
 
 	touch $@
 
