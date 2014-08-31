@@ -1,3 +1,9 @@
+perl (5.20.1~rc1-1) UNRELEASED; urgency=low
+
+  * New upstream release candidate
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Aug 2014 17:28:47 -0700
+
 perl (5.20.0-6) unstable; urgency=medium
 
   * Explicitly set mode of DEBIAN/conffiles to fix a Lintian error
