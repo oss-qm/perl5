@@ -8,6 +8,9 @@ perl (5.20.1~rc1-1) UNRELEASED; urgency=low
     (Closes: #759989)
   * Ensure that all manpage directories are installed with
     appropriate permissions, fixing Lintian warnings
+  * Support POD_MAN_DATE in Pod::Man for the left-hand footer to
+    help with reproducible builds; thanks to Russ Allbery
+    (Closes: #759405)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Aug 2014 17:28:47 -0700
 
