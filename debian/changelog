@@ -4,6 +4,8 @@ perl (5.20.1~rc1-1) UNRELEASED; urgency=low
   * Don't skip dist/threads/t/stack.t on GNU/Hurd as Hurd now has
     support for varying stack length sizes (Closes: #650175)
   * Disable failing test in t/io/socket.t on GNU/Hurd (see: #758718)
+  * Modify $Config{libperl} to avoid exposing the full version
+    (Closes: #759989)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Aug 2014 17:28:47 -0700
 

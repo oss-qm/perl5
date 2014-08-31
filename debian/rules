@@ -149,6 +149,13 @@ else
 		$(lib)/Config.pm
 endif
 
+	# avoid exposing the point release in libperl names, to
+	# avoid unnecessary breakage
+	# see #759989
+	./perl.static -i -p \
+	    -e 's/^(libperl='\''libperl\.so)\.$(fullversion)'\''/$$1.$(version)'\''/' \
+		$(lib)/Config.pm $(lib)/Config_heavy.pl
+
 	# remove dpkg-buildflags effects from %Config
 	# see #657853
 	if which dpkg-buildflags >/dev/null 2>&1; then \
