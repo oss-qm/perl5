@@ -25,7 +25,6 @@ debian/patchlevel.diff
 debian/skip-kfreebsd-crash.diff
 fixes/document_makemaker_ccflags.diff
 debian/find_html2text.diff
-debian/hurd_test_skip_stack.diff
 debian/perl5db-x-terminal-emulator.patch
 debian/cpan-missing-site-dirs.diff
 fixes/memoize_storable_nstore.diff

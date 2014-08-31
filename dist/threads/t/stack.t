@@ -7,10 +7,6 @@ BEGIN {
         print("1..0 # SKIP Perl not compiled with 'useithreads'\n");
         exit(0);
     }
-    if ($^O eq 'gnu') {
-        print("1..0 # SKIP fails on GNU/Hurd (Debian #650175)\n");
-        exit(0);
-    }
 }
 
 use ExtUtils::testlib;
