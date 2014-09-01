@@ -1,4 +1,4 @@
-From 5a6ba1efc9c8ed418ea26f045455a686da0803da Mon Sep 17 00:00:00 2001
+From 5c5248bfcf0eadc7aadb15acef43c4d2c8e725d5 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 31 Aug 2014 00:42:47 +0000
 Subject: Disable failing GNU/Hurd test in t/io/socket.t
@@ -17,21 +17,22 @@ Bug-Debian: http://bugs.debian.org/758718
 Bug: https://rt.perl.org/Ticket/Display.html?id=122657
 Patch-Name: debian/hurd_test_todo_socket.t
 ---
- t/io/socket.t | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ t/io/socket.t | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/t/io/socket.t b/t/io/socket.t
-index b723e3c..ecb9276 100644
+index b723e3c..93a33bc 100644
 --- a/t/io/socket.t
 +++ b/t/io/socket.t
-@@ -102,8 +102,11 @@ SKIP: {
+@@ -102,8 +102,12 @@ SKIP: {
  	    my $buf;
  	    my $recv_peer = recv($child, $buf, 1000, 0);
  	    # [perl #118843]
 -	    ok_child($recv_peer eq '' || $recv_peer eq $bind_name,
 -	       "peer from recv() should be empty or the remote name");
-+	    TODO: {
-+		local $TODO = 'fails on GNU/Hurd (Debian #758718)' if $^O eq 'gnu';
++	    if ($^O eq 'gnu') {
++		skip('fails on GNU/Hurd (Debian #758718)', 1);
++	    } else {
 +		ok_child($recv_peer eq '' || $recv_peer eq $bind_name,
 +	           "peer from recv() should be empty or the remote name");
 +	    }
