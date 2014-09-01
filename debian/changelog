@@ -1,4 +1,4 @@
-perl (5.20.1~rc1-1) UNRELEASED; urgency=low
+perl (5.20.1~rc1-1) experimental; urgency=low
 
   * New upstream release candidate
   * Don't skip dist/threads/t/stack.t on GNU/Hurd as Hurd now has
@@ -12,7 +12,7 @@ perl (5.20.1~rc1-1) UNRELEASED; urgency=low
     help with reproducible builds; thanks to Russ Allbery
     (Closes: #759405)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Aug 2014 17:28:47 -0700
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 31 Aug 2014 18:17:29 -0700
 
 perl (5.20.0-6) unstable; urgency=medium
 
