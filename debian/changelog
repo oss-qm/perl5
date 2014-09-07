@@ -1,8 +1,8 @@
-perl (5.20.1~rc2-1) UNRELEASED; urgency=low
+perl (5.20.1~rc2-1) experimental; urgency=low
 
   * New upstream release candidate
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 07 Sep 2014 18:21:30 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 07 Sep 2014 18:42:23 +0100
 
 perl (5.20.1~rc1-1) experimental; urgency=low
 
