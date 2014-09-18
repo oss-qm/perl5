@@ -1,6 +1,7 @@
 perl (5.20.1-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * [SECURITY] CVE-2014-4330: don't recurse infinitely in Data::Dumper
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 15 Sep 2014 00:06:30 +0100
 

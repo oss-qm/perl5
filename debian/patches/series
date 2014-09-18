@@ -34,3 +34,4 @@ debian/makemaker-pasthru.diff
 debian/perldoc-less-R.diff
 debian/hurd_test_todo_socket.t
 fixes/pod_man_reproducible_date.diff
+fixes/data_dump_infinite_recurse.diff
