@@ -1,4 +1,4 @@
-From 1e5b4bada89bd9c845beefa5db7ac5569ef06567 Mon Sep 17 00:00:00 2001
+From 9256a6f74e501b42d4a820728327763a651cfa4f Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 31 Aug 2014 00:42:47 +0000
 Subject: Disable failing GNU/Hurd test in t/io/socket.t

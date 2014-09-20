@@ -1,4 +1,4 @@
-From de5c0d2f20d7ba1a422256fc9c2519fc81b19dbd Mon Sep 17 00:00:00 2001
+From 2baae83c6e8c08f9075a048d047d4595721dec85 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Tue, 8 Jul 2014 23:04:30 +0300
 Subject: Downgrade the optimization of regcomp.c on mips and mipsel due to a
@@ -15,6 +15,7 @@ This only happens with -fPIC -ftree-vrp builds.
 It is a regression from gcc-4.8.
 
 Bug-Debian: http://bugs.debian.org/754054
+Bug: https://rt.perl.org/Ticket/Display.html?id=122817
 Patch-Name: fixes/regcomp-mips-optim.diff
 ---
  cflags.SH | 5 +++++
