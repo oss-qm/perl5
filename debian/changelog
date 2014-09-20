@@ -4,6 +4,8 @@ perl (5.20.1-1) UNRELEASED; urgency=medium
   * [SECURITY] CVE-2014-4330: don't recurse infinitely in Data::Dumper
     (Closes: #762256) 
   * Update Standards-Version (no changes)
+  * Update maintainer tests to reflect the fact that libcgi-fast-perl
+    is not being shipped
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 15 Sep 2014 00:06:30 +0100
 
