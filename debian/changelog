@@ -8,6 +8,8 @@ perl (5.20.1-1) UNRELEASED; urgency=medium
     is not being shipped
   * Update Breaks versions for libfile-spec-perl, libmodule-corelist-perl,
     libversion-perl
+  * Update patch metadata to reflect upstream status
+    (Closes: #762270, #762269)
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 15 Sep 2014 00:06:30 +0100
 

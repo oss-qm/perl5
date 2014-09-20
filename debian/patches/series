@@ -29,9 +29,9 @@ debian/perl5db-x-terminal-emulator.patch
 debian/cpan-missing-site-dirs.diff
 fixes/memoize_storable_nstore.diff
 debian/regen-skip.diff
-debian/regcomp-mips-optim.diff
+fixes/regcomp-mips-optim.diff
 debian/makemaker-pasthru.diff
-debian/perldoc-less-R.diff
-debian/hurd_test_todo_socket.t
+fixes/perldoc-less-R.diff
+fixes/hurd_test_todo_socket.t
 fixes/pod_man_reproducible_date.diff
 fixes/data_dump_infinite_recurse.diff

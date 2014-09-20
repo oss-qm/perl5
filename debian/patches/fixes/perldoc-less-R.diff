@@ -1,4 +1,4 @@
-From 2372c6fca3b33b8bb3c35a5395b8f12f314c0e3c Mon Sep 17 00:00:00 2001
+From 18cd89f5e935e63998754213bf6308aa69dff5e2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 23 Aug 2014 18:46:43 -0700
 Subject: Tell the 'less' pager to allow terminal escape sequences
@@ -9,7 +9,8 @@ controls this, so pass it in the LESS environment variable
 to avoid disturbing other pager invocations.
 
 Bug-Debian: https://bugs.debian.org/758689
-Patch-Name: debian/perldoc-less-R.diff
+Bug: https://rt.cpan.org/Public/Bug/Display.html?id=98636
+Patch-Name: fixes/perldoc-less-R.diff
 ---
  cpan/Pod-Perldoc/lib/Pod/Perldoc.pm | 3 +++
  1 file changed, 3 insertions(+)

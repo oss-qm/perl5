@@ -1,4 +1,4 @@
-From 31b327f71e31280551ac9666d018b7a4d7b96e7c Mon Sep 17 00:00:00 2001
+From 1e5b4bada89bd9c845beefa5db7ac5569ef06567 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sun, 31 Aug 2014 00:42:47 +0000
 Subject: Disable failing GNU/Hurd test in t/io/socket.t
@@ -15,7 +15,7 @@ reason. The test should most probably be discussed with upstream."
 
 Bug-Debian: http://bugs.debian.org/758718
 Bug: https://rt.perl.org/Ticket/Display.html?id=122657
-Patch-Name: debian/hurd_test_todo_socket.t
+Patch-Name: fixes/hurd_test_todo_socket.t
 ---
  t/io/socket.t | 8 ++++++--
  1 file changed, 6 insertions(+), 2 deletions(-)
