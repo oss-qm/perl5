@@ -756,7 +756,8 @@ sub _rd2
 
         while (($status = $z->read($x->{buff})) > 0) {
             if ($fh) {
-                syswrite $fh, ${ $x->{buff} }
+                local $\;
+                print $fh ${ $x->{buff} }
                     or return $z->saveErrorString(undef, "Error writing to output file: $!", $!);
                 ${ $x->{buff} } = '' ;
             }
