@@ -35,3 +35,4 @@ fixes/perldoc-less-R.diff
 fixes/hurd_test_todo_socket.t
 fixes/pod_man_reproducible_date.diff
 fixes/data_dump_infinite_recurse.diff
+fixes/io_uncompress_gunzip_inmemory.diff
