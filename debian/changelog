@@ -1,9 +1,9 @@
-perl (5.14.2-21+deb7u2) UNRELEASED; urgency=low
+perl (5.14.2-21+deb7u2) stable; urgency=low
 
   * [SECURITY] CVE-2014-4330: don't recurse infinitely in Data::Dumper
     (Closes: #762256)
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 21 Sep 2014 14:20:27 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 27 Sep 2014 23:48:33 +0100
 
 perl (5.14.2-21+deb7u1) stable; urgency=low
 
