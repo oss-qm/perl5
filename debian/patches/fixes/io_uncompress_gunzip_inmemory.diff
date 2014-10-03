@@ -1,4 +1,4 @@
-From 5d32f0688a56bd4aa3242e1174b8c44aadd0e3db Mon Sep 17 00:00:00 2001
+From 91e71dc733a15e190cc8cd1e960c3e30f4b52198 Mon Sep 17 00:00:00 2001
 From: Paul <pmqs@cpan.org>
 Date: Fri, 26 Sep 2014 23:44:43 +0100
 Subject: Fix gunzip to in-memory file handle

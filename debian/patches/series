@@ -32,7 +32,8 @@ debian/regen-skip.diff
 fixes/regcomp-mips-optim.diff
 debian/makemaker-pasthru.diff
 fixes/perldoc-less-R.diff
-fixes/hurd_test_todo_socket.t
 fixes/pod_man_reproducible_date.diff
 fixes/data_dump_infinite_recurse.diff
 fixes/io_uncompress_gunzip_inmemory.diff
+fixes/socket_test_recv_fix.diff
+fixes/hurd_socket_recv_todo.diff

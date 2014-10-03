@@ -1,4 +1,4 @@
-From 92ad49d8266598fece30e2bdf721969112212e54 Mon Sep 17 00:00:00 2001
+From bdcf29e8135b609ae67bb07847becbc9e7fdfa7d Mon Sep 17 00:00:00 2001
 From: Tony Cook <tony@develop-help.com>
 Date: Mon, 30 Jun 2014 12:16:03 +1000
 Subject: don't recurse infinitely in Data::Dumper
