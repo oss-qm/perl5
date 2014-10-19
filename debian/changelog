@@ -1,10 +1,10 @@
-perl (5.20.1-2) UNRELEASED; urgency=medium
+perl (5.20.1-2) unstable; urgency=medium
 
   * Fix IO::Uncompress::Gunzip gunzip to in-memory file handle
     (Closes: #747363)
   * Fix t/io/socket.t on Hurd: include upstream fixes (Closes: #758718)
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 26 Sep 2014 22:50:51 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 19 Oct 2014 22:02:58 +0100
 
 perl (5.20.1-1) unstable; urgency=medium
 
