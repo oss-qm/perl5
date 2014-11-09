@@ -72,3 +72,7 @@ usr/**/perl/*/vars.pm
 usr/**/perl/*/warnings.pm
 usr/**/perl/*/warnings/register.pm
 usr/**/perl/*/feature.pm
+usr/**/perl/*/File/Temp.pm
+usr/**/perl/*/File/Path.pm
+usr/**/perl/*/File/Basename.pm
+usr/**/perl/*/parent.pm
