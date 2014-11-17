@@ -1,7 +1,7 @@
 perl (5.20.1-3) unstable; urgency=low
 
   * Move File::Temp and its dependencies (File::Path, File::Basename,
-    and parent) to perl-base.
+    and parent) to perl-base. (Closes: #757905)
     See https://lists.debian.org/debian-devel/2014/11/msg00216.html
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 16 Nov 2014 18:54:17 +0200
