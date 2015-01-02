@@ -23,6 +23,7 @@ strip	    := $(shell /bin/bash debian/config.debian --strip)
 archtriplet := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 srcdir      := $(shell pwd)
 packages    := $(shell sed -n 's/^Package: *\(.*\)/\1/p' debian/control)
+build_date  := $(shell dpkg-parsechangelog | sed -n -e 's/^Date: //p')
 tmp	    = debian/tmp
 bin         = $(tmp)/usr/bin
 man         = $(tmp)/usr/share/man
@@ -483,6 +484,8 @@ binary-indep: build-stamp install-stamp
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
 	    dpkg-gencontrol -p$$p -P$(build)/$$p $(subst_upstream) $(subst_next_upstream); \
+	    find $(build)/$$p -depth -newermt '$(build_date)' -print0 | \
+	        xargs -0r touch --no-dereference --date='$(build_date)'; \
 	    dpkg --build $(build)/$$p ..; \
 	done
 
@@ -532,6 +535,8 @@ endif
 		                        -S$(srcdir)/$(build)/perl-base 2>&1 | \
 		fgrep -v 'File format not recognized'; # scripts \
 	    dpkg-gencontrol -p$$p -P$(build)/$$p $(subst_perlapi) $(subst_upstream); \
+	    find $(build)/$$p -depth -newermt '$(build_date)' -print0 | \
+	        xargs -0r touch --no-dereference --date='$(build_date)'; \
 	    dpkg --build $(build)/$$p ..; \
 	done
 
