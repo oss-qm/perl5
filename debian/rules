@@ -480,7 +480,7 @@ binary-indep: build-stamp install-stamp
 	    test -d $(build)/$$p/etc && find $(build)/$$p/etc -type f \
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
 	    chmod 644 $(build)/$$p/DEBIAN/conffiles; \
-	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
+	    (cd $(build)/$$p; find usr -type f -print | LC_ALL=C sort | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
 	    dpkg-gencontrol -p$$p -P$(build)/$$p $(subst_upstream) $(subst_next_upstream); \
@@ -520,7 +520,7 @@ endif
 	    test -d $(build)/$$p/etc && find $(build)/$$p/etc -type f \
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
 	    chmod 644 $(build)/$$p/DEBIAN/conffiles; \
-	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
+	    (cd $(build)/$$p; find usr -type f -print | LC_ALL=C sort | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
 	done
