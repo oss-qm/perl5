@@ -46,6 +46,8 @@ then
     libpth="$libpth $multiarch_dir"
 fi
 
+# set configuration time to latest debian/changelog entry
+cf_time=$(sed -n '/^ -- /{s/.*> \(.*\)/\1/p;q}' debian/changelog)
 # set generic email addresses, host/domain names
 cf_by='Debian Project'
 cf_email=perl@packages.debian.org
