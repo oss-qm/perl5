@@ -36,3 +36,4 @@ fixes/pod_man_reproducible_date.diff
 fixes/io_uncompress_gunzip_inmemory.diff
 fixes/socket_test_recv_fix.diff
 fixes/hurd_socket_recv_todo.diff
+fixes/regexp-performance.diff

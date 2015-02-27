@@ -5,6 +5,8 @@ perl (5.20.2-2) UNRELEASED; urgency=medium
 
   [ Niko Tyni ]
   * Fix the Broken libfile-spec-perl versions.
+  * Backport upstream fix for a regexp performance regression
+    from 5.14. (Closes: #777556)
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Feb 2015 20:02:36 +0000
 
