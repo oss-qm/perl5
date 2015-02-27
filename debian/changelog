@@ -4,7 +4,7 @@ perl (5.20.2-1) UNRELEASED; urgency=medium
   * Update Breaks versions for libfile-spec-perl, libmodule-corelist-perl,
     libstorable-perl
   * Break circular dependency between perl and perl-modules
-    (Closes: #777597)
+    (Closes: #777597, #502455)
   * Add Breaks: entries for various packages which could be affected by
     the above change, where they have been fixed
 
