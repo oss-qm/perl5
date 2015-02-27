@@ -112,7 +112,8 @@ Architecture: all
 Multi-Arch: foreign
 Depends: perl-base (>= 5.20.1-3)
 Pre-Depends: dpkg (>= 1.17.17)
-Recommends: libarchive-extract-perl,
+Recommends: perl,
+ libarchive-extract-perl,
  libmodule-pluggable-perl,
  libpod-latex-perl,
  libterm-ui-perl,
