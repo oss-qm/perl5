@@ -1,3 +1,9 @@
+perl (5.20.2-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Feb 2015 16:44:09 +0000
+
 perl (5.20.1-5) unstable; urgency=medium
 
   * Make perl-base and perl-modules Break perl (<< 5.20.0~)

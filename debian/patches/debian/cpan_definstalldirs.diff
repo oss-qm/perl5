@@ -1,4 +1,4 @@
-From 1af790bf1e6a92c4c11c40a0714babd9f1f8ae93 Mon Sep 17 00:00:00 2001
+From 440ad1e75dabbf3604818838c8929b68bf9e64e1 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Provide a sensible INSTALLDIRS default for modules installed from

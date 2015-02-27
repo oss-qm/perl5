@@ -1,4 +1,4 @@
-From b27c756ccf7b17aee7ab5fa554c6e4563008057e Mon Sep 17 00:00:00 2001
+From 5cc13e8a57ca7f2a5b3178427eb6ebec8e0f9a6b Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.
@@ -14,7 +14,7 @@ Patch-Name: debian/prune_libs.diff
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Configure b/Configure
-index af2d6c0..883ac4c 100755
+index 2f91ba1..e11d46f 100755
 --- a/Configure
 +++ b/Configure
 @@ -1387,8 +1387,7 @@ libswanted_uselargefiles=''
@@ -27,7 +27,7 @@ index af2d6c0..883ac4c 100755
  : We probably want to search /usr/shlib before most other libraries.
  : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
  glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
-@@ -22796,7 +22795,7 @@ sunos*X4*)
+@@ -22793,7 +22792,7 @@ sunos*X4*)
      ;;
  *) case "$usedl" in
      $define|true|[yY]*)

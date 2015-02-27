@@ -1,4 +1,4 @@
-From 082689692126f34f0cce714187d3adf1ff95dde2 Mon Sep 17 00:00:00 2001
+From 6eeefa23cd51df7beabd2944f3c19b808becb3d3 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 10 May 2014 23:34:14 +0300
 Subject: EU:MM: set location of libperl.a under /usr/lib

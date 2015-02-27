@@ -1,4 +1,4 @@
-From a6586a507113f266f15602366f82110b3eb24c93 Mon Sep 17 00:00:00 2001
+From ce572cc9a585c373df9714dc3c5a6c94cdb99d86 Mon Sep 17 00:00:00 2001
 From: Tony Cook <tony@develop-help.com>
 Date: Wed, 1 Oct 2014 11:33:19 +1000
 Subject: TODO checking the result of recv() on hurd
