@@ -3,6 +3,8 @@ perl (5.20.2-1) UNRELEASED; urgency=medium
   * New upstream release
   * Update Breaks versions for libfile-spec-perl, libmodule-corelist-perl,
     libstorable-perl
+  * Break circular dependency between perl and perl-modules
+    (Closes: #777597)
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Feb 2015 16:44:09 +0000
 
