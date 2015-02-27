@@ -9,11 +9,11 @@ Comment:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
  .
- Last checked against: Perl 5.20.1
+ Last checked against: Perl 5.20.2
 
 Files: *
 Copyright:
- Perl is Copyright (C) 1987-2013 by Larry Wall and others. All rights reserved.
+ Perl is Copyright (C) 1987-2015 by Larry Wall and others. All rights reserved.
 License: GPL-1+ or Artistic
     This program is free software; you can redistribute it and/or modify
     it under the terms of either:
@@ -1755,6 +1755,12 @@ Files:
 Copyright:
  Copyright (c) 2000 Mark Kvale
  All rights reserved.
+License: GPL-1+ or Artistic
+ This document may be distributed under the same terms as Perl itself.
+
+Files: pod/perlunicook.pod
+Copyright:
+ Copyright (c) 2012 Tom Christiansen
 License: GPL-1+ or Artistic
  This document may be distributed under the same terms as Perl itself.
 
