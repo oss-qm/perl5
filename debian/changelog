@@ -5,6 +5,8 @@ perl (5.20.2-1) UNRELEASED; urgency=medium
     libstorable-perl
   * Break circular dependency between perl and perl-modules
     (Closes: #777597)
+  * Add Breaks: entries for various packages which could be affected by
+    the above change, where they have been fixed
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Feb 2015 16:44:09 +0000
 
