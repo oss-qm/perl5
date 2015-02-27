@@ -1,6 +1,10 @@
 perl (5.20.2-2) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * Make perl-modules Recommend perl
+
+  [ Niko Tyni ]
+  * Fix the Broken libfile-spec-perl versions.
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Feb 2015 20:02:36 +0000
 
