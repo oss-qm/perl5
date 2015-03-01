@@ -8,6 +8,7 @@ perl (5.20.2-2) UNRELEASED; urgency=medium
   * Backport upstream fix for a regexp performance regression
     from 5.14. (Closes: #777556)
   * Make perl-modules Break older versions of perl. (Closes: #779433)
+  * Make perl-modules Depend on a matching perl-base. (Closes: #779455)
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Feb 2015 20:02:36 +0000
 
