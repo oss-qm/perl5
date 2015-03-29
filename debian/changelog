@@ -1,11 +1,11 @@
-perl (5.20.2-3) UNRELEASED; urgency=medium
+perl (5.20.2-3) unstable; urgency=medium
 
   * Improve the error message when a path is inaccessible during
     module loading (Closes: #781120)
   * Add more Breaks: entries for various packages which could be affected
     by the perl-modules dependency change (see #777597)
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Mar 2015 17:23:25 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 29 Mar 2015 15:20:48 +0100
 
 perl (5.20.2-2) unstable; urgency=medium
 
