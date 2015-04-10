@@ -24,6 +24,9 @@ my $have_strtod = $Config{d_strtod} eq 'define';
 my @locales = eval { find_locales( [ &LC_ALL, &LC_CTYPE, &LC_NUMERIC ] ) };
 skip_all("no locales available") unless @locales;
 
+# reset the locale environment
+local @ENV{'LANG', (grep /^LC_/, keys %ENV)};
+
 plan tests => &last;
 fresh_perl_is("for (qw(@locales)) {\n" . <<'EOF',
     use POSIX qw(locale_h);
@@ -39,9 +42,6 @@ EOF
 SKIP: {
     skip("Windows stores locale defaults in the registry", 1 )
                                                             if $^O eq 'MSWin32';
-    local $ENV{LC_NUMERIC}; # So not taken as a default
-    local $ENV{LC_ALL}; # so it never overrides LC_NUMERIC
-    local $ENV{LANG};   # So not taken as a default
     fresh_perl_is("for (qw(@locales)) {\n" . <<'EOF',
         use POSIX qw(locale_h);
         use locale;
@@ -256,7 +256,6 @@ EOF
 
     for ($different) {
 	local $ENV{LC_NUMERIC} = $_;
-	local $ENV{LC_ALL}; # so it never overrides LC_NUMERIC
 	fresh_perl_is(<<"EOF",
 	    use POSIX qw(locale_h);
 
