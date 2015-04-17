@@ -40,3 +40,4 @@ fixes/regexp-performance.diff
 fixes/failed_require_diagnostics.diff
 fixes/array-cloning.diff
 fixes/perldb-threads.diff
+debian/locale-robustness.diff
