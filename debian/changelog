@@ -4,6 +4,7 @@ perl (5.20.2-4) UNRELEASED; urgency=medium
     Thanks to James McCoy. (Closes: #779357)
   * Make t/run/locale more robust against subtly broken locale settings
     common in pbuilder chroot builds. (Closes: #782068)
+  * Backport upstream patches for gcc-5 compatibility. (Closes: #778060)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 10 Apr 2015 10:00:15 +0300
 

@@ -41,3 +41,6 @@ fixes/failed_require_diagnostics.diff
 fixes/array-cloning.diff
 fixes/perldb-threads.diff
 debian/locale-robustness.diff
+fixes/gcc5-errno.diff
+fixes/h2ph-hex-constants.diff
+fixes/h2ph-test-inc.diff
