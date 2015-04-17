@@ -53,16 +53,13 @@ case "$1" in
     --install-type)
 	# The default installation type for /usr/bin/perl of shared or
 	# static may be changed by including x-perl-static or x-perl-shared
-	# in DEB_BUILD_OPTIONS.  The default is shared except for i386 where
-	# there is a measurable performance penalty.
+	# in DEB_BUILD_OPTIONS.  The default used to vary based on the
+	# architecture but is now static everywhere. See #781476
 	case ",$DEB_BUILD_OPTIONS," in
 	    *[,\ ]x-perl-static[,\ ]*)	exec echo static;;
 	    *[,\ ]x-perl-shared[,\ ]*)	exec echo shared;;
 	esac
-	case "$arch_cpu" in
-	    i386)			exec echo static;;
-	    *)				exec echo shared;;
-	esac;;
+	exec echo static;;
 
     *)	echo "$0: need --shared, --static, or --debug option"
     	exit 2;;

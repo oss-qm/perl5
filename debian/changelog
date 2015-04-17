@@ -1,6 +1,7 @@
 perl (5.20.2-5) UNRELEASED; urgency=medium
 
-  * 
+  * Link /usr/bin/perl statically against libperl on all architectures.
+    (Closes: #781476)
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 06 May 2015 17:30:58 +0300
 
