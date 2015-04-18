@@ -5,6 +5,8 @@ perl (5.20.2-4) UNRELEASED; urgency=medium
   * Make t/run/locale more robust against subtly broken locale settings
     common in pbuilder chroot builds. (Closes: #782068)
   * Backport upstream patches for gcc-5 compatibility. (Closes: #778060)
+  * Replace a few ancient and incorrect DEB_BUILD_{GNU_TYPE,ARCH_CPU}
+    occurrences with the corresponding DEB_HOST_* ones. (Closes: #782803)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 10 Apr 2015 10:00:15 +0300
 

@@ -47,7 +47,7 @@ The Debian build process consists of the following components:
     perl (once built, as perl.static).  To bootstrap a new architecture,
     use:
 
-      DEB_BUILD_GNU_TYPE=<arch> debian/rules binary-arch
+      DEB_HOST_GNU_TYPE=<arch> debian/rules binary-arch
 
   debian/config.debian 
     a helper script, invoked by debian/rules to run Configure with

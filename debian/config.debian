@@ -9,8 +9,8 @@ fullver="$ver.$subver"
 nextver="$ver."$(($subver+1))
 ccflags=-DDEBIAN
 ldflags=
-arch_cpu=${DEB_BUILD_ARCH_CPU:-$(dpkg-architecture -qDEB_BUILD_ARCH_CPU)}
-gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
+arch_cpu=${DEB_HOST_ARCH_CPU:-$(dpkg-architecture -qDEB_HOST_ARCH_CPU)}
+gnu_type=${DEB_HOST_GNU_TYPE:-$(dpkg-architecture -qDEB_HOST_GNU_TYPE)}
 optimize=-O2
 debugging=-g
 
