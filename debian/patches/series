@@ -44,3 +44,5 @@ debian/locale-robustness.diff
 fixes/gcc5-errno.diff
 fixes/h2ph-hex-constants.diff
 fixes/h2ph-test-inc.diff
+fixes/podman-utc.diff
+fixes/podman-utc-docs.diff

@@ -9,6 +9,8 @@ perl (5.20.2-4) UNRELEASED; urgency=medium
     occurrences with the corresponding DEB_HOST_* ones. (Closes: #782803)
   * Make perl-doc suggest groff-base instead of the full groff.
     (Closes: #206211)
+  * Backport podlators patches to base the Pod::Man footer date
+    on UTC instead of the local time zone. (Closes: #780259)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 10 Apr 2015 10:00:15 +0300
 
