@@ -11,6 +11,8 @@ perl (5.20.2-4) UNRELEASED; urgency=medium
     (Closes: #206211)
   * Backport podlators patches to base the Pod::Man footer date
     on UTC instead of the local time zone. (Closes: #780259)
+  * Backport podlators patch to make Pod::Man support an empty
+    POD_MAN_DATE variable. (See #780259)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 10 Apr 2015 10:00:15 +0300
 

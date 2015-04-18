@@ -46,3 +46,4 @@ fixes/h2ph-hex-constants.diff
 fixes/h2ph-test-inc.diff
 fixes/podman-utc.diff
 fixes/podman-utc-docs.diff
+fixes/podman-empty-date.diff
