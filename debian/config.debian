@@ -80,6 +80,10 @@ case ",$DEB_BUILD_OPTIONS," in
 	optimize="$optimize${optimize:+ }-O0";;
 esac
 
+cc=${CC:-${gnu_type}-gcc}
+cpp=${CPP:-${gnu_type}-cpp}
+ld=${LD:-${gnu_type}-gcc}
+
 if which dpkg-buildflags >/dev/null 2>&1; then
     ccflags="$ccflags $(dpkg-buildflags --get CPPFLAGS)"
     ccflags="$ccflags $(dpkg-buildflags --get CFLAGS)"
@@ -93,6 +97,9 @@ cp debian/config.over .
 eval /bin/bash Configure			\
     -Dusethreads				\
     -Duselargefiles				\
+    -Dcc=$cc					\
+    -Dcpp=$cpp					\
+    -Dld=$ld					\
     -Dccflags=\'$ccflags\'			\
     -Dldflags=\'$ldflags\'			\
     -Dlddlflags=\'-shared $ldflags\'			\
