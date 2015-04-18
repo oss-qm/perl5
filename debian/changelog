@@ -7,6 +7,8 @@ perl (5.20.2-4) UNRELEASED; urgency=medium
   * Backport upstream patches for gcc-5 compatibility. (Closes: #778060)
   * Replace a few ancient and incorrect DEB_BUILD_{GNU_TYPE,ARCH_CPU}
     occurrences with the corresponding DEB_HOST_* ones. (Closes: #782803)
+  * Make perl-doc suggest groff-base instead of the full groff.
+    (Closes: #206211)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 10 Apr 2015 10:00:15 +0300
 
