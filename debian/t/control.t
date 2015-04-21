@@ -175,6 +175,12 @@ for my $perl_package_name (keys %deps_found) {
 
 			is($broken_version, $corelist_version,
 				"Breaks for $broken in $perl_package_name matches Module::CoreList for $module");
+			# help automating fixes for major version upgrades
+			# usage example:
+			#  prove -v debian/t/control.t 2>&1 | sed -n 's,# s/,s/, p' | sed -f - -i debian/control
+			if ($broken_version ne $corelist_version) {
+				diag("s/$broken (<< $broken_version)/$broken (<< $corelist_version)/");
+			}
 
 			skip("not checking Replaces and Provides for $broken in $perl_package_name", 2)
 				if $triplet_check_skip{$perl_package_name} &&
