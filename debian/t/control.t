@@ -157,10 +157,14 @@ for my $perl_package_name (keys %deps_found) {
 		my $module = deb2cpan($broken);
 		my ($archive_epoch, $archive_digits) = get_archive_info($broken);
 
-		my $broken_version = $dep_found->{$breaksname}{$broken}{version};
-		$broken_version =~ s/-\d+$//; # remove the Debian revision
-
 		SKIP: {
+			my $broken_version = $dep_found->{$breaksname}{$broken}{version};
+
+			skip("$module Breaks entry is unversioned", 3)
+				if !defined $broken_version;
+
+			$broken_version =~ s/-\d+$//; # remove the Debian revision
+
 			skip("$module is unknown to Module::CoreList", 3)
 				if !exists $corelist->{$module};
 
