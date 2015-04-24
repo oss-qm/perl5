@@ -97,6 +97,10 @@ perl.static:
 	# for the build log
 	./perl.static -Ilib -V
 
+	# save these for the perl-base package
+	mv lib/Config.pm lib/Config.pm.static
+	mv lib/Config_heavy.pl lib/Config_heavy.pl.static
+
 perl.debug:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
@@ -133,11 +137,17 @@ install-stamp: build-stamp
 	rm -rf $(tmp) $(build)
 
 	$(MAKE) install DESTDIR="$(tmp)"
+
+	# these end up in the wrong place
+	mv $(share)/Config.pm.static $(lib)
+	mv $(share)/Config_heavy.pl.static $(lib)
+
 	# switch man extensions to 1p and 3pm for vendor module installs
 	./perl.static -i -p \
 	    -e 's/^(man1ext=).*/$$1'\''1p'\''/;' \
 	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
-		$(lib)/Config.pm $(lib)/Config_heavy.pl
+		$(lib)/Config.pm $(lib)/Config_heavy.pl \
+		$(lib)/Config.pm.static $(lib)/Config_heavy.pl.static
 
 	# rip away CGI::Fast, which has a separate source package now
 	rm -f $(share)/CGI/Fast.pm $(man)/man3/CGI::Fast.3perl
@@ -146,7 +156,7 @@ ifeq (,$(perlabi))
 else
 	# add \$Config{debian_abi}
 	sed -i -e "/version =>/i\    debian_abi => '$(perlabi)'," \
-		$(lib)/Config.pm
+		$(lib)/Config.pm $(lib)/Config.pm.static
 endif
 
 	# avoid exposing the point release in libperl names, to
@@ -154,7 +164,8 @@ endif
 	# see #759989
 	./perl.static -i -p \
 	    -e 's/^(libperl='\''libperl\.so)\.$(fullversion)'\''/$$1.$(version)'\''/' \
-		$(lib)/Config.pm $(lib)/Config_heavy.pl
+		$(lib)/Config.pm $(lib)/Config_heavy.pl \
+		$(lib)/Config.pm.static $(lib)/Config_heavy.pl.static
 
 	# remove dpkg-buildflags effects from %Config
 	# see #657853
@@ -164,12 +175,14 @@ endif
 			case "$$flag" in -fstack-protector) ;; \
 			     *) ./perl.static -i -pe "/^(cc|cpp)flags/ and \
 			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
-		            $(lib)/Config.pm $(lib)/Config_heavy.pl ;; \
+		            $(lib)/Config.pm $(lib)/Config_heavy.pl \
+		            $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ;; \
 		    esac; done; \
 		for flag in $(shell dpkg-buildflags --get LDFLAGS); do \
 			./perl.static -i -pe "/^ld(dl)?flags/ and \
 			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
-		          $(lib)/Config.pm $(lib)/Config_heavy.pl ; \
+		          $(lib)/Config.pm $(lib)/Config_heavy.pl \
+		          $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ; \
 		done; \
 	fi
 
@@ -253,16 +266,43 @@ endif
 	# move pod out of -base modules and into .pod files in -doc
 	./perl.static debian/splitdoc $(build)/perl-base
 
+	# copy the essential parts of the standard library into a perl-base specific path
+	for d in $(build)/perl-base/usr/lib/$(archtriplet)/perl/$(fullversion) \
+	         $(build)/perl-base/usr/share/perl/$(fullversion); do \
+	    (cd $$d && find . -print0 | \
+	      cpio -0vdump $(srcdir)/$(build)/perl-base/usr/lib/$(archtriplet)/perl-base); \
+	done
+	# then move the original ones into perl and perl-modules-5.xx
+	(cd $(build)/perl-base && \
+	 find usr/lib/$(archtriplet)/perl/$(fullversion) -print0 | \
+	      cpio -0vdump $(srcdir)/$(build)/perl; \
+	     rm -rf usr/lib/$(archtriplet)/perl/$(fullversion); \
+	 find usr/share/perl/$(fullversion) -print0 | \
+	      cpio -0vdump $(srcdir)/$(build)/perl-modules-$(version); \
+	     rm -rf usr/share/perl/$(fullversion); \
+	 )
+
+	mkdir -p $(build)/libperl$(version)/usr/bin
+	cp -p perl $(build)/libperl$(version)/usr/bin/perl$(version)-$(archtriplet)
+
+ifeq ($(installtype),static)
+	# make the static configuration available to /usr/bin/perl
+	mkdir -p $(build)/perl-base/usr/lib/$(archtriplet)/perl-base
+	mv $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config.pm
+	mv $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config_heavy.pl
+else
+	rm $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static
+endif
+
 	# create symlinks to match @INC
-	ln -s $(fullversion) $(build)/perl-base/usr/lib/$(archtriplet)/perl/$(version)
-	ln -s $(fullversion) $(build)/perl-base/usr/share/perl/$(version)
+	ln -s $(fullversion) $(build)/perl/usr/lib/$(archtriplet)/perl/$(version)
+	ln -s $(fullversion) $(build)/perl-modules-$(version)/usr/share/perl/$(version)
 
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	# Verify that perl-base stays self contained
 
-	( shopt -s globstar; cd $(build)/perl-base; \
-	  find `grep -v '^#' $(srcdir)/debian/perl-base.files` ! -type d ) | \
+	( cd $(build)/perl-base && find . -name '*.p[hlm]' ) | \
 	  ./perl.static $(srcdir)/debian/check-require $(build)/perl-base
 endif
 endif
