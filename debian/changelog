@@ -16,6 +16,7 @@ perl (5.20.2-4) UNRELEASED; urgency=medium
   * Backport podlators patch to improve error handling with standard
     input. (Closes: #777405)
   * Minor improvements to the package maintainer test framework.
+    + remove the obsolete debian/check-control script
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 10 Apr 2015 10:00:15 +0300
 
