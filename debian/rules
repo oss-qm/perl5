@@ -272,10 +272,10 @@ endif
 	    (cd $$d && find . -print0 | \
 	      cpio -0vdump $(srcdir)/$(build)/perl-base/usr/lib/$(archtriplet)/perl-base); \
 	done
-	# then move the original ones into perl and perl-modules-5.xx
+	# then move the original ones into libperl5.xx and perl-modules-5.xx
 	(cd $(build)/perl-base && \
 	 find usr/lib/$(archtriplet)/perl/$(fullversion) -print0 | \
-	      cpio -0vdump $(srcdir)/$(build)/perl; \
+	      cpio -0vdump $(srcdir)/$(build)/libperl$(version); \
 	     rm -rf usr/lib/$(archtriplet)/perl/$(fullversion); \
 	 find usr/share/perl/$(fullversion) -print0 | \
 	      cpio -0vdump $(srcdir)/$(build)/perl-modules-$(version); \
@@ -288,14 +288,14 @@ endif
 ifeq ($(installtype),static)
 	# make the static configuration available to /usr/bin/perl
 	mkdir -p $(build)/perl-base/usr/lib/$(archtriplet)/perl-base
-	mv $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config.pm
-	mv $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config_heavy.pl
+	mv $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config.pm
+	mv $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config_heavy.pl
 else
-	rm $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static
+	rm $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static
 endif
 
 	# create symlinks to match @INC
-	ln -s $(fullversion) $(build)/perl/usr/lib/$(archtriplet)/perl/$(version)
+	ln -s $(fullversion) $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(version)
 	ln -s $(fullversion) $(build)/perl-modules-$(version)/usr/share/perl/$(version)
 
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
