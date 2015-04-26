@@ -1,6 +1,7 @@
 perl (5.20.2-3+deb8u1) UNRELEASED; urgency=medium
 
-  * 
+  * Make the perl debugger work with threaded programs again.
+    Thanks to James McCoy. (Closes: #779357)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 26 Apr 2015 20:20:06 +0300
 
