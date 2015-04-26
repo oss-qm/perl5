@@ -1,4 +1,4 @@
-perl (5.20.2-4) UNRELEASED; urgency=medium
+perl (5.20.2-4) unstable; urgency=medium
 
   * Make the perl debugger work with threaded programs again.
     Thanks to James McCoy. (Closes: #779357)
@@ -18,7 +18,7 @@ perl (5.20.2-4) UNRELEASED; urgency=medium
   * Minor improvements to the package maintainer test framework.
     + remove the obsolete debian/check-control script
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 10 Apr 2015 10:00:15 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 26 Apr 2015 13:00:50 +0300
 
 perl (5.20.2-3) unstable; urgency=medium
 
