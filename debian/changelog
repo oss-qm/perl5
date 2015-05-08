@@ -1,3 +1,19 @@
+perl (5.20.2-6+ma3) UNRELEASED; urgency=medium
+
+  * Make the libperl5.20 package co-installable between different
+    major versions and architectures.
+    + perl-modules is renamed to perl-modules-5.20
+    + the standard library is now in libperl5.20 + perl-modules-5.20
+      instead of perl + perl-modules
+    + perl-base has a copy of the essential parts of the standard library
+      (~3M) in /usr/lib/<triplet>/perl-base
+    + libperl5.20 includes a thin /usr/bin/perl5.20-<triplet>, linked
+      against the shared libperl.
+  * change @INC to contain the full upstream version instead of the
+    short one (5.20.2 vs. 5.20) for the core paths (privlib and archlib)
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 08 May 2015 22:48:42 +0300
+
 perl (5.20.2-6) unstable; urgency=low
 
   * Remove two obsolete lintian overrides.
