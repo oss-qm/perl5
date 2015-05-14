@@ -24,7 +24,6 @@ Conflicts: safe-rm (<< 0.8),
 Breaks: autoconf2.13 (<< 2.13-45),
  perl (<< ${Upstream-Version}~),
  perl-modules (<< ${Upstream-Version}~),
- libperl5.20 (<< 5.20.2-5),
  pdl (<< 1:2.007-4),
  libfile-spec-perl (<< 3.4801),
  libxsloader-perl (<< 0.17),
@@ -92,6 +91,7 @@ Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, perl-base (= ${binary:Version})
 Replaces: perl-base (<< 5.20.2-5)
+Breaks: perl-base (<< 5.20.2-5)
 Description: shared Perl library
  This package contains the shared Perl library, used by applications
  which embed a Perl interpreter.
