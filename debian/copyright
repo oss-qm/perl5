@@ -9,7 +9,7 @@ Comment:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
  .
- Last checked against: Perl 5.20.2
+ Last checked against: Perl 5.22.0~rc1
 
 Files: *
 Copyright:
@@ -202,7 +202,7 @@ License: GPL-1+ or Artistic
 
 Files: lib/unicore/*.txt
 Copyright:
- Copyright (c) 1991-2012 Unicode, Inc.
+ Copyright (c) 1991-2014 Unicode, Inc.
 License: Unicode
 Comment:
  The license is given as
@@ -290,6 +290,11 @@ License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under the same
  terms as the Perl 5 programming language system itself.
 
+Files: Porting/bench.pl
+Copyright:
+ Portions Copyright (C) 2002-2013 by Nicholas Nethercote et al.
+License: GPL-1
+
 Files: NetWare/*
 Copyright:
  Copyright (C) 2000-01, 2002 Novell, Inc. All Rights Reserved.
@@ -301,8 +306,7 @@ Files:
  vms/vms.c
  vms/vmsish.h
 Copyright:
-  Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,
-  2002, 2003, 2004, 2005, 2006, 2007 by Charles Bailey and others.
+  Copyright (C) 1993-2015 by Charles Bailey and others.
 License: GPL-1+ or Artistic
  You may distribute under the terms of either the GNU General Public
  License or the Artistic License, as specified in the README file.
@@ -350,10 +354,18 @@ License: GPL-1+ or Artistic
  code under the same terms as Perl 5.10 itself, or, at your option,
  any later version of Perl 5.
 
-Files: cpan/B-Debug/*
+Files: cpan/autodie/lib/autodie/Scope/GuardStack.pm
+Copyright: Copyright 2013, Niels Thykier <niels@thykier.net>
+License: GPL-1+ or Artistic
+ This is free software.  You may modify and/or redistribute this
+ code under the same terms as Perl 5.10 itself, or, at your option,
+ any later version of Perl 5.
+
+
+Files: cpan/B-
 Copyright:
  Copyright (c) 1996, 1997 Malcolm Beattie
- Copyright (c) 2008, 2010 Reini Urban
+ Copyright (c) 2008, 2010, 2013, 2014 Reini Urban
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or modify
  it under the terms of either:
@@ -363,39 +375,6 @@ License: GPL-1+ or Artistic
  later version, or
  .
  b) the "Artistic License" which comes with this kit.
-
-Files: cpan/CGI/*
-Copyright: 1995-2000 Lincoln D. Stein.  All rights reserved.
-License: GPL-1+ or Artistic-2
-
-Files:
- cpan/CGI/lib/CGI/Carp.pm
- cpan/CGI/lib/CGI/Cookie.pm
- cpan/CGI/lib/CGI/Fast.pm
- cpan/CGI/lib/CGI/Pretty.pm
- cpan/CGI/lib/CGI/Push.pm
- cpan/CGI/lib/CGI/Util.pm
-Copyright: 1995-2000 Lincoln D. Stein.  All rights reserved.
-License: GPL-1+ or Artistic
- This library is free software; you can redistribute it and/or modify
- it under the same terms as Perl itself.
-
-Files:
- cpan/CGI/lib/CGI.pm
- cpan/CGI/lib/CGI/Cookie.pm
- cpan/CGI/lib/CGI/Fast.pm
- cpan/CGI/lib/CGI/Push.pm
-Copyright: 1995-2000 Lincoln D. Stein.  All rights reserved.
-License: GPL-1+ or Artistic
- These files are part of the CGI.pm distribution, licensed as above.
-Comment: These files also include the comment below. As the restrictions
- are already covered by the terms of both the GPL and the Artistic licenses,
- it is assumed that this does not change the license in any way.
- .
- # It may be used and modified freely, but I do request that this copyright
- # notice remain attached to the file.  You may modify this module as you
- # wish, but if you redistribute a modified version, please attach a note
- # listing the modifications you have made.
 
 Files: cpan/Compress-Raw-Bzip2/*
 Copyright: Copyright (c) 2005-2013 Paul Marquess. All rights reserved.
@@ -428,7 +407,7 @@ License: ZLIB
 
 Files: cpan/Config-Perl-V/*
 Copyright:
- Copyright (C) 2009-2013 H.Merijn Brand
+ Copyright (C) 2009-2015 H.Merijn Brand
 License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -442,13 +421,24 @@ License: GPL-1+ or Artistic
 Files:
  cpan/CPAN/lib/App/Cpan.pm
  cpan/CPAN/scripts/cpan
-Copyright: (c) 2001-2013, brian d foy, All Rights Reserved.
+Copyright: (c) 2001-2014, brian d foy, All Rights Reserved.
 License: GPL-1+ or Artistic
  You may redistribute this under the same terms as Perl itself.
 
 Files: cpan/CPAN-Meta/*
 Copyright:
  This software is copyright (c) 2010 by David Golden and Ricardo Signes.
+License: GPL-1+ or Artistic
+ This is free software; you can redistribute it and/or modify it under
+ the same terms as the Perl 5 programming language system itself.
+
+Files:
+ cpan/CPAN-Meta/lib/CPAN/Meta/History/Meta_1_0.pod
+ cpan/CPAN-Meta/lib/CPAN/Meta/History/Meta_1_1.pod
+ cpan/CPAN-Meta/lib/CPAN/Meta/History/Meta_1_2.pod
+ cpan/CPAN-Meta/lib/CPAN/Meta/History/Meta_1_3.pod
+ cpan/CPAN-Meta/lib/CPAN/Meta/History/Meta_1_4.pod
+Copyright: Ken Williams
 License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under
  the same terms as the Perl 5 programming language system itself.
@@ -468,7 +458,7 @@ License: GPL-1+ or Artistic
  the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/DB_File/*
-Copyright: Copyright (c) 1995-2013 Paul Marquess. All rights reserved.
+Copyright: Copyright (c) 1995-2014 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -516,16 +506,22 @@ License: GPL-1+ or Artistic
 
 Files: cpan/Digest-SHA/*
 Copyright:
- Copyright (C) 2003-2013 Mark Shelor, All Rights Reserved
+ Copyright (C) 2003-2015 Mark Shelor, All Rights Reserved
 License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
 
 Files: cpan/Encode/*
-Copyright: Copyright 2002-2012 Dan Kogai <dankogai@dan.co.jp>
+Copyright: Copyright 2002-2014 Dan Kogai <dankogai@cpan.org>
 License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
+
+Files: cpan/Encode/bin/encguess
+Copyright: 2015 Michael LaGrasta and Dan Kogai
+License: Artistic
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the the Artistic License (2.0).
 
 Files: cpan/encoding-warnings/*
 Copyright:
@@ -556,6 +552,18 @@ License: GPL-1+ or Artistic
  file.
  .
  Copyright © 2001, 2002, 2005 Nicholas Clark
+
+Files: cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Locale.pm
+Copyright: 2010 Gisle Aas <gisle@aas.no>
+License: GPL-1+ or Artistic
+ This library is free software; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
+
+Files: cpan/ExtUtils-Manifest/lib/ExtUtils/Manifest.pm
+Copyright: 1996- by Andreas Koenig
+License: GPL-1+ or Artistic
+ This is free software; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
 
 Files:
  cpan/File-Fetch/*
@@ -591,13 +599,14 @@ License: GPL-1+ or Artistic
 Files: cpan/Filter-Util-Call/*
 Copyright:
  Copyright (c) 1995-2011 Paul Marquess. All rights reserved.
+ Copyright (c) 2011-2014 Reini Urban. All rights reserved.
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or
  modify it under the same terms as Perl itself.
 
 Files: cpan/Getopt-Long/*
 Copyright:
- Module Getopt::Long is Copyright 1990,2009-2010 by Johan Vromans.
+ Module Getopt::Long is Copyright 1990,2015 by Johan Vromans.
 License: GPL-2+ or Artistic
  This program is free software; you can redistribute it and/or
  modify it under the terms of the Perl Artistic License or the
@@ -607,7 +616,7 @@ License: GPL-2+ or Artistic
 
 Files: cpan/HTTP-Tiny/*
 Copyright:
- This software is copyright (c) 2014 by Christian Hansen.
+ This software is copyright (c) 2015 by Christian Hansen.
 License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under
  the same terms as the Perl 5 programming language system itself.
@@ -618,13 +627,6 @@ Copyright:
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it
  and/or modify it under the same terms as Perl itself.
-
-Files: cpan/IO-Socket-IP/*
-Copyright:
- This software is copyright (c) 2014 by Paul Evans <leonerd@leonerd.org.uk>.
-License:
- This is free software; you can redistribute it and/or modify it under
- the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/IO-Zlib/*
 Copyright:
@@ -644,7 +646,7 @@ License: GPL-1+ or Artistic
 
 Files: cpan/JSON-PP/*
 Copyright:
- Copyright 2007-2013 by Makamaka Hannyaharamitu
+ Copyright 2007-2014 by Makamaka Hannyaharamitu
 License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
@@ -652,9 +654,17 @@ License: GPL-1+ or Artistic
 Files: cpan/libnet/*
 Copyright:
  (C) 1995-2007 Graham Barr. All rights reserved.
+ (C) 2013-2014 Steve Hay. All rights reserved.
 License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or modify
  it under the same terms as Perl itself.
+
+Files: cpan/libnet/Makefile.PL
+Copyright:
+ Copyright (C) 2014 Steve Hay.  All rights reserved.
+License: GPL-1+ or Artistic
+ You may distribute under the terms of either the GNU General Public License
+ or the Artistic License, as specified in the LICENCE file.
 
 Files: cpan/List-Util/*
 Copyright:
@@ -663,19 +673,28 @@ License: GPL-1+ or Artistic
  This library is free software; you can redistribute it and/or
  modify it under the same terms as Perl itself.
 
-Files: cpan/List-Util/lib/Scalar/Util.pm
+Files: cpan/Scalar-List-Utils/lib/Scalar/Util.pm
 Copyright:
  Copyright (c) 1997-2007 Graham Barr <gbarr@pobox.com>. All rights reserved.
  Copyright (c) 1999 Tuomas J. Lukka <lukka@iki.fi>. All rights reserved.
+ Copyright (C) 2004, 2008  Matthijs van Duin.  All rights reserved.
+ Copyright (C) 2014 cPanel Inc.  All rights reserved.
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or modify it
  under the same terms as Perl itself.
+
+Files: cpan/Scalar-List-Utils/lib/Sub/Util.pm
+Copyright: (c) 2014 Paul Evans <leonerd@leonerd.org.uk>. All rights reserved
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
+
 
 Files: cpan/Locale-Codes/*
 Copyright:
  Copyright (C) 1997-2001 Canon Research Centre Europe (CRE).
  Copyright (C) 2001-2010 Neil Bowers
- Copyright (c) 1996-2013 Sullivan Beck
+ Copyright (c) 1996-2015 Sullivan Beck
  Copyright (c) 2001      Michael Hennecke
 License: GPL-1+ or Artistic
  This module is free software; you can redistribute it and/or
@@ -750,34 +769,6 @@ License: GPL-1+ or Artistic
   OF THIS MATERIAL FOR ANY PURPOSE.  IT IS PROVIDED "AS IS",
   WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
 
-Files: cpan/Module-Build/*
-Copyright:
- Copyright (c) 1999, 2001-2008 Ken Williams.  All rights reserved.
-License: GPL-1+ or Artistic
- This library is free software; you can redistribute it and/or
- modify it under the same terms as Perl itself.
-
-Files: cpan/Module-Build/lib/inc/latest.pm
-Copyright:
- Copyright (c) 2009 by Eric Wilhelm and David Golden
-License: GPL-1+ or Artistic
- This library is free software; you can redistribute it and/or
- modify it under the same terms as Perl itself.
-
-Files: cpan/Module-Build/t/README.pod
-Copyright:
- This documentation is Copyright (C) 2009 by David Golden.
-License: GPL-1+ or Artistic
- You can redistribute it and/or modify it under the same terms as
- Perl 5.10.0.
-
-Files: cpan/Module-Build/t/bundled/Tie/CPHash.pm
-Copyright:
- Copyright 1997 Christopher J. Madsen
-License: GPL-1+ or Artistic
- This program is free software; you can redistribute it and/or modify
- it under the same terms as Perl itself.
-
 Files: cpan/Module-Metadata/*
 Copyright:
  Copyright (c) 2001-2011 Ken Williams.  All rights reserved.
@@ -815,7 +806,7 @@ License: GPL-1+ or Artistic
 
 Files: cpan/Perl-OSType/*
 Copyright:
- This software is copyright (c) 2014 by David Golden.
+ This software is copyright (c) 2015 by David Golden.
 License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under
  the same terms as the Perl 5 programming language system itself.
@@ -978,6 +969,12 @@ License: GPL-1+ or Artistic
  This program is free software; you may redistribute it and/or modify it
  under the same terms as Perl itself.
 
+Files:
+ cpan/Term-ANSIColor/t/lib/Test/RRA.pm
+ cpan/Term-ANSIColor/t/lib/Test/RRA/*
+Copyright: 2013, 2014 The Board of Trustees of the Leland Stanford Junior University
+License: Expat
+
 Files: cpan/Term-Cap/*
 Copyright: unknown
 License: GPL-1+ or Artistic
@@ -1054,9 +1051,12 @@ Copyright:
  Copyright Mark Fowler <mark@twoshortplanks.com> 2002, 2004.
  .
  Some code taken from Test::More and Test::Catch, written by by
- Michael G Schwern <schwern@pobox.comE>.  Hence, those parts
- Copyright Micheal G Schwern 2001.  Used and distributed with
+ Michael G Schwern <schwern@pobox.com>.  Hence, those parts
+ Copyright Michael G Schwern 2001.  Used and distributed with
  permission.
+ .
+ This module is copyright 2005 Fergal Daly <fergal@esatclear.ie>, some parts
+ are based on other people's work.
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it
  and/or modify it under the same terms as Perl itself.
@@ -1073,6 +1073,30 @@ License: GPL-1+ or Artistic
  encouraged to use this code in your own programs for fun
  or for profit as you see fit.  A simple comment in the code giving
  credit would be courteous but is not required.
+
+Files: cpan/Test-Simple/lib/Test/Builder/IO/Scalar.pm
+Copyright:
+ Copyright (c) 1996 by Eryq.  All rights reserved.
+ Copyright (c) 1999,2001 by ZeeGee Software Inc.  All rights reserved.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it
+ and/or modify it under the same terms as Perl itself.
+
+Files: cpan/Test-Simple/lib/Test/Tester/CaptureRunner.pm
+Copyright: Copyright 2003 by Fergal Daly <fergal@esatclear.ie>.
+License: GPL-1+ or Artistic
+ This program is free software; you can redistribute it
+ and/or modify it under the same terms as Perl itself.
+
+Files:
+ cpan/Test-Simple/lib/Test/use/ok.pm
+ cpan/Test-Simple/lib/ok.pm
+Copyright:
+ To the extent possible under law, 唐鳳 has waived all copyright and related
+ or neighboring rights to L<Test-use-ok>
+Licence: 
+ To the extent possible under law, 唐鳳 has waived all copyright and related
+ or neighboring rights to L<Test-use-ok>.
 
 Files: cpan/Text-Balanced/*
 Copyright:
@@ -1162,7 +1186,7 @@ Comment:
 
 Files: cpan/Unicode-Collate/*
 Copyright:
- This module is Copyright(C) 2001-2012, SADAHIRO Tomoyuki. Japan. All
+ This module is Copyright(C) 2001-2014, SADAHIRO Tomoyuki. Japan. All
  rights reserved.
 License: GPL-1+ or Artistic
  This module is free software; you can redistribute it and/or
@@ -1170,7 +1194,7 @@ License: GPL-1+ or Artistic
 
 Files: cpan/Unicode-Collate/Collate/allkeys.txt
 Copyright:
- Copyright (c) 2001-2012 Unicode, Inc.
+ Copyright (c) 2001-2014 Unicode, Inc.
 License: Unicode
  For terms of use, see http://www.unicode.org/terms_of_use.html
 Comment:
@@ -1410,8 +1434,8 @@ License: GPL-1+ or Artistic
 
 Files: dist/Storable/*
 Copyright:
- Copyright (c) 1995-2000, Raphael Manfredi
- Copyright (c) 2001-2004, Larry Wall
+ Copyright (c) 1995-2001, Raphael Manfredi
+ Copyright (c) 2002-2014 by the Perl 5 Porters
 License: GPL-1+ or Artistic
  This program is free software; you can redistribute it and/or modify
  it under the same terms as Perl 5 itself.
