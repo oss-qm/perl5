@@ -1,5 +1,5 @@
 /*
- $Id: Encode.xs,v 2.27 2014/04/29 16:25:06 dankogai Exp dankogai $
+ $Id: Encode.xs,v 2.33 2015/01/22 10:17:32 dankogai Exp $
  */
 
 #define PERL_NO_GET_CONTEXT
@@ -7,6 +7,7 @@
 #include "perl.h"
 #include "XSUB.h"
 #include "encode.h"
+#include "def_t.h"
 
 # define PERLIO_MODNAME  "PerlIO::encoding"
 # define PERLIO_FILENAME "PerlIO/encoding.pm"
@@ -19,8 +20,10 @@
    encode_method().  1 is recommended. 2 restores NI-S original */
 #define ENCODE_XS_USEFP   1
 
-#define UNIMPLEMENTED(x,y) y x (SV *sv, char *encoding) {dTHX;   \
-                         Perl_croak(aTHX_ "panic_unimplemented"); \
+#define UNIMPLEMENTED(x,y) y x (SV *sv, char *encoding) {		\
+			Perl_croak_nocontext("panic_unimplemented");	\
+                        PERL_UNUSED_VAR(sv); \
+                        PERL_UNUSED_VAR(encoding); \
              return (y)0; /* fool picky compilers */ \
                          }
 /**/
@@ -67,6 +70,10 @@ void
 call_failure(SV * routine, U8 * done, U8 * dest, U8 * orig)
 {
     /* Exists for breakpointing */
+    PERL_UNUSED_VAR(routine);
+    PERL_UNUSED_VAR(done);
+    PERL_UNUSED_VAR(dest);
+    PERL_UNUSED_VAR(orig);
 }
 
 
@@ -343,10 +350,14 @@ process_utf8(pTHX_ SV* dst, U8* s, U8* e, SV *check_sv,
         if (UTF8_IS_START(*s)) {
             U8 skip = UTF8SKIP(s);
             if ((s + skip) > e) {
-                /* Partial character */
-                /* XXX could check that rest of bytes are UTF8_IS_CONTINUATION(ch) */
-                if (stop_at_partial || (check & ENCODE_STOP_AT_PARTIAL))
+                if (stop_at_partial || (check & ENCODE_STOP_AT_PARTIAL)) {
+                    const U8 *p = s + 1;
+                    for (; p < e; p++) {
+                        if (!UTF8_IS_CONTINUATION(*p))
+                            goto malformed_byte;
+                    }
                     break;
+                }
 
                 goto malformed_byte;
             }
@@ -359,11 +370,11 @@ process_utf8(pTHX_ SV* dst, U8* s, U8* e, SV *check_sv,
         if (strict && uv > PERL_UNICODE_MAX)
         ulen = (STRLEN) -1;
 #endif
-            if (ulen == -1) {
+            if (ulen == (STRLEN) -1) {
                 if (strict) {
                     uv = utf8n_to_uvuni(s, e - s, &ulen,
                                         UTF8_CHECK_ONLY | UTF8_ALLOW_NONSTRICT);
-                    if (ulen == -1)
+                    if (ulen == (STRLEN) -1)
                         goto malformed_byte;
                     goto malformed;
                 }
@@ -503,7 +514,6 @@ PREINIT:
     U8 *s;
     U8 *e;
     SV *dst;
-    bool renewed = 0;
     int check;
 CODE:
 {
@@ -564,6 +574,7 @@ Method_renew(obj)
 SV *	obj
 CODE:
 {
+    PERL_UNUSED_VAR(obj);
     XSRETURN(1);
 }
 
@@ -572,6 +583,7 @@ Method_renewed(obj)
 SV *    obj
 CODE:
     RETVAL = 0;
+    PERL_UNUSED_VAR(obj);
 OUTPUT:
     RETVAL
 
@@ -673,6 +685,7 @@ SV *	obj
 CODE:
 {
     /* encode_t *enc = INT2PTR(encode_t *, SvIV(SvRV(obj))); */
+    PERL_UNUSED_VAR(obj);
     ST(0) = &PL_sv_no;
     XSRETURN(1);
 }
@@ -685,7 +698,9 @@ CODE:
     /* encode_t *enc = INT2PTR(encode_t *, SvIV(SvRV(obj))); */
     /* require_pv(PERLIO_FILENAME); */
 
+    PERL_UNUSED_VAR(obj);
     eval_pv("require PerlIO::encoding", 0);
+    SPAGAIN;
 
     if (SvTRUE(get_sv("@", 0))) {
     ST(0) = &PL_sv_no;
@@ -703,6 +718,7 @@ CODE:
     encode_t *enc = INT2PTR(encode_t *, SvIV(SvRV(obj)));
     SV *retval;
     eval_pv("require Encode::MIME::Name", 0);
+    SPAGAIN;
 
     if (SvTRUE(get_sv("@", 0))) {
 	ST(0) = &PL_sv_undef;
@@ -843,7 +859,7 @@ OUTPUT:
     RETVAL
 
 #ifndef SvIsCOW
-# define SvIsCOW (SvREADONLY(sv) && SvFAKE(sv))
+# define SvIsCOW(sv) (SvREADONLY(sv) && SvFAKE(sv))
 #endif
 
 SV *
@@ -987,6 +1003,5 @@ OUTPUT:
 
 BOOT:
 {
-#include "def_t.h"
 #include "def_t.exh"
 }

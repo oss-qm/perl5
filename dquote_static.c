@@ -15,11 +15,7 @@
     Pulled from regcomp.c.
  */
 PERL_STATIC_INLINE I32
-S_regcurly(pTHX_ const char *s,
-           const bool rbrace_must_be_escaped /* Should the terminating '} be
-                                                preceded by a backslash?  This
-                                                is an abnormal case */
-    )
+S_regcurly(const char *s)
 {
     PERL_ARGS_ASSERT_REGCURLY;
 
@@ -35,9 +31,7 @@ S_regcurly(pTHX_ const char *s,
 	    s++;
     }
 
-    return (rbrace_must_be_escaped)
-           ? *s == '\\' && *(s+1) == '}'
-           : *s == '}';
+    return *s == '}';
 }
 
 /* XXX Add documentation after final interface and behavior is decided */
@@ -52,26 +46,22 @@ S_grok_bslash_c(pTHX_ const char source, const bool output_warning)
     U8 result;
 
     if (! isPRINT_A(source)) {
-        const char msg[] = "Character following \"\\c\" must be printable ASCII";
-        if (! isASCII(source)) {
-            Perl_croak(aTHX_ "%s", msg);
-        }
-        else if (output_warning) {  /* Unprintables can be removed in v5.22 */
-            Perl_ck_warner_d(aTHX_ packWARN2(WARN_DEPRECATED, WARN_SYNTAX), "%s",
-                                                                            msg);
-	}
+        Perl_croak(aTHX_ "%s",
+                        "Character following \"\\c\" must be printable ASCII");
     }
     else if (source == '{') {
-        assert(isPRINT_A(toCTRL('{')));
-
-        /* diag_listed_as: Use "%s" instead of "%s" */
-        Perl_croak(aTHX_ "Use \"%c\" instead of \"\\c{\"", toCTRL('{'));
+        const char control = toCTRL('{');
+        if (isPRINT_A(control)) {
+            /* diag_listed_as: Use "%s" instead of "%s" */
+            Perl_croak(aTHX_ "Use \"%c\" instead of \"\\c{\"", control);
+        }
+        else {
+            Perl_croak(aTHX_ "Sequence \"\\c{\" invalid");
+        }
     }
 
     result = toCTRL(source);
-    if (output_warning && ! isCNTRL_L1(result)) {
-        /* We use isCNTRL_L1 above and not simply isCNTRL, because on EBCDIC
-         * machines, things like \cT map into a C1 control. */
+    if (output_warning && isPRINT_A(result)) {
         U8 clearer[3];
         U8 i = 0;
         if (! isWORDCHAR(result)) {
@@ -98,7 +88,9 @@ S_grok_bslash_o(pTHX_ char **s, UV *uv, const char** error_msg,
 
 /*  Documentation to be supplied when interface nailed down finally
  *  This returns FALSE if there is an error which the caller need not recover
- *  from; , otherwise TRUE.  In either case the caller should look at *len
+ *  from; otherwise TRUE.  In either case the caller should look at *len [???].
+ *  It guarantees that the returned codepoint, *uv, when expressed as
+ *  utf8 bytes, would fit within the skipped "\o{...}" bytes.
  *  On input:
  *	s   is the address of a pointer to a NULL terminated string that begins
  *	    with 'o', and the previous character was a backslash.  At exit, *s
@@ -127,6 +119,11 @@ S_grok_bslash_o(pTHX_ char **s, UV *uv, const char** error_msg,
 		/* XXX Until the message is improved in grok_oct, handle errors
 		 * ourselves */
 	        | PERL_SCAN_SILENT_ILLDIGIT;
+
+#ifdef DEBUGGING
+    char *start = *s - 1;
+    assert(*start == '\\');
+#endif
 
     PERL_ARGS_ASSERT_GROK_BSLASH_O;
 
@@ -186,6 +183,10 @@ S_grok_bslash_o(pTHX_ char **s, UV *uv, const char** error_msg,
     /* Return past the '}' */
     *s = e + 1;
 
+    /* guarantee replacing "\o{...}" with utf8 bytes fits within
+     * existing space */
+    assert(OFFUNISKIP(*uv) < *s - start);
+
     return TRUE;
 }
 
@@ -198,7 +199,10 @@ S_grok_bslash_x(pTHX_ char **s, UV *uv, const char** error_msg,
 
 /*  Documentation to be supplied when interface nailed down finally
  *  This returns FALSE if there is an error which the caller need not recover
- *  from; , otherwise TRUE.  In either case the caller should look at *len
+ *  from; otherwise TRUE.
+ *  It guarantees that the returned codepoint, *uv, when expressed as
+ *  utf8 bytes, would fit within the skipped "\x{...}" bytes.
+ *
  *  On input:
  *	s   is the address of a pointer to a NULL terminated string that begins
  *	    with 'x', and the previous character was a backslash.  At exit, *s
@@ -225,15 +229,17 @@ S_grok_bslash_x(pTHX_ char **s, UV *uv, const char** error_msg,
     char* e;
     STRLEN numbers_len;
     I32 flags = PERL_SCAN_DISALLOW_PREFIX;
+#ifdef DEBUGGING
+    char *start = *s - 1;
+    assert(*start == '\\');
+#endif
 
     PERL_ARGS_ASSERT_GROK_BSLASH_X;
-
-    PERL_UNUSED_ARG(output_warning);
 
     assert(**s == 'x');
     (*s)++;
 
-    if (strict) {
+    if (strict || ! output_warning) {
         flags |= PERL_SCAN_SILENT_ILLDIGIT;
     }
 
@@ -252,7 +258,7 @@ S_grok_bslash_x(pTHX_ char **s, UV *uv, const char** error_msg,
             }
             return FALSE;
         }
-	return TRUE;
+	goto ok;
     }
 
     e = strchr(*s, '}');
@@ -277,7 +283,9 @@ S_grok_bslash_x(pTHX_ char **s, UV *uv, const char** error_msg,
             *error_msg = "Number with no digits";
             return FALSE;
         }
-        return TRUE;
+        *s = e + 1;
+        *uv = 0;
+        goto ok;
     }
 
     flags |= PERL_SCAN_ALLOW_UNDERSCORES;
@@ -299,6 +307,10 @@ S_grok_bslash_x(pTHX_ char **s, UV *uv, const char** error_msg,
     /* Return past the '}' */
     *s = e + 1;
 
+  ok:
+    /* guarantee replacing "\x{...}" with utf8 bytes fits within
+     * existing space */
+    assert(OFFUNISKIP(*uv) < *s - start);
     return TRUE;
 }
 
@@ -332,11 +344,5 @@ S_form_short_octal_warning(pTHX_
 }
 
 /*
- * Local variables:
- * c-indentation-style: bsd
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- *
  * ex: set ts=8 sts=4 sw=4 et:
  */

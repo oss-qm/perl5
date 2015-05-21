@@ -39,7 +39,6 @@
 
 PP(pp_const)
 {
-    dVAR;
     dSP;
     XPUSHs(cSVOP_sv);
     RETURN;
@@ -47,8 +46,8 @@ PP(pp_const)
 
 PP(pp_nextstate)
 {
-    dVAR;
     PL_curcop = (COP*)PL_op;
+    PL_sawalias = 0;
     TAINT_NOT;		/* Each statement is presumed innocent */
     PL_stack_sp = PL_stack_base + cxstack[cxstack_ix].blk_oldsp;
     FREETMPS;
@@ -58,33 +57,36 @@ PP(pp_nextstate)
 
 PP(pp_gvsv)
 {
-    dVAR;
     dSP;
     EXTEND(SP,1);
     if (UNLIKELY(PL_op->op_private & OPpLVAL_INTRO))
 	PUSHs(save_scalar(cGVOP_gv));
     else
 	PUSHs(GvSVn(cGVOP_gv));
+    if (GvREFCNT(cGVOP_gv) > 1 || GvALIASED_SV(cGVOP_gv))
+	PL_sawalias = TRUE;
     RETURN;
 }
 
+
+/* also used for: pp_lineseq() pp_regcmaybe() pp_scalar() pp_scope() */
+
 PP(pp_null)
 {
-    dVAR;
     return NORMAL;
 }
 
-/* This is sometimes called directly by pp_coreargs and pp_grepstart. */
+/* This is sometimes called directly by pp_coreargs, pp_grepstart and
+   amagic_call. */
 PP(pp_pushmark)
 {
-    dVAR;
     PUSHMARK(PL_stack_sp);
     return NORMAL;
 }
 
 PP(pp_stringify)
 {
-    dVAR; dSP; dTARGET;
+    dSP; dTARGET;
     SV * const sv = TOPs;
     SETs(TARG);
     sv_copypv(TARG, sv);
@@ -95,14 +97,19 @@ PP(pp_stringify)
 
 PP(pp_gv)
 {
-    dVAR; dSP;
+    dSP;
     XPUSHs(MUTABLE_SV(cGVOP_gv));
+    if (isGV(cGVOP_gv)
+     && (GvREFCNT(cGVOP_gv) > 1 || GvALIASED_SV(cGVOP_gv)))
+	PL_sawalias = TRUE;
     RETURN;
 }
 
+
+/* also used for: pp_andassign() */
+
 PP(pp_and)
 {
-    dVAR;
     PERL_ASYNC_CHECK();
     {
 	/* SP is not used to remove a variable that is saved across the
@@ -123,7 +130,7 @@ PP(pp_and)
 
 PP(pp_sassign)
 {
-    dVAR; dSP;
+    dSP;
     /* sassign keeps its args in the optree traditionally backwards.
        So we pop them differently.
     */
@@ -228,7 +235,7 @@ PP(pp_sassign)
 
 PP(pp_cond_expr)
 {
-    dVAR; dSP;
+    dSP;
     PERL_ASYNC_CHECK();
     if (SvTRUEx(POPs))
 	RETURNOP(cLOGOP->op_other);
@@ -238,7 +245,6 @@ PP(pp_cond_expr)
 
 PP(pp_unstack)
 {
-    dVAR;
     PERL_ASYNC_CHECK();
     TAINT_NOT;		/* Each statement is presumed innocent */
     PL_stack_sp = PL_stack_base + cxstack[cxstack_ix].blk_oldsp;
@@ -252,7 +258,7 @@ PP(pp_unstack)
 
 PP(pp_concat)
 {
-  dVAR; dSP; dATARGET; tryAMAGICbin_MG(concat_amg, AMGf_assign);
+  dSP; dATARGET; tryAMAGICbin_MG(concat_amg, AMGf_assign);
   {
     dPOPTOPssrl;
     bool lbyte;
@@ -294,15 +300,10 @@ PP(pp_concat)
     }
 
     if (!rcopied) {
-	if (left == right)
-	    /* $r.$r: do magic twice: tied might return different 2nd time */
-	    SvGETMAGIC(right);
 	rpv = SvPV_nomg_const(right, rlen);
 	rbyte = !DO_UTF8(right);
     }
     if (lbyte != rbyte) {
-	/* sv_utf8_upgrade_nomg() may reallocate the stack */
-	PUTBACK;
 	if (lbyte)
 	    sv_utf8_upgrade_nomg(TARG);
 	else {
@@ -311,7 +312,6 @@ PP(pp_concat)
 	    sv_utf8_upgrade_nomg(right);
 	    rpv = SvPV_nomg_const(right, rlen);
 	}
-	SPAGAIN;
     }
     sv_catpvn_nomg(TARG, rpv, rlen);
 
@@ -357,7 +357,7 @@ S_pushav(pTHX_ AV* const av)
 
 PP(pp_padrange)
 {
-    dVAR; dSP;
+    dSP;
     PADOFFSET base = PL_op->op_targ;
     int count = (int)(PL_op->op_private) & OPpPADRANGE_COUNTMASK;
     int i;
@@ -381,7 +381,7 @@ PP(pp_padrange)
                       (base << (OPpPADRANGE_COUNTSHIFT + SAVE_TIGHT_SHIFT))
                     | (count << SAVE_TIGHT_SHIFT)
                     | SAVEt_CLEARPADRANGE);
-        assert(OPpPADRANGE_COUNTMASK + 1 == (1 <<OPpPADRANGE_COUNTSHIFT));
+        STATIC_ASSERT_STMT(OPpPADRANGE_COUNTMASK + 1 == (1 << OPpPADRANGE_COUNTSHIFT));
         assert((payload >> (OPpPADRANGE_COUNTSHIFT+SAVE_TIGHT_SHIFT)) == base);
         {
             dSS_ADD;
@@ -398,7 +398,7 @@ PP(pp_padrange)
 
 PP(pp_padsv)
 {
-    dVAR; dSP;
+    dSP;
     EXTEND(SP, 1);
     {
 	OP * const op = PL_op;
@@ -428,7 +428,6 @@ PP(pp_padsv)
 
 PP(pp_readline)
 {
-    dVAR;
     dSP;
     if (TOPs) {
 	SvGETMAGIC(TOPs);
@@ -445,6 +444,10 @@ PP(pp_readline)
 	    PUTBACK;
 	    Perl_pp_rv2gv(aTHX);
 	    PL_last_in_gv = MUTABLE_GV(*PL_stack_sp--);
+	    if (PL_last_in_gv == (GV *)&PL_sv_undef)
+		PL_last_in_gv = NULL;
+	    else
+		assert(isGV_with_GP(PL_last_in_gv));
 	}
     }
     return do_readline();
@@ -452,7 +455,7 @@ PP(pp_readline)
 
 PP(pp_eq)
 {
-    dVAR; dSP;
+    dSP;
     SV *left, *right;
 
     tryAMAGICbin_MG(eq_amg, AMGf_set|AMGf_numeric);
@@ -466,9 +469,12 @@ PP(pp_eq)
     RETURN;
 }
 
+
+/* also used for: pp_i_predec() pp_i_preinc() pp_predec() */
+
 PP(pp_preinc)
 {
-    dVAR; dSP;
+    dSP;
     const bool inc =
 	PL_op->op_type == OP_PREINC || PL_op->op_type == OP_I_PREINC;
     if (UNLIKELY(SvTYPE(TOPs) >= SVt_PVAV || (isGV_with_GP(TOPs) && !SvFAKE(TOPs))))
@@ -486,9 +492,12 @@ PP(pp_preinc)
     return NORMAL;
 }
 
+
+/* also used for: pp_orassign() */
+
 PP(pp_or)
 {
-    dVAR; dSP;
+    dSP;
     PERL_ASYNC_CHECK();
     if (SvTRUE(TOPs))
 	RETURN;
@@ -499,9 +508,12 @@ PP(pp_or)
     }
 }
 
+
+/* also used for: pp_dor() pp_dorassign() */
+
 PP(pp_defined)
 {
-    dVAR; dSP;
+    dSP;
     SV* sv;
     bool defined;
     const int op_type = PL_op->op_type;
@@ -559,7 +571,7 @@ PP(pp_defined)
 
 PP(pp_add)
 {
-    dVAR; dSP; dATARGET; bool useleft; SV *svl, *svr;
+    dSP; dATARGET; bool useleft; SV *svl, *svr;
     tryAMAGICbin_MG(add_amg, AMGf_assign|AMGf_numeric);
     svr = TOPs;
     svl = TOPm1s;
@@ -636,8 +648,8 @@ PP(pp_add)
 		    if (aiv >= 0) {
 			auv = aiv;
 			auvok = 1;	/* Now acting as a sign flag.  */
-		    } else { /* 2s complement assumption for IV_MIN */
-			auv = (UV)-aiv;
+		    } else {
+			auv = (aiv == IV_MIN) ? (UV)aiv : (UV)(-aiv);
 		    }
 		}
 		a_valid = 1;
@@ -657,7 +669,7 @@ PP(pp_add)
 		    buv = biv;
 		    buvok = 1;
 		} else
-		    buv = (UV)-biv;
+                    buv = (biv == IV_MIN) ? (UV)biv : (UV)(-biv);
 	    }
 	    /* ?uvok if value is >= 0. basically, flagged as UV if it's +ve,
 	       else "IV" now, independent of how it came in.
@@ -698,7 +710,8 @@ PP(pp_add)
 		else {
 		    /* Negate result */
 		    if (result <= (UV)IV_MIN)
-			SETi( -(IV)result );
+                        SETi(result == (UV)IV_MIN
+                                ? IV_MIN : -(IV)result);
 		    else {
 			/* result valid, but out of range for IV.  */
 			SETn( -(NV)result );
@@ -722,9 +735,12 @@ PP(pp_add)
     }
 }
 
+
+/* also used for: pp_aelemfast_lex() */
+
 PP(pp_aelemfast)
 {
-    dVAR; dSP;
+    dSP;
     AV * const av = PL_op->op_type == OP_AELEMFAST_LEX
 	? MUTABLE_AV(PAD_SV(PL_op->op_targ)) : GvAVn(cGVOP_gv);
     const U32 lval = PL_op->op_flags & OPf_MOD;
@@ -743,7 +759,7 @@ PP(pp_aelemfast)
 
 PP(pp_join)
 {
-    dVAR; dSP; dMARK; dTARGET;
+    dSP; dMARK; dTARGET;
     MARK++;
     do_join(TARG, *MARK, MARK, SP);
     SP = MARK;
@@ -753,7 +769,7 @@ PP(pp_join)
 
 PP(pp_pushre)
 {
-    dVAR; dSP;
+    dSP;
 #ifdef DEBUGGING
     /*
      * We ass_u_me that LvTARGOFF() comes first, and that two STRLENs
@@ -772,9 +788,11 @@ PP(pp_pushre)
 
 /* Oversized hot code. */
 
+/* also used for: pp_say() */
+
 PP(pp_print)
 {
-    dVAR; dSP; dMARK; dORIGMARK;
+    dSP; dMARK; dORIGMARK;
     PerlIO *fp;
     MAGIC *mg;
     GV * const gv
@@ -866,13 +884,18 @@ PP(pp_print)
     RETURN;
 }
 
+
+/* also used for: pp_rv2hv() */
+/* also called directly by pp_lvavref */
+
 PP(pp_rv2av)
 {
-    dVAR; dSP; dTOPss;
+    dSP; dTOPss;
     const I32 gimme = GIMME_V;
     static const char an_array[] = "an ARRAY";
     static const char a_hash[] = "a HASH";
-    const bool is_pp_rv2av = PL_op->op_type == OP_RV2AV;
+    const bool is_pp_rv2av = PL_op->op_type == OP_RV2AV
+			  || PL_op->op_type == OP_LVAVREF;
     const svtype type = is_pp_rv2av ? SVt_PVAV : SVt_PVHV;
 
     SvGETMAGIC(sv);
@@ -920,9 +943,7 @@ PP(pp_rv2av)
 
     if (is_pp_rv2av) {
 	AV *const av = MUTABLE_AV(sv);
-	/* The guts of pp_rv2av, with no intending change to preserve history
-	   (until such time as we get tools that can do blame annotation across
-	   whitespace changes.  */
+	/* The guts of pp_rv2av  */
 	if (gimme == G_ARRAY) {
             SP--;
             PUTBACK;
@@ -962,8 +983,6 @@ PP(pp_rv2av)
 STATIC void
 S_do_oddball(pTHX_ SV **oddkey, SV **firstkey)
 {
-    dVAR;
-
     PERL_ARGS_ASSERT_DO_ODDBALL;
 
     if (*oddkey) {
@@ -1015,7 +1034,7 @@ PP(pp_aassign)
      * Don't bother if LHS is just an empty hash or array.
      */
 
-    if (    (PL_op->op_private & OPpASSIGN_COMMON)
+    if (    (PL_op->op_private & OPpASSIGN_COMMON || PL_sawalias)
 	&&  (
 	       firstlelem != lastlelem
 	    || ! ((sv = *firstlelem))
@@ -1052,8 +1071,14 @@ PP(pp_aassign)
     hash = NULL;
 
     while (LIKELY(lelem <= lastlelem)) {
+	bool alias = FALSE;
 	TAINT_NOT;		/* Each item stands on its own, taintwise. */
 	sv = *lelem++;
+	if (UNLIKELY(!sv)) {
+	    alias = TRUE;
+	    sv = *lelem++;
+	    ASSUME(SvTYPE(sv) == SVt_PVAV);
+	}
 	switch (SvTYPE(sv)) {
 	case SVt_PVAV:
 	    ary = MUTABLE_AV(sv);
@@ -1067,9 +1092,24 @@ PP(pp_aassign)
 		SV **didstore;
 		if (LIKELY(*relem))
 		    SvGETMAGIC(*relem); /* before newSV, in case it dies */
-		sv = newSV(0);
-		sv_setsv_nomg(sv, *relem);
-		*(relem++) = sv;
+		if (LIKELY(!alias)) {
+		    sv = newSV(0);
+		    sv_setsv_nomg(sv, *relem);
+		    *relem = sv;
+		}
+		else {
+		    if (!SvROK(*relem))
+			DIE(aTHX_ "Assigned value is not a reference");
+		    if (SvTYPE(SvRV(*relem)) > SVt_PVLV)
+		   /* diag_listed_as: Assigned value is not %s reference */
+			DIE(aTHX_
+			   "Assigned value is not a SCALAR reference");
+		    if (lval)
+			*relem = sv_mortalcopy(*relem);
+		    /* XXX else check for weak refs?  */
+		    sv = SvREFCNT_inc_simple_NN(SvRV(*relem));
+		}
+		relem++;
 		didstore = av_store(ary,i++,sv);
 		if (magic) {
 		    if (!didstore)
@@ -1295,7 +1335,7 @@ PP(pp_aassign)
 
 PP(pp_qr)
 {
-    dVAR; dSP;
+    dSP;
     PMOP * const pm = cPMOP;
     REGEXP * rx = PM_GETRE(pm);
     SV * const pkg = rx ? CALLREG_PACKAGE(rx) : NULL;
@@ -1335,7 +1375,7 @@ PP(pp_qr)
 
 PP(pp_match)
 {
-    dVAR; dSP; dTARG;
+    dSP; dTARG;
     PMOP *pm = cPMOP;
     PMOP *dynpm = pm;
     const char *s;
@@ -1346,7 +1386,7 @@ PP(pp_match)
     const char *truebase;			/* Start of string  */
     REGEXP *rx = PM_GETRE(pm);
     bool rxtainted;
-    const I32 gimme = GIMME;
+    const I32 gimme = GIMME_V;
     STRLEN len;
     const I32 oldsave = PL_savestack_ix;
     I32 had_zerolen = 0;
@@ -1354,7 +1394,7 @@ PP(pp_match)
 
     if (PL_op->op_flags & OPf_STACKED)
 	TARG = POPs;
-    else if (PL_op->op_private & OPpTARGET_MY)
+    else if (ARGTARG)
 	GETTARGET;
     else {
 	TARG = DEFSV;
@@ -1513,9 +1553,9 @@ PP(pp_match)
 	LEAVE_SCOPE(oldsave);
 	RETURN;
     }
-    /* NOTREACHED */
+    NOT_REACHED; /* NOTREACHED */
 
-nope:
+  nope:
     if (global && !(dynpm->op_pmflags & PMf_CONTINUE)) {
         if (!mg)
             mg = mg_find_mglob(TARG);
@@ -1531,7 +1571,7 @@ nope:
 OP *
 Perl_do_readline(pTHX)
 {
-    dVAR; dSP; dTARGETSTACKED;
+    dSP; dTARGETSTACKED;
     SV *sv;
     STRLEN tmplen = 0;
     STRLEN offset;
@@ -1569,7 +1609,7 @@ Perl_do_readline(pTHX)
 			goto have_fp;
 		    }
 		}
-		fp = nextargv(PL_last_in_gv);
+		fp = nextargv(PL_last_in_gv, PL_op->op_flags & OPf_SPECIAL);
 		if (!fp) { /* Note: fp != IoIFP(io) */
 		    (void)do_close(PL_last_in_gv, FALSE); /* now it does*/
 		}
@@ -1593,8 +1633,7 @@ Perl_do_readline(pTHX)
 	if (gimme == G_SCALAR) {
 	    /* undef TARG, and push that undefined value */
 	    if (type != OP_RCATLINE) {
-		SV_CHECK_THINKFIRST_COW_DROP(TARG);
-		SvOK_off(TARG);
+		sv_setsv(TARG,NULL);
 	    }
 	    PUSHTARG;
 	}
@@ -1656,7 +1695,7 @@ Perl_do_readline(pTHX)
 	{
 	    PerlIO_clearerr(fp);
 	    if (IoFLAGS(io) & IOf_ARGV) {
-		fp = nextargv(PL_last_in_gv);
+		fp = nextargv(PL_last_in_gv, PL_op->op_flags & OPf_SPECIAL);
 		if (fp)
 		    continue;
 		(void)do_close(PL_last_in_gv, FALSE);
@@ -1739,7 +1778,7 @@ Perl_do_readline(pTHX)
 
 PP(pp_helem)
 {
-    dVAR; dSP;
+    dSP;
     HE* he;
     SV **svp;
     SV * const keysv = POPs;
@@ -1817,9 +1856,445 @@ PP(pp_helem)
     RETURN;
 }
 
+
+/* a stripped-down version of Perl_softref2xv() for use by
+ * pp_multideref(), which doesn't use PL_op->op_flags */
+
+GV *
+S_softref2xv_lite(pTHX_ SV *const sv, const char *const what,
+		const svtype type)
+{
+    if (PL_op->op_private & HINT_STRICT_REFS) {
+	if (SvOK(sv))
+	    Perl_die(aTHX_ PL_no_symref_sv, sv,
+		     (SvPOKp(sv) && SvCUR(sv)>32 ? "..." : ""), what);
+	else
+	    Perl_die(aTHX_ PL_no_usym, what);
+    }
+    if (!SvOK(sv))
+        Perl_die(aTHX_ PL_no_usym, what);
+    return gv_fetchsv_nomg(sv, GV_ADD, type);
+}
+
+
+/* Handle one or more aggregate derefs and array/hash indexings, e.g.
+ * $h->{foo}  or  $a[0]{$key}[$i]  or  f()->[1]
+ *
+ * op_aux points to an array of unions of UV / IV / SV* / PADOFFSET.
+ * Each of these either contains a set of actions, or an argument, such as
+ * an IV to use as an array index, or a lexical var to retrieve.
+ * Several actions re stored per UV; we keep shifting new actions off the
+ * one UV, and only reload when it becomes zero.
+ */
+
+PP(pp_multideref)
+{
+    SV *sv = NULL; /* init to avoid spurious 'may be used uninitialized' */
+    UNOP_AUX_item *items = cUNOP_AUXx(PL_op)->op_aux;
+    UV actions = items->uv;
+
+    assert(actions);
+    /* this tells find_uninit_var() where we're up to */
+    PL_multideref_pc = items;
+
+    while (1) {
+        /* there are three main classes of action; the first retrieve
+         * the initial AV or HV from a variable or the stack; the second
+         * does the equivalent of an unrolled (/DREFAV, rv2av, aelem),
+         * the third an unrolled (/DREFHV, rv2hv, helem).
+         */
+        switch (actions & MDEREF_ACTION_MASK) {
+
+        case MDEREF_reload:
+            actions = (++items)->uv;
+            continue;
+
+        case MDEREF_AV_padav_aelem:                 /* $lex[...] */
+            sv = PAD_SVl((++items)->pad_offset);
+            goto do_AV_aelem;
+
+        case MDEREF_AV_gvav_aelem:                  /* $pkg[...] */
+            sv = UNOP_AUX_item_sv(++items);
+            assert(isGV_with_GP(sv));
+            sv = (SV*)GvAVn((GV*)sv);
+            goto do_AV_aelem;
+
+        case MDEREF_AV_pop_rv2av_aelem:             /* expr->[...] */
+            {
+                dSP;
+                sv = POPs;
+                PUTBACK;
+                goto do_AV_rv2av_aelem;
+            }
+
+        case MDEREF_AV_gvsv_vivify_rv2av_aelem:     /* $pkg->[...] */
+            sv = UNOP_AUX_item_sv(++items);
+            assert(isGV_with_GP(sv));
+            sv = GvSVn((GV*)sv);
+            goto do_AV_vivify_rv2av_aelem;
+
+        case MDEREF_AV_padsv_vivify_rv2av_aelem:     /* $lex->[...] */
+            sv = PAD_SVl((++items)->pad_offset);
+            /* FALLTHROUGH */
+
+        do_AV_vivify_rv2av_aelem:
+        case MDEREF_AV_vivify_rv2av_aelem:           /* vivify, ->[...] */
+            /* this is the OPpDEREF action normally found at the end of
+             * ops like aelem, helem, rv2sv */
+            sv = vivify_ref(sv, OPpDEREF_AV);
+            /* FALLTHROUGH */
+
+        do_AV_rv2av_aelem:
+            /* this is basically a copy of pp_rv2av when it just has the
+             * sKR/1 flags */
+            SvGETMAGIC(sv);
+            if (LIKELY(SvROK(sv))) {
+                if (UNLIKELY(SvAMAGIC(sv))) {
+                    sv = amagic_deref_call(sv, to_av_amg);
+                }
+                sv = SvRV(sv);
+                if (UNLIKELY(SvTYPE(sv) != SVt_PVAV))
+                    DIE(aTHX_ "Not an ARRAY reference");
+            }
+            else if (SvTYPE(sv) != SVt_PVAV) {
+                if (!isGV_with_GP(sv))
+                    sv = (SV*)S_softref2xv_lite(aTHX_ sv, "an ARRAY", SVt_PVAV);
+                sv = MUTABLE_SV(GvAVn((GV*)sv));
+            }
+            /* FALLTHROUGH */
+
+        do_AV_aelem:
+            {
+                /* retrieve the key; this may be either a lexical or package
+                 * var (whose index/ptr is stored as an item) or a signed
+                 * integer constant stored as an item.
+                 */
+                SV *elemsv;
+                IV elem = 0; /* to shut up stupid compiler warnings */
+
+
+                assert(SvTYPE(sv) == SVt_PVAV);
+
+                switch (actions & MDEREF_INDEX_MASK) {
+                case MDEREF_INDEX_none:
+                    goto finish;
+                case MDEREF_INDEX_const:
+                    elem  = (++items)->iv;
+                    break;
+                case MDEREF_INDEX_padsv:
+                    elemsv = PAD_SVl((++items)->pad_offset);
+                    goto check_elem;
+                case MDEREF_INDEX_gvsv:
+                    elemsv = UNOP_AUX_item_sv(++items);
+                    assert(isGV_with_GP(elemsv));
+                    elemsv = GvSVn((GV*)elemsv);
+                check_elem:
+                    if (UNLIKELY(SvROK(elemsv) && !SvGAMAGIC(elemsv)
+                                            && ckWARN(WARN_MISC)))
+                        Perl_warner(aTHX_ packWARN(WARN_MISC),
+                                "Use of reference \"%"SVf"\" as array index",
+                                SVfARG(elemsv));
+                    /* the only time that S_find_uninit_var() needs this
+                     * is to determine which index value triggered the
+                     * undef warning. So just update it here. Note that
+                     * since we don't save and restore this var (e.g. for
+                     * tie or overload execution), its value will be
+                     * meaningless apart from just here */
+                    PL_multideref_pc = items;
+                    elem = SvIV(elemsv);
+                    break;
+                }
+
+
+                /* this is basically a copy of pp_aelem with OPpDEREF skipped */
+
+                if (!(actions & MDEREF_FLAG_last)) {
+                    SV** svp = av_fetch((AV*)sv, elem, 1);
+                    if (!svp || ! (sv=*svp))
+                        DIE(aTHX_ PL_no_aelem, elem);
+                    break;
+                }
+
+                if (PL_op->op_private &
+                    (OPpMULTIDEREF_EXISTS|OPpMULTIDEREF_DELETE))
+                {
+                    if (PL_op->op_private & OPpMULTIDEREF_EXISTS) {
+                        sv = av_exists((AV*)sv, elem) ? &PL_sv_yes : &PL_sv_no;
+                    }
+                    else {
+                        I32 discard = (GIMME_V == G_VOID) ? G_DISCARD : 0;
+                        sv = av_delete((AV*)sv, elem, discard);
+                        if (discard)
+                            return NORMAL;
+                        if (!sv)
+                            sv = &PL_sv_undef;
+                    }
+                }
+                else {
+                    const U32 lval = PL_op->op_flags & OPf_MOD || LVRET;
+                    const U32 defer = PL_op->op_private & OPpLVAL_DEFER;
+                    const bool localizing = PL_op->op_private & OPpLVAL_INTRO;
+                    bool preeminent = TRUE;
+                    AV *const av = (AV*)sv;
+                    SV** svp;
+
+                    if (UNLIKELY(localizing)) {
+                        MAGIC *mg;
+                        HV *stash;
+
+                        /* If we can determine whether the element exist,
+                         * Try to preserve the existenceness of a tied array
+                         * element by using EXISTS and DELETE if possible.
+                         * Fallback to FETCH and STORE otherwise. */
+                        if (SvCANEXISTDELETE(av))
+                            preeminent = av_exists(av, elem);
+                    }
+
+                    svp = av_fetch(av, elem, lval && !defer);
+
+                    if (lval) {
+                        if (!svp || !(sv = *svp)) {
+                            IV len;
+                            if (!defer)
+                                DIE(aTHX_ PL_no_aelem, elem);
+                            len = av_tindex(av);
+                            sv = sv_2mortal(newSVavdefelem(av,
+                            /* Resolve a negative index now, unless it points
+                             * before the beginning of the array, in which
+                             * case record it for error reporting in
+                             * magic_setdefelem. */
+                                elem < 0 && len + elem >= 0
+                                    ? len + elem : elem, 1));
+                        }
+                        else {
+                            if (UNLIKELY(localizing)) {
+                                if (preeminent) {
+                                    save_aelem(av, elem, svp);
+                                    sv = *svp; /* may have changed */
+                                }
+                                else
+                                    SAVEADELETE(av, elem);
+                            }
+                        }
+                    }
+                    else {
+                        sv = (svp ? *svp : &PL_sv_undef);
+                        /* see note in pp_helem() */
+                        if (SvRMAGICAL(av) && SvGMAGICAL(sv))
+                            mg_get(sv);
+                    }
+                }
+
+            }
+          finish:
+            {
+                dSP;
+                XPUSHs(sv);
+                RETURN;
+            }
+            /* NOTREACHED */
+
+
+
+
+        case MDEREF_HV_padhv_helem:                 /* $lex{...} */
+            sv = PAD_SVl((++items)->pad_offset);
+            goto do_HV_helem;
+
+        case MDEREF_HV_gvhv_helem:                  /* $pkg{...} */
+            sv = UNOP_AUX_item_sv(++items);
+            assert(isGV_with_GP(sv));
+            sv = (SV*)GvHVn((GV*)sv);
+            goto do_HV_helem;
+
+        case MDEREF_HV_pop_rv2hv_helem:             /* expr->{...} */
+            {
+                dSP;
+                sv = POPs;
+                PUTBACK;
+                goto do_HV_rv2hv_helem;
+            }
+
+        case MDEREF_HV_gvsv_vivify_rv2hv_helem:     /* $pkg->{...} */
+            sv = UNOP_AUX_item_sv(++items);
+            assert(isGV_with_GP(sv));
+            sv = GvSVn((GV*)sv);
+            goto do_HV_vivify_rv2hv_helem;
+
+        case MDEREF_HV_padsv_vivify_rv2hv_helem:    /* $lex->{...} */
+            sv = PAD_SVl((++items)->pad_offset);
+            /* FALLTHROUGH */
+
+        do_HV_vivify_rv2hv_helem:
+        case MDEREF_HV_vivify_rv2hv_helem:           /* vivify, ->{...} */
+            /* this is the OPpDEREF action normally found at the end of
+             * ops like aelem, helem, rv2sv */
+            sv = vivify_ref(sv, OPpDEREF_HV);
+            /* FALLTHROUGH */
+
+        do_HV_rv2hv_helem:
+            /* this is basically a copy of pp_rv2hv when it just has the
+             * sKR/1 flags (and pp_rv2hv is aliased to pp_rv2av) */
+
+            SvGETMAGIC(sv);
+            if (LIKELY(SvROK(sv))) {
+                if (UNLIKELY(SvAMAGIC(sv))) {
+                    sv = amagic_deref_call(sv, to_hv_amg);
+                }
+                sv = SvRV(sv);
+                if (UNLIKELY(SvTYPE(sv) != SVt_PVHV))
+                    DIE(aTHX_ "Not a HASH reference");
+            }
+            else if (SvTYPE(sv) != SVt_PVHV) {
+                if (!isGV_with_GP(sv))
+                    sv = (SV*)S_softref2xv_lite(aTHX_ sv, "a HASH", SVt_PVHV);
+                sv = MUTABLE_SV(GvHVn((GV*)sv));
+            }
+            /* FALLTHROUGH */
+
+        do_HV_helem:
+            {
+                /* retrieve the key; this may be either a lexical / package
+                 * var or a string constant, whose index/ptr is stored as an
+                 * item
+                 */
+                SV *keysv = NULL; /* to shut up stupid compiler warnings */
+
+                assert(SvTYPE(sv) == SVt_PVHV);
+
+                switch (actions & MDEREF_INDEX_MASK) {
+                case MDEREF_INDEX_none:
+                    goto finish;
+
+                case MDEREF_INDEX_const:
+                    keysv = UNOP_AUX_item_sv(++items);
+                    break;
+
+                case MDEREF_INDEX_padsv:
+                    keysv = PAD_SVl((++items)->pad_offset);
+                    break;
+
+                case MDEREF_INDEX_gvsv:
+                    keysv = UNOP_AUX_item_sv(++items);
+                    keysv = GvSVn((GV*)keysv);
+                    break;
+                }
+
+                /* see comment above about setting this var */
+                PL_multideref_pc = items;
+
+
+                /* ensure that candidate CONSTs have been HEKified */
+                assert(   ((actions & MDEREF_INDEX_MASK) != MDEREF_INDEX_const)
+                       || SvTYPE(keysv) >= SVt_PVMG
+                       || !SvOK(keysv)
+                       || SvROK(keysv)
+                       || SvIsCOW_shared_hash(keysv));
+
+                /* this is basically a copy of pp_helem with OPpDEREF skipped */
+
+                if (!(actions & MDEREF_FLAG_last)) {
+                    HE *he = hv_fetch_ent((HV*)sv, keysv, 1, 0);
+                    if (!he || !(sv=HeVAL(he)) || sv == &PL_sv_undef)
+                        DIE(aTHX_ PL_no_helem_sv, SVfARG(keysv));
+                    break;
+                }
+
+                if (PL_op->op_private &
+                    (OPpMULTIDEREF_EXISTS|OPpMULTIDEREF_DELETE))
+                {
+                    if (PL_op->op_private & OPpMULTIDEREF_EXISTS) {
+                        sv = hv_exists_ent((HV*)sv, keysv, 0)
+                                                ? &PL_sv_yes : &PL_sv_no;
+                    }
+                    else {
+                        I32 discard = (GIMME_V == G_VOID) ? G_DISCARD : 0;
+                        sv = hv_delete_ent((HV*)sv, keysv, discard, 0);
+                        if (discard)
+                            return NORMAL;
+                        if (!sv)
+                            sv = &PL_sv_undef;
+                    }
+                }
+                else {
+                    const U32 lval = PL_op->op_flags & OPf_MOD || LVRET;
+                    const U32 defer = PL_op->op_private & OPpLVAL_DEFER;
+                    const bool localizing = PL_op->op_private & OPpLVAL_INTRO;
+                    bool preeminent = TRUE;
+                    SV **svp;
+                    HV * const hv = (HV*)sv;
+                    HE* he;
+
+                    if (UNLIKELY(localizing)) {
+                        MAGIC *mg;
+                        HV *stash;
+
+                        /* If we can determine whether the element exist,
+                         * Try to preserve the existenceness of a tied hash
+                         * element by using EXISTS and DELETE if possible.
+                         * Fallback to FETCH and STORE otherwise. */
+                        if (SvCANEXISTDELETE(hv))
+                            preeminent = hv_exists_ent(hv, keysv, 0);
+                    }
+
+                    he = hv_fetch_ent(hv, keysv, lval && !defer, 0);
+                    svp = he ? &HeVAL(he) : NULL;
+
+
+                    if (lval) {
+                        if (!svp || !(sv = *svp) || sv == &PL_sv_undef) {
+                            SV* lv;
+                            SV* key2;
+                            if (!defer)
+                                DIE(aTHX_ PL_no_helem_sv, SVfARG(keysv));
+                            lv = sv_newmortal();
+                            sv_upgrade(lv, SVt_PVLV);
+                            LvTYPE(lv) = 'y';
+                            sv_magic(lv, key2 = newSVsv(keysv),
+                                                PERL_MAGIC_defelem, NULL, 0);
+                            /* sv_magic() increments refcount */
+                            SvREFCNT_dec_NN(key2);
+                            LvTARG(lv) = SvREFCNT_inc_simple(hv);
+                            LvTARGLEN(lv) = 1;
+                            sv = lv;
+                        }
+                        else {
+                            if (localizing) {
+                                if (HvNAME_get(hv) && isGV(sv))
+                                    save_gp(MUTABLE_GV(sv),
+                                        !(PL_op->op_flags & OPf_SPECIAL));
+                                else if (preeminent) {
+                                    save_helem_flags(hv, keysv, svp,
+                                         (PL_op->op_flags & OPf_SPECIAL)
+                                            ? 0 : SAVEf_SETMAGIC);
+                                    sv = *svp; /* may have changed */
+                                }
+                                else
+                                    SAVEHDELETE(hv, keysv);
+                            }
+                        }
+                    }
+                    else {
+                        sv = (svp && *svp ? *svp : &PL_sv_undef);
+                        /* see note in pp_helem() */
+                        if (SvRMAGICAL(hv) && SvGMAGICAL(sv))
+                            mg_get(sv);
+                    }
+                }
+                goto finish;
+            }
+
+        } /* switch */
+
+        actions >>= MDEREF_SHIFT;
+    } /* while */
+    /* NOTREACHED */
+}
+
+
 PP(pp_iter)
 {
-    dVAR; dSP;
+    dSP;
     PERL_CONTEXT *cx;
     SV *oldsv;
     SV **itersvp;
@@ -1921,13 +2396,17 @@ PP(pp_iter)
             sv = AvARRAY(av)[ix];
         }
 
+        if (UNLIKELY(cx->cx_type & CXp_FOR_LVREF)) {
+            SvSetMagicSV(*itersvp, sv);
+            break;
+        }
+
         if (LIKELY(sv)) {
             if (UNLIKELY(SvIS_FREED(sv))) {
                 *itersvp = NULL;
                 Perl_croak(aTHX_ "Use of freed value in iteration");
             }
             if (SvPADTMP(sv)) {
-                assert(!IS_PADGV(sv));
                 sv = newSVsv(sv);
             }
             else {
@@ -2023,15 +2502,15 @@ pp_match is just a simpler version of the above.
 
 PP(pp_subst)
 {
-    dVAR; dSP; dTARG;
+    dSP; dTARG;
     PMOP *pm = cPMOP;
     PMOP *rpm = pm;
     char *s;
     char *strend;
     const char *c;
     STRLEN clen;
-    I32 iters = 0;
-    I32 maxiters;
+    SSize_t iters = 0;
+    SSize_t maxiters;
     bool once;
     U8 rxtainted = 0; /* holds various SUBST_TAINT_* flag bits.
 			See "how taint works" above */
@@ -2054,7 +2533,7 @@ PP(pp_subst)
 
     if (PL_op->op_flags & OPf_STACKED)
 	TARG = POPs;
-    else if (PL_op->op_private & OPpTARGET_MY)
+    else if (ARGTARG)
 	GETTARGET;
     else {
 	TARG = DEFSV;
@@ -2142,8 +2621,8 @@ PP(pp_subst)
 	if (DO_UTF8(TARG) && !doutf8) {
 	     nsv = sv_newmortal();
 	     SvSetSV(nsv, dstr);
-	     if (PL_encoding)
-		  sv_recode_to_utf8(nsv, PL_encoding);
+	     if (IN_ENCODING)
+		  sv_recode_to_utf8(nsv, _get_encoding());
 	     else
 		  sv_utf8_upgrade(nsv);
 	     c = SvPV_const(nsv, clen);
@@ -2255,7 +2734,7 @@ PP(pp_subst)
 		Move(s, d, i+1, char);		/* include the NUL */
 	    }
 	    SPAGAIN;
-	    mPUSHi((I32)iters);
+	    mPUSHi(iters);
 	}
     }
     else {
@@ -2323,10 +2802,10 @@ PP(pp_subst)
 	      first = FALSE;
 	    }
 	    else {
-		if (PL_encoding) {
+		if (IN_ENCODING) {
 		    if (!nsv) nsv = sv_newmortal();
 		    sv_copypv(nsv, repl);
-		    if (!DO_UTF8(nsv)) sv_recode_to_utf8(nsv, PL_encoding);
+		    if (!DO_UTF8(nsv)) sv_recode_to_utf8(nsv, _get_encoding());
 		    sv_catsv(dstr, nsv);
 		}
 		else sv_catsv(dstr, repl);
@@ -2367,7 +2846,7 @@ PP(pp_subst)
 	    SvPV_set(dstr, NULL);
 
 	    SPAGAIN;
-	    mPUSHi((I32)iters);
+	    mPUSHi(iters);
 	}
     }
 
@@ -2404,7 +2883,7 @@ PP(pp_subst)
 
 PP(pp_grepwhile)
 {
-    dVAR; dSP;
+    dSP;
 
     if (SvTRUEx(POPs))
 	PL_stack_base[PL_markstack_ptr[-1]++] = PL_stack_base[*PL_markstack_ptr];
@@ -2445,7 +2924,6 @@ PP(pp_grepwhile)
 
 	src = PL_stack_base[*PL_markstack_ptr];
 	if (SvPADTMP(src)) {
-            assert(!IS_PADGV(src));
 	    src = PL_stack_base[*PL_markstack_ptr] = sv_mortalcopy(src);
 	    PL_tmps_floor++;
 	}
@@ -2461,7 +2939,7 @@ PP(pp_grepwhile)
 
 PP(pp_leavesub)
 {
-    dVAR; dSP;
+    dSP;
     SV **mark;
     SV **newsp;
     PMOP *newpm;
@@ -2528,7 +3006,7 @@ PP(pp_leavesub)
 
 PP(pp_entersub)
 {
-    dVAR; dSP; dPOPss;
+    dSP; dPOPss;
     GV *gv;
     CV *cv;
     PERL_CONTEXT *cx;
@@ -2554,7 +3032,7 @@ PP(pp_entersub)
             break;
         case SVt_PVLV:
             if(isGV_with_GP(sv)) goto we_have_a_glob;
-            /*FALLTHROUGH*/
+            /* FALLTHROUGH */
         default:
             if (sv == &PL_sv_yes) {		/* unfound import, ignore */
                 if (hasargs)
@@ -2584,7 +3062,7 @@ PP(pp_entersub)
             cv = MUTABLE_CV(SvRV(sv));
             if (SvTYPE(cv) == SVt_PVCV)
                 break;
-            /* FALL THROUGH */
+            /* FALLTHROUGH */
         case SVt_PVHV:
         case SVt_PVAV:
             DIE(aTHX_ "Not a CODE reference");
@@ -2605,20 +3083,20 @@ PP(pp_entersub)
 	SV* sub_name;
 
 	/* anonymous or undef'd function leaves us no recourse */
-	if (CvANON(cv) || !(gv = CvGV(cv))) {
-	    if (CvNAMED(cv))
-		DIE(aTHX_ "Undefined subroutine &%"HEKf" called",
-			   HEKfARG(CvNAME_HEK(cv)));
+	if (CvLEXICAL(cv) && CvHASGV(cv))
+	    DIE(aTHX_ "Undefined subroutine &%"SVf" called",
+		       SVfARG(cv_name(cv, NULL, 0)));
+	if (CvANON(cv) || !CvHASGV(cv)) {
 	    DIE(aTHX_ "Undefined subroutine called");
 	}
 
 	/* autoloaded stub? */
-	if (cv != GvCV(gv)) {
+	if (cv != GvCV(gv = CvGV(cv))) {
 	    cv = GvCV(gv);
 	}
 	/* should call AUTOLOAD now? */
 	else {
-try_autoload:
+          try_autoload:
 	    if ((autogv = gv_autoload_pvn(GvSTASH(gv), GvNAME(gv), GvNAMELEN(gv),
 				   GvNAMEUTF8(gv) ? SVf_UTF8 : 0)))
 	    {
@@ -2707,7 +3185,6 @@ try_autoload:
 		if (*MARK)
 		{
 		    if (SvPADTMP(*MARK)) {
-                        assert(!IS_PADGV(*MARK));
 			*MARK = sv_mortalcopy(*MARK);
                     }
 		    SvTEMP_off(*MARK);
@@ -2776,7 +3253,6 @@ try_autoload:
 	    while (items--) {
 		mark++;
 		if (*mark && SvPADTMP(*mark)) {
-                    assert(!IS_PADGV(*mark));
 		    *mark = sv_mortalcopy(*mark);
                 }
 	    }
@@ -2814,23 +3290,14 @@ Perl_sub_crush_depth(pTHX_ CV *cv)
     if (CvANON(cv))
 	Perl_warner(aTHX_ packWARN(WARN_RECURSION), "Deep recursion on anonymous subroutine");
     else {
-        HEK *const hek = CvNAME_HEK(cv);
-        SV *tmpstr;
-        if (hek) {
-            tmpstr = sv_2mortal(newSVhek(hek));
-        }
-        else {
-            tmpstr = sv_newmortal();
-            gv_efullname3(tmpstr, CvGV(cv), NULL);
-        }
 	Perl_warner(aTHX_ packWARN(WARN_RECURSION), "Deep recursion on subroutine \"%"SVf"\"",
-		    SVfARG(tmpstr));
+		    SVfARG(cv_name(cv,NULL,0)));
     }
 }
 
 PP(pp_aelem)
 {
-    dVAR; dSP;
+    dSP;
     SV** svp;
     SV* const elemsv = POPs;
     IV elem = SvIV(elemsv);
@@ -2941,55 +3408,31 @@ Perl_vivify_ref(pTHX_ SV *sv, U32 to_what)
     return sv;
 }
 
-PP(pp_method)
+PERL_STATIC_INLINE HV *
+S_opmethod_stash(pTHX_ SV* meth)
 {
-    dVAR; dSP;
-    SV* const sv = TOPs;
-
-    if (SvROK(sv)) {
-	SV* const rsv = SvRV(sv);
-	if (SvTYPE(rsv) == SVt_PVCV) {
-	    SETs(rsv);
-	    RETURN;
-	}
-    }
-
-    SETs(method_common(sv, NULL));
-    RETURN;
-}
-
-PP(pp_method_named)
-{
-    dVAR; dSP;
-    SV* const sv = cSVOP_sv;
-    U32 hash = SvSHARED_HASH(sv);
-
-    XPUSHs(method_common(sv, &hash));
-    RETURN;
-}
-
-STATIC SV *
-S_method_common(pTHX_ SV* meth, U32* hashp)
-{
-    dVAR;
     SV* ob;
-    GV* gv;
     HV* stash;
-    SV *packsv = NULL;
-    SV * const sv = PL_stack_base + TOPMARK == PL_stack_sp
+
+    SV* const sv = PL_stack_base + TOPMARK == PL_stack_sp
 	? (Perl_croak(aTHX_ "Can't call method \"%"SVf"\" without a "
 			    "package or object reference", SVfARG(meth)),
 	   (SV *)NULL)
 	: *(PL_stack_base + TOPMARK + 1);
 
-    PERL_ARGS_ASSERT_METHOD_COMMON;
+    PERL_ARGS_ASSERT_OPMETHOD_STASH;
 
     if (UNLIKELY(!sv))
        undefined:
 	Perl_croak(aTHX_ "Can't call method \"%"SVf"\" on an undefined value",
 		   SVfARG(meth));
 
-    SvGETMAGIC(sv);
+    if (UNLIKELY(SvGMAGICAL(sv))) mg_get(sv);
+    else if (SvIsCOW_shared_hash(sv)) { /* MyClass->meth() */
+	stash = gv_stashsv(sv, GV_CACHE_ONLY);
+	if (stash) return stash;
+    }
+
     if (SvROK(sv))
 	ob = MUTABLE_SV(SvRV(sv));
     else if (!SvOK(sv)) goto undefined;
@@ -3011,22 +3454,12 @@ S_method_common(pTHX_ SV* meth, U32* hashp)
 	GV* iogv;
         STRLEN packlen;
         const char * const packname = SvPV_nomg_const(sv, packlen);
-        const bool packname_is_utf8 = !!SvUTF8(sv);
-        const HE* const he =
-	    (const HE *)hv_common(
-                PL_stashcache, NULL, packname, packlen,
-                packname_is_utf8 ? HVhek_UTF8 : 0, 0, NULL, 0
-	    );
-	  
-        if (he) { 
-            stash = INT2PTR(HV*,SvIV(HeVAL(he)));
-            DEBUG_o(Perl_deb(aTHX_ "PL_stashcache hit %p for '%"SVf"'\n",
-                             stash, sv));
-            goto fetch;
-        }
+        const U32 packname_utf8 = SvUTF8(sv);
+        stash = gv_stashpvn(packname, packlen, packname_utf8 | GV_CACHE_ONLY);
+        if (stash) return stash;
 
 	if (!(iogv = gv_fetchpvn_flags(
-	        packname, packlen, SVf_UTF8 * packname_is_utf8, SVt_PVIO
+	        packname, packlen, packname_utf8, SVt_PVIO
 	     )) ||
 	    !(ob=MUTABLE_SV(GvIO(iogv))))
 	{
@@ -3038,17 +3471,9 @@ S_method_common(pTHX_ SV* meth, U32* hashp)
 				  SVfARG(meth));
 	    }
 	    /* assume it's a package name */
-	    stash = gv_stashpvn(packname, packlen, packname_is_utf8 ? SVf_UTF8 : 0);
-	    if (!stash)
-		packsv = sv;
-            else {
-	        SV* const ref = newSViv(PTR2IV(stash));
-	        (void)hv_store(PL_stashcache, packname,
-                                packname_is_utf8 ? -(I32)packlen : (I32)packlen, ref, 0);
-                DEBUG_o(Perl_deb(aTHX_ "PL_stashcache caching %p for '%"SVf"'\n",
-                                 stash, sv));
-	    }
-	    goto fetch;
+	    stash = gv_stashpvn(packname, packlen, packname_utf8);
+	    if (stash) return stash;
+	    else return MUTABLE_HV(sv);
 	}
 	/* it _is_ a filehandle name -- replace with a reference */
 	*(PL_stack_base + TOPMARK + 1) = sv_2mortal(newRV(MUTABLE_SV(iogv)));
@@ -3066,38 +3491,125 @@ S_method_common(pTHX_ SV* meth, U32* hashp)
                                         : meth));
     }
 
-    stash = SvSTASH(ob);
+    return SvSTASH(ob);
+}
 
-  fetch:
-    /* NOTE: stash may be null, hope hv_fetch_ent and
-       gv_fetchmethod can cope (it seems they can) */
+PP(pp_method)
+{
+    dSP;
+    GV* gv;
+    HV* stash;
+    SV* const meth = TOPs;
 
-    /* shortcut for simple names */
-    if (hashp) {
-	const HE* const he = hv_fetch_ent(stash, meth, 0, *hashp);
-	if (he) {
-	    gv = MUTABLE_GV(HeVAL(he));
-	    if (isGV(gv) && GvCV(gv) &&
-		(!GvCVGEN(gv) || GvCVGEN(gv)
-                  == (PL_sub_generation + HvMROMETA(stash)->cache_gen)))
-		return MUTABLE_SV(GvCV(gv));
-	}
+    if (SvROK(meth)) {
+        SV* const rmeth = SvRV(meth);
+        if (SvTYPE(rmeth) == SVt_PVCV) {
+            SETs(rmeth);
+            RETURN;
+        }
     }
 
-    gv = gv_fetchmethod_sv_flags(stash ? stash : MUTABLE_HV(packsv),
-			             meth, GV_AUTOLOAD | GV_CROAK);
+    stash = opmethod_stash(meth);
 
+    gv = gv_fetchmethod_sv_flags(stash, meth, GV_AUTOLOAD|GV_CROAK);
     assert(gv);
 
-    return isGV(gv) ? MUTABLE_SV(GvCV(gv)) : MUTABLE_SV(gv);
+    SETs(isGV(gv) ? MUTABLE_SV(GvCV(gv)) : MUTABLE_SV(gv));
+    RETURN;
+}
+
+#define METHOD_CHECK_CACHE(stash,cache,meth) 				\
+    const HE* const he = hv_fetch_ent(cache, meth, 0, 0);		\
+    if (he) {								\
+        gv = MUTABLE_GV(HeVAL(he));					\
+        if (isGV(gv) && GvCV(gv) && (!GvCVGEN(gv) || GvCVGEN(gv)	\
+             == (PL_sub_generation + HvMROMETA(stash)->cache_gen)))	\
+        {								\
+            XPUSHs(MUTABLE_SV(GvCV(gv)));				\
+            RETURN;							\
+        }								\
+    }									\
+
+PP(pp_method_named)
+{
+    dSP;
+    GV* gv;
+    SV* const meth = cMETHOPx_meth(PL_op);
+    HV* const stash = opmethod_stash(meth);
+
+    if (LIKELY(SvTYPE(stash) == SVt_PVHV)) {
+        METHOD_CHECK_CACHE(stash, stash, meth);
+    }
+
+    gv = gv_fetchmethod_sv_flags(stash, meth, GV_AUTOLOAD|GV_CROAK);
+    assert(gv);
+
+    XPUSHs(isGV(gv) ? MUTABLE_SV(GvCV(gv)) : MUTABLE_SV(gv));
+    RETURN;
+}
+
+PP(pp_method_super)
+{
+    dSP;
+    GV* gv;
+    HV* cache;
+    SV* const meth = cMETHOPx_meth(PL_op);
+    HV* const stash = CopSTASH(PL_curcop);
+    /* Actually, SUPER doesn't need real object's (or class') stash at all,
+     * as it uses CopSTASH. However, we must ensure that object(class) is
+     * correct (this check is done by S_opmethod_stash) */
+    opmethod_stash(meth);
+
+    if ((cache = HvMROMETA(stash)->super)) {
+        METHOD_CHECK_CACHE(stash, cache, meth);
+    }
+
+    gv = gv_fetchmethod_sv_flags(stash, meth, GV_AUTOLOAD|GV_CROAK|GV_SUPER);
+    assert(gv);
+
+    XPUSHs(isGV(gv) ? MUTABLE_SV(GvCV(gv)) : MUTABLE_SV(gv));
+    RETURN;
+}
+
+PP(pp_method_redir)
+{
+    dSP;
+    GV* gv;
+    SV* const meth = cMETHOPx_meth(PL_op);
+    HV* stash = gv_stashsv(cMETHOPx_rclass(PL_op), 0);
+    opmethod_stash(meth); /* not used but needed for error checks */
+
+    if (stash) { METHOD_CHECK_CACHE(stash, stash, meth); }
+    else stash = MUTABLE_HV(cMETHOPx_rclass(PL_op));
+
+    gv = gv_fetchmethod_sv_flags(stash, meth, GV_AUTOLOAD|GV_CROAK);
+    assert(gv);
+
+    XPUSHs(isGV(gv) ? MUTABLE_SV(GvCV(gv)) : MUTABLE_SV(gv));
+    RETURN;
+}
+
+PP(pp_method_redir_super)
+{
+    dSP;
+    GV* gv;
+    HV* cache;
+    SV* const meth = cMETHOPx_meth(PL_op);
+    HV* stash = gv_stashsv(cMETHOPx_rclass(PL_op), 0);
+    opmethod_stash(meth); /* not used but needed for error checks */
+
+    if (UNLIKELY(!stash)) stash = MUTABLE_HV(cMETHOPx_rclass(PL_op));
+    else if ((cache = HvMROMETA(stash)->super)) {
+         METHOD_CHECK_CACHE(stash, cache, meth);
+    }
+
+    gv = gv_fetchmethod_sv_flags(stash, meth, GV_AUTOLOAD|GV_CROAK|GV_SUPER);
+    assert(gv);
+
+    XPUSHs(isGV(gv) ? MUTABLE_SV(GvCV(gv)) : MUTABLE_SV(gv));
+    RETURN;
 }
 
 /*
- * Local variables:
- * c-indentation-style: bsd
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- *
  * ex: set ts=8 sts=4 sw=4 et:
  */

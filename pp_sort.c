@@ -347,14 +347,12 @@ typedef struct {
 static I32
 cmp_desc(pTHX_ gptr const a, gptr const b)
 {
-    dVAR;
     return -PL_sort_RealCmp(aTHX_ a, b);
 }
 
 STATIC void
 S_mergesortsv(pTHX_ gptr *base, size_t nmemb, SVCOMPARE_t cmp, U32 flags)
 {
-    dVAR;
     IV i, run, offset;
     I32 sense, level;
     gptr *f1, *f2, *t, *b, *p;
@@ -557,7 +555,7 @@ S_mergesortsv(pTHX_ gptr *base, size_t nmemb, SVCOMPARE_t cmp, U32 flags)
 	    }
 	}
     }
-done:
+  done:
     if (aux != small) Safefree(aux);	/* free iff allocated */
     if (flags) {
 	 PL_sort_RealCmp = savecmp;	/* Restore current comparison routine, if any */
@@ -896,7 +894,7 @@ S_qsortsvu(pTHX_ SV ** array, size_t num_elts, SVCOMPARE_t compare)
             elements in the middle of the partition, those are the ones we
             pick here (conveniently pointed at by u_right, pc_left, and
             u_left). The values of the left, center, and right elements
-            are refered to as l c and r in the following comments.
+            are referred to as l c and r in the following comments.
          */
 
 #ifdef QSORT_ORDER_GUESS
@@ -1322,7 +1320,6 @@ S_qsortsvu(pTHX_ SV ** array, size_t num_elts, SVCOMPARE_t compare)
 static I32
 cmpindir(pTHX_ gptr const a, gptr const b)
 {
-    dVAR;
     gptr * const ap = (gptr *)a;
     gptr * const bp = (gptr *)b;
     const I32 sense = PL_sort_RealCmp(aTHX_ *ap, *bp);
@@ -1335,7 +1332,6 @@ cmpindir(pTHX_ gptr const a, gptr const b)
 static I32
 cmpindir_desc(pTHX_ gptr const a, gptr const b)
 {
-    dVAR;
     gptr * const ap = (gptr *)a;
     gptr * const bp = (gptr *)b;
     const I32 sense = PL_sort_RealCmp(aTHX_ *ap, *bp);
@@ -1351,7 +1347,6 @@ cmpindir_desc(pTHX_ gptr const a, gptr const b)
 STATIC void
 S_qsortsv(pTHX_ gptr *list1, size_t nmemb, SVCOMPARE_t cmp, U32 flags)
 {
-    dVAR;
     if ((flags & SORTf_STABLE) != 0) {
 	 gptr **pp, *q;
 	 size_t n, j, i;
@@ -1475,13 +1470,13 @@ Perl_sortsv_flags(pTHX_ SV **array, size_t nmemb, SVCOMPARE_t cmp, U32 flags)
 
 PP(pp_sort)
 {
-    dVAR; dSP; dMARK; dORIGMARK;
+    dSP; dMARK; dORIGMARK;
     SV **p1 = ORIGMARK+1, **p2;
     SSize_t max, i;
     AV* av = NULL;
     GV *gv;
     CV *cv = NULL;
-    I32 gimme = GIMME;
+    I32 gimme = GIMME_V;
     OP* const nextop = PL_op->op_next;
     I32 overloading = 0;
     bool hasargs = FALSE;
@@ -1512,7 +1507,7 @@ PP(pp_sort)
     SAVEVPTR(PL_sortcop);
     if (flags & OPf_STACKED) {
 	if (flags & OPf_SPECIAL) {
-	    OP *nullop = cLISTOP->op_first->op_sibling;	/* pass pushmark */
+            OP *nullop = OpSIBLING(cLISTOP->op_first);  /* pass pushmark */
             assert(nullop->op_type == OP_NULL);
 	    PL_sortcop = nullop->op_next;
 	}
@@ -1609,7 +1604,6 @@ PP(pp_sort)
     for (i=max; i > 0 ; i--) {
 	if ((*p1 = *p2++)) {			/* Weed out nulls. */
 	    if (copytmps && SvPADTMP(*p1)) {
-                assert(!IS_PADGV(*p1));
 		*p1 = sv_mortalcopy(*p1);
             }
 	    SvTEMP_off(*p1);
@@ -1727,11 +1721,15 @@ PP(pp_sort)
 		        ? ( ( ( priv & OPpSORT_INTEGER) || all_SIVs)
 			    ? ( overloading ? S_amagic_i_ncmp : S_sv_i_ncmp)
 			    : ( overloading ? S_amagic_ncmp : S_sv_ncmp ) )
-			: ( IN_LOCALE_RUNTIME
+			: (
+#ifdef USE_LOCALE_COLLATE
+                           IN_LC_RUNTIME(LC_COLLATE)
 			    ? ( overloading
 				? (SVCOMPARE_t)S_amagic_cmp_locale
 				: (SVCOMPARE_t)sv_cmp_locale_static)
-			    : ( overloading ? (SVCOMPARE_t)S_amagic_cmp : (SVCOMPARE_t)sv_cmp_static)),
+                            :
+#endif
+			      ( overloading ? (SVCOMPARE_t)S_amagic_cmp : (SVCOMPARE_t)sv_cmp_static)),
 		    sort_flags);
 	}
 	if ((priv & OPpSORT_REVERSE) != 0) {
@@ -1770,7 +1768,6 @@ PP(pp_sort)
 static I32
 S_sortcv(pTHX_ SV *const a, SV *const b)
 {
-    dVAR;
     const I32 oldsaveix = PL_savestack_ix;
     const I32 oldscopeix = PL_scopestack_ix;
     I32 result;
@@ -1812,7 +1809,6 @@ S_sortcv(pTHX_ SV *const a, SV *const b)
 static I32
 S_sortcv_stacked(pTHX_ SV *const a, SV *const b)
 {
-    dVAR;
     const I32 oldsaveix = PL_savestack_ix;
     const I32 oldscopeix = PL_scopestack_ix;
     I32 result;
@@ -1869,7 +1865,7 @@ S_sortcv_stacked(pTHX_ SV *const a, SV *const b)
 static I32
 S_sortcv_xsub(pTHX_ SV *const a, SV *const b)
 {
-    dVAR; dSP;
+    dSP;
     const I32 oldsaveix = PL_savestack_ix;
     const I32 oldscopeix = PL_scopestack_ix;
     CV * const cv=MUTABLE_CV(PL_sortcop);
@@ -1937,7 +1933,6 @@ S_sv_i_ncmp(pTHX_ SV *const a, SV *const b)
 static I32
 S_amagic_ncmp(pTHX_ SV *const a, SV *const b)
 {
-    dVAR;
     SV * const tmpsv = tryCALL_AMAGICbin(a,b,ncmp_amg);
 
     PERL_ARGS_ASSERT_AMAGIC_NCMP;
@@ -1958,7 +1953,6 @@ S_amagic_ncmp(pTHX_ SV *const a, SV *const b)
 static I32
 S_amagic_i_ncmp(pTHX_ SV *const a, SV *const b)
 {
-    dVAR;
     SV * const tmpsv = tryCALL_AMAGICbin(a,b,ncmp_amg);
 
     PERL_ARGS_ASSERT_AMAGIC_I_NCMP;
@@ -1979,7 +1973,6 @@ S_amagic_i_ncmp(pTHX_ SV *const a, SV *const b)
 static I32
 S_amagic_cmp(pTHX_ SV *const str1, SV *const str2)
 {
-    dVAR;
     SV * const tmpsv = tryCALL_AMAGICbin(str1,str2,scmp_amg);
 
     PERL_ARGS_ASSERT_AMAGIC_CMP;
@@ -1997,10 +1990,11 @@ S_amagic_cmp(pTHX_ SV *const str1, SV *const str2)
     return sv_cmp(str1, str2);
 }
 
+#ifdef USE_LOCALE_COLLATE
+
 static I32
 S_amagic_cmp_locale(pTHX_ SV *const str1, SV *const str2)
 {
-    dVAR;
     SV * const tmpsv = tryCALL_AMAGICbin(str1,str2,scmp_amg);
 
     PERL_ARGS_ASSERT_AMAGIC_CMP_LOCALE;
@@ -2018,12 +2012,8 @@ S_amagic_cmp_locale(pTHX_ SV *const str1, SV *const str2)
     return sv_cmp_locale(str1, str2);
 }
 
+#endif
+
 /*
- * Local variables:
- * c-indentation-style: bsd
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- *
  * ex: set ts=8 sts=4 sw=4 et:
  */

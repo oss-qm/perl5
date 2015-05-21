@@ -45,6 +45,7 @@
  *
  */
 
+#define PERL_EXT
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -347,13 +348,13 @@ dl_install_xsub(perl_name, symref, filename="$Package")
 					      XS_DYNAMIC_FILENAME)));
 
 
-char *
+SV *
 dl_error()
     CODE:
     dMY_CXT;
-    RETVAL = dl_last_error ;
+    RETVAL = newSVsv(MY_CXT.x_dl_last_error);
     OUTPUT:
-      RETVAL
+    RETVAL
 
 #if defined(USE_ITHREADS)
 
@@ -368,8 +369,17 @@ CLONE(...)
      * using Perl variables that belong to another thread, we create our 
      * own for this thread.
      */
-    MY_CXT.x_dl_last_error = newSVpvn("", 0);
+    MY_CXT.x_dl_last_error = newSVpvs("");
     dl_require_symbols = get_av("DynaLoader::dl_require_symbols", GV_ADDMULTI);
+
+    /* Set up the "static" control blocks for dl_expand_filespec() */
+    dl_fab = cc$rms_fab;
+    dl_nam = cc$rms_nam;
+    dl_fab.fab$l_nam = &dl_nam;
+    dl_nam.nam$l_esa = dl_esa;
+    dl_nam.nam$b_ess = sizeof dl_esa;
+    dl_nam.nam$l_rsa = dl_rsa;
+    dl_nam.nam$b_rss = sizeof dl_rsa;
 
 #endif
 

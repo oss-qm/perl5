@@ -10,7 +10,7 @@ print OUT <<'EOT';
 
 package XSLoader;
 
-$VERSION = "0.17";
+$VERSION = "0.20";
 
 #use strict;
 
@@ -48,7 +48,8 @@ package XSLoader;
 sub load {
     package DynaLoader;
 
-    my ($module, $modlibname) = caller();
+    my ($caller, $modlibname) = caller();
+    my $module = $caller;
 
     if (@_) {
         $module = $_[0];
@@ -67,11 +68,14 @@ sub load {
 
 EOT
 
-print OUT <<'EOT' if defined &DynaLoader::mod2fname;
+# defined &DynaLoader::mod2fname catches most cases, except when
+# cross-compiling to a system that defines mod2fname. Using 
+# $Config{d_libname_unique} is a best attempt at catching those cases.
+print OUT <<'EOT' if defined &DynaLoader::mod2fname || $Config{d_libname_unique};
     # Some systems have restrictions on files names for DLL's etc.
     # mod2fname returns appropriate file base name (typically truncated)
     # It may also edit @modparts if required.
-    $modfname = &mod2fname(\@modparts) if defined &mod2fname;
+    $modfname = &DynaLoader::mod2fname(\@modparts) if defined &DynaLoader::mod2fname;
 
 EOT
 
@@ -84,7 +88,7 @@ EOT
 
 print OUT <<'EOT';
     my $modpname = join('/',@modparts);
-    my $c = @modparts;
+    my $c = () = split(/::/,$caller,-1);
     $modlibname =~ s,[\\/][^\\/]+$,, while $c--;    # Q&D basename
 EOT
 
@@ -105,9 +109,10 @@ print OUT <<'EOT';
 #       print STDERR "BS: $bs ($^O, $dlsrc)\n" if $dl_debug;
         eval { do $bs; };
         warn "$bs: $@\n" if $@;
+	goto \&XSLoader::bootstrap_inherit;
     }
 
-    goto \&XSLoader::bootstrap_inherit if not -f $file or -s $bs;
+    goto \&XSLoader::bootstrap_inherit if not -f $file;
 
     my $bootname = "boot_$module";
     $bootname =~ s/\W/_/g;

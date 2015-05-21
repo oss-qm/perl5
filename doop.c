@@ -30,7 +30,6 @@
 STATIC I32
 S_do_trans_simple(pTHX_ SV * const sv)
 {
-    dVAR;
     I32 matches = 0;
     STRLEN len;
     U8 *s = (U8*)SvPV_nomg(sv,len);
@@ -99,7 +98,6 @@ S_do_trans_simple(pTHX_ SV * const sv)
 STATIC I32
 S_do_trans_count(pTHX_ SV * const sv)
 {
-    dVAR;
     STRLEN len;
     const U8 *s = (const U8*)SvPV_nomg_const(sv, len);
     const U8 * const send = s + len;
@@ -137,7 +135,6 @@ S_do_trans_count(pTHX_ SV * const sv)
 STATIC I32
 S_do_trans_complex(pTHX_ SV * const sv)
 {
-    dVAR;
     STRLEN len;
     U8 *s = (U8*)SvPV_nomg(sv, len);
     U8 * const send = s+len;
@@ -301,7 +298,6 @@ S_do_trans_complex(pTHX_ SV * const sv)
 STATIC I32
 S_do_trans_simple_utf8(pTHX_ SV * const sv)
 {
-    dVAR;
     U8 *s;
     U8 *send;
     U8 *d;
@@ -406,7 +402,6 @@ S_do_trans_simple_utf8(pTHX_ SV * const sv)
 STATIC I32
 S_do_trans_count_utf8(pTHX_ SV * const sv)
 {
-    dVAR;
     const U8 *s;
     const U8 *start = NULL;
     const U8 *send;
@@ -456,7 +451,6 @@ S_do_trans_count_utf8(pTHX_ SV * const sv)
 STATIC I32
 S_do_trans_complex_utf8(pTHX_ SV * const sv)
 {
-    dVAR;
     U8 *start, *send;
     U8 *d;
     I32 matches = 0;
@@ -624,20 +618,19 @@ S_do_trans_complex_utf8(pTHX_ SV * const sv)
 I32
 Perl_do_trans(pTHX_ SV *sv)
 {
-    dVAR;
     STRLEN len;
-    const I32 hasutf = (PL_op->op_private &
-                    (OPpTRANS_FROM_UTF|OPpTRANS_TO_UTF));
+    const I32 flags = PL_op->op_private;
+    const I32 hasutf = flags & (OPpTRANS_FROM_UTF | OPpTRANS_TO_UTF);
 
     PERL_ARGS_ASSERT_DO_TRANS;
 
-    if (SvREADONLY(sv) && !(PL_op->op_private & OPpTRANS_IDENTICAL)) {
-            Perl_croak_no_modify();
+    if (SvREADONLY(sv) && !(flags & OPpTRANS_IDENTICAL)) {
+        Perl_croak_no_modify();
     }
     (void)SvPV_const(sv, len);
     if (!len)
 	return 0;
-    if (!(PL_op->op_private & OPpTRANS_IDENTICAL)) {
+    if (!(flags & OPpTRANS_IDENTICAL)) {
 	if (!SvPOKp(sv) || SvTHINKFIRST(sv))
 	    (void)SvPV_force_nomg(sv, len);
 	(void)SvPOK_only_UTF8(sv);
@@ -645,43 +638,28 @@ Perl_do_trans(pTHX_ SV *sv)
 
     DEBUG_t( Perl_deb(aTHX_ "2.TBL\n"));
 
-    switch (PL_op->op_private & ~hasutf & (
-		OPpTRANS_FROM_UTF|OPpTRANS_TO_UTF|OPpTRANS_IDENTICAL|
-		OPpTRANS_SQUASH|OPpTRANS_DELETE|OPpTRANS_COMPLEMENT)) {
-    case 0:
-	if (hasutf)
-	    return do_trans_simple_utf8(sv);
-	else
-	    return do_trans_simple(sv);
-
-    case OPpTRANS_IDENTICAL:
-    case OPpTRANS_IDENTICAL|OPpTRANS_COMPLEMENT:
-	if (hasutf)
-	    return do_trans_count_utf8(sv);
-	else
-	    return do_trans_count(sv);
-
-    default:
-	if (hasutf)
-	    return do_trans_complex_utf8(sv);
-	else
-	    return do_trans_complex(sv);
+    /* If we use only OPpTRANS_IDENTICAL to bypass the READONLY check,
+     * we must also rely on it to choose the readonly strategy.
+     */
+    if (flags & OPpTRANS_IDENTICAL) {
+        return hasutf ? do_trans_count_utf8(sv) : do_trans_count(sv);
+    } else if (flags & (OPpTRANS_SQUASH|OPpTRANS_DELETE|OPpTRANS_COMPLEMENT)) {
+        return hasutf ? do_trans_complex_utf8(sv) : do_trans_complex(sv);
+    } else {
+        return hasutf ? do_trans_simple_utf8(sv) : do_trans_simple(sv);
     }
 }
 
 void
 Perl_do_join(pTHX_ SV *sv, SV *delim, SV **mark, SV **sp)
 {
-    dVAR;
     SV ** const oldmark = mark;
     I32 items = sp - mark;
     STRLEN len;
     STRLEN delimlen;
+    const char * const delims = SvPV_const(delim, delimlen);
 
     PERL_ARGS_ASSERT_DO_JOIN;
-
-    (void) SvPV_const(delim, delimlen); /* stringify and get the delimlen */
-    /* SvCUR assumes it's SvPOK() and woe betide you if it's not. */
 
     mark++;
     len = (items > 0 ? (delimlen * (items - 1) ) : 0);
@@ -716,14 +694,24 @@ Perl_do_join(pTHX_ SV *sv, SV *delim, SV **mark, SV **sp)
     }
 
     if (delimlen) {
+	const U32 delimflag = DO_UTF8(delim) ? SV_CATUTF8 : SV_CATBYTES;
 	for (; items > 0; items--,mark++) {
-	    sv_catsv_nomg(sv,delim);
-	    sv_catsv(sv,*mark);
+	    STRLEN len;
+	    const char *s;
+	    sv_catpvn_flags(sv,delims,delimlen,delimflag);
+	    s = SvPV_const(*mark,len);
+	    sv_catpvn_flags(sv,s,len,
+			    DO_UTF8(*mark) ? SV_CATUTF8 : SV_CATBYTES);
 	}
     }
     else {
 	for (; items > 0; items--,mark++)
-	    sv_catsv(sv,*mark);
+	{
+	    STRLEN len;
+	    const char *s = SvPV_const(*mark,len);
+	    sv_catpvn_flags(sv,s,len,
+			    DO_UTF8(*mark) ? SV_CATUTF8 : SV_CATBYTES);
+	}
     }
     SvSETMAGIC(sv);
 }
@@ -731,7 +719,6 @@ Perl_do_join(pTHX_ SV *sv, SV *delim, SV **mark, SV **sp)
 void
 Perl_do_sprintf(pTHX_ SV *sv, I32 len, SV **sarg)
 {
-    dVAR;
     STRLEN patlen;
     const char * const pat = SvPV_const(*sarg, patlen);
     bool do_taint = FALSE;
@@ -759,7 +746,6 @@ Perl_do_sprintf(pTHX_ SV *sv, I32 len, SV **sarg)
 UV
 Perl_do_vecget(pTHX_ SV *sv, SSize_t offset, int size)
 {
-    dVAR;
     STRLEN srclen, len, uoffset, bitoffs = 0;
     const I32 svpv_flags = ((PL_op->op_flags & OPf_MOD || LVRET)
                                           ? SV_UNDEF_RETURNS_NULL : 0);
@@ -850,7 +836,7 @@ Perl_do_vecget(pTHX_ SV *sv, SSize_t offset, int size)
 			((UV) s[uoffset + 1] << 48) +
 			((UV) s[uoffset + 2] << 40) +
 			((UV) s[uoffset + 3] << 32) +
-			(     s[uoffset + 4] << 24);
+			((UV) s[uoffset + 4] << 24);
 		else if (uoffset + 6 >= srclen)
 		    retnum =
 			((UV) s[uoffset    ] << 56) +
@@ -867,7 +853,7 @@ Perl_do_vecget(pTHX_ SV *sv, SSize_t offset, int size)
 			((UV) s[uoffset + 3] << 32) +
 			((UV) s[uoffset + 4] << 24) +
 			((UV) s[uoffset + 5] << 16) +
-			(     s[uoffset + 6] <<  8);
+			((UV) s[uoffset + 6] <<  8);
 	    }
 #endif
 	}
@@ -914,7 +900,6 @@ Perl_do_vecget(pTHX_ SV *sv, SSize_t offset, int size)
 void
 Perl_do_vecset(pTHX_ SV *sv)
 {
-    dVAR;
     SSize_t offset, bitoffs = 0;
     int size;
     unsigned char *s;
@@ -1001,7 +986,6 @@ Perl_do_vecset(pTHX_ SV *sv)
 void
 Perl_do_vop(pTHX_ I32 optype, SV *sv, SV *left, SV *right)
 {
-    dVAR;
 #ifdef LIBERAL
     long *dl;
     long *ll;
@@ -1223,14 +1207,16 @@ Perl_do_vop(pTHX_ I32 optype, SV *sv, SV *left, SV *right)
 	    break;
 	}
     }
-finish:
+  finish:
     SvTAINT(sv);
 }
+
+
+/* used for: pp_keys(), pp_values() */
 
 OP *
 Perl_do_kv(pTHX)
 {
-    dVAR;
     dSP;
     HV * const keys = MUTABLE_HV(POPs);
     HE *entry;
@@ -1271,35 +1257,24 @@ Perl_do_kv(pTHX)
 
     EXTEND(SP, HvUSEDKEYS(keys) * (dokeys + dovalues));
 
-    PUTBACK;	/* hv_iternext and hv_iterval might clobber stack_sp */
     while ((entry = hv_iternext(keys))) {
-	SPAGAIN;
 	if (dokeys) {
 	    SV* const sv = hv_iterkeysv(entry);
-	    XPUSHs(sv);	/* won't clobber stack_sp */
+	    XPUSHs(sv);
 	}
 	if (dovalues) {
 	    SV *tmpstr;
-	    PUTBACK;
 	    tmpstr = hv_iterval(keys,entry);
 	    DEBUG_H(Perl_sv_setpvf(aTHX_ tmpstr, "%lu%%%d=%lu",
 			    (unsigned long)HeHASH(entry),
 			    (int)HvMAX(keys)+1,
 			    (unsigned long)(HeHASH(entry) & HvMAX(keys))));
-	    SPAGAIN;
 	    XPUSHs(tmpstr);
 	}
-	PUTBACK;
     }
-    return NORMAL;
+    RETURN;
 }
 
 /*
- * Local variables:
- * c-indentation-style: bsd
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- *
  * ex: set ts=8 sts=4 sw=4 et:
  */

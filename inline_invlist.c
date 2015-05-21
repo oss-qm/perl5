@@ -18,11 +18,10 @@
 #define FROM_INTERNAL_SIZE(x) ((x)/ sizeof(UV))
 
 PERL_STATIC_INLINE bool*
-S_get_invlist_offset_addr(pTHX_ SV* invlist)
+S_get_invlist_offset_addr(SV* invlist)
 {
     /* Return the address of the field that says whether the inversion list is
      * offset (it contains 1) or not (contains 0) */
-
     PERL_ARGS_ASSERT_GET_INVLIST_OFFSET_ADDR;
 
     assert(SvTYPE(invlist) == SVt_INVLIST);
@@ -31,7 +30,7 @@ S_get_invlist_offset_addr(pTHX_ SV* invlist)
 }
 
 PERL_STATIC_INLINE UV
-S__invlist_len(pTHX_ SV* const invlist)
+S__invlist_len(SV* const invlist)
 {
     /* Returns the current number of elements stored in the inversion list's
      * array */
@@ -46,7 +45,7 @@ S__invlist_len(pTHX_ SV* const invlist)
 }
 
 PERL_STATIC_INLINE bool
-S__invlist_contains_cp(pTHX_ SV* const invlist, const UV cp)
+S__invlist_contains_cp(SV* const invlist, const UV cp)
 {
     /* Does <invlist> contain code point <cp> as part of the set? */
 
@@ -55,6 +54,27 @@ S__invlist_contains_cp(pTHX_ SV* const invlist, const UV cp)
     PERL_ARGS_ASSERT__INVLIST_CONTAINS_CP;
 
     return index >= 0 && ELEMENT_RANGE_MATCHES_INVLIST(index);
+}
+
+PERL_STATIC_INLINE UV*
+S_invlist_array(SV* const invlist)
+{
+    /* Returns the pointer to the inversion list's array.  Every time the
+     * length changes, this needs to be called in case malloc or realloc moved
+     * it */
+
+    PERL_ARGS_ASSERT_INVLIST_ARRAY;
+
+    /* Must not be empty.  If these fail, you probably didn't check for <len>
+     * being non-zero before trying to get the array */
+    assert(_invlist_len(invlist));
+
+    /* The very first element always contains zero, The array begins either
+     * there, or if the inversion list is offset, at the element after it.
+     * The offset header field determines which; it contains 0 or 1 to indicate
+     * how much additionally to add */
+    assert(0 == *(SvPVX(invlist)));
+    return ((UV *) SvPVX(invlist) + *get_invlist_offset_addr(invlist));
 }
 
 #   if defined(PERL_IN_UTF8_C) || defined(PERL_IN_REGEXEC_C)

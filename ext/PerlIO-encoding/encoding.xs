@@ -385,7 +385,10 @@ PerlIOEncode_fill(pTHX_ PerlIO * f)
 	if (avail == 0)
 	    PerlIOBase(f)->flags |= PERLIO_F_EOF;
 	else
+	{
 	    PerlIOBase(f)->flags |= PERLIO_F_ERROR;
+	    Perl_PerlIO_save_errno(aTHX_ f);
+	}
     }
     FREETMPS;
     LEAVE;
@@ -599,7 +602,7 @@ PerlIOEncode_write(pTHX_ PerlIO *f, const void *vbuf, Size_t count)
     }
 }
 
-PerlIO_funcs PerlIO_encode = {
+PERLIO_FUNCS_DECL(PerlIO_encode) = {
     sizeof(PerlIO_funcs),
     "encoding",
     sizeof(PerlIOEncode),
@@ -650,7 +653,7 @@ BOOT:
 	Perl_warner(aTHX_ packWARN(WARN_IO), ":encoding without 'use Encode'");
 #endif
 	/* The SV is magically freed by load_module */
-	load_module(PERL_LOADMOD_NOIMPORT, newSVpvn("Encode", 6), Nullsv, Nullsv);
+	load_module(PERL_LOADMOD_NOIMPORT, newSVpvs("Encode"), Nullsv, Nullsv);
 	assert(sp == PL_stack_sp);
     }
     PUSHMARK(sp);
@@ -663,7 +666,7 @@ BOOT:
     sv_setsv(chk, POPs);
     PUTBACK;
 #ifdef PERLIO_LAYERS
-    PerlIO_define_layer(aTHX_ &PerlIO_encode);
+    PerlIO_define_layer(aTHX_ PERLIO_FUNCS_CAST(&PerlIO_encode));
 #endif
     POPSTACK;
 }

@@ -22,16 +22,12 @@ if($Config{d_setlocale}) {
     require POSIX;
     $locale = POSIX::setlocale( &POSIX::LC_ALL, "C");
     if (defined $locale && $locale eq 'C') {
-        BEGIN {
-            if($Config{d_setlocale}) {
-                require locale; import locale; # make \w work right in non-ASCII lands
-            }
-        }
+        use locale; # make \w work right in non-ASCII lands
 
         # Some locale implementations don't have the 128-255 characters all
         # mean nothing.  Skip the locale tests in that situation
         for my $i (128 .. 255) {
-            if (chr($i) =~ /[[:print:]]/) {
+            if (chr(utf8::unicode_to_native($i)) =~ /[[:print:]]/) {
                 undef $locale;
                 last;
             }
@@ -115,7 +111,7 @@ foreach my $name (sort keys %properties) {
 
         my $ret;
         my $char_name = charnames::viacode($i) // "No name";
-        my $display_name = sprintf "\\N{U+%02X, %s}", $i, $char_name;
+        my $display_name = sprintf "\\x{%02X, %s}", $i, $char_name;
 
         if ($name eq 'quotemeta') { # There is only one macro for this, and is
                                     # defined only for Latin1 range
@@ -140,7 +136,7 @@ foreach my $name (sort keys %properties) {
                     fail($@);
                 }
                 else {
-                    my $truth = truth($matches && $i < 128);
+                    my $truth = truth($matches && utf8::native_to_unicode($i) < 128);
                     is ($ret, $truth, "is${function}_A( $display_name ) == $truth");
                 }
                 $ret = truth eval "test_is${function}_L1($i)";
@@ -154,15 +150,14 @@ foreach my $name (sort keys %properties) {
             }
 
             if (defined $locale) {
-                require locale; import locale;
-
+                use locale;
                 POSIX::setlocale( &POSIX::LC_ALL, "C");
                 $ret = truth eval "test_is${function}_LC($i)";
                 if ($@) {
                     fail($@);
                 }
                 else {
-                    my $truth = truth($matches && $i < 128);
+                    my $truth = truth($matches && utf8::native_to_unicode($i) < 128);
                     is ($ret, $truth, "is${function}_LC( $display_name ) == $truth (C locale)");
                 }
             }
@@ -193,15 +188,14 @@ foreach my $name (sort keys %properties) {
         }
 
         if (defined $locale && $name ne 'vertws') {
-            require locale; import locale;
-
+            use locale;
             POSIX::setlocale( &POSIX::LC_ALL, "C");
             $ret = truth eval "test_is${function}_LC_uvchr('$i')";
             if ($@) {
                 fail($@);
             }
             else {
-                my $truth = truth($matches && ($i < 128 || $i > 255));
+                my $truth = truth($matches && (utf8::native_to_unicode($i) < 128 || $i > 255));
                 is ($ret, $truth, "is${function}_LC_uvchr( $display_name ) == $truth (C locale)");
             }
         }
@@ -232,15 +226,14 @@ foreach my $name (sort keys %properties) {
         }
 
         if ($name ne 'vertws' && defined $locale) {
-            require locale; import locale;
-
+            use locale;
             POSIX::setlocale( &POSIX::LC_ALL, "C");
             $ret = truth eval "test_is${function}_LC_utf8('$char')";
             if ($@) {
                 fail($@);
             }
             else {
-                my $truth = truth($matches && ($i < 128 || $i > 255));
+                my $truth = truth($matches && (utf8::native_to_unicode($i) < 128 || $i > 255));
                 is ($ret, $truth, "is${function}_LC_utf8( $display_name ) == $truth (C locale)");
             }
         }
@@ -348,9 +341,8 @@ foreach my $name (sort keys %to_properties) {
 
         if ($name ne 'TITLE') { # Test _LC;  titlecase is not defined in locales.
             if (defined $locale) {
-                require locale; import locale;
-
-                    POSIX::setlocale( &POSIX::LC_ALL, "C");
+                use locale;
+                POSIX::setlocale( &POSIX::LC_ALL, "C");
                 $ret = eval "test_to${function}_LC($j)";
                 if ($@) {
                     fail($@);

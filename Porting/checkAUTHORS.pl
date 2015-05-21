@@ -443,6 +443,7 @@ jhi                                     jhi\100iki.fi
 +                                       jhi\100hut.fi
 +                                       jarkko.hietaniemi\100nokia.com
 +                                       jarkko.hietaniemi\100cc.hut.fi
++                                       jarkko.hietaniemi\100booking.com
 jesse                                   jesse\100bestpractical.com
 +                                       jesse\100fsck.com
 +                                       jesse\100perl.org
@@ -564,6 +565,8 @@ brian.d.foy\100gmail.com                bdfoy\100cpan.org
 BQW10602\100nifty.com                   sadahiro\100cpan.org
 bulk88\100hotmail.com                   bulk88
 
+chad.granum\100dreamhost.com            exodist7\100gmail.com
+choroba\100cpan.org                     choroba\100weed.(none)
 chromatic\100wgz.org                    chromatic\100rmci.net
 ckuskie\100cadence.com                  colink\100perldreamer.com
 claes\100surfar.nu                      claes\100versed.se
@@ -588,7 +591,9 @@ dan\100sidhe.org                        sugalsd\100lbcc.cc.or.us
 +                                       sugalskd\100osshe.edu
 daniel\100bitpusher.com                 daniel\100biz.bitpusher.com
 david.dyck\100fluke.com                 dcd\100tc.fluke.com
-david\100kineticode.com                 david\100wheeler.com
+david\100justatheory.com                david\100wheeler.net
++                                       david\100kineticode.com
++                                       david\100wheeler.com
 +                                       david\100wheeler.net
 dennis\100booking.com                   dennis\100camel.ams6.corp.booking.com
 +					dennis.kaarsemaker\100booking.com
@@ -707,9 +712,10 @@ laszlo.molnar\100eth.ericsson.se        molnarl\100cdata.tvnet.hu
 +                                       ml1050\100freemail.hu
 lewart\100uiuc.edu                      lewart\100vadds.cvm.uiuc.edu
 +                                       d-lewart\100uiuc.edu
-lkundrak\100v3.sk                      lubo.rintel\100gooddata.com
+lkundrak\100v3.sk                       lubo.rintel\100gooddata.com
 lstein\100cshl.org                      lstein\100formaggio.cshl.org
 +                                       lstein\100genome.wi.mit.edu
+l.mai\100web.de                         plokinom\100gmail.com
 lupe\100lupe-christoph.de               lupe\100alanya.m.isar.de
 lutherh\100stratcom.com                 lutherh\100infinet.com
 mab\100wdl.loral.com                    markb\100rdcf.sm.unisys.com
@@ -900,6 +906,7 @@ stef\100mongueurs.net                   stef\100payrard.net
 +                                       s.payrard\100wanadoo.fr
 +                                       properler\100freesurf.fr
 +                                       stef\100francenet.fr
+stevan\100cpan.org                      stevan.little\100iinteractive.com
 sthoenna\100efn.org                     ysth\100raven.shiftboard.com
 sisyphus1\100optusnet.com.au            sisyphus\100cpan.org
 
