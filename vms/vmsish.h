@@ -28,7 +28,7 @@
 #  pragma message disable (ADDRCONSTEXT,NEEDCONSTEXT)
 #endif
 #ifdef __DECCXX
-#  pragma message informational (INTSIGNCHANGE,CASTQUALTYP,ASSCOMMEA,NOCTOBUTCONREFM)
+#  pragma message informational (INTSIGNCHANGE,CASTQUALTYP,ASSCOMMEA,NOCTOBUTCONREFM,MISSINGRETURN)
 #endif
 
 /* DEC's C compilers and gcc use incompatible definitions of _to(upp|low)er() */
@@ -164,12 +164,6 @@
 #define my_gmtime(a)			Perl_my_gmtime(aTHX_ a)
 #define my_localtime(a)			Perl_my_localtime(aTHX_ a)
 #define my_mkdir(a,b)			Perl_my_mkdir(aTHX_ a,b)
-#define my_sigemptyset(a)		Perl_my_sigemptyset(a)
-#define my_sigfillset(a)		Perl_my_sigfillset(a)
-#define my_sigaddset(a,b)		Perl_my_sigaddset(a,b)
-#define my_sigdelset(a,b,c)		Perl_my_sigdelset(a,b,c)
-#define my_sigismember(a,b)		Perl_my_sigismember(a,b)
-#define my_sigprocmask(a,b,c)		Perl_my_sigprocmask(a,b,c)
 #ifdef HAS_SYMLINK
 #  define my_symlink(a,b)		Perl_my_symlink(aTHX_ a,b)
 #endif
@@ -280,15 +274,13 @@
 
 #define COMPLEX_STATUS	1	/* We track both "POSIX" and VMS values */
 
-#define HINT_V_VMSISH		24
 #define HINT_M_VMSISH_STATUS	0x40000000 /* system, $? return VMS status */
 #define HINT_M_VMSISH_TIME	0x80000000 /* times are local, not UTC */
-#define NATIVE_HINTS		(PL_hints >> HINT_V_VMSISH)  /* used in op.c */
 
 #ifdef PERL_IMPLICIT_CONTEXT
-#  define TEST_VMSISH(h)	(my_perl && PL_curcop && (PL_curcop->op_private & ((h) >> HINT_V_VMSISH)))
+#  define TEST_VMSISH(h)	(my_perl && PL_curcop && (PL_curcop->cop_hints & (h)))
 #else
-#  define TEST_VMSISH(h)	(PL_curcop && (PL_curcop->op_private & ((h) >> HINT_V_VMSISH)))
+#  define TEST_VMSISH(h)	(PL_curcop && (PL_curcop->cop_hints & (h)))
 #endif
 #define VMSISH_STATUS	TEST_VMSISH(HINT_M_VMSISH_STATUS)
 #define VMSISH_TIME	TEST_VMSISH(HINT_M_VMSISH_TIME)
@@ -799,4 +791,8 @@ char *	my_getlogin (void);
 #define PERL_RMSEXPAND_M_VMS_IN		0x08 /* Assume input is VMS already */
 #define PERL_RMSEXPAND_M_SYMLINK	0x20 /* Use symbolic link, not target */
 
+/* With long doubles, NaN == NaN, which it shouldn't. */
+#ifdef USE_LONG_DOUBLE
+#  define NAN_COMPARE_BROKEN 1
+#endif
 #endif  /* __vmsish_h_included */

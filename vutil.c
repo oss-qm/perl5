@@ -18,6 +18,8 @@
 #define VERSION_MAX 0x7FFFFFFF
 
 /*
+=head1 Versioning
+
 =for apidoc prescan_version
 
 Validate that a given string can be parsed as a version object, but doesn't
@@ -621,6 +623,7 @@ VER_NV:
 #endif
         { /* Braces needed because macro just below declares a variable */
         STORE_NUMERIC_LOCAL_SET_STANDARD();
+        LOCK_NUMERIC_STANDARD();
 	if (sv) {
 	    Perl_sv_catpvf(aTHX_ sv, "%.9"NVff, SvNVX(ver));
 	    len = SvCUR(sv);
@@ -630,6 +633,7 @@ VER_NV:
 	    len = my_snprintf(tbuf, sizeof(tbuf), "%.9"NVff, SvNVX(ver));
 	    buf = tbuf;
 	}
+        UNLOCK_NUMERIC_STANDARD();
         RESTORE_NUMERIC_LOCAL();
         }
 	while (buf[len-1] == '0' && len > 0) len--;

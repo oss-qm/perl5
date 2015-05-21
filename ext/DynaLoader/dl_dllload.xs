@@ -84,6 +84,7 @@
    Other comments within the dl_dlopen.xs file may be helpful as well.
 */
 
+#define PERL_EXT
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -184,11 +185,11 @@ dl_install_xsub(perl_name, symref, filename="$Package")
     XSRETURN(1);
 
 
-char *
+SV *
 dl_error()
     CODE:
     dMY_CXT;
-    RETVAL = dl_last_error ;
+    RETVAL = newSVsv(MY_CXT.x_dl_last_error);
     OUTPUT:
     RETVAL
 
@@ -205,7 +206,7 @@ CLONE(...)
      * using Perl variables that belong to another thread, we create our 
      * own for this thread.
      */
-    MY_CXT.x_dl_last_error = newSVpvn("", 0);
+    MY_CXT.x_dl_last_error = newSVpvs("");
 
 #endif
 

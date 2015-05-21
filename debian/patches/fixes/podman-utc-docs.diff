@@ -1,4 +1,4 @@
-From 47726d63cddac507002b21c1c9510946f001872d Mon Sep 17 00:00:00 2001
+From e71b2c5373c7d3f59d7b1cd2d5dcbdb0a7161ccd Mon Sep 17 00:00:00 2001
 From: Russ Allbery <rra@cpan.org>
 Date: Wed, 15 Apr 2015 20:49:07 -0700
 Subject: Documentation and test suite updates for UTC fix

@@ -24,6 +24,12 @@ case "$osvers" in
     ;;
 esac
 
+# finite() deprecated in 10.9, use isfinite() instead.
+case "$osvers" in
+[1-8].*) ;;
+*) d_finite='undef' ;;
+esac
+
 # This was previously used in all but causes three cases
 # (no -Ddprefix=, -Dprefix=/usr, -Dprefix=/some/thing/else)
 # but that caused too much grief.
@@ -123,9 +129,11 @@ ccflags="${ccflags} -fno-common -DPERL_DARWIN"
 # stdint.h defining INT32_MIN as (-INT32_MAX-1)
 # -- Edward Moy
 #
-case "$(grep '^#define INT32_MIN' /usr/include/stdint.h)" in
+if test -f /usr/include/stdint.h; then
+  case "$(grep '^#define INT32_MIN' /usr/include/stdint.h)" in
   *-2147483648) ccflags="${ccflags} -DINT32_MIN_BROKEN -DINT64_MIN_BROKEN" ;;
-esac
+  esac
+fi
 
 # Avoid Apple's cpp precompiler, better for extensions
 if [ "X`echo | ${cc} -no-cpp-precomp -E - 2>&1 >/dev/null`" = "X" ]; then
@@ -193,6 +201,8 @@ case "$osvers" in
    lddlflags="${ldflags} -bundle -undefined suppress"
    ;;
 *) 
+   # MACOSX_DEPLOYMENT_TARGET selects the minimum OS level we want to support
+   # https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/cross_development/Configuring/configuring.html
    lddlflags="${ldflags} -bundle -undefined dynamic_lookup"
    case "$ld" in
        *MACOSX_DEVELOPMENT_TARGET*) ;;
@@ -328,6 +338,11 @@ i_dbm=undef;
 # Configure doesn't detect ranlib on Tiger properly.
 # NeilW says this should be acceptable on all darwin versions.
 ranlib='ranlib'
+
+# Catch MacPorts gcc/g++ extra libdir
+case "$($cc -v 2>&1)" in
+*"MacPorts gcc"*) loclibpth="$loclibpth /opt/local/lib/libgcc" ;;
+esac
 
 ##
 # Build process

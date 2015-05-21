@@ -12,6 +12,7 @@
  */
 
 #define PERLIO_NOT_STDIO 0
+#define PERL_EXT
 
 /*
  * On AIX 4.3 and above the emulation layer is not needed any more, and
@@ -759,11 +760,11 @@ dl_install_xsub(perl_name, symref, filename="$Package")
 					      XS_DYNAMIC_FILENAME)));
 
 
-char *
+SV *
 dl_error()
     CODE:
     dMY_CXT;
-    RETVAL = dl_last_error ;
+    RETVAL = newSVsv(MY_CXT.x_dl_last_error);
     OUTPUT:
     RETVAL
 
@@ -780,7 +781,7 @@ CLONE(...)
      * using Perl variables that belong to another thread, we create our 
      * own for this thread.
      */
-    MY_CXT.x_dl_last_error = newSVpvn("", 0);
+    MY_CXT.x_dl_last_error = newSVpvs("");
 
 #endif
 

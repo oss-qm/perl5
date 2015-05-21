@@ -499,12 +499,14 @@ DispStream(s, message)
 #ifdef AT_LEAST_ZLIB_1_2_5_2
 voidpf my_zcalloc (voidpf opaque, unsigned items, unsigned size)
 {
+    PERL_UNUSED_VAR(opaque);
     return safemalloc(items * size);
 }
 
 
 void my_zcfree (voidpf opaque, voidpf ptr)
 {
+    PERL_UNUSED_VAR(opaque);
     safefree(ptr);
     return; 
 }
@@ -1500,6 +1502,8 @@ Perl_sv_dump(output); */
         s->stream.next_in = nextIn ;
         s->stream.avail_in  = availIn ;
     }
+#else
+    PERL_UNUSED_VAR(eof);
 #endif
     
     s->last_error = RETVAL ;
@@ -1744,6 +1748,8 @@ scan(s, buf, out=NULL, eof=FALSE)
     bool	eof_mode = FALSE;
     int    start_len = NO_INIT
   CODE:
+    PERL_UNUSED_VAR(out);
+    PERL_UNUSED_VAR(eof);
     /* If the input buffer is a reference, dereference it */
 #ifndef MAGIC_APPEND
         buf = buf;
@@ -1755,7 +1761,7 @@ scan(s, buf, out=NULL, eof=FALSE)
         croak("Wide character in Compress::Raw::Zlib::InflateScan::scan input parameter");
 #endif         
     /* initialise the input buffer */
-    s->stream.next_in = (Bytef*)SvPV_nomg_nolen(buf) ;
+    s->stream.next_in = (Bytef*)SvPV_force_nomg_nolen(buf) ;
     s->stream.avail_in = SvCUR(buf) ;
     start_len = s->stream.avail_in ;
     s->bytesInflated = 0 ; 
@@ -1841,8 +1847,8 @@ scan(s, buf, out=NULL, eof=FALSE)
             SvCUR_set(buf, in) ;
             if (in)
                 Move(s->stream.next_in, SvPVX(buf), in, char) ;	
-                *SvEND(buf) = '\0';
-                SvSETMAGIC(buf);
+            *SvEND(buf) = '\0';
+            SvSETMAGIC(buf);
         }
     }
 #endif

@@ -1,4 +1,4 @@
-From 1073a78f95b4668323d2e7e3944915ca75ef0f24 Mon Sep 17 00:00:00 2001
+From 6b043e09a65a17373f456c984795ff0caa4361b4 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Fiddle with *PREFIX and variables written to the makefile
@@ -17,10 +17,10 @@ Patch-Name: debian/prefix_changes.diff
  4 files changed, 13 insertions(+), 16 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
-index 2066311..0a1fb49 100644
+index 4c00129..1ea2035 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
-@@ -765,8 +765,6 @@ all POD files in MAN1PODS and MAN3PODS.
+@@ -902,8 +902,6 @@ all POD files in MAN1PODS and MAN3PODS.
  sub manifypods_target {
      my($self) = shift;
  
@@ -29,16 +29,16 @@ index 2066311..0a1fb49 100644
      my $dependencies  = '';
  
      # populate manXpods & dependencies:
-@@ -782,7 +780,7 @@ END
+@@ -919,7 +917,7 @@ END
      foreach my $section (qw(1 3)) {
          my $pods = $self->{"MAN${section}PODS"};
-         push @man_cmds, $self->split_command(<<CMD, map {($_,$pods->{$_})} sort keys %$pods);
--	\$(NOECHO) \$(POD2MAN) --section=$section --perm_rw=\$(PERM_RW)
-+	\$(NOECHO) \$(POD2MAN) --section=\$(MAN${section}EXT) --perm_rw=\$(PERM_RW)
+         my $p2m = sprintf <<CMD, $] > 5.008 ? " -u" : "";
+-	\$(NOECHO) \$(POD2MAN) --section=$section --perm_rw=\$(PERM_RW)%s
++	\$(NOECHO) \$(POD2MAN) --section=\$(MAN${section}EXT) --perm_rw=\$(PERM_RW)%s
  CMD
+         push @man_cmds, $self->split_command($p2m, map {($_,$pods->{$_})} sort keys %$pods);
      }
- 
-@@ -1748,9 +1746,11 @@ sub init_INSTALL_from_PREFIX {
+@@ -1875,9 +1873,11 @@ sub init_INSTALL_from_PREFIX {
          $self->{SITEPREFIX}   ||= $sprefix;
          $self->{VENDORPREFIX} ||= $vprefix;
  
@@ -54,10 +54,10 @@ index 2066311..0a1fb49 100644
  
      my $arch    = $Config{archname};
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 0a6797f..c19a5f9 100644
+index 391dc22..4a8e14c 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -3029,8 +3029,7 @@ sub prefixify {
+@@ -3077,8 +3077,7 @@ sub prefixify {
      warn "  prefixify $var => $path\n" if $Verbose >= 2;
      warn "    from $sprefix to $rprefix\n" if $Verbose >= 2;
  

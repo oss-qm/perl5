@@ -136,6 +136,8 @@ static int	do_spawn2_handles(pTHX_ const char *cmd, int exectype,
                         const int *handles);
 static int	do_spawnvp_handles(int mode, const char *cmdname,
                         const char * const *argv, const int *handles);
+static PerlIO * do_popen(const char *mode, const char *command, IV narg,
+			 SV **args);
 static long	find_pid(pTHX_ int pid);
 static void	remove_dead_process(long child);
 static int	terminate_process(DWORD pid, HANDLE process_handle, int sig);
@@ -146,8 +148,8 @@ static char*	wstr_to_str(const wchar_t* wstr);
 static long	filetime_to_clock(PFILETIME ft);
 static BOOL	filetime_from_time(PFILETIME ft, time_t t);
 static char*	create_command_line(char *cname, STRLEN clen,
-			const char * const *args);
-static char*	qualified_path(const char *cmd);
+				    const char * const *args);
+static char*	qualified_path(const char *cmd, bool other_exts);
 static void	ansify_path(void);
 static LRESULT	win32_process_message(HWND hwnd, UINT msg,
 			WPARAM wParam, LPARAM lParam);
@@ -279,7 +281,7 @@ get_regstr_from(HKEY hkey, const char *valuename, SV **svp)
 	{
 	    dTHX;
 	    if (!*svp)
-		*svp = sv_2mortal(newSVpvn("",0));
+		*svp = sv_2mortal(newSVpvs(""));
 	    SvGROW(*svp, datalen);
 	    retval = RegQueryValueEx(handle, valuename, 0, NULL,
 				     (PBYTE)SvPVX(*svp), &datalen);
@@ -358,9 +360,9 @@ get_emd_part(SV **prev_pathp, STRLEN *const len, char *trailing_path, ...)
 	/* directory exists */
 	dTHX;
 	if (!*prev_pathp)
-	    *prev_pathp = sv_2mortal(newSVpvn("",0));
+	    *prev_pathp = sv_2mortal(newSVpvs(""));
 	else if (SvPVX(*prev_pathp))
-	    sv_catpvn(*prev_pathp, ";", 1);
+	    sv_catpvs(*prev_pathp, ";");
 	sv_catpv(*prev_pathp, mod_name);
 	if(len)
 	    *len = SvCUR(*prev_pathp);
@@ -418,7 +420,7 @@ win32_get_xlib(const char *pl, const char *xlib, const char *libname,
 	sv1 = sv2;
     } else if (sv2) {
         dTHX;
-	sv_catpvn(sv1, ";", 1);
+	sv_catpv(sv1, ";");
 	sv_catsv(sv1, sv2);
     }
 
@@ -1785,7 +1787,7 @@ win32_getenv(const char *name)
 
     needlen = GetEnvironmentVariableA(name,NULL,0);
     if (needlen != 0) {
-	curitem = sv_2mortal(newSVpvn("", 0));
+	curitem = sv_2mortal(newSVpvs(""));
         do {
             SvGROW(curitem, needlen+1);
             needlen = GetEnvironmentVariableA(name,SvPVX(curitem),
@@ -2140,7 +2142,7 @@ do_raise(pTHX_ int sig)
 	    }
 	}
     }
-    /* Tell caller to exit thread/process as approriate */
+    /* Tell caller to exit thread/process as appropriate */
     return 1;
 }
 
@@ -2226,7 +2228,7 @@ win32_msgwait(pTHX_ DWORD count, LPHANDLE handles, DWORD timeout, LPDWORD result
      * This scenario can only be created if the timespan from the return of
      * MsgWaitForMultipleObjects to GetSystemTimeAsFileTime exceeds 1 ms. To
      * generate the scenario, manual breakpoints in a C debugger are required,
-     * or a context switch occured in win32_async_check in PeekMessage, or random
+     * or a context switch occurred in win32_async_check in PeekMessage, or random
      * messages are delivered to the *thread* message queue of the Perl thread
      * from another process (msctf.dll doing IPC among its instances, VS debugger
      * causes msctf.dll to be loaded into Perl by kernel), see [perl #33096].
@@ -2931,22 +2933,13 @@ win32_pipe(int *pfd, unsigned int size, int mode)
 DllExport PerlIO*
 win32_popenlist(const char *mode, IV narg, SV **args)
 {
- Perl_croak_nocontext("List form of pipe open not implemented");
- return NULL;
+    get_shell();
+
+    return do_popen(mode, NULL, narg, args);
 }
 
-/*
- * a popen() clone that respects PERL5SHELL
- *
- * changed to return PerlIO* rather than FILE * by BKS, 11-11-2000
- */
-
-DllExport PerlIO*
-win32_popen(const char *command, const char *mode)
-{
-#ifdef USE_RTL_POPEN
-    return _popen(command, mode);
-#else
+STATIC PerlIO*
+do_popen(const char *mode, const char *command, IV narg, SV **args) {
     int p[2];
     int handles[3];
     int parent, child;
@@ -2955,6 +2948,7 @@ win32_popen(const char *command, const char *mode)
     int childpid;
     DWORD nhandle;
     int lock_held = 0;
+    const char **args_pvs = NULL;
 
     /* establish which ends read and write */
     if (strchr(mode,'w')) {
@@ -3008,8 +3002,29 @@ win32_popen(const char *command, const char *mode)
     {
 	dTHX;
 
-	if ((childpid = do_spawn2_handles(aTHX_ command, EXECF_SPAWN_NOWAIT, handles)) == -1)
-	    goto cleanup;
+	if (command) {
+	    if ((childpid = do_spawn2_handles(aTHX_ command, EXECF_SPAWN_NOWAIT, handles)) == -1)
+	        goto cleanup;
+
+	}
+	else {
+	    int i;
+	    const char *exe_name;
+
+	    Newx(args_pvs, narg + 1 + w32_perlshell_items, const char *);
+	    SAVEFREEPV(args_pvs);
+	    for (i = 0; i < narg; ++i)
+	        args_pvs[i] = SvPV_nolen(args[i]);
+	    args_pvs[i] = NULL;
+	    exe_name = qualified_path(args_pvs[0], TRUE);
+	    if (!exe_name)
+	        /* let CreateProcess() try to find it instead */
+	        exe_name = args_pvs[0];
+
+	    if ((childpid = do_spawnvp_handles(P_NOWAIT, exe_name, args_pvs, handles)) == -1) {
+	        goto cleanup;
+	    }
+	}
 
 	win32_close(p[child]);
 
@@ -3028,7 +3043,21 @@ cleanup:
     win32_close(p[1]);
 
     return (NULL);
+}
 
+/*
+ * a popen() clone that respects PERL5SHELL
+ *
+ * changed to return PerlIO* rather than FILE * by BKS, 11-11-2000
+ */
+
+DllExport PerlIO*
+win32_popen(const char *command, const char *mode)
+{
+#ifdef USE_RTL_POPEN
+    return _popen(command, mode);
+#else
+    return do_popen(mode, command, 0, NULL);
 #endif /* USE_RTL_POPEN */
 }
 
@@ -3215,7 +3244,6 @@ win32_chsize(int fd, Off_t size)
 	    retval = -1;
 	}
     }
-finish:
     win32_lseek(fd, cur, SEEK_SET);
     return retval;
 #else
@@ -3519,8 +3547,15 @@ create_command_line(char *cname, STRLEN clen, const char * const *args)
     return cmd;
 }
 
+static const char *exe_extensions[] =
+  {
+    ".exe", /* this must be first */
+    ".cmd",
+    ".bat"
+  };
+
 static char *
-qualified_path(const char *cmd)
+qualified_path(const char *cmd, bool other_exts)
 {
     char *pathstr;
     char *fullcmd, *curfullcmd;
@@ -3559,10 +3594,16 @@ qualified_path(const char *cmd)
 	if (cmd[cmdlen-1] != '.'
 	    && (cmdlen < 4 || cmd[cmdlen-4] != '.'))
 	{
-	    strcpy(curfullcmd, ".exe");
-	    res = GetFileAttributes(fullcmd);
-	    if (res != 0xFFFFFFFF && !(res & FILE_ATTRIBUTE_DIRECTORY))
-		return fullcmd;
+	    int i;
+	    /* first extension is .exe */
+	    int ext_limit = other_exts ? C_ARRAY_LENGTH(exe_extensions) : 1;
+	    for (i = 0; i < ext_limit; ++i) {
+	        strcpy(curfullcmd, exe_extensions[i]);
+	        res = GetFileAttributes(fullcmd);
+	        if (res != 0xFFFFFFFF && !(res & FILE_ATTRIBUTE_DIRECTORY))
+		    return fullcmd;
+	    }
+
 	    *curfullcmd = '\0';
 	}
 
@@ -3678,7 +3719,7 @@ DllExport int
 win32_spawnvp(int mode, const char *cmdname, const char *const *argv)
 {
 #ifdef USE_RTL_SPAWNVP
-    return spawnvp(mode, cmdname, (char * const *)argv);
+    return _spawnvp(mode, cmdname, (char * const *)argv);
 #else
     return do_spawnvp_handles(mode, cmdname, argv, NULL);
 #endif
@@ -3799,7 +3840,7 @@ RETRY:
 	 * jump through our own hoops by picking out the path
 	 * we really want it to use. */
 	if (!fullcmd) {
-	    fullcmd = qualified_path(cname);
+	    fullcmd = qualified_path(cname, FALSE);
 	    if (fullcmd) {
 		if (cname != cmdname)
 		    Safefree(cname);
@@ -3853,9 +3894,9 @@ win32_execv(const char *cmdname, const char *const *argv)
     /* if this is a pseudo-forked child, we just want to spawn
      * the new program, and return */
     if (w32_pseudo_id)
-	return spawnv(P_WAIT, cmdname, argv);
+	return _spawnv(P_WAIT, cmdname, argv);
 #endif
-    return execv(cmdname, argv);
+    return _execv(cmdname, argv);
 }
 
 DllExport int
@@ -3875,7 +3916,7 @@ win32_execvp(const char *cmdname, const char *const *argv)
 	    return status;
     }
 #endif
-    return execvp(cmdname, argv);
+    return _execvp(cmdname, argv);
 }
 
 DllExport void
@@ -4156,7 +4197,7 @@ XS(w32_SetChildShowWindow)
     unsigned short showwindow = w32_showwindow;
 
     if (items > 1)
-	Perl_croak(aTHX_ "usage: Win32::SetChildShowWindow($showwindow)");
+	croak_xs_usage(cv, "[showwindow]");
 
     if (items == 0 || !SvOK(ST(0)))
         w32_use_showwindow = FALSE;
@@ -4356,13 +4397,7 @@ ansify_path(void)
          * will not call mg_set() if it initializes %ENV from `environ`.
          */
         SetEnvironmentVariableA("PATH", ansi_path+5);
-        /* We are intentionally leaking the ansi_path string here because
-         * the some runtime libraries puts it directly into the environ
-         * array.  The Microsoft runtime library seems to make a copy,
-         * but will leak the copy should it be replaced again later.
-         * Since this code is only called once during PERL_SYS_INIT this
-         * shouldn't really matter.
-         */
+        win32_free(ansi_path);
     }
     win32_free(wide_path);
 }

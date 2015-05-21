@@ -52,7 +52,6 @@
 
 void
 Perl_set_caret_X(pTHX) {
-    dVAR;
     GV* tmpgv = gv_fetchpvs("\030", GV_ADD|GV_NOTQUAL, SVt_PV); /* $^X */
     if (tmpgv) {
         SV *const caret_x = GvSV(tmpgv);
@@ -100,7 +99,13 @@ Perl_set_caret_X(pTHX) {
         }
 #  elif defined(HAS_PROCSELFEXE)
         char buf[MAXPATHLEN];
-        int len = readlink(PROCSELFEXE_PATH, buf, sizeof(buf) - 1);
+        SSize_t len = readlink(PROCSELFEXE_PATH, buf, sizeof(buf) - 1);
+        /* NOTE: if the length returned by readlink() is sizeof(buf) - 1,
+         * it is impossible to know whether the result was truncated. */
+
+        if (len != -1) {
+            buf[len] = '\0';
+        }
 
         /* On Playstation2 Linux V1.0 (kernel 2.2.1) readlink(/proc/self/exe)
            includes a spurious NUL which will cause $^X to fail in system
@@ -130,11 +135,5 @@ Perl_set_caret_X(pTHX) {
 }
 
 /*
- * Local variables:
- * c-indentation-style: bsd
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- *
  * ex: set ts=8 sts=4 sw=4 et:
  */

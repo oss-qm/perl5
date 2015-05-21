@@ -1,4 +1,8 @@
 #define PERL_IN_XS_APITEST
+
+/* We want to be able to test things that aren't API yet. */
+#define PERL_EXT
+
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -83,7 +87,6 @@ typedef void (freeent_function)(pTHX_ HV *, HE *);
 
 void
 test_freeent(freeent_function *f) {
-    dTHX;
     dSP;
     HV *test_hash = newHV();
     HE *victim;
@@ -260,7 +263,12 @@ rmagical_a_dummy(pTHX_ IV idx, SV *sv) {
     return 0;
 }
 
-STATIC MGVTBL rmagical_b = { 0 };
+/* We could do "= { 0 };" but some versions of gcc do warn
+ * (with -Wextra) about missing initializer, this is probably gcc
+ * being a bit too paranoid.  But since this is file-static, we can
+ * just have it without initializer, since it should get
+ * zero-initialized. */
+STATIC MGVTBL rmagical_b;
 
 STATIC void
 blockhook_csc_start(pTHX_ int full)
@@ -401,9 +409,9 @@ THX_ck_entersub_args_scalars(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
     OP *aop = cUNOPx(entersubop)->op_first;
     PERL_UNUSED_ARG(namegv);
     PERL_UNUSED_ARG(ckobj);
-    if (!aop->op_sibling)
+    if (!OpHAS_SIBLING(aop))
 	aop = cUNOPx(aop)->op_first;
-    for (aop = aop->op_sibling; aop->op_sibling; aop = aop->op_sibling) {
+    for (aop = OpSIBLING(aop); OpHAS_SIBLING(aop); aop = OpSIBLING(aop)) {
 	op_contextualize(aop, G_SCALAR);
     }
     return entersubop;
@@ -413,17 +421,20 @@ STATIC OP *
 THX_ck_entersub_multi_sum(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
 {
     OP *sumop = NULL;
+    OP *parent = entersubop;
     OP *pushop = cUNOPx(entersubop)->op_first;
     PERL_UNUSED_ARG(namegv);
     PERL_UNUSED_ARG(ckobj);
-    if (!pushop->op_sibling)
+    if (!OpHAS_SIBLING(pushop)) {
+        parent = pushop;
 	pushop = cUNOPx(pushop)->op_first;
+    }
     while (1) {
-	OP *aop = pushop->op_sibling;
-	if (!aop->op_sibling)
+	OP *aop = OpSIBLING(pushop);
+	if (!OpHAS_SIBLING(aop))
 	    break;
-	pushop->op_sibling = aop->op_sibling;
-	aop->op_sibling = NULL;
+        /* cut out first arg */
+        op_sibling_splice(parent, pushop, 1, NULL);
 	op_contextualize(aop, G_SCALAR);
 	if (sumop) {
 	    sumop = newBINOP(OP_ADD, 0, sumop, aop);
@@ -450,7 +461,7 @@ test_op_list_describe_part(SV *res, OP *o)
     if (o->op_flags & OPf_KIDS) {
 	OP *k;
 	sv_catpvs(res, "[");
-	for (k = cUNOPx(o)->op_first; k; k = k->op_sibling)
+	for (k = cUNOPx(o)->op_first; k; k = OpSIBLING(k))
 	    test_op_list_describe_part(res, k);
 	sv_catpvs(res, "]");
     } else {
@@ -477,8 +488,7 @@ THX_mkUNOP(pTHX_ U32 type, OP *first)
     UNOP *unop;
     NewOp(1103, unop, 1, UNOP);
     unop->op_type   = (OPCODE)type;
-    unop->op_first  = first;
-    unop->op_flags  = OPf_KIDS;
+    op_sibling_splice((OP*)unop, NULL, 0, first);
     return (OP *)unop;
 }
 
@@ -489,10 +499,8 @@ THX_mkBINOP(pTHX_ U32 type, OP *first, OP *last)
     BINOP *binop;
     NewOp(1103, binop, 1, BINOP);
     binop->op_type      = (OPCODE)type;
-    binop->op_first     = first;
-    binop->op_flags     = OPf_KIDS;
-    binop->op_last      = last;
-    first->op_sibling   = last;
+    op_sibling_splice((OP*)binop, NULL, 0, last);
+    op_sibling_splice((OP*)binop, NULL, 0, first);
     return (OP *)binop;
 }
 
@@ -503,11 +511,9 @@ THX_mkLISTOP(pTHX_ U32 type, OP *first, OP *sib, OP *last)
     LISTOP *listop;
     NewOp(1103, listop, 1, LISTOP);
     listop->op_type     = (OPCODE)type;
-    listop->op_flags    = OPf_KIDS;
-    listop->op_first    = first;
-    first->op_sibling   = sib;
-    sib->op_sibling     = last;
-    listop->op_last     = last;
+    op_sibling_splice((OP*)listop, NULL, 0, last);
+    op_sibling_splice((OP*)listop, NULL, 0, sib);
+    op_sibling_splice((OP*)listop, NULL, 0, first);
     return (OP *)listop;
 }
 
@@ -558,19 +564,21 @@ THX_pp_establish_cleanup(pTHX)
 STATIC OP *
 THX_ck_entersub_establish_cleanup(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
 {
-    OP *pushop, *argop, *estop;
+    OP *parent, *pushop, *argop, *estop;
     ck_entersub_args_proto(entersubop, namegv, ckobj);
+    parent = entersubop;
     pushop = cUNOPx(entersubop)->op_first;
-    if(!pushop->op_sibling) pushop = cUNOPx(pushop)->op_first;
-    argop = pushop->op_sibling;
-    pushop->op_sibling = argop->op_sibling;
-    argop->op_sibling = NULL;
+    if(!OpHAS_SIBLING(pushop)) {
+        parent = pushop;
+        pushop = cUNOPx(pushop)->op_first;
+    }
+    /* extract out first arg, then delete the rest of the tree */
+    argop = OpSIBLING(pushop);
+    op_sibling_splice(parent, pushop, 1, NULL);
     op_free(entersubop);
-    NewOpSz(0, estop, sizeof(UNOP));
-    estop->op_type = OP_RAND;
+
+    estop = mkUNOP(OP_RAND, argop);
     estop->op_ppaddr = THX_pp_establish_cleanup;
-    cUNOPx(estop)->op_flags = OPf_KIDS;
-    cUNOPx(estop)->op_first = argop;
     PL_hints |= HINT_BLOCK_SCOPE;
     return estop;
 }
@@ -578,13 +586,16 @@ THX_ck_entersub_establish_cleanup(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
 STATIC OP *
 THX_ck_entersub_postinc(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
 {
-    OP *pushop, *argop;
+    OP *parent, *pushop, *argop;
     ck_entersub_args_proto(entersubop, namegv, ckobj);
+    parent = entersubop;
     pushop = cUNOPx(entersubop)->op_first;
-    if(!pushop->op_sibling) pushop = cUNOPx(pushop)->op_first;
-    argop = pushop->op_sibling;
-    pushop->op_sibling = argop->op_sibling;
-    argop->op_sibling = NULL;
+    if(!OpHAS_SIBLING(pushop)) {
+        parent = pushop;
+        pushop = cUNOPx(pushop)->op_first;
+    }
+    argop = OpSIBLING(pushop);
+    op_sibling_splice(parent, pushop, 1, NULL);
     op_free(entersubop);
     return newUNOP(OP_POSTINC, 0,
 	op_lvalue(op_contextualize(argop, G_SCALAR), OP_POSTINC));
@@ -598,12 +609,13 @@ THX_ck_entersub_pad_scalar(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
     SV *a0, *a1;
     ck_entersub_args_proto(entersubop, namegv, ckobj);
     pushop = cUNOPx(entersubop)->op_first;
-    if(!pushop->op_sibling) pushop = cUNOPx(pushop)->op_first;
-    argop = pushop->op_sibling;
-    if(argop->op_type != OP_CONST || argop->op_sibling->op_type != OP_CONST)
+    if(!OpHAS_SIBLING(pushop))
+        pushop = cUNOPx(pushop)->op_first;
+    argop = OpSIBLING(pushop);
+    if(argop->op_type != OP_CONST || OpSIBLING(argop)->op_type != OP_CONST)
 	croak("bad argument expression type for pad_scalar()");
     a0 = cSVOPx_sv(argop);
-    a1 = cSVOPx_sv(argop->op_sibling);
+    a1 = cSVOPx_sv(OpSIBLING(argop));
     switch(SvIV(a0)) {
 	case 1: {
 	    SV *namesv = sv_2mortal(newSVpvs("$"));
@@ -659,6 +671,9 @@ static SV *hintkey_swaplabel_sv, *hintkey_labelconst_sv;
 static SV *hintkey_arrayfullexpr_sv, *hintkey_arraylistexpr_sv;
 static SV *hintkey_arraytermexpr_sv, *hintkey_arrayarithexpr_sv;
 static SV *hintkey_arrayexprflags_sv;
+static SV *hintkey_DEFSV_sv;
+static SV *hintkey_with_vars_sv;
+static SV *hintkey_join_with_space_sv;
 static int (*next_keyword_plugin)(pTHX_ char *, STRLEN, OP **);
 
 /* low-level parser helpers */
@@ -691,16 +706,18 @@ static OP *THX_parse_var(pTHX)
 }
 
 #define push_rpn_item(o) \
-    (tmpop = (o), tmpop->op_sibling = stack, stack = tmpop)
-#define pop_rpn_item() \
-    (!stack ? (croak("RPN stack underflow"), (OP*)NULL) : \
-     (tmpop = stack, stack = stack->op_sibling, \
-      tmpop->op_sibling = NULL, tmpop))
+    op_sibling_splice(parent, NULL, 0, o);
+#define pop_rpn_item() ( \
+    (tmpop = op_sibling_splice(parent, NULL, 1, NULL)) \
+        ? tmpop : (croak("RPN stack underflow"), (OP*)NULL))
 
 #define parse_rpn_expr() THX_parse_rpn_expr(aTHX)
 static OP *THX_parse_rpn_expr(pTHX)
 {
-    OP *stack = NULL, *tmpop;
+    OP *tmpop;
+    /* fake parent for splice to mess with */
+    OP *parent = mkBINOP(OP_NULL, NULL, NULL);
+
     while(1) {
 	I32 c;
 	lex_read_space(0);
@@ -708,7 +725,9 @@ static OP *THX_parse_rpn_expr(pTHX)
 	switch(c) {
 	    case /*(*/')': case /*{*/'}': {
 		OP *result = pop_rpn_item();
-		if(stack) croak("RPN expression must return a single value");
+		if(cLISTOPx(parent)->op_first)
+                    croak("RPN expression must return a single value");
+                op_free(parent);
 		return result;
 	    } break;
 	    case '0': case '1': case '2': case '3': case '4':
@@ -944,6 +963,106 @@ static OP *THX_parse_keyword_arrayexprflags(pTHX)
     return o ? newANONLIST(o) : newANONHASH(newOP(OP_STUB, 0));
 }
 
+#define parse_keyword_DEFSV() THX_parse_keyword_DEFSV(aTHX)
+static OP *THX_parse_keyword_DEFSV(pTHX)
+{
+    return newDEFSVOP();
+}
+
+#define sv_cat_c(a,b) THX_sv_cat_c(aTHX_ a, b)
+static void THX_sv_cat_c(pTHX_ SV *sv, U32 c) {
+    char ds[UTF8_MAXBYTES + 1], *d;
+    d = (char *)uvchr_to_utf8((U8 *)ds, c);
+    if (d - ds > 1) {
+        sv_utf8_upgrade(sv);
+    }
+    sv_catpvn(sv, ds, d - ds);
+}
+
+#define parse_keyword_with_vars() THX_parse_keyword_with_vars(aTHX)
+static OP *THX_parse_keyword_with_vars(pTHX)
+{
+    I32 c;
+    IV count;
+    int save_ix;
+    OP *vardeclseq, *body;
+
+    save_ix = block_start(TRUE);
+    vardeclseq = NULL;
+
+    count = 0;
+
+    lex_read_space(0);
+    c = lex_peek_unichar(0);
+    while (c != '{') {
+        SV *varname;
+        PADOFFSET padoff;
+
+        if (c == -1) {
+            croak("unexpected EOF; expecting '{'");
+        }
+
+        if (!isIDFIRST_uni(c)) {
+            croak("unexpected '%c'; expecting an identifier", (int)c);
+        }
+
+        varname = newSVpvs("$");
+        if (lex_bufutf8()) {
+            SvUTF8_on(varname);
+        }
+
+        sv_cat_c(varname, c);
+        lex_read_unichar(0);
+
+        while (c = lex_peek_unichar(0), c != -1 && isIDCONT_uni(c)) {
+            sv_cat_c(varname, c);
+            lex_read_unichar(0);
+        }
+
+        padoff = pad_add_name_sv(varname, padadd_NO_DUP_CHECK, NULL, NULL);
+
+        {
+            OP *my_var = newOP(OP_PADSV, OPf_MOD | (OPpLVAL_INTRO << 8));
+            my_var->op_targ = padoff;
+
+            vardeclseq = op_append_list(
+                OP_LINESEQ,
+                vardeclseq,
+                newSTATEOP(
+                    0, NULL,
+                    newASSIGNOP(
+                        OPf_STACKED,
+                        my_var, 0,
+                        newSVOP(
+                            OP_CONST, 0,
+                            newSViv(++count)
+                        )
+                    )
+                )
+            );
+        }
+
+        lex_read_space(0);
+        c = lex_peek_unichar(0);
+    }
+
+    intro_my();
+
+    body = parse_block(0);
+
+    return block_end(save_ix, op_append_list(OP_LINESEQ, vardeclseq, body));
+}
+
+#define parse_join_with_space() THX_parse_join_with_space(aTHX)
+static OP *THX_parse_join_with_space(pTHX)
+{
+    OP *delim, *args;
+
+    args = parse_listexpr(0);
+    delim = newSVOP(OP_CONST, 0, newSVpvs(" "));
+    return op_convert_list(OP_JOIN, 0, op_prepend_elem(OP_LIST, delim, args));
+}
+
 /* plugin glue */
 
 #define keyword_active(hintkey_sv) THX_keyword_active(aTHX_ hintkey_sv)
@@ -1028,6 +1147,18 @@ static int my_keyword_plugin(pTHX_
 		    keyword_active(hintkey_arrayexprflags_sv)) {
 	*op_ptr = parse_keyword_arrayexprflags();
 	return KEYWORD_PLUGIN_EXPR;
+    } else if(keyword_len == 5 && strnEQ(keyword_ptr, "DEFSV", 5) &&
+		    keyword_active(hintkey_DEFSV_sv)) {
+	*op_ptr = parse_keyword_DEFSV();
+	return KEYWORD_PLUGIN_EXPR;
+    } else if(keyword_len == 9 && strnEQ(keyword_ptr, "with_vars", 9) &&
+		    keyword_active(hintkey_with_vars_sv)) {
+	*op_ptr = parse_keyword_with_vars();
+	return KEYWORD_PLUGIN_STMT;
+    } else if(keyword_len == 15 && strnEQ(keyword_ptr, "join_with_space", 15) &&
+		    keyword_active(hintkey_join_with_space_sv)) {
+	*op_ptr = parse_join_with_space();
+	return KEYWORD_PLUGIN_EXPR;
     } else {
 	return next_keyword_plugin(aTHX_ keyword_ptr, keyword_len, op_ptr);
     }
@@ -1092,14 +1223,14 @@ addissub_myck_add(pTHX_ OP *op)
     OP *aop, *bop;
     U8 flags;
     if (!(flag_svp && SvTRUE(*flag_svp) && (op->op_flags & OPf_KIDS) &&
-	    (aop = cBINOPx(op)->op_first) && (bop = aop->op_sibling) &&
-	    !bop->op_sibling))
+	    (aop = cBINOPx(op)->op_first) && (bop = OpSIBLING(aop)) &&
+	    !OpHAS_SIBLING(bop)))
 	return addissub_nxck_add(aTHX_ op);
-    aop->op_sibling = NULL;
-    cBINOPx(op)->op_first = NULL;
-    op->op_flags &= ~OPf_KIDS;
     flags = op->op_flags;
-    op_free(op);
+    op_sibling_splice(op, NULL, 1, NULL); /* excise aop */
+    op_sibling_splice(op, NULL, 1, NULL); /* excise bop */
+    op_free(op); /* free the empty husk */
+    flags &= ~OPf_KIDS;
     return newBINOP(OP_SUBTRACT, flags, aop, bop);
 }
 
@@ -1133,6 +1264,14 @@ MODULE = XS::APItest		PACKAGE = XS::APItest
 INCLUDE: const-xs.inc
 
 INCLUDE: numeric.xs
+
+void
+assertx(int x)
+    CODE:
+        /* this only needs to compile and checks that assert() can be
+           used this way syntactically */
+	(void)(assert(x), 1);
+	(void)(x);
 
 MODULE = XS::APItest::utf8	PACKAGE = XS::APItest::utf8
 
@@ -1457,13 +1596,17 @@ common(params)
 	if ((svp = hv_fetchs(params, "hash", 0)))
 	    hash = SvUV(*svp);
 
-	if ((svp = hv_fetchs(params, "hash_pv", 0))) {
+	if (hv_fetchs(params, "hash_pv", 0)) {
+            assert(key);
 	    PERL_HASH(hash, key, klen);
 	}
-	if ((svp = hv_fetchs(params, "hash_sv", 0))) {
-	    STRLEN len;
-	    const char *const p = SvPV(keysv, len);
-	    PERL_HASH(hash, p, len);
+	if (hv_fetchs(params, "hash_sv", 0)) {
+            assert(keysv);
+            {
+              STRLEN len;
+              const char *const p = SvPV(keysv, len);
+              PERL_HASH(hash, p, len);
+            }
 	}
 
 	result = (HE *)hv_common(hv, keysv, key, klen, flags, action, val, hash);
@@ -1729,12 +1872,9 @@ xop_build_optree ()
 
         kid = newSVOP(OP_CONST, 0, newSViv(42));
         
-        NewOp(1102, unop, 1, UNOP);
-        unop->op_type       = OP_CUSTOM;
+        unop = (UNOP*)mkUNOP(OP_CUSTOM, kid);
         unop->op_ppaddr     = pp_xop;
-        unop->op_flags      = OPf_KIDS;
         unop->op_private    = 0;
-        unop->op_first      = kid;
         unop->op_next       = NULL;
         kid->op_next        = (OP*)unop;
 
@@ -1763,12 +1903,9 @@ xop_from_custom_op ()
         UNOP *unop;
         XOP *xop;
 
-        NewOp(1102, unop, 1, UNOP);
-        unop->op_type       = OP_CUSTOM;
+        unop = (UNOP*)mkUNOP(OP_CUSTOM, NULL);
         unop->op_ppaddr     = pp_xop;
-        unop->op_flags      = OPf_KIDS;
         unop->op_private    = 0;
-        unop->op_first      = NULL;
         unop->op_next       = NULL;
 
         xop = Perl_custom_op_xop(aTHX_ (OP *)unop);
@@ -2096,6 +2233,7 @@ newCONSTSUB(stash, name, flags, sv)
                break;
         }
         EXTEND(SP, 2);
+        assert(mycv);
         PUSHs( CvCONST(mycv) ? &PL_sv_yes : &PL_sv_no );
         PUSHs((SV*)CvGV(mycv));
 
@@ -2240,6 +2378,26 @@ gv_autoload_type(stash, methname, type, method)
                break;
         }
 	XPUSHs( gv ? (SV*)gv : &PL_sv_undef);
+
+SV *
+gv_const_sv(SV *name)
+    PREINIT:
+        GV *gv;
+    CODE:
+        if (SvPOK(name)) {
+	    HV *stash = gv_stashpv("main",0);
+	    HE *he = hv_fetch_ent(stash, name, 0, 0);
+	    gv = (GV *)HeVAL(he);
+        }
+	else {
+	    gv = (GV *)name;
+        }
+        RETVAL = gv_const_sv(gv);
+        if (!RETVAL)
+            XSRETURN_EMPTY;
+	RETVAL = newSVsv(RETVAL);
+    OUTPUT:
+        RETVAL
 
 void
 whichsig_type(namesv, type)
@@ -2429,7 +2587,7 @@ my_caller(level)
         ST(4) = cop_hints_fetch_pvs(cx->blk_oldcop, "foo", 0);
         ST(5) = cop_hints_fetch_pvn(cx->blk_oldcop, "foo", 3, 0, 0);
         ST(6) = cop_hints_fetch_sv(cx->blk_oldcop, 
-                sv_2mortal(newSVpvn("foo", 3)), 0, 0);
+                sv_2mortal(newSVpvs("foo")), 0, 0);
 
         hv = cop_hints_2hv(cx->blk_oldcop, 0);
         ST(7) = hv ? sv_2mortal(newRV_noinc((SV *)hv)) : &PL_sv_undef;
@@ -3315,6 +3473,9 @@ BOOT:
     hintkey_arraytermexpr_sv = newSVpvs_share("XS::APItest/arraytermexpr");
     hintkey_arrayarithexpr_sv = newSVpvs_share("XS::APItest/arrayarithexpr");
     hintkey_arrayexprflags_sv = newSVpvs_share("XS::APItest/arrayexprflags");
+    hintkey_DEFSV_sv = newSVpvs_share("XS::APItest/DEFSV");
+    hintkey_with_vars_sv = newSVpvs_share("XS::APItest/with_vars");
+    hintkey_join_with_space_sv = newSVpvs_share("XS::APItest/join_with_space");
     next_keyword_plugin = PL_keyword_plugin;
     PL_keyword_plugin = my_keyword_plugin;
 }
@@ -3511,14 +3672,25 @@ test_newFOROP_without_slab()
 CODE:
     {
 	const I32 floor = start_subparse(0,0);
+	OP *o;
 	/* The slab allocator does not like CvROOT being set. */
 	CvROOT(PL_compcv) = (OP *)1;
-	op_free(newFOROP(0, 0, newOP(OP_PUSHMARK, 0), 0, 0));
+	o = newFOROP(0, 0, newOP(OP_PUSHMARK, 0), 0, 0);
+#ifdef PERL_OP_PARENT
+	if (cLOOPx(cUNOPo->op_first)->op_last->op_sibparent
+		!= cUNOPo->op_first)
+	{
+	    Perl_warn(aTHX_ "Op parent pointer is stale");
+	    RETVAL = FALSE;
+	}
+	else
+#endif
+	    /* If we do not crash before returning, the test passes. */
+	    RETVAL = TRUE;
+	op_free(o);
 	CvROOT(PL_compcv) = NULL;
 	SvREFCNT_dec(PL_compcv);
 	LEAVE_SCOPE(floor);
-	/* If we have not crashed yet, then the test passes. */
-	RETVAL = TRUE;
     }
 OUTPUT:
     RETVAL
@@ -3583,6 +3755,70 @@ alias_av(AV *av, IV ix, SV *sv)
     CODE:
 	av_store(av, ix, SvREFCNT_inc(sv));
 
+SV *
+cv_name(SVREF ref, ...)
+    CODE:
+	RETVAL = SvREFCNT_inc(cv_name((CV *)ref,
+				      items>1 && ST(1) != &PL_sv_undef
+					? ST(1)
+					: NULL,
+				      items>2 ? SvUV(ST(2)) : 0));
+    OUTPUT:
+	RETVAL
+
+void
+sv_catpvn(SV *sv, SV *sv2)
+    CODE:
+    {
+	STRLEN len;
+	const char *s = SvPV(sv2,len);
+	sv_catpvn_flags(sv,s,len, SvUTF8(sv2) ? SV_CATUTF8 : SV_CATBYTES);
+    }
+
+bool
+test_newOP_CUSTOM()
+    CODE:
+    {
+	OP *o = newLISTOP(OP_CUSTOM, 0, NULL, NULL);
+	op_free(o);
+	o = newOP(OP_CUSTOM, 0);
+	op_free(o);
+	o = newUNOP(OP_CUSTOM, 0, NULL);
+	op_free(o);
+	o = newUNOP_AUX(OP_CUSTOM, 0, NULL, NULL);
+	op_free(o);
+	o = newMETHOP(OP_CUSTOM, 0, newOP(OP_NULL,0));
+	op_free(o);
+	o = newMETHOP_named(OP_CUSTOM, 0, newSV(0));
+	op_free(o);
+	o = newBINOP(OP_CUSTOM, 0, NULL, NULL);
+	op_free(o);
+	o = newPMOP(OP_CUSTOM, 0);
+	op_free(o);
+	o = newSVOP(OP_CUSTOM, 0, newSV(0));
+	op_free(o);
+#ifdef USE_ITHREADS
+	ENTER;
+	lex_start(NULL, NULL, 0);
+	{
+	    I32 ix = start_subparse(FALSE,0);
+	    o = newPADOP(OP_CUSTOM, 0, newSV(0));
+	    op_free(o);
+	    LEAVE_SCOPE(ix);
+	}
+	LEAVE;
+#endif
+	o = newPVOP(OP_CUSTOM, 0, NULL);
+	op_free(o);
+	o = newLOGOP(OP_CUSTOM, 0, newOP(OP_NULL,0), newOP(OP_NULL,0));
+	op_free(o);
+	o = newLOOPEX(OP_CUSTOM, newOP(OP_NULL,0));
+	op_free(o);
+	RETVAL = TRUE;
+    }
+    OUTPUT:
+	RETVAL
+
 MODULE = XS::APItest PACKAGE = XS::APItest::AUTOLOADtest
 
 int
@@ -3634,6 +3870,11 @@ ALIAS:
     sv_unmagic_bar = 1
 CODE:
     sv_unmagicext(SvRV(sv), PERL_MAGIC_ext, ix ? &vtbl_bar : &vtbl_foo);
+
+void
+sv_magic(SV *sv, SV *thingy)
+CODE:
+    sv_magic(SvRV(sv), NULL, PERL_MAGIC_ext, (const char *)thingy, 0);
 
 UV
 test_get_vtbl()
@@ -4792,3 +5033,37 @@ test_toTITLE_utf8(SV * p)
         RETVAL = av;
     OUTPUT:
         RETVAL
+
+SV *
+test_Gconvert(SV * number, SV * num_digits)
+    PREINIT:
+        char buffer[100];
+        int len;
+    CODE:
+        len = (int) SvIV(num_digits);
+        if (len > 99) croak("Too long a number for test_Gconvert");
+        PERL_UNUSED_RESULT(Gconvert(SvNV(number), len,
+                 0,    /* No trailing zeroes */
+                 buffer));
+        RETVAL = newSVpv(buffer, 0);
+    OUTPUT:
+        RETVAL
+
+MODULE = XS::APItest		PACKAGE = XS::APItest::Backrefs
+
+void
+apitest_weaken(SV *sv)
+    PROTOTYPE: $
+    CODE:
+        sv_rvweaken(sv);
+
+SV *
+has_backrefs(SV *sv)
+    CODE:
+        if (SvROK(sv) && sv_get_backrefs(SvRV(sv)))
+            RETVAL = &PL_sv_yes;
+        else
+            RETVAL = &PL_sv_no;
+    OUTPUT:
+        RETVAL
+

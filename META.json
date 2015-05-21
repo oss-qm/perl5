@@ -4,7 +4,7 @@
       "perl5-porters@perl.org"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "CPAN::Meta version 2.140640",
+   "generated_by" : "CPAN::Meta version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -27,9 +27,6 @@
          "dist/Env",
          "dist/Exporter",
          "dist/ExtUtils-CBuilder",
-         "dist/ExtUtils-Command",
-         "dist/ExtUtils-Install",
-         "dist/ExtUtils-Manifest",
          "dist/ExtUtils-ParseXS",
          "dist/Filter-Simple",
          "dist/I18N-Collate",
@@ -56,7 +53,7 @@
          "dist/threads-shared",
          "dist/Tie-File",
          "dist/XSLoader",
-         "mad",
+         "lib/perl5db",
          "win32"
       ],
       "file" : [
@@ -115,7 +112,7 @@
          "vxs.inc"
       ]
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "bugtracker" : {
          "web" : "https://rt.perl.org/"
@@ -128,5 +125,5 @@
          "url" : "http://perl5.git.perl.org/"
       }
    },
-   "version" : "5.020002"
+   "version" : "5.022000"
 }

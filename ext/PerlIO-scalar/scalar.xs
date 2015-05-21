@@ -46,7 +46,7 @@ PerlIOScalar_pushed(pTHX_ PerlIO * f, const char *mode, SV * arg,
 	}
     }
     else {
-	s->var = newSVpvn("", 0);
+	s->var = newSVpvs("");
     }
     SvUPGRADE(s->var, SVt_PV);
 
@@ -149,6 +149,7 @@ PerlIOScalar_read(pTHX_ PerlIO *f, void *vbuf, Size_t count)
     if (!(PerlIOBase(f)->flags & PERLIO_F_CANREAD)) {
 	PerlIOBase(f)->flags |= PERLIO_F_ERROR;
 	SETERRNO(EBADF, SS_IVCHAN);
+	Perl_PerlIO_save_errno(aTHX_ f);
 	return 0;
     }
     {
@@ -210,6 +211,21 @@ PerlIOScalar_write(pTHX_ PerlIO * f, const void *vbuf, Size_t count)
 	}
 	else {
 	    STRLEN const cur = SvCUR(sv);
+
+            /* ensure we don't try to create ridiculously large
+             * SVs on small platforms
+             */
+#if SSize_t_size < Off_t_size
+            if (s->posn > SSize_t_MAX) {
+#ifdef EFBIG
+                SETERRNO(EFBIG, SS_BUFFEROVF);
+#else
+                SETERRNO(ENOSPC, SS_BUFFEROVF);
+#endif
+                return 0;
+            }
+#endif
+
 	    if ((STRLEN)s->posn > cur) {
 		dst = SvGROW(sv, (STRLEN)s->posn + count + 1);
 		Zero(SvPVX(sv) + cur, (STRLEN)s->posn - cur, char);

@@ -28,6 +28,13 @@
 #ifndef sv_dup_inc
 #  define sv_dup_inc(s,t)	SvREFCNT_inc(sv_dup(s,t))
 #endif
+#ifndef PERL_UNUSED_RESULT
+#  if defined(__GNUC__) && defined(HASATTRIBUTE_WARN_UNUSED_RESULT)
+#    define PERL_UNUSED_RESULT(v) STMT_START { __typeof__(v) z = (v); (void)sizeof(z); } STMT_END
+#  else
+#    define PERL_UNUSED_RESULT(v) ((void)(v))
+#  endif
+#endif
 
 #ifdef USE_ITHREADS
 
@@ -346,7 +353,7 @@ S_exit_warning(pTHX)
 /* Called from perl_destruct() in each thread.  If it's the main thread,
  * stop it from freeing everything if there are other threads still running.
  */
-int
+STATIC int
 Perl_ithread_hook(pTHX)
 {
     dMY_POOL;
@@ -356,7 +363,7 @@ Perl_ithread_hook(pTHX)
 
 /* MAGIC (in mg.h sense) hooks */
 
-int
+STATIC int
 ithread_mg_get(pTHX_ SV *sv, MAGIC *mg)
 {
     ithread *thread = (ithread *)mg->mg_ptr;
@@ -365,7 +372,7 @@ ithread_mg_get(pTHX_ SV *sv, MAGIC *mg)
     return (0);
 }
 
-int
+STATIC int
 ithread_mg_free(pTHX_ SV *sv, MAGIC *mg)
 {
     ithread *thread = (ithread *)mg->mg_ptr;
@@ -375,7 +382,7 @@ ithread_mg_free(pTHX_ SV *sv, MAGIC *mg)
     return (0);
 }
 
-int
+STATIC int
 ithread_mg_dup(pTHX_ MAGIC *mg, CLONE_PARAMS *param)
 {
     PERL_UNUSED_ARG(param);
@@ -383,7 +390,7 @@ ithread_mg_dup(pTHX_ MAGIC *mg, CLONE_PARAMS *param)
     return (0);
 }
 
-MGVTBL ithread_vtbl = {
+STATIC const MGVTBL ithread_vtbl = {
     ithread_mg_get,     /* get */
     0,                  /* set */
     0,                  /* len */
@@ -470,10 +477,10 @@ S_ithread_run(void * arg)
 {
     ithread *thread = (ithread *)arg;
     int jmp_rc = 0;
-    I32 oldscope;
+    volatile I32 oldscope;
     volatile int exit_app = 0;   /* Thread terminated using 'exit' */
     volatile int exit_code = 0;
-    int died = 0;       /* Thread terminated abnormally */
+    volatile int died = 0;       /* Thread terminated abnormally */
 
     dJMPENV;
 
@@ -713,11 +720,14 @@ S_ithread_create(
     }
     PERL_SET_CONTEXT(aTHX);
     if (!thread) {
-        int rc;
         MUTEX_UNLOCK(&MY_POOL.create_destruct_mutex);
-        rc = PerlLIO_write(PerlIO_fileno(Perl_error_log),
-                            PL_no_mem, strlen(PL_no_mem));
-        PERL_UNUSED_VAR(rc);
+        {
+          int fd = PerlIO_fileno(Perl_error_log);
+          if (fd >= 0) {
+            /* If there's no error_log, we cannot scream about it missing. */
+            PERL_UNUSED_RESULT(PerlLIO_write(fd, PL_no_mem, strlen(PL_no_mem)));
+          }
+        }
         my_exit(1);
     }
     Zero(thread, 1, ithread);

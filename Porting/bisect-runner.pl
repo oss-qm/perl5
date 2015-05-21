@@ -53,7 +53,7 @@ push @paths, qw(/usr/local/lib /lib /usr/lib)
         unless $linux64;
 
 unless(GetOptions(\%options,
-                  'target=s', 'make=s', 'jobs|j=i', 'expect-pass=i',
+                  'target=s', 'make=s', 'jobs|j=i', 'crash', 'expect-pass=i',
                   'expect-fail' => sub { $options{'expect-pass'} = 0; },
                   'clean!', 'one-liner|e=s@', 'c', 'l', 'w', 'match=s',
                   'no-match=s' => sub {
@@ -100,7 +100,7 @@ if (defined $target && $target =~ /\.t\z/) {
         die_255("$0: Test-case targets can't be run with --$_")
             if $options{$_};
     }
-    die_255("$0: Test-case targets can't be combined with an explict test")
+    die_255("$0: Test-case targets can't be combined with an explicit test")
         if @ARGV;
 
     # Needing this unless is a smell suggesting that this implementation of
@@ -139,25 +139,27 @@ bisect.pl - use git bisect to pinpoint changes
 
 =head1 SYNOPSIS
 
-    # When did this become an error?
-    .../Porting/bisect.pl -e 'my $a := 2;'
-    # When did this stop being an error?
-    .../Porting/bisect.pl --expect-fail -e '1 // 2'
-    # When did this test start failing?
-    .../Porting/bisect.pl --target t/op/sort.t
-    # When were all lines matching this pattern removed from all files?
-    .../Porting/bisect.pl --match '\b(?:PL_)hash_seed_set\b'
-    # When was some line matching this pattern added to some file?
-    .../Porting/bisect.pl --expect-fail --match '\buseithreads\b'
-    # When did this test program stop exiting 0?
-    .../Porting/bisect.pl -- ./perl -Ilib ../test_prog.pl
-    # When did this first become valid syntax?
-    .../Porting/bisect.pl --target=miniperl --end=v5.10.0 \
-         --expect-fail -e 'my $a := 2;'
-    # What was the last revision to build with these options?
-    .../Porting/bisect.pl --test-build -Dd_dosuid
-    # When did this test program start generating errors from valgrind?
-    .../Porting/bisect.pl --valgrind ../test_prog.pl
+ # When did this become an error?
+ .../Porting/bisect.pl -e 'my $a := 2;'
+ # When did this stop being an error?
+ .../Porting/bisect.pl --expect-fail -e '1 // 2'
+ # When did this test start failing?
+ .../Porting/bisect.pl --target t/op/sort.t
+ # When were all lines matching this pattern removed from all files?
+ .../Porting/bisect.pl --match '\b(?:PL_)hash_seed_set\b'
+ # When was some line matching this pattern added to some file?
+ .../Porting/bisect.pl --expect-fail --match '\buseithreads\b'
+ # When did this test program stop exiting 0?
+ .../Porting/bisect.pl -- ./perl -Ilib ../test_prog.pl
+ # When did this test program start crashing (any signal or coredump)?
+ .../Porting/bisect.pl --crash -- ./perl -Ilib ../test_prog.pl
+ # When did this first become valid syntax?
+ .../Porting/bisect.pl --target=miniperl --end=v5.10.0 \
+      --expect-fail -e 'my $a := 2;'
+ # What was the last revision to build with these options?
+ .../Porting/bisect.pl --test-build -Dd_dosuid
+ # When did this test program start generating errors from valgrind?
+ .../Porting/bisect.pl --valgrind ../test_prog.pl
 
 =head1 DESCRIPTION
 
@@ -397,6 +399,13 @@ revision. The bisect run will find the first commit where it passes.
 
 =item *
 
+--crash
+
+Treat any non-crash as success, any crash as failure. (Crashing defined
+as exiting with a signal or a core dump.)
+
+=item *
+
 -D I<config_arg=value>
 
 =item *
@@ -582,7 +591,7 @@ F<Configure> is run, and C<C> and C<XS> code isn't patched until after
 F<miniperl> is built. If C<--all-fixups> is specified, all the fixups are
 done before running C<Configure>. In rare cases adding this may cause a
 bisect to abort, because an inapplicable patch or other fixup is attempted
-for a revision which would usually have already I<skip>ed. If this happens,
+for a revision which would usually have already I<skip>ped. If this happens,
 please report it as a bug, giving the OS and problem revision.
 
 =item *
@@ -624,7 +633,7 @@ file is fed to C<patch -p1> on standard input. For C<=~>, the patch is
 applied if no lines match the pattern.
 
 As the empty pattern in Perl is a special case (it matches the most recent
-sucessful match) which is not useful here, an the treatment of empty pattern
+successful match) which is not useful here, the treatment of an empty pattern
 is special-cased. C<I<filename> =~ //> applies the patch if filename is
 present. C<I<filename> !~ //> applies the patch if filename missing. This
 makes it easy to unconditionally apply patches to files, and to use a patch
@@ -1137,6 +1146,7 @@ sub run_report_and_exit {
     my $ret = run_with_options({setprgp => $options{setpgrp},
                                 timeout => $options{timeout},
                                }, @_);
+    $ret &= 0xff if $options{crash};
     report_and_exit(!$ret, 'zero exit from', 'non-zero exit from', "@_");
 }
 
@@ -3485,9 +3495,4 @@ sub apply_fixups {
     }
 }
 
-# Local variables:
-# cperl-indent-level: 4
-# indent-tabs-mode: nil
-# End:
-#
 # ex: set ts=8 sts=4 sw=4 et:

@@ -2,12 +2,12 @@
 
 BEGIN {
     chdir 't' if -d 't';
-    @INC = '../lib';
     require './test.pl';
+    set_up_inc('../lib');
 }
 use strict;
 use warnings;
-no warnings 'deprecated', 'experimental::autoderef';
+no warnings 'experimental::autoderef', 'experimental::refaliasing';
 use vars qw($data $array $values $hash $errpat);
 
 plan 'no_plan';
@@ -450,3 +450,20 @@ my $over_a_h = Foo::Overload::ArrayOnHash->new;
   like($@, $errpat, "Overload: ambiguous dereference");
   is($warn, '', "no warning issued"); $warn = '';
 }
+
+use feature 'refaliasing';
+my $a = 7;
+our %h;
+\$h{f} = \$a;
+($a, $b) = each \%h;
+is "$a $b", "f 7", 'each \%hash in list assignment';
+$a = 7;
+($a, $b) = (3, values \%h);
+is "$a $b", "3 7", 'values \%hash in list assignment';
+*a = sub { \@_ }->($a);
+$a = 7;
+($a, $b) = each \our @a;
+is "$a $b", "0 7", 'each \@array in list assignment';
+$a = 7;
+($a, $b) = (3, values \@a);
+is "$a $b", "3 7", 'values \@array in list assignment';

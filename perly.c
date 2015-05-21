@@ -19,10 +19,6 @@
  *	restriction.  This special exception was added by the Free
  *	Software Foundation in version 1.24 of Bison.
  *
- * Note that this file is also #included in madly.c, to allow compilation
- * of a second parser, Perl_madparse, that is identical to Perl_yyparse,
- * but which includes extra code for dumping the parse tree.
- * This is controlled by the PERL_IN_MADLY_C define.
  */
 
 #include "EXTERN.h"
@@ -93,6 +89,7 @@ do {								\
 static void
 yysymprint(pTHX_ PerlIO * const yyoutput, int yytype, const YYSTYPE * const yyvaluep)
 {
+    PERL_UNUSED_CONTEXT;
     if (yytype < YYNTOKENS) {
 	YYFPRINTF (yyoutput, "token %s (", yytname[yytype]);
 #   ifdef YYPRINT
@@ -143,9 +140,6 @@ yy_stack_print (pTHX_ const yy_parser *parser)
 		    : "(Nullop)"
 	    );
 	    break;
-#ifndef PERL_IN_MADLY_C
-	case toketype_i_tkval:
-#endif
 	case toketype_ival:
 	    PerlIO_printf(Perl_debug_log, " %8"IVdf, (IV)ps->val.ival);
 	    break;
@@ -240,13 +234,8 @@ S_clear_yystack(pTHX_  const yy_parser *parser)
 `----------*/
 
 int
-#ifdef PERL_IN_MADLY_C
-Perl_madparse (pTHX_ int gramtype)
-#else
 Perl_yyparse (pTHX_ int gramtype)
-#endif
 {
-    dVAR;
     int yystate;
     int yyn;
     int yyresult;
@@ -263,13 +252,6 @@ Perl_yyparse (pTHX_ int gramtype)
     /* The variable used to return semantic value and location from the
 	  action routines: ie $$.  */
     YYSTYPE yyval;
-
-#ifndef PERL_IN_MADLY_C
-#  ifdef PERL_MAD
-    if (PL_madskills)
-	return madparse(gramtype);
-#  endif
-#endif
 
     YYDPRINTF ((Perl_debug_log, "Starting parse\n"));
 
@@ -336,21 +318,8 @@ Perl_yyparse (pTHX_ int gramtype)
 
     /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
     if (parser->yychar == YYEMPTY) {
-	YYDPRINTF ((Perl_debug_log, "Reading a token: "));
-#ifdef PERL_IN_MADLY_C
-	parser->yychar = PL_madskills ? madlex() : yylex();
-#else
+	YYDPRINTF ((Perl_debug_log, "Reading a token:\n"));
 	parser->yychar = yylex();
-#endif
-
-/* perly.tab is shipped based on an ASCII system; if it were to be regenerated
- * on a platform that doesn't use ASCII, this translation back would need to be
- * removed */
-#  ifdef EBCDIC
-	if (parser->yychar >= 0 && parser->yychar < 255) {
-	    parser->yychar = NATIVE_TO_LATIN1(parser->yychar);
-	}
-#  endif
     }
 
     if (parser->yychar <= YYEOF) {
@@ -358,7 +327,16 @@ Perl_yyparse (pTHX_ int gramtype)
 	YYDPRINTF ((Perl_debug_log, "Now at end of input.\n"));
     }
     else {
-	yytoken = YYTRANSLATE (parser->yychar);
+        /* perly.tab is shipped based on an ASCII system, so need to index it
+         * with characters translated to ASCII.  Although it's not designed for
+         * this purpose, we can use NATIVE_TO_UNI here.  It returns its
+         * argument on ASCII platforms, and on EBCDIC translates native to
+         * ascii in the 0-255 range, leaving everything else unchanged.  This
+         * jibes with yylex() returning some bare characters in that range, but
+         * all tokens it returns are either 0, or above 255.  There could be a
+         * problem if NULs weren't 0, or were ever returned as raw chars by
+         * yylex() */
+        yytoken = YYTRANSLATE (NATIVE_TO_UNI(parser->yychar));
 	YYDSYMPRINTF ("Next token is", yytoken, &parser->yylval);
     }
 
@@ -433,26 +411,6 @@ Perl_yyparse (pTHX_ int gramtype)
     YY_REDUCE_PRINT (yyn);
 
     switch (yyn) {
-
-#ifdef PERL_IN_MADLY_C
-#  define IVAL(i) (i)->tk_lval.ival
-#  define PVAL(p) (p)->tk_lval.pval
-#  define TOKEN_GETMAD(a,b,c) token_getmad((a),(b),(c))
-#  define TOKEN_FREE(a) token_free(a)
-#  define OP_GETMAD(a,b,c) op_getmad((a),(b),(c))
-#  define IF_MAD(a,b) (a)
-#  define DO_MAD(a) a
-#  define MAD
-#else
-#  define IVAL(i) (i)
-#  define PVAL(p) (p)
-#  define TOKEN_GETMAD(a,b,c)
-#  define TOKEN_FREE(a)
-#  define OP_GETMAD(a,b,c)
-#  define IF_MAD(a,b) (b)
-#  define DO_MAD(a)
-#  undef MAD
-#endif
 
 /* contains all the rule actions; auto-generated from perly.y */
 #include "perly.act"
@@ -619,11 +577,5 @@ Perl_yyparse (pTHX_ int gramtype)
 }
 
 /*
- * Local variables:
- * c-indentation-style: bsd
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- *
  * ex: set ts=8 sts=4 sw=4 et:
  */

@@ -1,3 +1,9 @@
+perl (5.22.0~rc1-1) UNRELEASED; urgency=medium
+
+  * New upstream release candidate
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 21 May 2015 16:18:51 +0200
+
 perl (5.20.2-6) unstable; urgency=low
 
   * Remove two obsolete lintian overrides.

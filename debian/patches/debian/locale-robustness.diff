@@ -1,4 +1,4 @@
-From 13051e6eb3d5420cd08051d8437b5d56774ee6b0 Mon Sep 17 00:00:00 2001
+From ee113fa14f8debf79bf0f133ab0567cc64d07700 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 10 Apr 2015 10:19:51 +0300
 Subject: Make t/run/locale.t survive missing locales masked by LC_ALL
@@ -19,20 +19,20 @@ Patch-Name: debian/locale-robustness.diff
  1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/t/run/locale.t b/t/run/locale.t
-index 3483f02..ddf8382 100644
+index bd1a034..2105339 100644
 --- a/t/run/locale.t
 +++ b/t/run/locale.t
-@@ -24,6 +24,9 @@ my $have_strtod = $Config{d_strtod} eq 'define';
- my @locales = eval { find_locales( [ &LC_ALL, &LC_CTYPE, &LC_NUMERIC ] ) };
+@@ -27,6 +27,9 @@ my @locales = eval { find_locales( [ &LC_ALL, &LC_CTYPE, &LC_NUMERIC ],
+                                  ) };
  skip_all("no locales available") unless @locales;
  
 +# reset the locale environment
 +local @ENV{'LANG', (grep /^LC_/, keys %ENV)};
 +
  plan tests => &last;
- fresh_perl_is("for (qw(@locales)) {\n" . <<'EOF',
-     use POSIX qw(locale_h);
-@@ -39,9 +42,6 @@ EOF
+ 
+ my $non_C_locale;
+@@ -58,9 +61,6 @@ EOF
  SKIP: {
      skip("Windows stores locale defaults in the registry", 1 )
                                                              if $^O eq 'MSWin32';
@@ -42,10 +42,10 @@ index 3483f02..ddf8382 100644
      fresh_perl_is("for (qw(@locales)) {\n" . <<'EOF',
          use POSIX qw(locale_h);
          use locale;
-@@ -256,7 +256,6 @@ EOF
+@@ -348,7 +348,6 @@ EOF
  
-     for ($different) {
- 	local $ENV{LC_NUMERIC} = $_;
+     {
+ 	local $ENV{LC_NUMERIC} = $different;
 -	local $ENV{LC_ALL}; # so it never overrides LC_NUMERIC
  	fresh_perl_is(<<"EOF",
  	    use POSIX qw(locale_h);

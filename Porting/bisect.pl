@@ -225,7 +225,7 @@ system 'git', 'bisect', 'run', $^X, $runner, @ARGV and die;
 END {
     my $end_time = time;
 
-    printf "That took %d seconds\n", $end_time - $start_time
+    printf "That took %d seconds.\n", $end_time - $start_time
         if defined $start_time;
 }
 
@@ -235,9 +235,4 @@ Documentation for this is in bisect-runner.pl
 
 =cut
 
-# Local variables:
-# cperl-indent-level: 4
-# indent-tabs-mode: nil
-# End:
-#
 # ex: set ts=8 sts=4 sw=4 et:
