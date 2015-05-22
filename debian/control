@@ -286,8 +286,6 @@ Provides: libpod-parser-perl,
  libhttp-tiny-perl,
  libcpan-meta-requirements-perl,
  libexperimental-perl,
- libtest-use-ok-perl,
- libtest-tester-perl,
 Description: Core Perl modules
  Architecture independent Perl modules.  These modules are part of Perl and
  required if the `perl' package is installed.

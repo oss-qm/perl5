@@ -28,6 +28,11 @@ require 'lib/deprecate.pm';
 { 
 	no warnings 'once';
 	%deprecated = reverse %deprecate::DEBIAN_PACKAGES;
+	# These names are being deprecated by Debian rather than upstream
+	# since they have been merged into libtest-simple-perl
+	# See <https://lists.debian.org/debian-perl/2015/04/msg00022.html>.
+	$deprecated{'libtest-use-ok-perl'} = 1;
+	$deprecated{'libtest-tester-perl'} = 1;
 }
 
 # list special cases of version numbers that are OK here
