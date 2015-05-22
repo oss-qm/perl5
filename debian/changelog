@@ -2,6 +2,8 @@ perl (5.22.0~rc1-1) UNRELEASED; urgency=medium
 
   * New upstream release candidate
     - libperl5.20 becomes libperl5.22
+    - update Breaks/Provides/Replaces to reflect changes to
+      dual-lived packages
 
  -- Dominic Hargreaves <dom@earth.li>  Thu, 21 May 2015 16:18:51 +0200
 
