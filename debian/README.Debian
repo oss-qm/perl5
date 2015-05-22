@@ -6,7 +6,7 @@ Perl Packages for Debian
   perl-modules     - Core Perl modules.
   perl-doc         - Perl documentation.
   perl-debug       - Debug-enabled Perl interpreter.
-  libperl5.20      - Shared Perl library.
+  libperl5.22      - Shared Perl library.
   libperl-dev      - Perl library: development files.
 
 To provide a minimal working perl, the ``perl-base'' package provides

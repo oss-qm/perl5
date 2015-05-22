@@ -85,7 +85,7 @@ Description: debug-enabled Perl interpreter
  than perl programs, which may be traced/debugged using the standard
  perl binary using the -d switch (see perldebug(1)).
 
-Package: libperl5.20
+Package: libperl5.22
 Section: libs
 Priority: optional
 Architecture: any
@@ -100,7 +100,7 @@ Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: perl (= ${binary:Version}), libperl5.20 (= ${binary:Version}),
+Depends: perl (= ${binary:Version}), libperl5.22 (= ${binary:Version}),
  libc6-dev | libc-dev
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter.
