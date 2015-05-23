@@ -336,11 +336,11 @@ endif
 	    -depth -type d -empty | xargs -r rmdir
 
 	# want these in /etc since /usr may not be writable
-	mkdir -p $(build)/perl-modules/etc/perl/CPAN \
-	    $(build)/perl-modules/etc/perl/Net
+	mkdir -p $(build)/perl/etc/perl/CPAN \
+	    $(build)/perl/etc/perl/Net
 
 	# default configuration for libnet
-	cp debian/libnet.cfg $(build)/perl-modules/etc/perl/Net
+	cp debian/libnet.cfg $(build)/perl/etc/perl/Net
 
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -n9

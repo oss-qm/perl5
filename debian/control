@@ -329,7 +329,7 @@ Breaks: perl-doc (<< ${Upstream-Version}-1),
  ftpmirror (<< 1.96+dfsg-13)
 Replaces: perl-base (<< 5.10.1-12),
  perl-doc (<< 5.8.0-1),
- perl-modules (<< 5.8.1-1),
+ perl-modules (<< 5.20.6-ma3),
  libarchive-tar-perl (<= 1.38-2),
  libdigest-md5-perl,
  libmime-base64-perl,
