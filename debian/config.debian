@@ -99,8 +99,8 @@ eval /bin/bash Configure			\
     -Dcccdlflags=-fPIC				\
     -Darchname=$gnu_type			\
     -Dprefix=/usr				\
-    -Dprivlib=/usr/share/perl/$ver		\
-    -Darchlib=/usr/lib/$archtriplet/perl/$ver		\
+    -Dprivlib=/usr/share/perl/$fullver		\
+    -Darchlib=/usr/lib/$archtriplet/perl/$fullver		\
     -Dvendorprefix=/usr				\
     -Dvendorlib=/usr/share/perl5		\
     -Dvendorarch=/usr/lib/$archtriplet/perl5/$ver			\
