@@ -58,7 +58,7 @@ Description: minimal Perl system
  .
  This package provides a Perl interpreter and the small subset of the
  standard run-time library required to perform basic tasks. For a full
- Perl installation, install "perl" (and its dependencies, "perl-modules"
+ Perl installation, install "perl" (and its dependencies, "perl-modules-5.20"
  and "perl-doc").
 
 Package: perl-doc
@@ -105,7 +105,7 @@ Depends: perl (= ${binary:Version}), libperl5.20 (= ${binary:Version}),
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter.
 
-Package: perl-modules
+Package: perl-modules-5.20
 Priority: standard
 Architecture: all
 Multi-Arch: foreign
@@ -129,7 +129,8 @@ Suggests: libb-lint-perl,
  libobject-accessor-perl
 Conflicts: defoma (<< 0.11.12),
  mono-gac (<< 2.10.8.1-3)
-Breaks: libpod-parser-perl (<< 1.62),
+Breaks: perl-modules,
+ libpod-parser-perl (<< 1.62),
  perl (<< ${Upstream-Version}~),
  pdl (<< 1:2.007-4),
  libansicolor-perl (<< 4.02),
@@ -191,7 +192,8 @@ Breaks: libpod-parser-perl (<< 1.62),
  shorewall-core (<< 4.6.4.3-2),
  patcher (<< 0.0.20040521-6.1),
  cli-common (<< 0.9+nmu1),
-Replaces: libpod-parser-perl,
+Replaces: perl-modules,
+ libpod-parser-perl,
  libansicolor-perl,
  libnet-perl,
  libattribute-handlers-perl,
@@ -238,7 +240,8 @@ Replaces: libpod-parser-perl,
  libcpan-meta-requirements-perl,
  libexperimental-perl,
  libpackage-constants-perl,
-Provides: libpod-parser-perl,
+Provides: perl-modules,
+ libpod-parser-perl,
  libansicolor-perl,
  libnet-perl,
  libattribute-handlers-perl,
@@ -288,15 +291,15 @@ Description: Core Perl modules
  .
  Note that this package only exists to save archive space and should be
  considered an internal implementation detail of the `perl' package.
- Other packages should not depend on `perl-modules' directly, they
- should use `perl' (which depends on `perl-modules') instead.
+ Other packages should not depend on `perl-modules-5.20' directly, they
+ should use `perl' (which depends on `perl-modules-5.20') instead.
 
 Package: perl
 Priority: standard
 Architecture: any
 Multi-Arch: allowed
 Pre-Depends: dpkg (>= 1.17.17)
-Depends: perl-base (= ${binary:Version}), perl-modules (>= ${source:Version}), ${shlibs:Depends}
+Depends: perl-base (= ${binary:Version}), perl-modules-5.20 (>= ${source:Version}), ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
 Breaks: perl-doc (<< ${Upstream-Version}-1),
  libdigest-md5-perl (<< 2.53),
