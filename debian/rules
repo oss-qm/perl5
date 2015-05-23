@@ -288,9 +288,9 @@ endif
 	    $(build)/perl/usr/share/man/man1/psed.1
 
 	# the diagnostics module needs perldiag.pod
-	mkdir $(build)/perl-modules/usr/share/perl/$(fullversion)/pod
+	mkdir $(build)/perl-modules-$(version)/usr/share/perl/$(fullversion)/pod
 	mv $(build)/perl-doc/usr/share/perl/$(fullversion)/pod/perldiag.pod \
-	    $(build)/perl-modules/usr/share/perl/$(fullversion)/pod
+	    $(build)/perl-modules-$(version)/usr/share/perl/$(fullversion)/pod
 
 	# copy dummy perldoc to perl package
 	cp debian/perl.perldoc $(build)/perl/usr/bin/perldoc
@@ -332,7 +332,7 @@ endif
 	done
 
 	# remove empty directories left after moving module docs
-	find $(build)/perl-modules/usr/share/perl/$(fullversion) \
+	find $(build)/perl-modules-$(version)/usr/share/perl/$(fullversion) \
 	    -depth -type d -empty | xargs -r rmdir
 
 	# want these in /etc since /usr may not be writable
