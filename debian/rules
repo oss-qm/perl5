@@ -26,8 +26,8 @@ packages    := $(shell sed -n 's/^Package: *\(.*\)/\1/p' debian/control)
 tmp	    = debian/tmp
 bin         = $(tmp)/usr/bin
 man         = $(tmp)/usr/share/man
-lib         = $(tmp)/usr/lib/$(archtriplet)/perl/$(version)
-share       = $(tmp)/usr/share/perl/$(version)
+lib         = $(tmp)/usr/lib/$(archtriplet)/perl/$(fullversion)
+share       = $(tmp)/usr/share/perl/$(fullversion)
 build	    = debian/build
 debug       = $(build)/perl-debug/usr/lib/debug
 patches     = debian/patches/series
@@ -226,10 +226,6 @@ endif
 	ln -s libperl.so.$(fullversion) $(tmp)/usr/lib/$(archtriplet)/libperl.so.$(version)
 	ln -s libperl.so.$(version) $(tmp)/usr/lib/$(archtriplet)/libperl.so
 
-	# move to full version (symlinks created in perl-base below)
-	mv $(lib) $(tmp)/usr/lib/$(archtriplet)/perl/$(fullversion)
-	mv $(share) $(tmp)/usr/share/perl/$(fullversion)
-
 ifeq ($(installtype),static)
 	cp perl.static $(bin)/perl
 endif
@@ -293,10 +289,6 @@ ifeq ($(installtype),static)
 else
 	rm $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static
 endif
-
-	# create symlinks to match @INC
-	ln -s $(fullversion) $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(version)
-	ln -s $(fullversion) $(build)/perl-modules-$(version)/usr/share/perl/$(version)
 
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
