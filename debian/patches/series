@@ -36,3 +36,4 @@ fixes/podman-utc-docs.diff
 fixes/podman-empty-date.diff
 fixes/podman-pipe.diff
 debian/pod2man-customized.diff
+debian/makemaker_customized.diff
