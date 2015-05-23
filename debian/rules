@@ -243,7 +243,12 @@ endif
 	done
 
 	# ensure that all file have been moved from debian/tmp
-	test `find $(tmp) ! -type d | wc -l` -eq 0
+	FILESLEFT=`find $(tmp) ! -type d`; \
+	 if [ -n "$$FILESLEFT" ]; then \
+		echo "error:files left in debian/tmp:"; \
+		echo "$$FILESLEFT"; \
+	    exit 1; \
+	 fi
 
 	# move pod out of -base modules and into .pod files in -doc
 	./perl.static debian/splitdoc $(build)/perl-base
