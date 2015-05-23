@@ -14,10 +14,12 @@ gnu_type=${DEB_HOST_GNU_TYPE:-$(dpkg-architecture -qDEB_HOST_GNU_TYPE)}
 optimize=-O2
 debugging=-g
 
+archtriplet=`dpkg-architecture -qDEB_HOST_MULTIARCH`
+
 case "$1" in
     --static) # static perl
     	build_type=static
-	opts="-Uuseshrplib";;
+	opts="-Uuseshrplib -Dotherlibdirs=\"/usr/lib/$archtriplet/perl-base\"";;
 
     --debug) # debugperl
     	build_type=debug
@@ -84,8 +86,6 @@ if which dpkg-buildflags >/dev/null 2>&1; then
     ldflags="$ldflags $(dpkg-buildflags --get LDFLAGS)"
 fi
 
-archtriplet=`dpkg-architecture -qDEB_HOST_MULTIARCH`
-
 # post-configure tweaks
 cp debian/config.over .
 
@@ -99,8 +99,8 @@ eval /bin/bash Configure			\
     -Dcccdlflags=-fPIC				\
     -Darchname=$gnu_type			\
     -Dprefix=/usr				\
-    -Dprivlib=/usr/share/perl/$ver		\
-    -Darchlib=/usr/lib/$archtriplet/perl/$ver		\
+    -Dprivlib=/usr/share/perl/$fullver		\
+    -Darchlib=/usr/lib/$archtriplet/perl/$fullver		\
     -Dvendorprefix=/usr				\
     -Dvendorlib=/usr/share/perl5		\
     -Dvendorarch=/usr/lib/$archtriplet/perl5/$ver			\

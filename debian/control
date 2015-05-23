@@ -25,7 +25,7 @@ Breaks: autoconf2.13 (<< 2.13-45),
  perl (<< ${Upstream-Version}~),
  perl-modules (<< ${Upstream-Version}~),
  pdl (<< 1:2.007-4),
- libfile-spec-perl (<< 3.5600),
+ libfile-spec-perl (<< 3.56),
  libxsloader-perl (<< 0.20),
  libmarc-charset-perl (<< 1.2),
  libsocket-perl (<< 2.018),
@@ -58,7 +58,7 @@ Description: minimal Perl system
  .
  This package provides a Perl interpreter and the small subset of the
  standard run-time library required to perform basic tasks. For a full
- Perl installation, install "perl" (and its dependencies, "perl-modules"
+ Perl installation, install "perl" (and its dependencies, "perl-modules-5.22"
  and "perl-doc").
 
 Package: perl-doc
@@ -89,9 +89,75 @@ Package: libperl5.22
 Section: libs
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, perl-base (= ${binary:Version})
-Replaces: perl-base (<< 5.20.2-5)
-Breaks: perl-base (<< 5.20.2-5)
+Depends: ${shlibs:Depends}, perl-modules-5.22 (>= ${source:Version})
+Breaks: perl-base (<< 5.20.2-5),
+ libdigest-md5-perl (<< 2.54),
+ libmime-base64-perl (<< 3.15),
+ libtime-hires-perl (<< 1.9726),
+ libstorable-perl (<< 2.53),
+ libdigest-sha-perl (<< 5.95),
+ libsys-syslog-perl (<< 0.33),
+ libcompress-zlib-perl (<< 2.068),
+ libcompress-raw-zlib-perl (<< 2.068),
+ libcompress-raw-bzip2-perl (<< 2.068),
+ libio-compress-zlib-perl (<< 2.068),
+ libio-compress-bzip2-perl (<< 2.068),
+ libio-compress-base-perl (<< 2.068),
+ libio-compress-perl (<< 2.068),
+ libthreads-perl (<< 2.01),
+ libthreads-shared-perl (<< 1.48),
+ libtime-piece-perl (<< 1.29),
+ libencode-perl (<< 2.72),
+ mrtg (<< 2.16.3-3.1),
+ libhtml-template-compiled-perl (<< 0.95-1),
+ libperl-apireference-perl (<< 0.09-1),
+ dh-make-perl (<< 0.73-1),
+ libregexp-optimizer-perl (<< 0.15-3),
+ libxml-parser-lite-tree-perl (<< 0.14-1),
+ libyaml-perl (<< 0.73-1),
+ libload-perl (<< 0.20-1),
+ libsoap-lite-perl (<< 0.712-4),
+ libnet-jifty-perl (<< 0.14-1),
+ ftpmirror (<< 1.96+dfsg-13)
+Replaces: perl-base (<< 5.20.2-6+ma3), perl (<< 5.20.2-6+ma3),
+ perl-doc (<< 5.8.0-1),
+ libarchive-tar-perl (<= 1.38-2),
+ libdigest-md5-perl,
+ libmime-base64-perl,
+ libtime-hires-perl,
+ libstorable-perl,
+ libdigest-sha-perl,
+ libtime-piece-perl,
+ libsys-syslog-perl,
+ libcompress-zlib-perl,
+ libcompress-raw-zlib-perl,
+ libcompress-raw-bzip2-perl,
+ libio-compress-zlib-perl,
+ libio-compress-bzip2-perl,
+ libio-compress-base-perl,
+ libio-compress-perl,
+ libthreads-perl,
+ libthreads-shared-perl,
+ libmodule-corelist-perl (<< 2.14-2),
+ libencode-perl
+Provides: libdigest-md5-perl,
+ libmime-base64-perl,
+ libtime-hires-perl,
+ libstorable-perl,
+ libdigest-sha-perl,
+ libsys-syslog-perl,
+ libcompress-zlib-perl,
+ libcompress-raw-zlib-perl,
+ libcompress-raw-bzip2-perl,
+ libio-compress-zlib-perl,
+ libio-compress-bzip2-perl,
+ libio-compress-base-perl,
+ libio-compress-perl,
+ libthreads-perl,
+ libthreads-shared-perl,
+ libtime-piece-perl,
+ libencode-perl,
+Multi-Arch: same
 Description: shared Perl library
  This package contains the shared Perl library, used by applications
  which embed a Perl interpreter.
@@ -105,7 +171,7 @@ Depends: perl (= ${binary:Version}), libperl5.22 (= ${binary:Version}),
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter.
 
-Package: perl-modules
+Package: perl-modules-5.22
 Priority: standard
 Architecture: all
 Multi-Arch: foreign
@@ -129,7 +195,8 @@ Suggests: libb-lint-perl,
  libobject-accessor-perl
 Conflicts: defoma (<< 0.11.12),
  mono-gac (<< 2.10.8.1-3)
-Breaks: libpod-parser-perl (<< 1.63),
+Breaks: perl-modules,
+ libpod-parser-perl (<< 1.63),
  perl (<< ${Upstream-Version}~),
  pdl (<< 1:2.007-4),
  libansicolor-perl (<< 4.03),
@@ -160,7 +227,7 @@ Breaks: libpod-parser-perl (<< 1.63),
  libparent-perl (<< 0.232),
  libautodie-perl (<< 2.26),
  libthread-queue-perl (<< 3.05),
- libfile-spec-perl (<< 3.5600),
+ libfile-spec-perl (<< 3.56),
  libtime-local-perl (<< 1.2300),
  podlators-perl (<< 2.3.1),
  libunicode-collate-perl (<< 1.12),
@@ -193,7 +260,9 @@ Breaks: libpod-parser-perl (<< 1.63),
  cli-common (<< 0.9+nmu1),
  libtest-use-ok-perl (<< 0.16),
  libtest-tester-perl (<< 0.114),
-Replaces: libpod-parser-perl,
+Replaces: perl-modules,
+ perl-base (<< 5.20.2-6+ma3),
+ libpod-parser-perl,
  libansicolor-perl,
  libnet-perl,
  libattribute-handlers-perl,
@@ -242,7 +311,8 @@ Replaces: libpod-parser-perl,
  libpackage-constants-perl,
  libtest-use-ok-perl,
  libtest-tester-perl,
-Provides: libpod-parser-perl,
+Provides: perl-modules,
+ libpod-parser-perl,
  libansicolor-perl,
  libnet-perl,
  libattribute-handlers-perl,
@@ -292,85 +362,19 @@ Description: Core Perl modules
  .
  Note that this package only exists to save archive space and should be
  considered an internal implementation detail of the `perl' package.
- Other packages should not depend on `perl-modules' directly, they
- should use `perl' (which depends on `perl-modules') instead.
+ Other packages should not depend on `perl-modules-5.22' directly, they
+ should use `perl' (which depends on `perl-modules-5.22') instead.
 
 Package: perl
 Priority: standard
 Architecture: any
 Multi-Arch: allowed
 Pre-Depends: dpkg (>= 1.17.17)
-Depends: perl-base (= ${binary:Version}), perl-modules (>= ${source:Version}), ${shlibs:Depends}
+Depends: perl-base (= ${binary:Version}), perl-modules-5.22 (>= ${source:Version}), libperl5.22 (= ${binary:Version}, ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
-Breaks: perl-doc (<< ${Upstream-Version}-1),
- libdigest-md5-perl (<< 2.54),
- libmime-base64-perl (<< 3.15),
- libtime-hires-perl (<< 1.9726),
- libstorable-perl (<< 2.53),
- libdigest-sha-perl (<< 5.95),
- libsys-syslog-perl (<< 0.33),
- libcompress-zlib-perl (<< 2.068),
- libcompress-raw-zlib-perl (<< 2.068),
- libcompress-raw-bzip2-perl (<< 2.068),
- libio-compress-zlib-perl (<< 2.068),
- libio-compress-bzip2-perl (<< 2.068),
- libio-compress-base-perl (<< 2.068),
- libio-compress-perl (<< 2.068),
- libthreads-perl (<< 2.01),
- libthreads-shared-perl (<< 1.48),
- libtime-piece-perl (<< 1.29),
- libencode-perl (<< 2.72),
- mrtg (<< 2.16.3-3.1),
- libhtml-template-compiled-perl (<< 0.95-1),
- libperl-apireference-perl (<< 0.09-1),
- dh-make-perl (<< 0.73-1),
- libregexp-optimizer-perl (<< 0.15-3),
- libxml-parser-lite-tree-perl (<< 0.14-1),
- libyaml-perl (<< 0.73-1),
- libload-perl (<< 0.20-1),
- libsoap-lite-perl (<< 0.712-4),
- libnet-jifty-perl (<< 0.14-1),
- ftpmirror (<< 1.96+dfsg-13)
-Replaces: perl-base (<< 5.10.1-12),
- perl-doc (<< 5.8.0-1),
- perl-modules (<< 5.8.1-1),
- libarchive-tar-perl (<= 1.38-2),
- libdigest-md5-perl,
- libmime-base64-perl,
- libtime-hires-perl,
- libstorable-perl,
- libdigest-sha-perl,
- libtime-piece-perl,
- libsys-syslog-perl,
- libcompress-zlib-perl,
- libcompress-raw-zlib-perl,
- libcompress-raw-bzip2-perl,
- libio-compress-zlib-perl,
- libio-compress-bzip2-perl,
- libio-compress-base-perl,
- libio-compress-perl,
- libthreads-perl,
- libthreads-shared-perl,
- libmodule-corelist-perl (<< 2.14-2),
- libencode-perl,
-Provides: data-dumper, perl5,
- libdigest-md5-perl,
- libmime-base64-perl,
- libtime-hires-perl,
- libstorable-perl,
- libdigest-sha-perl,
- libsys-syslog-perl,
- libcompress-zlib-perl,
- libcompress-raw-zlib-perl,
- libcompress-raw-bzip2-perl,
- libio-compress-zlib-perl,
- libio-compress-bzip2-perl,
- libio-compress-base-perl,
- libio-compress-perl,
- libthreads-perl,
- libthreads-shared-perl,
- libtime-piece-perl,
- libencode-perl,
+Breaks: perl-doc (<< ${Upstream-Version}-1)
+Replaces: perl-modules (<< 5.20.6+ma3)
+Provides: perl5, data-dumper
 Recommends: netbase, rename
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
  make

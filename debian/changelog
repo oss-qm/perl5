@@ -1,10 +1,25 @@
 perl (5.22.0~rc2-1) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * New upstream release candidate
     - libperl5.20 becomes libperl5.22
     - update Breaks/Provides/Replaces to reflect changes to
       dual-lived packages
     - activate the perl-major-upgrade trigger
+  * Merge multiarch changes from Niko Tyni as detailed below
+
+  [ Niko Tyni ]
+  * Make the libperl5.22 package co-installable between different
+    major versions and architectures.
+    + perl-modules is renamed to perl-modules-5.22
+    + the standard library is now in libperl5.22 + perl-modules-5.22
+      instead of perl + perl-modules
+    + perl-base has a copy of the essential parts of the standard library
+      (~3M) in /usr/lib/<triplet>/perl-base
+    + libperl5.22 includes a thin /usr/bin/perl5.22-<triplet>, linked
+      against the shared libperl.
+  * change @INC to contain the full upstream version instead of the
+    short one (5.22.0 vs. 5.22) for the core paths (privlib and archlib)
 
  -- Dominic Hargreaves <dom@earth.li>  Thu, 21 May 2015 16:18:51 +0200
 

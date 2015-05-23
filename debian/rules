@@ -26,8 +26,8 @@ packages    := $(shell sed -n 's/^Package: *\(.*\)/\1/p' debian/control)
 tmp	    = debian/tmp
 bin         = $(tmp)/usr/bin
 man         = $(tmp)/usr/share/man
-lib         = $(tmp)/usr/lib/$(archtriplet)/perl/$(version)
-share       = $(tmp)/usr/share/perl/$(version)
+lib         = $(tmp)/usr/lib/$(archtriplet)/perl/$(fullversion)
+share       = $(tmp)/usr/share/perl/$(fullversion)
 build	    = debian/build
 debug       = $(build)/perl-debug/usr/lib/debug
 patches     = debian/patches/series
@@ -97,6 +97,10 @@ perl.static:
 	# for the build log
 	./perl.static -Ilib -V
 
+	# save these for the perl-base package
+	mv lib/Config.pm lib/Config.pm.static
+	mv lib/Config_heavy.pl lib/Config_heavy.pl.static
+
 perl.debug:
 	$(checkdir)
 	rm -f libperl.so* # must be built last
@@ -133,11 +137,17 @@ install-stamp: build-stamp
 	rm -rf $(tmp) $(build)
 
 	$(MAKE) install DESTDIR="$(tmp)"
+
+	# these end up in the wrong place
+	mv $(share)/Config.pm.static $(lib)
+	mv $(share)/Config_heavy.pl.static $(lib)
+
 	# switch man extensions to 1p and 3pm for vendor module installs
 	./perl.static -i -p \
 	    -e 's/^(man1ext=).*/$$1'\''1p'\''/;' \
 	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
-		$(lib)/Config.pm $(lib)/Config_heavy.pl
+		$(lib)/Config.pm $(lib)/Config_heavy.pl \
+		$(lib)/Config.pm.static $(lib)/Config_heavy.pl.static
 
 	# rip away CGI::Fast, which has a separate source package now
 	rm -f $(share)/CGI/Fast.pm $(man)/man3/CGI::Fast.3perl
@@ -146,7 +156,7 @@ ifeq (,$(perlabi))
 else
 	# add \$Config{debian_abi}
 	sed -i -e "/version =>/i\    debian_abi => '$(perlabi)'," \
-		$(lib)/Config.pm
+		$(lib)/Config.pm $(lib)/Config.pm.static
 endif
 
 	# avoid exposing the point release in libperl names, to
@@ -154,7 +164,8 @@ endif
 	# see #759989
 	./perl.static -i -p \
 	    -e 's/^(libperl='\''libperl\.so)\.$(fullversion)'\''/$$1.$(version)'\''/' \
-		$(lib)/Config.pm $(lib)/Config_heavy.pl
+		$(lib)/Config.pm $(lib)/Config_heavy.pl \
+		$(lib)/Config.pm.static $(lib)/Config_heavy.pl.static
 
 	# remove dpkg-buildflags effects from %Config
 	# see #657853
@@ -164,12 +175,14 @@ endif
 			case "$$flag" in -fstack-protector) ;; \
 			     *) ./perl.static -i -pe "/^(cc|cpp)flags/ and \
 			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
-		            $(lib)/Config.pm $(lib)/Config_heavy.pl ;; \
+		            $(lib)/Config.pm $(lib)/Config_heavy.pl \
+		            $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ;; \
 		    esac; done; \
 		for flag in $(shell dpkg-buildflags --get LDFLAGS); do \
 			./perl.static -i -pe "/^ld(dl)?flags/ and \
 			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
-		          $(lib)/Config.pm $(lib)/Config_heavy.pl ; \
+		          $(lib)/Config.pm $(lib)/Config_heavy.pl \
+		          $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ; \
 		done; \
 	fi
 
@@ -213,10 +226,6 @@ endif
 	ln -s libperl.so.$(fullversion) $(tmp)/usr/lib/$(archtriplet)/libperl.so.$(version)
 	ln -s libperl.so.$(version) $(tmp)/usr/lib/$(archtriplet)/libperl.so
 
-	# move to full version (symlinks created in perl-base below)
-	mv $(lib) $(tmp)/usr/lib/$(archtriplet)/perl/$(fullversion)
-	mv $(share) $(tmp)/usr/share/perl/$(fullversion)
-
 ifeq ($(installtype),static)
 	cp perl.static $(bin)/perl
 endif
@@ -243,21 +252,49 @@ endif
 	done
 
 	# ensure that all file have been moved from debian/tmp
-	test `find $(tmp) ! -type d | wc -l` -eq 0
+	FILESLEFT=`find $(tmp) ! -type d`; \
+	 if [ -n "$$FILESLEFT" ]; then \
+		echo "error:files left in debian/tmp:"; \
+		echo "$$FILESLEFT"; \
+	    exit 1; \
+	 fi
 
 	# move pod out of -base modules and into .pod files in -doc
 	./perl.static debian/splitdoc $(build)/perl-base
 
-	# create symlinks to match @INC
-	ln -s $(fullversion) $(build)/perl-base/usr/lib/$(archtriplet)/perl/$(version)
-	ln -s $(fullversion) $(build)/perl-base/usr/share/perl/$(version)
+	# copy the essential parts of the standard library into a perl-base specific path
+	for d in $(build)/perl-base/usr/lib/$(archtriplet)/perl/$(fullversion) \
+	         $(build)/perl-base/usr/share/perl/$(fullversion); do \
+	    (cd $$d && find . -print0 | \
+	      cpio -0vdump $(srcdir)/$(build)/perl-base/usr/lib/$(archtriplet)/perl-base); \
+	done
+	# then move the original ones into libperl5.xx and perl-modules-5.xx
+	(cd $(build)/perl-base && \
+	 find usr/lib/$(archtriplet)/perl/$(fullversion) -print0 | \
+	      cpio -0vdump $(srcdir)/$(build)/libperl$(version); \
+	     rm -rf usr/lib/$(archtriplet)/perl/$(fullversion); \
+	 find usr/share/perl/$(fullversion) -print0 | \
+	      cpio -0vdump $(srcdir)/$(build)/perl-modules-$(version); \
+	     rm -rf usr/share/perl/$(fullversion); \
+	 )
+
+	mkdir -p $(build)/libperl$(version)/usr/bin
+	cp -p perl $(build)/libperl$(version)/usr/bin/perl$(version)-$(archtriplet)
+
+ifeq ($(installtype),static)
+	# make the static configuration available to /usr/bin/perl
+	mkdir -p $(build)/perl-base/usr/lib/$(archtriplet)/perl-base
+	mv $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config.pm
+	mv $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static $(build)/perl-base/usr/lib/$(archtriplet)/perl-base/Config_heavy.pl
+else
+	rm $(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/$(fullversion)/Config.pm.static $(build)/perl/usr/lib/$(archtriplet)/perl/$(fullversion)/Config_heavy.pl.static
+endif
 
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	# Verify that perl-base stays self contained
 
-	( shopt -s globstar; cd $(build)/perl-base; \
-	  find `grep -v '^#' $(srcdir)/debian/perl-base.files` ! -type d ) | \
+	( cd $(build)/perl-base && find . -name '*.p[hlm]' ) | \
 	  ./perl.static $(srcdir)/debian/check-require $(build)/perl-base
 endif
 endif
@@ -283,9 +320,9 @@ endif
 	    $(build)/perl/usr/share/man/man1/psed.1
 
 	# the diagnostics module needs perldiag.pod
-	mkdir $(build)/perl-modules/usr/share/perl/$(fullversion)/pod
+	mkdir $(build)/perl-modules-$(version)/usr/share/perl/$(fullversion)/pod
 	mv $(build)/perl-doc/usr/share/perl/$(fullversion)/pod/perldiag.pod \
-	    $(build)/perl-modules/usr/share/perl/$(fullversion)/pod
+	    $(build)/perl-modules-$(version)/usr/share/perl/$(fullversion)/pod
 
 	# copy dummy perldoc to perl package
 	cp debian/perl.perldoc $(build)/perl/usr/bin/perldoc
@@ -327,15 +364,15 @@ endif
 	done
 
 	# remove empty directories left after moving module docs
-	find $(build)/perl-modules/usr/share/perl/$(fullversion) \
+	find $(build)/perl-modules-$(version)/usr/share/perl/$(fullversion) \
 	    -depth -type d -empty | xargs -r rmdir
 
 	# want these in /etc since /usr may not be writable
-	mkdir -p $(build)/perl-modules/etc/perl/CPAN \
-	    $(build)/perl-modules/etc/perl/Net
+	mkdir -p $(build)/perl/etc/perl/CPAN \
+	    $(build)/perl/etc/perl/Net
 
 	# default configuration for libnet
-	cp debian/libnet.cfg $(build)/perl-modules/etc/perl/Net
+	cp debian/libnet.cfg $(build)/perl/etc/perl/Net
 
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -n9
@@ -457,6 +494,9 @@ endif
 		chmod 755 $(build)/$$p/DEBIAN/$$c; \
 	    done; \
 	    ! test -f $(build)/$$p/DEBIAN/shlibs || chmod 644 $(build)/$$p/DEBIAN/shlibs; \
+	    test -d $(build)/$$p/etc && find $(build)/$$p/etc -type f \
+		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
+	    chmod 644 $(build)/$$p/DEBIAN/conffiles; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
