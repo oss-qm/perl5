@@ -1,4 +1,4 @@
-From 71a1a849be36f1662dcdc152d27f0a9fca9cded7 Mon Sep 17 00:00:00 2001
+From 2ec1f207c2a4f32c4f19069f6deb4c4bff9ddd24 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Set umask approproately for site install directories

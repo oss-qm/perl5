@@ -1,4 +1,4 @@
-From ee113fa14f8debf79bf0f133ab0567cc64d07700 Mon Sep 17 00:00:00 2001
+From 2363adeba5922984962e12fa69c1ab2faf7034b9 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 10 Apr 2015 10:19:51 +0300
 Subject: Make t/run/locale.t survive missing locales masked by LC_ALL

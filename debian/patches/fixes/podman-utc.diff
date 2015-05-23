@@ -1,4 +1,4 @@
-From 5d6c955b4cbd923ab6959aa64507931fa51f70be Mon Sep 17 00:00:00 2001
+From 7cc1809964965331c8b107f0a8e6e73ed8ea184c Mon Sep 17 00:00:00 2001
 From: Chris Lamb <lamby@debian.org>
 Date: Wed, 15 Apr 2015 20:42:53 -0700
 Subject: Make the embedded date from Pod::Man reproducible
