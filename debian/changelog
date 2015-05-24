@@ -24,6 +24,9 @@ perl (5.22.0~rc2-1) UNRELEASED; urgency=medium
       against the shared libperl.
   * change @INC to contain the full upstream version instead of the
     short one (5.22.0 vs. 5.22) for the core paths (privlib and archlib)
+  * Prefix $Config{cc}, ld, and cpp with DEB_HOST_GNU_TYPE as a step
+    towards enabling multiarch and crosscompiling. While at it, explicitly
+    use gcc now. (Closes: #775009)
 
   [ Dominic Hargreaves ]
   * Various cleanups to dependency fields
