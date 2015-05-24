@@ -2,6 +2,10 @@ perl (5.22.0~rc2-1) UNRELEASED; urgency=medium
 
   [ Dominic Hargreaves ]
   * New upstream release candidate
+    - fixes FTBFS under pbuilder with USENETWORK=no (Closes: #759799)
+    - fixes UTF8 issues with $!, $@ etc. (Closes: #409704)
+    - fixes fatal warnings hiding syntax errors (Closes: #663544)
+    - add Getopt::Long bundling_values option (Closes: #764621)
     - libperl5.20 becomes libperl5.22
     - update Breaks/Provides/Replaces to reflect changes to
       dual-lived packages
@@ -10,7 +14,7 @@ perl (5.22.0~rc2-1) UNRELEASED; urgency=medium
 
   [ Niko Tyni ]
   * Make the libperl5.22 package co-installable between different
-    major versions and architectures.
+    major versions and architectures (Closes: #495394, #786575)
     + perl-modules is renamed to perl-modules-5.22
     + the standard library is now in libperl5.22 + perl-modules-5.22
       instead of perl + perl-modules
