@@ -352,7 +352,7 @@ Priority: standard
 Architecture: any
 Multi-Arch: allowed
 Pre-Depends: dpkg (>= 1.17.17)
-Depends: perl-base (= ${binary:Version}), perl-modules-5.22 (>= ${source:Version}), libperl5.22 (= ${binary:Version}, ${shlibs:Depends}
+Depends: perl-base (= ${binary:Version}), perl-modules-5.22 (>= ${source:Version}), libperl5.22 (= ${binary:Version}), ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
 Breaks: perl-doc (<< ${Upstream-Version}-1)
 Replaces: perl-modules (<< 5.22.0~)
