@@ -51,7 +51,7 @@ sub canonicalize {
 
 	s|usr/share/perl/[^/]+/||;
 	s|usr/lib/[^/]+/perl/[^/]+/||;
-	s|usr/lib/[^/]+/perl-base-[^/]+/||;
+	s|usr/lib/[^/]+/perl-base/||;
 
 	s|/|::|g if s/\.pm$//;
 	return ($_);
