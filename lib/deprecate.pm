@@ -11,17 +11,7 @@ unless (%Config) { require Config; *Config = \%Config::Config; }
 # deprecated modules where available
 
 our %DEBIAN_PACKAGES = (
-    'CGI' => 'libcgi-pm-perl',
-    'CGI::Apache' => 'libcgi-pm-perl',
-    'CGI::Carp' => 'libcgi-pm-perl',
-    'CGI::Cookie' => 'libcgi-pm-perl',
-    'CGI::Fast' => 'libcgi-fast-perl',
-    'CGI::Pretty' => 'libcgi-pm-perl',
-    'CGI::Push' => 'libcgi-pm-perl',
-    'CGI::Switch' => 'libcgi-pm-perl',
-    'CGI::Util' => 'libcgi-pm-perl',
-    'Module::Build' => 'libmodule-build-perl',
-    'Package::Constants' => 'libpackage-constants-perl',
+    # None for the perl 5.22 cycle
 );
 
 # This isn't a public API. It's internal to code maintained by the perl-porters
