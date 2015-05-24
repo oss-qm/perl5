@@ -1,4 +1,4 @@
-perl (5.22.0~rc2-1) UNRELEASED; urgency=medium
+perl (5.22.0~rc2-1) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
   * New upstream release candidate
@@ -32,8 +32,9 @@ perl (5.22.0~rc2-1) UNRELEASED; urgency=medium
   * Various cleanups to dependency fields
     - we no longer provide the perl5, perl5-base, and data-dumper virtual
       packages
+  * Upload to experimental from the Barcelona Perl team sprint
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 21 May 2015 16:18:51 +0200
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 24 May 2015 14:48:12 +0200
 
 perl (5.20.2-6) unstable; urgency=low
 
