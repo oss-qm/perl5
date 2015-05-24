@@ -38,14 +38,14 @@ Breaks: autoconf2.13 (<< 2.13-45),
  libfile-temp-perl (<< 0.2304),
  libfile-path-perl (<< 2.09),
  libscalar-list-utils-perl (<< 1:1.41)
-Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.20.1-3), libperl5.8 (<< 5.8.0-20),
+Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.20.1-3)
  libscalar-list-utils-perl,
  libxsloader-perl,
  libsocket-perl,
  libfile-temp-perl,
  libfile-path-perl,
  libio-socket-ip-perl,
-Provides: perl5-base, ${perlapi:Provides},
+Provides: ${perlapi:Provides},
  libscalar-list-utils-perl,
  libxsloader-perl,
  libsocket-perl,
@@ -90,8 +90,7 @@ Section: libs
 Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, perl-modules-5.22 (>= ${source:Version})
-Breaks: perl-base (<< 5.20.2-5),
- libdigest-md5-perl (<< 2.54),
+Breaks: libdigest-md5-perl (<< 2.54),
  libmime-base64-perl (<< 3.15),
  libtime-hires-perl (<< 1.9726),
  libstorable-perl (<< 2.53),
@@ -119,8 +118,7 @@ Breaks: perl-base (<< 5.20.2-5),
  libsoap-lite-perl (<< 0.712-4),
  libnet-jifty-perl (<< 0.14-1),
  ftpmirror (<< 1.96+dfsg-13)
-Replaces: perl-base (<< 5.20.2-6+ma3), perl (<< 5.20.2-6+ma3),
- perl-doc (<< 5.8.0-1),
+Replaces: perl-base (<< 5.22.0~), perl (<< 5.22.0~),
  libarchive-tar-perl (<= 1.38-2),
  libdigest-md5-perl,
  libmime-base64-perl,
@@ -161,6 +159,10 @@ Multi-Arch: same
 Description: shared Perl library
  This package contains the shared Perl library, used by applications
  which embed a Perl interpreter.
+ .
+ It also contains the architecture-dependent parts of the standard
+ library (and depends on perl-modules-5.22 which contains the
+ architecture-independent parts).
 
 Package: libperl-dev
 Section: libdevel
@@ -178,31 +180,15 @@ Multi-Arch: foreign
 Depends: perl-base (>= ${Upstream-Version}-1)
 Pre-Depends: dpkg (>= 1.17.17)
 Recommends: perl (>= ${Upstream-Version}-1),
- libarchive-extract-perl,
- libmodule-pluggable-perl,
- libpod-latex-perl,
- libterm-ui-perl,
- libtext-soundex-perl,
- libcgi-pm-perl,
- libmodule-build-perl,
- libpackage-constants-perl,
-Suggests: libb-lint-perl,
- libcpanplus-dist-build-perl,
- libcpanplus-perl,
- libfile-checktree-perl,
- liblog-message-simple-perl,
- liblog-message-perl,
- libobject-accessor-perl
 Conflicts: defoma (<< 0.11.12),
  mono-gac (<< 2.10.8.1-3)
 Breaks: perl-modules,
- libpod-parser-perl (<< 1.63),
  perl (<< ${Upstream-Version}~),
+ libpod-parser-perl (<< 1.63),
  pdl (<< 1:2.007-4),
  libansicolor-perl (<< 4.03),
  libnet-perl (<= 1:1.22),
  libattribute-handlers-perl (<< 0.97),
- libcgi-pm-perl (<< 3.65),
  libi18n-langtags-perl (<< 0.40),
  liblocale-maketext-perl (<< 1.26),
  libmath-bigint-perl (<< 1.9997),
@@ -214,7 +200,6 @@ Breaks: perl-modules,
  libio-zlib-perl (<< 1.10),
  libarchive-tar-perl (<< 2.04),
  libextutils-cbuilder-perl (<< 0.280221),
- libmodule-build-perl (<< 0.420500),
  libmodule-load-perl (<< 0.32),
  liblocale-maketext-simple-perl (<< 0.21),
  libparams-check-perl (<< 0.38),
@@ -244,7 +229,6 @@ Breaks: perl-modules,
  libhttp-tiny-perl (<< 0.054),
  libcpan-meta-requirements-perl (<< 2.132),
  libexperimental-perl (<< 0.013),
- libpackage-constants-perl (<< 0.04),
  pristine-tar (<< 1.33),
  polygen-data (<< 1.0.6.ds2-13.1),
  rinse (<< 3.0.7),
@@ -261,12 +245,11 @@ Breaks: perl-modules,
  libtest-use-ok-perl (<< 0.16),
  libtest-tester-perl (<< 0.114),
 Replaces: perl-modules,
- perl-base (<< 5.20.2-6+ma3),
+ perl-base (<< 5.22.0~),
  libpod-parser-perl,
  libansicolor-perl,
  libnet-perl,
  libattribute-handlers-perl,
- libcgi-pm-perl,
  libi18n-langtags-perl,
  liblocale-maketext-perl,
  libmath-bigint-perl,
@@ -278,7 +261,6 @@ Replaces: perl-modules,
  libio-zlib-perl,
  libarchive-tar-perl,
  libextutils-cbuilder-perl,
- libmodule-build-perl,
  libmodule-load-perl,
  liblocale-maketext-simple-perl,
  libparams-check-perl,
@@ -373,8 +355,7 @@ Pre-Depends: dpkg (>= 1.17.17)
 Depends: perl-base (= ${binary:Version}), perl-modules-5.22 (>= ${source:Version}), libperl5.22 (= ${binary:Version}, ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
 Breaks: perl-doc (<< ${Upstream-Version}-1)
-Replaces: perl-modules (<< 5.20.6+ma3)
-Provides: perl5, data-dumper
+Replaces: perl-modules (<< 5.22.0~)
 Recommends: netbase, rename
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
  make

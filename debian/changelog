@@ -21,6 +21,11 @@ perl (5.22.0~rc2-1) UNRELEASED; urgency=medium
   * change @INC to contain the full upstream version instead of the
     short one (5.22.0 vs. 5.22) for the core paths (privlib and archlib)
 
+  [ Dominic Hargreaves ]
+  * Various cleanups to dependency fields
+    - we no longer provide the perl5, perl5-base, and data-dumper virtual
+      packages
+
  -- Dominic Hargreaves <dom@earth.li>  Thu, 21 May 2015 16:18:51 +0200
 
 perl (5.20.2-6) unstable; urgency=low
