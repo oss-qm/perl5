@@ -34,7 +34,7 @@ perl (5.22.0~rc2-1) experimental; urgency=medium
       packages
   * Upload to experimental from the Barcelona Perl team sprint
 
- -- Dominic Hargreaves <dom@earth.li>  Sun, 24 May 2015 14:48:12 +0200
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 24 May 2015 19:15:46 +0200
 
 perl (5.20.2-6) unstable; urgency=low
 
