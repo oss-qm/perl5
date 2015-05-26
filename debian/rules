@@ -98,8 +98,8 @@ perl.static:
 	./perl.static -Ilib -V
 
 	# save these for the perl-base package
-	mv lib/Config.pm lib/Config.pm.static
-	mv lib/Config_heavy.pl lib/Config_heavy.pl.static
+	cp lib/Config.pm lib/Config.pm.static
+	cp lib/Config_heavy.pl lib/Config_heavy.pl.static
 
 perl.debug:
 	$(checkdir)
