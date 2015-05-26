@@ -462,7 +462,7 @@ binary-indep: build-stamp install-stamp
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
-	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_upstream) $(subst_next_upstream); \
+	    dpkg-gencontrol -p$$p -P$(build)/$$p $(subst_upstream) $(subst_next_upstream); \
 	    dpkg --build $(build)/$$p ..; \
 	done
 
@@ -511,7 +511,7 @@ endif
 		xargs -r dpkg-shlibdeps -S$(srcdir)/$(build)/libperl$(version) \
 		                        -S$(srcdir)/$(build)/perl-base 2>&1 | \
 		fgrep -v 'File format not recognized'; # scripts \
-	    dpkg-gencontrol -p$$p -isp -P$(build)/$$p $(subst_perlapi) $(subst_upstream); \
+	    dpkg-gencontrol -p$$p -P$(build)/$$p $(subst_perlapi) $(subst_upstream); \
 	    dpkg --build $(build)/$$p ..; \
 	done
 
