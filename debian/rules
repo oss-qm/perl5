@@ -382,6 +382,12 @@ endif
 	# default configuration for libnet
 	cp debian/libnet.cfg $(build)/perl/etc/perl/Net
 
+	# symlinks for perl-cross-config
+	ccdir=$(build)/libperl$(version)/usr/lib/$(archtriplet)/perl/cross-config-$(fullversion); \
+	  mkdir -p $$ccdir; \
+	  ln -s ../$(fullversion)/Config.pm $$ccdir; \
+	  ln -s ../$(fullversion)/Config_heavy.pl $$ccdir
+
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -n9
 	find $(build)/*/usr/share/doc -type f \
