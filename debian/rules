@@ -226,7 +226,7 @@ endif
 	ln -s libperl.so.$(fullversion) $(tmp)/usr/lib/$(archtriplet)/libperl.so.$(version)
 	ln -s libperl.so.$(version) $(tmp)/usr/lib/$(archtriplet)/libperl.so
 
-	# move to full version (symlinks created in perl-base below)
+	# move to full version (symlinks created in libperl5.* below)
 	mv $(lib) $(tmp)/usr/lib/$(archtriplet)/perl/$(fullversion)
 	mv $(share) $(tmp)/usr/share/perl/$(fullversion)
 
