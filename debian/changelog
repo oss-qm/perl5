@@ -1,3 +1,17 @@
+perl (5.22.0~rc2-2) UNRELEASED; urgency=medium
+
+  * Small build system tweaks:
+    + stash Config* files by copying them rather than renaming
+    + remove deprecated dpkg-gencontrol -isp options
+  * Restore the short version symlinks on privlib/archlib.
+    (Closes: #787158)
+  * Add infrastructure for cross compiling XS module packages:
+    + link Config.pm to /usr/lib/<triplet>/perl/cross-config-5.22.0/
+      (Closes: #717433)
+    + make libperl5.22 Provide a perl-cross-config virtual package
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 29 May 2015 22:39:46 +0300
+
 perl (5.22.0~rc2-1) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
