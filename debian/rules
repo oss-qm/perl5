@@ -280,6 +280,7 @@ endif
 	 find usr/share/perl/$(fullversion) -print0 | \
 	      cpio -0vdump $(srcdir)/$(build)/perl-modules-$(version); \
 	     rm -rf usr/share/perl/$(fullversion); \
+	     rmdir usr/share/perl; \
 	 )
 
 	mkdir -p $(build)/libperl$(version)/usr/bin
