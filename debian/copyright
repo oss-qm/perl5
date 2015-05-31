@@ -1832,6 +1832,11 @@ License: GPL-1+
  On Debian GNU/Linux systems, the complete text of the GNU General
  Public License can be found in `/usr/share/common-licenses/GPL-1'.
 
+License: GPL-2+
+ On Debian GNU/Linux systems, the complete text of version 2 of
+ the GNU General Public License can be found in
+ `/usr/share/common-licenses/GPL-2'.
+
 License: Artistic
  On Debian GNU/Linux systems, the complete text of the
  Artistic Licence can be found in `/usr/share/common-licenses/Artistic'.
