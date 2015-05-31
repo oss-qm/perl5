@@ -283,8 +283,13 @@ endif
 	     rmdir usr/share/perl; \
 	 )
 
-	mkdir -p $(build)/libperl$(version)/usr/bin
-	cp -p perl $(build)/libperl$(version)/usr/bin/perl$(version)-$(archtriplet)
+	# install a separate cpan binary in libperl5.xx with a modified hashbang
+	lp=$(build)/libperl$(version); \
+	 mkdir -p $$lp/usr/bin; \
+	 cp -p perl $$lp/usr/bin/perl$(version)-$(archtriplet); \
+	 cp -p $(build)/perl/usr/bin/cpan $$lp/usr/bin/cpan$(version)-$(archtriplet); \
+	 sed -i "1 s,/usr/bin/perl,/usr/bin/perl$(version)-$(archtriplet)," \
+	  $$lp/usr/bin/cpan$(version)-$(archtriplet)
 
 ifeq ($(installtype),static)
 	# make the static configuration available to /usr/bin/perl
