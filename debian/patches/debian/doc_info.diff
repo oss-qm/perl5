@@ -1,4 +1,4 @@
-From add80c5c867cb224962ad72ec963eb2350be1198 Mon Sep 17 00:00:00 2001
+From e18f81e69c55d698abd293e71063d6b6b275cc07 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Replace generic man(1) instructions with Debian-specific information.
