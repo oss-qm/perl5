@@ -1,4 +1,4 @@
-perl (5.22.0-1) UNRELEASED; urgency=medium
+perl (5.22.0-1) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
   * New upstream release
@@ -7,7 +7,7 @@ perl (5.22.0-1) UNRELEASED; urgency=medium
   * Add upstream patch to fix a 5.22 regression with 'perl -C<number>'.
     (Closes: #788636)
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 01 Jun 2015 19:11:09 +0100
+ -- Niko Tyni <ntyni@debian.org>  Sat, 13 Jun 2015 20:05:07 +0300
 
 perl (5.22.0~rc2-2) experimental; urgency=medium
 
