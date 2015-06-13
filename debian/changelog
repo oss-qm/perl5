@@ -1,6 +1,11 @@
 perl (5.22.0-1) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * New upstream release
+
+  [ Niko Tyni ]
+  * Add upstream patch to fix a 5.22 regression with 'perl -C<number>'.
+    (Closes: #788636)
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 01 Jun 2015 19:11:09 +0100
 
