@@ -290,11 +290,6 @@ License: GPL-1+ or Artistic
  This is free software; you can redistribute it and/or modify it under the same
  terms as the Perl 5 programming language system itself.
 
-Files: Porting/bench.pl
-Copyright:
- Portions Copyright (C) 2002-2013 by Nicholas Nethercote et al.
-License: GPL-1
-
 Files: NetWare/*
 Copyright:
  Copyright (C) 2000-01, 2002 Novell, Inc. All Rights Reserved.
