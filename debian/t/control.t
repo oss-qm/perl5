@@ -116,6 +116,7 @@ my %is_perl_binary;
 
 my %deps_found;
 my $breaks_total = 0;
+my $tests_per_breaks = 3;
 
 for my $perl_package_info ($control->get_packages) {
 	my $perl_package_name = $perl_package_info->{Package};
@@ -140,7 +141,7 @@ for my $perl_package_info ($control->get_packages) {
 	}
 }
 
-plan tests => 3 * $breaks_total + 2;
+plan tests => $tests_per_breaks * $breaks_total + 2;
 
 ok($breaks_total, "successfully parsed debian/control");
 
@@ -160,12 +161,12 @@ for my $perl_package_name (keys %deps_found) {
 		SKIP: {
 			my $broken_version = $dep_found->{$breaksname}{$broken}{version};
 
-			skip("$module Breaks entry is unversioned", 3)
+			skip("$module Breaks entry is unversioned", $tests_per_breaks)
 				if !defined $broken_version;
 
 			$broken_version =~ s/-\d+$//; # remove the Debian revision
 
-			skip("$module is unknown to Module::CoreList", 3)
+			skip("$module is unknown to Module::CoreList", $tests_per_breaks)
 				if !exists $corelist->{$module};
 
 			my $corelist_version =
@@ -182,7 +183,7 @@ for my $perl_package_name (keys %deps_found) {
 				diag("s/$broken (<< $broken_version)/$broken (<< $corelist_version)/");
 			}
 
-			skip("not checking Replaces and Provides for $broken in $perl_package_name", 2)
+			skip("not checking Replaces and Provides for $broken in $perl_package_name", $tests_per_breaks - 1)
 				if $triplet_check_skip{$perl_package_name} &&
 					grep { $_ eq $broken } @{$triplet_check_skip{$perl_package_name}};
 
