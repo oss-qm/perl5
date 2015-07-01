@@ -116,7 +116,7 @@ my %is_perl_binary;
 
 my %deps_found;
 my $breaks_total = 0;
-my $tests_per_breaks = 3;
+my $tests_per_breaks = 4;
 
 for my $perl_package_info ($control->get_packages) {
 	my $perl_package_name = $perl_package_info->{Package};
@@ -189,6 +189,9 @@ for my $perl_package_name (keys %deps_found) {
 
 			ok(exists $dep_found->{Replaces}{$broken},
 				"Breaks for $broken in $perl_package_name implies Replaces");
+
+			is($dep_found->{Replaces}{$broken}{version}, $broken_version,
+				"Replaces version for $broken in $perl_package_name matches Breaks");
 
 			if (exists $deprecated{$broken}) {
 				ok(!exists $dep_found->{Provides}{$broken},
