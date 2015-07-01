@@ -1,4 +1,4 @@
-From 0ecf83f259db09cb38cb37c9b22e72be185afa8f Mon Sep 17 00:00:00 2001
+From ee068400ed9ab2494b165ca02743a37e5bf951db Mon Sep 17 00:00:00 2001
 From: Hugo van der Sanden <hv@crypt.org>
 Date: Thu, 11 Jun 2015 12:25:40 +0100
 Subject: fix -Cnn parsing

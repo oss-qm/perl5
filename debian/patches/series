@@ -8,7 +8,6 @@ fixes/respect_umask.diff
 debian/writable_site_dirs.diff
 debian/extutils_set_libperl_path.diff
 debian/no_packlist_perllocal.diff
-debian/prefix_changes.diff
 debian/fakeroot.diff
 debian/instmodsh_doc.diff
 debian/ld_run_path.diff
@@ -36,5 +35,6 @@ fixes/podman-utc-docs.diff
 fixes/podman-empty-date.diff
 fixes/podman-pipe.diff
 debian/pod2man-customized.diff
-debian/makemaker_customized.diff
 fixes/perl-Cnn.diff
+debian/man-sections.diff
+debian/makemaker_customized.diff
