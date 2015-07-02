@@ -1,13 +1,15 @@
-From 56c2b2ee38efc4dae4f7b8c39db0471786e53b24 Mon Sep 17 00:00:00 2001
+From 764a8db93e09cbe01de772124ee3ca8594d12afc Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 1 Jul 2015 22:23:53 +0300
-Subject: Adjust manual page sections in ExtUtils::MakeMaker for the Debian
- Perl policy.
+Subject: Make EU::MakeMaker honour MANnEXT settings in generated manpage
+ headers
 
 This was inherited from early changes by Brendan O'Dea, previously
-in debian/prefix_changes.diff and before that in debian/extutils_hacks.diff
+(accidentally) in debian/prefix_changes.diff and before that in
+debian/extutils_hacks.diff
 
-Patch-Name: debian/man-sections.diff
+Patch-Name: debian/makemaker-manext.diff
+Bug-Debian: https://bugs.debian.org/247370
 ---
  cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

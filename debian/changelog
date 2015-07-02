@@ -3,6 +3,9 @@ perl (5.22.0-2) UNRELEASED; urgency=medium
   * Drop the ExtUtils::MakeMaker changes we've been carrying for much too long
     to keep "make install PREFIX=something" working after upstream stopped
     supporting it. (Closes: #788883)
+  * Describe and rename the remaining inherited "ExtUtils hack" patch
+    that makes MakeMaker honour MANnEXT settings in generated manpage
+    headers. (See #247370)
   * Provide libtest-use-ok-perl and libtest-tester-perl. (Closes: #790302)
   * Make Replaces entries for dual life module packages versioned.
     (Closes: #789339)
