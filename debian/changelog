@@ -1,4 +1,4 @@
-perl (5.22.0-2) UNRELEASED; urgency=medium
+perl (5.22.0-2) experimental; urgency=medium
 
   * Drop the ExtUtils::MakeMaker changes we've been carrying for much too long
     to keep "make install PREFIX=something" working after upstream stopped
@@ -10,7 +10,7 @@ perl (5.22.0-2) UNRELEASED; urgency=medium
   * Make Replaces entries for dual life module packages versioned.
     (Closes: #789339)
 
- -- Niko Tyni <ntyni@debian.org>  Wed, 01 Jul 2015 21:37:39 +0300
+ -- Niko Tyni <ntyni@debian.org>  Thu, 02 Jul 2015 19:56:57 +0300
 
 perl (5.22.0-1) experimental; urgency=medium
 
