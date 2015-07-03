@@ -54,3 +54,25 @@ cf_email=perl@packages.debian.org
 perladmin=root@localhost
 mydomain=
 myhostname=localhost
+
+case "$osname" in
+  linux)
+      osvers=3.16.0
+      osdesc="#1 smp debian $osvers"
+      os=gnulinux
+      ;;
+  gnu)
+      osvers=0.6
+      osdesc="gnu-mach"
+      os=gnu
+      ;;
+  gnukfreebsd)
+      osvers=9.0
+      osdesc="#0"
+      os=gnukfreebsd
+      ;;
+esac
+if [ -n "$osdesc" ]; then
+  machine_uname=$(uname -m | tr '[A-Z]' '[a-z]' | sed -e "s,['/],,g")
+  myuname="$osname $myhostname $osvers $osdesc $machine_uname $os "
+fi
