@@ -84,6 +84,9 @@ $(patchlevel): $(patches)
 	$(checkdir)
 	test -f $<	# maintainer sanity check
 	debian/gen-patchlevel -p $(patchprefix) -v $(package_version) $< > $@
+	# $patchlevel_date in perlbug is extracted from patchlevel.h mtime, let's set
+	# it to highest mtime of Debian patches for build reproducibility
+	patchdate=`debian/gen-patchlevel -d`; touch --date="@$$patchdate" patchlevel.h
 
 perl.static:
 	$(checkdir)
