@@ -17,6 +17,9 @@ export SHELL = /bin/bash
 # at least LOCALTIME_{MIN,MAX} are affected by this
 export TZ=UTC
 
+# Configure output is sorted and varies with LC_COLLATE
+export LC_ALL=C
+
 fullversion := $(shell /bin/bash debian/config.debian --full-version)
 nextversion := $(shell /bin/bash debian/config.debian --next-version)
 version     := $(shell /bin/bash debian/config.debian --version)
