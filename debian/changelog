@@ -1,3 +1,21 @@
+perl (5.22.0-3) UNRELEASED; urgency=medium
+
+  * The "reproducible builds" release. (Closes: #774422)
+
+  [ Jérémy Bobbio ]
+  * Fix mtimes before building binary packages
+  * Set a deterministic configuration time
+  * Sort file list when generating md5sums
+  * Set mtime of patchlevel.h to highest mtime of Debian patches
+
+  [ Niko Tyni ]
+  * Override $Config{osvers} and $Config{myuname} to deterministic values
+  * Set the timezone to UTC when building as a workaround for #791362
+  * Set LC_ALL=C for the build to ensure stable sort ordering
+  * Replace __DATE__/__TIME__ usage with a deterministic time stamp
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 22 Aug 2015 10:10:01 +0300
+
 perl (5.22.0-2) experimental; urgency=medium
 
   * Drop the ExtUtils::MakeMaker changes we've been carrying for much too long
