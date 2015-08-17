@@ -14,6 +14,10 @@ perl (5.22.0-3) UNRELEASED; urgency=medium
   * Set LC_ALL=C for the build to ensure stable sort ordering
   * Replace __DATE__/__TIME__ usage with a deterministic time stamp
 
+  [ Dominic Hargreaves ]
+  *  Document the special case of modifying Configure in
+     debian/README.Source (Closes: #762638)
+
  -- Niko Tyni <ntyni@debian.org>  Sat, 22 Aug 2015 10:10:01 +0300
 
 perl (5.22.0-2) experimental; urgency=medium
