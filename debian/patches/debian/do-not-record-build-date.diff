@@ -1,0 +1,50 @@
+From a6b050751530754f041c34ba5ee00559b7cfa82a Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sun, 12 Jul 2015 22:23:00 +0300
+Subject: Allow overriding the compile time in "perl -V" output
+
+The C preprocessor macros __DATE__ and __TIME__ embed the compile time
+into the binary for the purposes of "perl -V" output. This makes the
+build unreproducible: compiling the same source with the same toolchain
+cannot be made to yield bitwise identical binaries and other generated
+files.
+
+The compile time can now be overridden with the PERL_BUILD_DATE macro.
+
+Bug: https://rt.perl.org/Ticket/Display.html?id=125830
+Bug-Debian: https://bugs.debian.org/774422
+Patch-Name: debian/do-not-record-build-date.diff
+---
+ perl.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/perl.c b/perl.c
+index e64f1f4..9942070 100644
+--- a/perl.c
++++ b/perl.c
+@@ -1795,15 +1795,20 @@ S_Internals_V(pTHX_ CV *cv)
+     PUSHs(Perl_newSVpvn_flags(aTHX_ non_bincompat_options,
+ 			      sizeof(non_bincompat_options) - 1, SVs_TEMP));
+ 
++#ifndef PERL_BUILD_DATE
+ #ifdef __DATE__
+ #  ifdef __TIME__
+-    PUSHs(Perl_newSVpvn_flags(aTHX_
+-			      STR_WITH_LEN("Compiled at " __DATE__ " " __TIME__),
+-			      SVs_TEMP));
++#    define PERL_BUILD_DATE __DATE__ " " __TIME__
+ #  else
+-    PUSHs(Perl_newSVpvn_flags(aTHX_ STR_WITH_LEN("Compiled on " __DATE__),
+-			      SVs_TEMP));
++#    define PERL_BUILD_DATE __DATE__
+ #  endif
++#endif
++#endif
++
++#ifdef PERL_BUILD_DATE
++    PUSHs(Perl_newSVpvn_flags(aTHX_
++			      STR_WITH_LEN("Compiled at " PERL_BUILD_DATE),
++			      SVs_TEMP));
+ #else
+     PUSHs(&PL_sv_undef);
+ #endif
