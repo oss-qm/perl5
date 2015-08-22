@@ -1,4 +1,4 @@
-perl (5.22.0-3) UNRELEASED; urgency=medium
+perl (5.22.0-3) experimental; urgency=medium
 
   * The "reproducible builds" release. (Closes: #774422)
 
@@ -18,7 +18,7 @@ perl (5.22.0-3) UNRELEASED; urgency=medium
   *  Document the special case of modifying Configure in
      debian/README.Source (Closes: #762638)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 22 Aug 2015 10:10:01 +0300
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 22 Aug 2015 23:40:24 +0200
 
 perl (5.22.0-2) experimental; urgency=medium
 
