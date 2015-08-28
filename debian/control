@@ -72,7 +72,7 @@ Description: Perl documentation
  writing Perl programs, you almost certainly need this.
 
 Package: perl-debug
-Section: debug
+Section: devel
 Priority: extra
 Architecture: any
 Depends: perl (= ${binary:Version}), ${shlibs:Depends}
