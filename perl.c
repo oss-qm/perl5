@@ -1796,13 +1796,13 @@ S_Internals_V(pTHX_ CV *cv)
 			      sizeof(non_bincompat_options) - 1, SVs_TEMP));
 
 #ifndef PERL_BUILD_DATE
-#ifdef __DATE__
-#  ifdef __TIME__
-#    define PERL_BUILD_DATE __DATE__ " " __TIME__
-#  else
-#    define PERL_BUILD_DATE __DATE__
+#  ifdef __DATE__
+#    ifdef __TIME__
+#      define PERL_BUILD_DATE __DATE__ " " __TIME__
+#    else
+#      define PERL_BUILD_DATE __DATE__
+#    endif
 #  endif
-#endif
 #endif
 
 #ifdef PERL_BUILD_DATE
