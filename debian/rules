@@ -27,6 +27,7 @@ installtype := $(shell /bin/bash debian/config.debian --install-type)
 test_target := $(shell /bin/bash debian/config.debian --test-target)
 strip	    := $(shell /bin/bash debian/config.debian --strip)
 archtriplet := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+arch        := $(shell dpkg-architecture -qDEB_HOST_ARCH)
 srcdir      := $(shell pwd)
 packages    := $(shell sed -n 's/^Package: *\(.*\)/\1/p' debian/control)
 build_date  := $(shell dpkg-parsechangelog | sed -n -e 's/^Date: //p')
@@ -370,7 +371,15 @@ endif
 		do \
 		    d=`echo $$target | sed 's,/[^/]*$$,,'`; \
 		    test -d $$doc/$$d || mkdir -p $$doc/$$d; \
-		    cp -p $$src $$doc/$$target; \
+		    if [ "$$src" = "debian/changelog" ] && \
+		       head -1 $$src | grep -iq 'binary-only=yes'; \
+		    then \
+		        # split out binNMU changelog entries \
+		        debian/split-binnmu $$src > $$doc/$$target \
+		                                 2> $$doc/$${target}.$(arch); \
+		    else \
+		        cp -p $$src $$doc/$$target; \
+		    fi; \
 		done <debian/$$p.docs; \
 	    fi; \
 	    test -d $$doc/$$p || ln -s perl $$doc/$$p; \
