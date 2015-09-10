@@ -512,7 +512,7 @@ binary-arch: build-stamp install-stamp
 	$(checkdir)
 	$(checkroot)
 ifeq ($(installtype),static)
-	echo 'libperl $(version) libperl$(version) (= $${source:Version})' \
+	echo 'libperl $(version) libperl$(version) (= $${binary:Version})' \
 	    >debian/shlibs.local
 
 	echo 'libperl $(version) libperl$(version) (>= $(package_upstream_version))' \
