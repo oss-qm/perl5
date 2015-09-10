@@ -1,6 +1,16 @@
 perl (5.22.0-4) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * Move perl-debug from the debug to the devel section (Closes: #796834)
+
+  [ gregor herrmann ]
+  * Convert /usr/share/doc/libperl5.22 symlink into a directory.
+
+  [ Niko Tyni ]
+  * Remove obsolete debian/*.moduledocs references
+  * Don't try to install cpan/libnet/Config.eg, it's gone with 5.22
+  * Split out binary-only changelog entries (Closes: #797106)
+  * Unbreak libperl5.22 binNMUs by using ${binary:Version} in shlibs.local
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 28 Aug 2015 20:15:42 +0100
 
