@@ -1,4 +1,4 @@
-perl (5.22.0-4) UNRELEASED; urgency=medium
+perl (5.22.0-4) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
   * Move perl-debug from the debug to the devel section (Closes: #796834)
@@ -12,7 +12,7 @@ perl (5.22.0-4) UNRELEASED; urgency=medium
   * Split out binary-only changelog entries (Closes: #797106)
   * Unbreak libperl5.22 binNMUs by using ${binary:Version} in shlibs.local
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 28 Aug 2015 20:15:42 +0100
+ -- Niko Tyni <ntyni@debian.org>  Fri, 11 Sep 2015 11:19:45 +0300
 
 perl (5.22.0-3) experimental; urgency=medium
 
