@@ -944,7 +944,7 @@ Files: cpan/Sys-Syslog/fallback/syslog.h
 Copyright:
  Copyright (c) 1982, 1986, 1988, 1993
       The Regents of the University of California.  All rights reserved.
-License: BSD-4-clause
+License: BSD-3-clause-with-weird-numbering
 
 Files: cpan/Term-ANSIColor/*
 Copyright:
@@ -2091,7 +2091,7 @@ License: Expat
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
 
-License: BSD-4-clause
+License: BSD-3-clause-with-weird-numbering
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions
  are met:
