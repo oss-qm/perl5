@@ -1,3 +1,10 @@
+perl (5.22.0-5) UNRELEASED; urgency=medium
+
+  * Rename the license of the Sys-Syslog syslog.h file in debian/copyright
+    (Closes: #799014)
+
+ -- Niko Tyni <ntyni@debian.org>  Tue, 15 Sep 2015 22:21:14 +0300
+
 perl (5.22.0-4) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
