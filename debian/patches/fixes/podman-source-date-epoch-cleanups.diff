@@ -1,4 +1,4 @@
-From 1e4b9ed0f2a5a5994af33405927a003a059a7ef8 Mon Sep 17 00:00:00 2001
+From d9b74267f1015830c6fe44959402e63c33962a73 Mon Sep 17 00:00:00 2001
 From: Russ Allbery <rra@cpan.org>
 Date: Sat, 28 Nov 2015 18:48:00 -0800
 Subject: Coding style and documentation for SOURCE_EPOCH_DATE

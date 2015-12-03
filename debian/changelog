@@ -5,6 +5,8 @@ perl (5.22.1~rc3-1) UNRELEASED; urgency=medium
     (Closes: #799014)
   * Backport SOURCE_DATE_EPOCH support in Pod::Man from podlators-4.00.
     (Closes: #801621)
+  * Remove strcpy usage from debian/patches/debian/mod_paths.diff,
+    now policed by t/porting/libperl.t
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 03 Dec 2015 22:03:47 +0200
 

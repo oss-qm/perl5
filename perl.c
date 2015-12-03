@@ -4551,14 +4551,14 @@ S_init_perllib(pTHX)
 	{
 	    if (arch_vers)
 	    {
-		strcpy(arch_vers, *p);
+		my_snprintf(arch_vers, 16, "%s", *p);
 		if (PerlLIO_stat(sitearch, &s) >= 0 && S_ISDIR(s.st_mode))
 		    S_incpush_use_sep(aTHX_ sitearch, strlen(sitearch), 0x0);
 	    }
 
 	    if (lib_vers)
 	    {
-		strcpy(lib_vers, *p);
+		my_snprintf(lib_vers, 16, "%s", *p);
 		if (PerlLIO_stat(sitelib, &s) >= 0 && S_ISDIR(s.st_mode))
 		    S_incpush_use_sep(aTHX_ sitelib, strlen(sitelib), 0x0);
 	    }
