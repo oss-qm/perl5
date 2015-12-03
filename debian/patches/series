@@ -35,7 +35,6 @@ fixes/podman-utc-docs.diff
 fixes/podman-empty-date.diff
 fixes/podman-pipe.diff
 debian/pod2man-customized.diff
-fixes/perl-Cnn.diff
 debian/makemaker-manext.diff
 debian/makemaker_customized.diff
 debian/do-not-record-build-date.diff

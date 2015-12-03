@@ -1,4 +1,4 @@
-From 2e43988e75007143e0fdd82a48a63541d57f5e64 Mon Sep 17 00:00:00 2001
+From bec4c7461fc5299efad849ced806bd7b9705491c Mon Sep 17 00:00:00 2001
 From: Russ Allbery <rra@cpan.org>
 Date: Wed, 15 Apr 2015 22:21:25 -0700
 Subject: Support an empty POD_MAN_DATE environment variable
