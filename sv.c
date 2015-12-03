@@ -3974,9 +3974,15 @@ S_glob_assign_glob(pTHX_ SV *const dstr, SV *const sstr, const int dtype)
         SvREFCNT_inc_simple_void_NN(sv_2mortal(dstr));
     }
 
+    /* freeing dstr's GP might free sstr (e.g. *x = $x),
+     * so temporarily protect it */
+    ENTER;
+    SAVEFREESV(SvREFCNT_inc_simple_NN(sstr));
     gp_free(MUTABLE_GV(dstr));
     GvINTRO_off(dstr);		/* one-shot flag */
     GvGP_set(dstr, gp_ref(GvGP(sstr)));
+    LEAVE;
+
     if (SvTAINTED(sstr))
 	SvTAINT(dstr);
     if (GvIMPORTED(dstr) != GVf_IMPORTED
@@ -10866,7 +10872,7 @@ Perl_sv_vcatpvfn(pTHX_ SV *const sv, const char *const pat, const STRLEN patlen,
  * The non-double-double-long-double overshoots since all bits of NV
  * are not mantissa bits, there are also exponent bits. */
 #ifdef LONGDOUBLE_DOUBLEDOUBLE
-#  define VHEX_SIZE (1+DOUBLEDOUBLE_MAXBITS/4)
+#  define VHEX_SIZE (3+DOUBLEDOUBLE_MAXBITS/4)
 #else
 #  define VHEX_SIZE (1+(NVSIZE * 8)/4)
 #endif
@@ -10963,7 +10969,7 @@ S_hextract(pTHX_ const NV nv, int* exponent, U8* vhex, U8* vend)
 
     /* HEXTRACTSIZE is the maximum number of xdigits. */
 #if defined(USE_LONG_DOUBLE) && defined(LONGDOUBLE_DOUBLEDOUBLE)
-#  define HEXTRACTSIZE (DOUBLEDOUBLE_MAXBITS/4)
+#  define HEXTRACTSIZE (2+DOUBLEDOUBLE_MAXBITS/4)
 #else
 #  define HEXTRACTSIZE 2 * NVSIZE
 #endif
@@ -10971,8 +10977,10 @@ S_hextract(pTHX_ const NV nv, int* exponent, U8* vhex, U8* vend)
     const U8* vmaxend = vhex + HEXTRACTSIZE;
     PERL_UNUSED_VAR(ix); /* might happen */
     (void)Perl_frexp(PERL_ABS(nv), exponent);
-    if (vend && (vend <= vhex || vend > vmaxend))
-        Perl_croak(aTHX_ "Hexadecimal float: internal error");
+    if (vend && (vend <= vhex || vend > vmaxend)) {
+        /* diag_listed_as: Hexadecimal float: internal error (%s) */
+        Perl_croak(aTHX_ "Hexadecimal float: internal error (entry)");
+    }
     {
         /* First check if using long doubles. */
 #if defined(USE_LONG_DOUBLE) && (NVSIZE > DOUBLESIZE)
@@ -11178,8 +11186,10 @@ S_hextract(pTHX_ const NV nv, int* exponent, U8* vhex, U8* vend)
          * which is convenient since the HEXTRACTSIZE is tricky
          * for double-double. */
         ixmin < 0 || ixmax >= NVSIZE ||
-        (vend && v != vend))
-        Perl_croak(aTHX_ "Hexadecimal float: internal error");
+        (vend && v != vend)) {
+        /* diag_listed_as: Hexadecimal float: internal error (%s) */
+        Perl_croak(aTHX_ "Hexadecimal float: internal error (overflow)");
+    }
     return v;
 }
 
@@ -11522,9 +11532,12 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
       tryasterisk:
 	if (*q == '*') {
 	    q++;
-	    if ( (ewix = expect_number(&q)) )
-		if (*q++ != '$')
+	    if ( (ewix = expect_number(&q)) ) {
+		if (*q++ == '$')
+                    no_redundant_warning = TRUE;
+                else
 		    goto unknown;
+            }
 	    asterisk = TRUE;
 	}
 	if (*q == 'v') {
@@ -12285,6 +12298,7 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                 U8* v = vhex; /* working pointer to vhex */
                 U8* vend; /* pointer to one beyond last digit of vhex */
                 U8* vfnz = NULL; /* first non-zero */
+                U8* vlnz = NULL; /* last non-zero */
                 const bool lower = (c == 'a');
                 /* At output the values of vhex (up to vend) will
                  * be mapped through the xdig to get the actual
@@ -12292,6 +12306,7 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                 const char* xdig = PL_hexdigit;
                 int zerotail = 0; /* how many extra zeros to append */
                 int exponent = 0; /* exponent of the floating point input */
+                bool hexradix = FALSE; /* should we output the radix */
 
                 /* XXX: denormals, NaN, Inf.
                  *
@@ -12316,7 +12331,9 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
 #  endif
 #endif
 
-                if (fv < 0)
+                if (fv < 0
+                    || Perl_signbit(nv)
+                  )
                     *p++ = '-';
                 else if (plus)
                     *p++ = plus;
@@ -12338,8 +12355,6 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                 }
 
                 if (vfnz) {
-                    U8* vlnz = NULL; /* The last non-zero. */
-
                     /* Find the last non-zero xdigit. */
                     for (v = vend - 1; v >= vhex; v--) {
                         if (*v) {
@@ -12399,9 +12414,24 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                     v = vhex;
                     *p++ = xdig[*v++];
 
-                    /* The radix is always output after the first
-                     * non-zero xdigit, or if alt.  */
-                    if (vfnz < vlnz || alt) {
+                    /* If there are non-zero xdigits, the radix
+                     * is output after the first one. */
+                    if (vfnz < vlnz) {
+                      hexradix = TRUE;
+                    }
+                }
+                else {
+                    *p++ = '0';
+                    exponent = 0;
+                    zerotail = precis;
+                }
+
+                /* The radix is always output if precis, or if alt. */
+                if (precis > 0 || alt) {
+                  hexradix = TRUE;
+                }
+
+                if (hexradix) {
 #ifndef USE_LOCALE_NUMERIC
                         *p++ = '.';
 #else
@@ -12417,17 +12447,17 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                         }
                         RESTORE_LC_NUMERIC();
 #endif
-                    }
+                }
 
+                if (vlnz) {
                     while (v <= vlnz)
                         *p++ = xdig[*v++];
-
-                    while (zerotail--)
-                        *p++ = '0';
                 }
-                else {
+
+                if (zerotail > 0) {
+                  while (zerotail--) {
                     *p++ = '0';
-                    exponent = 0;
+                  }
                 }
 
                 elen = p - PL_efloatbuf;
@@ -12538,7 +12568,7 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                     elen = quadmath_snprintf(PL_efloatbuf, PL_efloatsize,
                                              qfmt, nv);
                     if ((IV)elen == -1)
-                        Perl_croak_nocontext("panic: quadmath_snprintf failed, format \"%s|'", qfmt);
+                        Perl_croak_nocontext("panic: quadmath_snprintf failed, format \"%s\"", qfmt);
                     if (qfmt != ptr)
                         Safefree(qfmt);
                 }

@@ -6313,7 +6313,13 @@ Perl_yylex(pTHX)
 
     case '`':
 	s = scan_str(s,FALSE,FALSE,FALSE,NULL);
-	DEBUG_T( { printbuf("### Saw backtick string before %s\n", s); } );
+	DEBUG_T( {
+            if (s)
+                printbuf("### Saw backtick string before %s\n", s);
+            else
+		PerlIO_printf(Perl_debug_log,
+			     "### Saw unterminated backtick string\n");
+        } );
 	if (PL_expect == XOPERATOR)
 	    no_op("Backticks",s);
 	if (!s)
@@ -8029,7 +8035,13 @@ Perl_yylex(pTHX)
 
 		if (*s == ':' && s[1] != ':')
 		    PL_expect = attrful;
-		else if ((*s != '{' && *s != '(') && key == KEY_sub) {
+		else if ((*s != '{' && *s != '(') && key != KEY_format) {
+                    assert(key == KEY_sub || key == KEY_AUTOLOAD ||
+                           key == KEY_DESTROY || key == KEY_BEGIN ||
+                           key == KEY_UNITCHECK || key == KEY_CHECK ||
+                           key == KEY_INIT || key == KEY_END ||
+                           key == KEY_my || key == KEY_state ||
+                           key == KEY_our);
 		    if (!have_name)
 			Perl_croak(aTHX_ "Illegal declaration of anonymous subroutine");
 		    else if (*s != ';' && *s != '}')
@@ -10220,21 +10232,46 @@ Perl_scan_num(pTHX_ const char *start, YYSTYPE* lvalp)
 #ifdef HEXFP_NV
                     NV mult = 1 / 16.0;
 #endif
-                    h++;
-                    while (isXDIGIT(*h) || *h == '_') {
+                    for (h++; (isXDIGIT(*h) || *h == '_'); h++) {
                         if (isXDIGIT(*h)) {
                             U8 b = XDIGIT_VALUE(*h);
                             total_bits += shift;
+                            if (total_bits < NV_MANT_DIG) {
 #ifdef HEXFP_UQUAD
-                            hexfp_uquad <<= shift;
-                            hexfp_uquad |= b;
-                            hexfp_frac_bits += shift;
+                                hexfp_uquad <<= shift;
+                                hexfp_uquad |= b;
+                                hexfp_frac_bits += shift;
 #else /* HEXFP_NV */
-                            hexfp_nv += b * mult;
-                            mult /= 16.0;
+                                hexfp_nv += b * mult;
+                                mult /= 16.0;
 #endif
+                            } else if (total_bits - shift < NV_MANT_DIG) {
+                                /* A hexdigit straddling the edge of
+                                 * mantissa.  We can try grabbing as
+                                 * many as possible bits. */
+                                int shift2 = 0;
+                                if (b & 1) {
+                                    shift2 = 4;
+                                } else if (b & 2) {
+                                    shift2 = 3;
+                                    total_bits--;
+                                } else if (b & 4) {
+                                    shift2 = 2;
+                                    total_bits -= 2;
+                                } else if (b & 8) {
+                                    shift2 = 1;
+                                    total_bits -= 3;
+                                }
+#ifdef HEXFP_UQUAD
+                                hexfp_uquad <<= shift2;
+                                hexfp_uquad |= b;
+                                hexfp_frac_bits += shift2;
+#else /* HEXFP_NV */
+                                hexfp_nv += b * mult;
+                                mult /= 16.0;
+#endif
+                            }
                         }
-                        h++;
                     }
                 }
 
@@ -10263,23 +10300,21 @@ Perl_scan_num(pTHX_ const char *start, YYSTYPE* lvalp)
                                 hexfp_exp *= 10;
                                 hexfp_exp += *h - '0';
 #ifdef NV_MIN_EXP
-                                if (negexp &&
-                                    -hexfp_exp < NV_MIN_EXP - 1) {
+                                if (negexp
+                                    && -hexfp_exp < NV_MIN_EXP - 1) {
                                     Perl_ck_warner(aTHX_ packWARN(WARN_OVERFLOW),
                                                    "Hexadecimal float: exponent underflow");
-#endif
                                     break;
                                 }
-                                else {
-#ifdef NV_MAX_EXP
-                                    if (!negexp &&
-                                        hexfp_exp > NV_MAX_EXP - 1) {
-                                        Perl_ck_warner(aTHX_ packWARN(WARN_OVERFLOW),
-                                                   "Hexadecimal float: exponent overflow");
-                                        break;
-                                    }
 #endif
+#ifdef NV_MAX_EXP
+                                if (!negexp
+                                    && hexfp_exp > NV_MAX_EXP - 1) {
+                                    Perl_ck_warner(aTHX_ packWARN(WARN_OVERFLOW),
+                                                   "Hexadecimal float: exponent overflow");
+                                    break;
                                 }
+#endif
                             }
                             h++;
                         }
