@@ -1,4 +1,4 @@
-From 5ac6af7b0b47a256c6e6dfd66844c2c236ab2671 Mon Sep 17 00:00:00 2001
+From 1894c7ad884055a2e43323a632a303e833c93633 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 12 Jul 2015 22:23:00 +0300
 Subject: Allow overriding the compile time in "perl -V" output
@@ -13,6 +13,7 @@ The compile time can now be overridden with the PERL_BUILD_DATE macro.
 
 Bug: https://rt.perl.org/Ticket/Display.html?id=125830
 Bug-Debian: https://bugs.debian.org/774422
+Origin: backport, http://perl5.git.perl.org/perl.git/commitdiff/6baa8dbdfb8bc6c409778912cc3c8ea3dd39c342
 Patch-Name: debian/do-not-record-build-date.diff
 ---
  perl.c | 19 ++++++++++++-------
