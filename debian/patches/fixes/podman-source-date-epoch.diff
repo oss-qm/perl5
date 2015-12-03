@@ -1,0 +1,96 @@
+From 69f0efbde3a635df7e6455420ec0acd6ce6e9473 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Mon, 12 Oct 2015 17:39:33 +0300
+Subject: Make Pod::Man honor the SOURCE_DATE_EPOCH environment variable
+
+See https://reproducible-builds.org/specs/source-date-epoch/ for
+the SOURCE_DATE_EPOCH specification.
+
+Origin: backport, http://git.eyrie.org/?p=perl/podlators.git;a=commitdiff;h=afd8a3d4f5393e3376739489b56981bf8a33e48b
+Bug-Debian: https://bugs.debian.org/801621
+Patch-Name: fixes/podman-source-date-epoch.diff
+---
+ cpan/podlators/lib/Pod/Man.pm  | 24 ++++++++++++++++++------
+ cpan/podlators/t/devise-date.t | 21 ++++++++++++++++++++-
+ 2 files changed, 38 insertions(+), 7 deletions(-)
+
+diff --git a/cpan/podlators/lib/Pod/Man.pm b/cpan/podlators/lib/Pod/Man.pm
+index 969eaff..6e57bac 100644
+--- a/cpan/podlators/lib/Pod/Man.pm
++++ b/cpan/podlators/lib/Pod/Man.pm
+@@ -893,6 +893,10 @@ sub devise_title {
+ # reproducible generation of the same file even if the input file timestamps
+ # are unpredictable or the POD coms from standard input.
+ #
++# Otherwise, if SOURCE_DATE_EPOCH is set and can be parsed as seconds
++# since the UNIX epoch, base the timestamp on that.
++# See <https://reproducible-builds.org/specs/source-date-epoch/>
++#
+ # Otherwise, use the modification date of the input if we can stat it.  Be
+ # aware that Pod::Simple returns the stringification of the file handle as
+ # source_filename for input from a file handle, so we'll stat some random ref
+@@ -909,14 +913,22 @@ sub devise_date {
+         return $ENV{POD_MAN_DATE};
+     }
+ 
++    # If SOURCE_DATE_EPOCH is set and can be parsed, use that.
++    my $time;
++    if (defined($ENV{SOURCE_DATE_EPOCH}) &&
++        $ENV{SOURCE_DATE_EPOCH} !~ /\D/) {
++        $time = $ENV{SOURCE_DATE_EPOCH};
++    }
++
+     # Otherwise, get the input filename and try to stat it.  If that fails,
+     # use the current time.
+-    my $input = $self->source_filename;
+-    my $time;
+-    if ($input) {
+-        $time = (stat($input))[9] || time();
+-    } else {
+-        $time = time();
++    if (!defined $time) {
++        my $input = $self->source_filename;
++        if ($input) {
++            $time = (stat($input))[9] || time();
++        } else {
++            $time = time();
++        }
+     }
+ 
+     # Can't use POSIX::strftime(), which uses Fcntl, because MakeMaker uses
+diff --git a/cpan/podlators/t/devise-date.t b/cpan/podlators/t/devise-date.t
+index 27271d9..5fb08e2 100644
+--- a/cpan/podlators/t/devise-date.t
++++ b/cpan/podlators/t/devise-date.t
+@@ -12,7 +12,7 @@ use warnings;
+ use Pod::Man;
+ use POSIX qw(strftime);
+ 
+-use Test::More tests => 3;
++use Test::More tests => 6;
+ 
+ # Check that the results of device_date matches strftime.  There is no input
+ # file name, so this will use the current time.
+@@ -30,3 +30,22 @@ is($parser->devise_date, '2014-01-01', 'devise_date honors POD_MAN_DATE');
+ # Check that an empty environment variable is honored.
+ local $ENV{POD_MAN_DATE} = q{};
+ is($parser->devise_date, q{}, 'devise_date honors empty POD_MAN_DATE');
++
++# Set another environment variable and ensure that it's honored.
++local $ENV{POD_MAN_DATE};
++local $ENV{SOURCE_DATE_EPOCH} = 1439390140;
++is($parser->devise_date, '2015-08-12', 'devise_date honors SOURCE_DATE_EPOCH');
++
++# Check that POD_MAN_DATE overrides SOURCE_DATE_EPOCH
++local $ENV{POD_MAN_DATE} = '2013-01-01';
++local $ENV{SOURCE_DATE_EPOCH} = 1482676620;
++is($parser->devise_date, '2013-01-01', 'devise_date honors POD_MAN_DATE over SOURCE_DATE_EPOCH');
++
++# Check that an invalid SOURCE_DATE_EPOCH is not accepted
++local $ENV{POD_MAN_DATE};
++local $ENV{SOURCE_DATE_EPOCH} = '1482676620B';
++is(
++    $parser->devise_date,
++    strftime('%Y-%m-%d', gmtime()),
++    'devise_date ignores invalid SOURCE_DATE_EPOCH'
++);

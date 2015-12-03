@@ -3,6 +3,8 @@ perl (5.22.1~rc3-1) UNRELEASED; urgency=medium
   * New upstream release candidate.
   * Rename the license of the Sys-Syslog syslog.h file in debian/copyright
     (Closes: #799014)
+  * Backport SOURCE_DATE_EPOCH support in Pod::Man from podlators-4.00.
+    (Closes: #801621)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 03 Dec 2015 22:03:47 +0200
 
