@@ -20,6 +20,10 @@ export TZ=UTC
 # Configure output is sorted and varies with LC_COLLATE
 export LC_ALL=C
 
+# use the timestamp from debian/changelog for Pod::Man generated man pages
+# this may end up in dpkg-buildpackage eventually but it's not there yet
+export SOURCE_DATE_EPOCH = $(shell date -d "$$(dpkg-parsechangelog -SDate)" +%s)
+
 fullversion := $(shell /bin/bash debian/config.debian --full-version)
 nextversion := $(shell /bin/bash debian/config.debian --next-version)
 version     := $(shell /bin/bash debian/config.debian --version)
