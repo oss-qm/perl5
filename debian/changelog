@@ -1,4 +1,4 @@
-perl (5.22.1~rc3-1) UNRELEASED; urgency=medium
+perl (5.22.1~rc3-1) experimental; urgency=low
 
   * New upstream release candidate.
   * Rename the license of the Sys-Syslog syslog.h file in debian/copyright
@@ -8,7 +8,7 @@ perl (5.22.1~rc3-1) UNRELEASED; urgency=medium
   * Remove strcpy usage from debian/patches/debian/mod_paths.diff,
     now policed by t/porting/libperl.t
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 03 Dec 2015 22:03:47 +0200
+ -- Niko Tyni <ntyni@debian.org>  Fri, 04 Dec 2015 11:42:57 +0200
 
 perl (5.22.0-4) experimental; urgency=medium
 
