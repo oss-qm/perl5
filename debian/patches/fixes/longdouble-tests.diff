@@ -1,0 +1,27 @@
+From 91b650a55415c08f212aa47b42c11e8f49563f80 Mon Sep 17 00:00:00 2001
+From: Jarkko Hietaniemi <jhi@iki.fi>
+Date: Fri, 4 Dec 2015 17:04:34 -0500
+Subject: hexfp: these should be tested only with uselongdouble.
+
+Origin: upstream, http://perl5.git.perl.org/perl.git/commitdiff/df3d8cc3eeca597a21c2d7ad7686adbef4df784b
+Bug-Debian: https://bugs.debian.org/807038
+Patch-Name: fixes/longdouble-tests.diff
+---
+ t/op/sprintf2.t | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/t/op/sprintf2.t b/t/op/sprintf2.t
+index 48986f0..9d369cb 100644
+--- a/t/op/sprintf2.t
++++ b/t/op/sprintf2.t
+@@ -666,7 +666,9 @@ for my $t (@hexfloat) {
+ # double-double long double %a special testing.
+ SKIP: {
+     skip("$^O doublekind=$Config{doublekind}", 6)
+-        unless ($Config{doublekind} == 4 && $^O eq 'linux');
++        unless ($Config{doublekind} == 4 &&
++                $^O eq 'linux' &&
++                $Config{uselongdouble});
+     # [rt.perl.org 125633]
+     like(sprintf("%La\n", (2**1020) + (2**-1072)),
+          qr/^0x1.0{522}1p\+1020$/);
