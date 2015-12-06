@@ -1,4 +1,4 @@
-From a0d92616928d46724a3dc6f8c07f38b8e6ec3a26 Mon Sep 17 00:00:00 2001
+From a9f7e3cf63c5d5f4bd2df7a19a3218d96eda139e Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 5 Dec 2015 10:08:13 +0200
 Subject: Guard for building with SOURCE_DATE_EPOCH or POD_MAN_DATE set
@@ -6,6 +6,7 @@ Subject: Guard for building with SOURCE_DATE_EPOCH or POD_MAN_DATE set
 The strftime test expects the current time rather than anything
 in the environment.
 
+Origin: backport, http://git.eyrie.org/?p=perl/podlators.git;a=commitdiff;h=b2179a05d3398dffabcdb639eb70550f3c3f4ade
 Bug-Debian: https://bugs.debian.org/807086
 Patch-Name: fixes/podman-source-date-epoch-testfix.diff
 ---

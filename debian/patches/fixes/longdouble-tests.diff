@@ -1,4 +1,4 @@
-From 91b650a55415c08f212aa47b42c11e8f49563f80 Mon Sep 17 00:00:00 2001
+From 65453e498efdab0c8b37982aa2fd9da633066b85 Mon Sep 17 00:00:00 2001
 From: Jarkko Hietaniemi <jhi@iki.fi>
 Date: Fri, 4 Dec 2015 17:04:34 -0500
 Subject: hexfp: these should be tested only with uselongdouble.
