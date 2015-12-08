@@ -1,4 +1,4 @@
-From c2b6a6178c23aba9e0c9144831d94f0567017efa Mon Sep 17 00:00:00 2001
+From 50e23129fbbd9b8f48a27f188e305588cfe5dad7 Mon Sep 17 00:00:00 2001
 From: Russ Allbery <rra@debian.org>
 Date: Sat, 30 Aug 2014 15:10:41 -0700
 Subject: Support POD_MAN_DATE in Pod::Man for the left-hand footer

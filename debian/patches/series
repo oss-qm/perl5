@@ -41,5 +41,4 @@ debian/do-not-record-build-date.diff
 fixes/podman-source-date-epoch.diff
 fixes/podman-source-date-epoch-cleanups.diff
 fixes/podman-source-date-epoch-testfix.diff
-fixes/longdouble-tests.diff
 debian/devel-ppport-reproducibility.diff

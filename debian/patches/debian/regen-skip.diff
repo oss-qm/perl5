@@ -1,4 +1,4 @@
-From 84bcf2a18a5063722ba328b5166994558e6c4eea Mon Sep 17 00:00:00 2001
+From 8753ed0b4f65abac2133683f95687b7d29425b85 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 17 May 2014 14:57:01 +0300
 Subject: Skip a regeneration check in unrelated git repositories

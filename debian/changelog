@@ -1,3 +1,9 @@
+perl (5.22.1~rc4-1) UNRELEASED; urgency=low
+
+  * New upstream release candidate.
+
+ -- Niko Tyni <ntyni@debian.org>  Tue, 08 Dec 2015 23:55:36 +0200
+
 perl (5.22.1~rc3-2) experimental; urgency=low
 
   * Fix a podlators test failure when building under SOURCE_DATE_EPOCH.

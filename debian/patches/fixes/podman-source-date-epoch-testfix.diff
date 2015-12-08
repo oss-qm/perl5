@@ -1,4 +1,4 @@
-From a9f7e3cf63c5d5f4bd2df7a19a3218d96eda139e Mon Sep 17 00:00:00 2001
+From 1142c9c8e4452c8d24fbc26ded53f29addaa2a6a Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 5 Dec 2015 10:08:13 +0200
 Subject: Guard for building with SOURCE_DATE_EPOCH or POD_MAN_DATE set

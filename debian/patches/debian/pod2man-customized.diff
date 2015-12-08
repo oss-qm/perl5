@@ -1,4 +1,4 @@
-From 24af65a694d2f6e6e3753c46611a2d80b5eefa65 Mon Sep 17 00:00:00 2001
+From abf476af4907182b49ad9e5af104d67aeaf1d42e Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 18 Apr 2015 17:39:32 +0300
 Subject: Update porting/customized.dat for pod2man modifications
