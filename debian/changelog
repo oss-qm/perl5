@@ -1,8 +1,8 @@
-perl (5.22.1~rc4-1) UNRELEASED; urgency=low
+perl (5.22.1~rc4-1) experimental; urgency=low
 
   * New upstream release candidate.
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 08 Dec 2015 23:55:36 +0200
+ -- Niko Tyni <ntyni@debian.org>  Wed, 09 Dec 2015 18:51:28 +0200
 
 perl (5.22.1~rc3-2) experimental; urgency=low
 
