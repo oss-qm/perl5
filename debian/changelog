@@ -1,6 +1,7 @@
 perl (5.22.1~rc4-3) UNRELEASED; urgency=medium
 
-  * 
+  * Backport Encode::Unicode BOM fix from Encode-2.77.
+    (Closes: #798727)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 12 Dec 2015 16:21:54 +0200
 

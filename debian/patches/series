@@ -42,3 +42,5 @@ fixes/podman-source-date-epoch.diff
 fixes/podman-source-date-epoch-cleanups.diff
 fixes/podman-source-date-epoch-testfix.diff
 debian/devel-ppport-reproducibility.diff
+fixes/encode-unicode-bom.diff
+debian/encode-unicode-bom-doc.diff
