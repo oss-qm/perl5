@@ -33,6 +33,9 @@ require 'lib/deprecate.pm';
 # list special cases of version numbers that are OK here
 # version numbering discontinuities (epochs, added digits) cause these
 my %ok = (
+       "libencode-perl" => {
+               "2.72" => "2.77",
+       },
        "libtest-simple-perl" => {
                "0.98" => "0.98",
        },
