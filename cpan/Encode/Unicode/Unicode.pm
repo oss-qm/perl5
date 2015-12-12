@@ -182,7 +182,9 @@ what the BOM says.
 
 When no BOM is found, Encode 2.76 and blow croaked.  Since Encode
 2.77, it falls back to BE accordingly to RFC2781 and the Unicode
-Standard version 8.0
+Standard version 8.0. This behaviour has also been backported to
+Encode 2.72 and later as shipped in the Debian perl package since
+version 5.22.1-1 (see L<https://bugs.debian.org/798727>).
 
 =item *
 
