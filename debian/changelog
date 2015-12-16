@@ -1,5 +1,6 @@
-perl (5.22.1~rc4-3) UNRELEASED; urgency=medium
+perl (5.22.1-1) UNRELEASED; urgency=medium
 
+  * New upstream release.
   * Backport Encode::Unicode BOM fix from Encode-2.77.
     (Closes: #798727)
     + break+replace libencode-perl (<< 2.77) accordingly
