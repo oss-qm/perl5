@@ -46,6 +46,10 @@ my %ok = (
                "3.48_01" => "3.4801",
                "3.56"    => "3.5600",
        },
+       # bug #808629
+       "libautodie-perl" => {
+                "2.26"   => "2.29",
+       }
 );
 
 # list special cases where a Breaks entry doesn't need to imply
