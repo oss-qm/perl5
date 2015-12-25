@@ -194,7 +194,9 @@ for my $perl_package_name (keys %deps_found) {
 			ok(exists $dep_found->{Replaces}{$broken},
 				"Breaks for $broken in $perl_package_name implies Replaces");
 
-			is($dep_found->{Replaces}{$broken}{version}, $broken_version,
+			my $replaced_version = $dep_found->{Replaces}{$broken}{version};
+			$replaced_version =~ s/-\d+$//; # remove the Debian revision to mirror $broken_version
+			is($replaced_version, $broken_version,
 				"Replaces version for $broken in $perl_package_name matches Breaks");
 
 			if (exists $deprecated{$broken}) {
