@@ -1,7 +1,12 @@
 perl (5.22.1-3) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * psed was removed in 5.22, so remove the (broken) manpage symlink
     too (Closes: #808683)
+
+  [ Niko Tyni ]
+  * Fix an autodie scoping issue with "no autodie" and the "system" sub.
+    (Closes: #808629)
 
  -- Dominic Hargreaves <dom@earth.li>  Mon, 21 Dec 2015 22:20:02 +0000
 
