@@ -134,7 +134,7 @@ for my $perl_package_info ($control->get_packages) {
 		next if !exists $perl_package_info->{$deptype};
 
 		# Dpkg::Deps cannot parse unsubstituted substvars so remove this
-		$perl_package_info->{$deptype} =~ s/\${perlapi:Provides}//;
+		$perl_package_info->{$deptype} =~ s/\$\{perlapi:Provides}//;
 
 		my $parsed = deps_parse($perl_package_info->{$deptype});
 		next if !defined $parsed;
