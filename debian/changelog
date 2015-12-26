@@ -1,4 +1,4 @@
-perl (5.22.1-3) UNRELEASED; urgency=medium
+perl (5.22.1-3) unstable; urgency=medium
 
   [ Dominic Hargreaves ]
   * psed was removed in 5.22, so remove the (broken) manpage symlink
@@ -7,9 +7,9 @@ perl (5.22.1-3) UNRELEASED; urgency=medium
   [ Niko Tyni ]
   * Fix an autodie scoping issue with "no autodie" and the "system" sub.
     (Closes: #808629)
-    * break libautodie-perl (<< 2.29-2) to make sure it won't override the fix
+    + break libautodie-perl (<< 2.29-2) to make sure it won't override the fix
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 21 Dec 2015 22:20:02 +0000
+ -- Niko Tyni <ntyni@debian.org>  Sat, 26 Dec 2015 09:28:43 +0200
 
 perl (5.22.1-2) unstable; urgency=low
 
