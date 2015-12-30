@@ -1,3 +1,9 @@
+perl (5.20.2-3+deb8u2) UNRELEASED; urgency=medium
+
+  * [SECURITY] CVE-2015-8607 fix untaint issue with File::Spec::canonpath()
+
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 30 Dec 2015 00:29:42 +0000
+
 perl (5.20.2-3+deb8u1) jessie; urgency=medium
 
   * Make the perl debugger work with threaded programs again.
