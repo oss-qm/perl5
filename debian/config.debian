@@ -9,8 +9,8 @@ fullver="$ver.$subver"
 nextver="$ver."$(($subver+1))
 ccflags=-DDEBIAN
 ldflags=
-arch_cpu=${DEB_HOST_ARCH_CPU:-$(dpkg-architecture -qDEB_HOST_ARCH_CPU)}
-gnu_type=${DEB_HOST_GNU_TYPE:-$(dpkg-architecture -qDEB_HOST_GNU_TYPE)}
+host_arch_cpu=${DEB_HOST_ARCH_CPU:-$(dpkg-architecture -qDEB_HOST_ARCH_CPU)}
+host_gnu_type=${DEB_HOST_GNU_TYPE:-$(dpkg-architecture -qDEB_HOST_GNU_TYPE)}
 optimize=-O2
 debugging=-g
 
@@ -70,7 +70,7 @@ case "$1" in
     	exit 2;;
 esac
 
-case "$arch_cpu:$build_type" in
+case "$host_arch_cpu:$build_type" in
     sh4:*) # required to correctly handle floating point on sh4
     	ccflags="$ccflags -mieee";;
 
@@ -83,9 +83,9 @@ case ",$DEB_BUILD_OPTIONS," in
 	optimize="$optimize${optimize:+ }-O0";;
 esac
 
-cc=${CC:-${gnu_type}-gcc}
-cpp=${CPP:-${gnu_type}-cpp}
-ld=${LD:-${gnu_type}-gcc}
+cc=${CC:-${host_gnu_type}-gcc}
+cpp=${CPP:-${host_gnu_type}-cpp}
+ld=${LD:-${host_gnu_type}-gcc}
 
 if which dpkg-buildflags >/dev/null 2>&1; then
     ccflags="$ccflags $(dpkg-buildflags --get CPPFLAGS)"
@@ -107,7 +107,7 @@ eval /bin/bash Configure			\
     -Dldflags=\'$ldflags\'			\
     -Dlddlflags=\'-shared $ldflags\'			\
     -Dcccdlflags=-fPIC				\
-    -Darchname=$gnu_type			\
+    -Darchname=$host_gnu_type			\
     -Dprefix=/usr				\
     -Dprivlib=/usr/share/perl/$ver		\
     -Darchlib=/usr/lib/$archtriplet/perl/$ver		\
