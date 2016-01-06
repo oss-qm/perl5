@@ -5,12 +5,12 @@ Maintainer: Niko Tyni <ntyni@debian.org>
 Uploaders: Dominic Hargreaves <dom@earth.li>
 Standards-Version: 3.9.6
 Homepage: http://dev.perl.org/perl5/
-Build-Depends: file,
+Build-Depends: file <!nocheck>,
  cpio,
  libdb-dev,
  libgdbm-dev,
- netbase [!hurd-any],
- procps [!hurd-any],
+ netbase [!hurd-any] <!nocheck>,
+ procps [!hurd-any] <!nocheck>,
  zlib1g-dev | libz-dev,
  libbz2-dev,
  dpkg-dev (>= 1.16.0),
