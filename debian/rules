@@ -55,6 +55,8 @@ checkdir    = test -d debian
 checkroot   = test `id -u` -eq 0
 checkperl   = $(SHELL) debian/checkperl
 
+PERL_TO_USE = $(srcdir)/perl.static
+
 # this may differ from $(fullversion) for release candidates and the like
 package_upstream_version = $(shell dpkg-parsechangelog | \
         sed -ne 's/-[^-]\+$$//; s/^Version: *\([0-9]\+:\)*//p')
@@ -69,7 +71,7 @@ subst_upstream = -VUpstream-Version=$(package_upstream_version)
 subst_next_upstream = -VNext-Upstream-Version=$(nextversion)
 
 ifeq (,$(perlabi))
-subst_perlapi  = -Vperlapi:Provides="`./perl.static debian/mkprovides`"
+subst_perlapi  = -Vperlapi:Provides="`$(PERL_TO_USE) debian/mkprovides`"
 else
 subst_perlapi  = -Vperlapi:Provides="perlapi-$(perlabi)"
 endif
@@ -112,7 +114,7 @@ perl.static:
 	mv perl perl.static
 
 	# for the build log
-	./perl.static -Ilib -V
+	$(PERL_TO_USE) -Ilib -V
 
 	# save these for the perl-base package
 	cp lib/Config.pm lib/Config.pm.static
@@ -160,7 +162,7 @@ install-stamp: build-stamp
 	mv $(share)/Config_heavy.pl.static $(lib)
 
 	# switch man extensions to 1p and 3pm for vendor module installs
-	./perl.static -i -p \
+	$(PERL_TO_USE) -i -p \
 	    -e 's/^(man1ext=).*/$$1'\''1p'\''/;' \
 	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
 		$(lib)/Config.pm $(lib)/Config_heavy.pl \
@@ -179,7 +181,7 @@ endif
 	# avoid exposing the point release in libperl names, to
 	# avoid unnecessary breakage
 	# see #759989
-	./perl.static -i -p \
+	$(PERL_TO_USE) -i -p \
 	    -e 's/^(libperl='\''libperl\.so)\.$(fullversion)'\''/$$1.$(version)'\''/' \
 		$(lib)/Config.pm $(lib)/Config_heavy.pl \
 		$(lib)/Config.pm.static $(lib)/Config_heavy.pl.static
@@ -190,13 +192,13 @@ endif
 		for flag in $(shell dpkg-buildflags --get CPPFLAGS) \
 		         $(shell dpkg-buildflags --get CFLAGS); do \
 			case "$$flag" in -fstack-protector) ;; \
-			     *) ./perl.static -i -pe "/^(cc|cpp)flags/ and \
+			     *) $(PERL_TO_USE) -i -pe "/^(cc|cpp)flags/ and \
 			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
 		            $(lib)/Config.pm $(lib)/Config_heavy.pl \
 		            $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ;; \
 		    esac; done; \
 		for flag in $(shell dpkg-buildflags --get LDFLAGS); do \
-			./perl.static -i -pe "/^ld(dl)?flags/ and \
+			$(PERL_TO_USE) -i -pe "/^ld(dl)?flags/ and \
 			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
 		          $(lib)/Config.pm $(lib)/Config_heavy.pl \
 		          $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ; \
@@ -204,12 +206,12 @@ endif
 	fi
 
 	# convert required header files
-	-cd /usr/include; $(srcdir)/perl.static -I $(srcdir)/lib \
+	-cd /usr/include; $(PERL_TO_USE) -I $(srcdir)/lib \
 	    $(srcdir)/utils/h2ph -a -d $(srcdir)/$(lib) \
 		`cat $(srcdir)/debian/headers`
 
 	# fix up generated headers
-	./perl.static -Ilib debian/fixheaders $(lib)
+	$(PERL_TO_USE) debian/fixheaders $(lib)
 
 	# simple wrapper around Errno module
 	cp debian/errno.ph $(lib)
@@ -220,7 +222,7 @@ ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	for ph in `< debian/headers sed -e 's/\.h$$/.ph/'`; do \
 		if [ ! -f $(lib)/$$ph ]; then \
 			echo "$$ph: missing"; else \
-			echo $$ph | ./perl.static debian/check-require $(tmp) \
+			echo $$ph | $(PERL_TO_USE) debian/check-require $(tmp) \
 				|| exit 1; \
 		fi; \
 	done
@@ -269,7 +271,7 @@ endif
 		done) >debian/list.tmp; \
 	    (cd $(tmp); cpio -vdumpl ../build/$$p) <debian/list.tmp 2>&1 | \
 		grep -v ' linked to '; \
-	    (cd $(tmp); ../../perl.static -nle unlink) <debian/list.tmp; \
+	    (cd $(tmp); $(PERL_TO_USE) -nle unlink) <debian/list.tmp; \
 	done
 
 	# ensure that all file have been moved from debian/tmp
@@ -281,7 +283,7 @@ endif
 	 fi
 
 	# move pod out of -base modules and into .pod files in -doc
-	./perl.static debian/splitdoc $(build)/perl-base
+	$(PERL_TO_USE) debian/splitdoc $(build)/perl-base
 
 	# copy the essential parts of the standard library into a perl-base specific path
 	for d in $(build)/perl-base/usr/lib/$(archtriplet)/perl/$(fullversion) \
@@ -326,7 +328,7 @@ ifeq (,$(findstring x-perl-notest,$(DEB_BUILD_OPTIONS)))
 	# Verify that perl-base stays self contained
 
 	( cd $(build)/perl-base && find . -name '*.p[hlm]' ) | \
-	  ./perl.static $(srcdir)/debian/check-require $(build)/perl-base
+	  $(PERL_TO_USE) $(srcdir)/debian/check-require $(build)/perl-base
 endif
 endif
 
@@ -362,7 +364,7 @@ endif
 	cp debian/rename $(build)/perl/usr/bin/prename
 	chmod 755 $(build)/perl/usr/bin/prename
 
-	./perl.static -Ilib $(build)/perl/usr/bin/pod2man --official \
+	$(PERL_TO_USE) -Ilib $(build)/perl/usr/bin/pod2man --official \
 	    debian/rename >$(build)/perl/usr/share/man/man1/prename.1
 
 	# install docs
