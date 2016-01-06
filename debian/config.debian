@@ -9,6 +9,7 @@ fullver="$ver.$subver"
 nextver="$ver."$(($subver+1))
 ccflags=-DDEBIAN
 ldflags=
+host_arch=${DEB_HOST_ARCH:-$(dpkg-architecture -qDEB_HOST_ARCH)}
 host_arch_cpu=${DEB_HOST_ARCH_CPU:-$(dpkg-architecture -qDEB_HOST_ARCH_CPU)}
 host_gnu_type=${DEB_HOST_GNU_TYPE:-$(dpkg-architecture -qDEB_HOST_GNU_TYPE)}
 build_gnu_type=${DEB_BUILD_GNU_TYPE:-$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)}
@@ -97,8 +98,11 @@ fi
 # post-configure tweaks
 cp debian/config.over .
 
-# need bash when sourcing config.over
-eval /bin/bash Configure			\
+if [ "$build_gnu_type" = "$host_gnu_type" ]
+then
+    # native builds
+    # need bash when sourcing config.over
+    eval /bin/bash Configure			\
     -Dusethreads				\
     -Duselargefiles				\
     -Dcc=$cc					\
@@ -136,7 +140,48 @@ eval /bin/bash Configure			\
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
     $extra_path					\
-    -des $opts
+    -dEs $opts
+
+    # for the Configure -S call below
+    override=
+else
+	# cross builds
+
+	# First, ask Configure to compile a build system miniperl and
+	# generate_uudmap executable in host/
+	#
+	# It's tempting to use the system perl for this, but that fails
+	# when building extensions because it tries to dynamically load
+	# XS modules from lib/, particularly as <*> uses File::Glob on
+	# full perls (but not miniperl)
+	if [ ! -x build-miniperl ]; then
+	    ./Configure -dE -Dusecrosscompile
+	    # host/ gets cleaned between builds by 'make distclean', so
+	    # stash the results
+	    cp host/miniperl build-miniperl
+	    cp host/generate_uudmap build-generate_uudmap
+	fi
+
+	# get ready made config.sh, currently in debian/cross/<arch>
+	sourceconfig=debian/cross/${host_arch}/config.sh.${build_type}
+	if [ ! -f $sourceconfig ]; then
+	    echo "need $sourceconfig for cross build!" 1>&2
+	    exit 1
+	fi
+	cp $sourceconfig ./config.sh
+
+	# override configuration for cross building
+	echo "usecrosscompile='define'" >  optdef.sh
+	echo "hostperl='./build-miniperl'" >> optdef.sh
+	echo "hostgenerate='./build-generate_uudmap'" >> optdef.sh
+	echo "perl='/usr/bin/perl'" >> optdef.sh
+
+	# for the Configure -S call below
+	override=-O
+fi
+
+# now continue with extracting Makefile et al.
+/bin/bash Configure -S $override
 
 # append PERL_BUILD_DATE before the last #endif in config.h
 # massive quoting problems prevent passing this to Configure

@@ -55,6 +55,7 @@ checkdir    = test -d debian
 checkroot   = test `id -u` -eq 0
 checkperl   = $(SHELL) debian/checkperl
 
+DEB_BUILD_GNU_TYPE      ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 DEB_HOST_GNU_TYPE       ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 
 OBJCOPY = $(DEB_HOST_GNU_TYPE)-objcopy
@@ -63,7 +64,11 @@ STRIP = $(DEB_HOST_GNU_TYPE)-strip
 # Invoking PERL_TO_USE is expected to find its standard library
 # without additional command line arguments, so include lib/ here
 # in its definition.
-PERL_TO_USE = $(srcdir)/perl.static -I $(srcdir)/lib
+ifeq ($(DEB_HOST_GNU_TYPE), $(DEB_BUILD_GNU_TYPE))
+	PERL_TO_USE = $(srcdir)/perl.static
+else
+	PERL_TO_USE = $(shell which perl)
+endif
 
 # this may differ from $(fullversion) for release candidates and the like
 package_upstream_version = $(shell dpkg-parsechangelog | \
@@ -121,8 +126,10 @@ perl.static:
 	mv libperl.a libperl-static
 	mv perl perl.static
 
+ifeq ($(DEB_HOST_GNU_TYPE), $(DEB_BUILD_GNU_TYPE))
 	# for the build log
 	$(PERL_TO_USE) -Ilib -V
+endif
 
 	# save these for the perl-base package
 	cp lib/Config.pm lib/Config.pm.static
@@ -155,6 +162,7 @@ clean:
 	rm -rf config.over perl.static perl.debug libperl-static libperl.so* \
 	    $(patchlevel) build-stamp install-stamp t/auto debian/shlibs.local \
 	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
+	    build-miniperl build-generate_uudmap optdef.sh \
 	    debian/substvars debian/files debian/list.tmp $(tmp) $(build)
 
 install-stamp: build-stamp
