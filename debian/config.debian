@@ -161,12 +161,21 @@ else
 	cp host/generate_uudmap build-generate_uudmap
 
 	# get ready made config.sh, currently in debian/config/<triplet>
-	sourceconfig=debian/config/$archtriplet/config.sh.${build_type}
-	if [ ! -f $sourceconfig ]; then
-	    echo "need $sourceconfig for cross build!" 1>&2
+	basedir=/usr/lib/$archtriplet/perl/debian-config-data
+	baseconfig=${basedir}/config.sh.static
+	if [ ! -f "$baseconfig" ]; then
+	    echo "need $baseconfig for cross build!" 1>&2
 	    exit 1
 	fi
-	cp $sourceconfig ./config.sh
+	cp $baseconfig ./config.sh
+	if [ "$build_type" != "static" ]; then
+		patchconfig=${basedir}/config.sh.$build_type.patch
+		if [ ! -f "$patchconfig" ]; then
+			echo "need $patchconfig for cross build!" 1>&2
+			exit 1
+		fi
+		patch config.sh < $patchconfig
+	fi
 
 	# override configuration for cross building
 	echo "usecrosscompile='define'" >  optdef.sh
