@@ -136,7 +136,7 @@ eval /bin/bash Configure			\
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
     $extra_path					\
-    $opts -des \
+    -des $opts
 
 # append PERL_BUILD_DATE before the last #endif in config.h
 # massive quoting problems prevent passing this to Configure
