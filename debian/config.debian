@@ -146,6 +146,7 @@ then
 else
 	# cross builds
 
+    if ! echo $DEB_BUILD_PROFILES | grep -w -q stage1; then
 	# First, ask Configure to compile a build system miniperl and
 	# generate_uudmap executable in host/
 	#
@@ -159,6 +160,7 @@ else
 	# stash the results
 	cp host/miniperl build-miniperl
 	cp host/generate_uudmap build-generate_uudmap
+    fi
 
 	# get ready made config.sh, currently in debian/config/<triplet>
 	basedir=/usr/lib/$archtriplet/perl/debian-config-data
@@ -177,6 +179,7 @@ else
 		patch config.sh < $patchconfig
 	fi
 
+    if ! echo $DEB_BUILD_PROFILES | grep -w -q stage1; then
 	# override configuration for cross building
 	echo "usecrosscompile='define'" >  optdef.sh
 	echo "hostperl='./build-miniperl'" >> optdef.sh
@@ -185,11 +188,14 @@ else
 
 	# for the Configure -S call below
 	override=-O
+    fi
 fi
 
-# now continue with extracting Makefile et al.
-/bin/bash Configure -S $override
+if ! echo $DEB_BUILD_PROFILES | grep -w -q stage1; then
+    # now continue with extracting Makefile et al.
+    /bin/bash Configure -S $override
 
-# append PERL_BUILD_DATE before the last #endif in config.h
-# massive quoting problems prevent passing this to Configure
-sed -i "\$i #define PERL_BUILD_DATE \"$PERL_BUILD_DATE\"" config.h
+    # append PERL_BUILD_DATE before the last #endif in config.h
+    # massive quoting problems prevent passing this to Configure
+    sed -i "\$i #define PERL_BUILD_DATE \"$PERL_BUILD_DATE\"" config.h
+fi

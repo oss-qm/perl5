@@ -5,12 +5,12 @@ Maintainer: Niko Tyni <ntyni@debian.org>
 Uploaders: Dominic Hargreaves <dom@earth.li>
 Standards-Version: 3.9.6
 Homepage: http://dev.perl.org/perl5/
-Build-Depends: file <!nocheck>,
+Build-Depends: file <!nocheck !stage1>,
  cpio,
  libdb-dev,
  libgdbm-dev,
- netbase [!hurd-any] <!nocheck>,
- procps [!hurd-any] <!nocheck>,
+ netbase [!hurd-any] <!nocheck !stage1>,
+ procps [!hurd-any] <!nocheck !stage1>,
  zlib1g-dev | libz-dev,
  libbz2-dev,
  dpkg-dev (>= 1.16.0),
@@ -23,6 +23,7 @@ Package: perl-base
 Essential: yes
 Priority: required
 Architecture: any
+Build-Profiles: <!stage1>
 Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.17.17)
 Conflicts: safe-rm (<< 0.8),
  update-inetd (<< 4.41),
@@ -75,6 +76,7 @@ Package: perl-doc
 Section: doc
 Priority: optional
 Architecture: all
+Build-Profiles: <!stage1>
 Depends: perl (>= ${Upstream-Version}-1)
 Suggests: man-browser, groff-base
 Description: Perl documentation
@@ -85,6 +87,7 @@ Package: perl-debug
 Section: devel
 Priority: extra
 Architecture: any
+Build-Profiles: <!stage1>
 Depends: perl (= ${binary:Version}), ${shlibs:Depends}
 Description: debug-enabled Perl interpreter
  debugperl provides a debug-enabled version of Perl which can produce
@@ -111,6 +114,7 @@ Package: libperl5.22
 Section: libs
 Priority: optional
 Architecture: any
+Build-Profiles: <!stage1>
 Depends: ${shlibs:Depends}, perl-modules-5.22 (>= ${source:Version})
 Breaks: libdigest-md5-perl (<< 2.54),
  libmime-base64-perl (<< 3.15),
@@ -191,6 +195,7 @@ Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
+Build-Profiles: <!stage1>
 Depends: perl (= ${binary:Version}), libperl5.22 (= ${binary:Version}),
  libc6-dev | libc-dev
 Description: Perl library: development files
@@ -200,6 +205,7 @@ Package: perl-modules-5.22
 Priority: standard
 Architecture: all
 Multi-Arch: foreign
+Build-Profiles: <!stage1>
 Depends: perl-base (>= ${Upstream-Version}-1)
 Pre-Depends: dpkg (>= 1.17.17)
 Recommends: perl (>= ${Upstream-Version}-1),
@@ -377,6 +383,7 @@ Package: perl
 Priority: standard
 Architecture: any
 Multi-Arch: allowed
+Build-Profiles: <!stage1>
 Pre-Depends: dpkg (>= 1.17.17)
 Depends: perl-base (= ${binary:Version}), perl-modules-5.22 (>= ${source:Version}), libperl5.22 (= ${binary:Version}), ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)

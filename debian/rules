@@ -33,9 +33,17 @@ strip	    := $(shell /bin/bash debian/config.debian --strip)
 archtriplet := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 arch        := $(shell dpkg-architecture -qDEB_HOST_ARCH)
 srcdir      := $(shell pwd)
+
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 packages    := $(shell sed -n 's/^Package: *//p' debian/control)
 arch_pkgs   := $(shell sed -n '/^Package:/ { s/^Package: *//; h }; /^Architecture: any/ { x; p }' debian/control)
 indep_pkgs  := $(shell sed -n '/^Package:/ { s/^Package: *//; h }; /^Architecture: all/ { x; p }' debian/control)
+else
+packages    := perl-config-data
+arch_pkgs   := perl-config-data
+indep_pkgs  :=
+endif
+
 build_date  := $(shell dpkg-parsechangelog | sed -n -e 's/^Date: //p')
 tmp	    = debian/tmp
 bin         = $(tmp)/usr/bin
@@ -72,6 +80,10 @@ ifeq ($(DEB_HOST_GNU_TYPE), $(DEB_BUILD_GNU_TYPE))
 else
 	PERL_TO_USE = $(shell which perl)
 	export TIME_HIRES_DONT_RUN_PROBES=1
+endif
+
+ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+	PERL_TO_USE = $(shell which perl)
 endif
 
 # this may differ from $(fullversion) for release candidates and the like
@@ -130,6 +142,11 @@ perl.static:
 	# for the perl-config-data package
 	cp config.sh config.sh.static
 
+ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+	# we won't 'make distclean' later so clean this up manually
+	rm -f config.sh
+	touch $@
+else
 	$(MAKE) perl $(test_target)
 	mv libperl.a libperl-static
 	mv perl perl.static
@@ -142,6 +159,7 @@ endif
 	# save these for the perl-base package
 	cp lib/Config.pm lib/Config.pm.static
 	cp lib/Config_heavy.pl lib/Config_heavy.pl.static
+endif
 
 perl.debug:
 	$(checkdir)
@@ -153,8 +171,14 @@ perl.debug:
 	# for the perl-config-data package
 	cp config.sh config.sh.debug
 
+ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+	# we won't 'make distclean' later so clean this up manually
+	rm -f config.sh
+	touch $@
+else
 	$(MAKE) perl
 	mv perl perl.debug
+endif
 
 libperl.so.$(fullversion):
 	$(checkdir)
@@ -165,10 +189,16 @@ libperl.so.$(fullversion):
 	# for the perl-config-data package
 	cp config.sh config.sh.shared
 
+ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+	# we won't 'make distclean' later so clean this up manually
+	rm -f config.sh
+	touch $@
+else
 	$(MAKE) SHRPLDFLAGS='$$(LDDLFLAGS) -Wl,-soname,libperl.so.$(version)' $@
 	ln -s libperl.so.$(fullversion) libperl.so.$(version)
 	ln -s libperl.so.$(version) libperl.so
 	$(MAKE) all $(test_target) || { rm -f libperl.so*; exit 1; }
+endif
 
 clean:
 	$(checkdir)
@@ -178,7 +208,7 @@ clean:
 	rm -rf config.over perl.static perl.debug libperl-static libperl.so* \
 	    $(patchlevel) build-stamp install-stamp t/auto debian/shlibs.local \
 	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
-	    build-miniperl build-generate_uudmap optdef.sh config.sh.* \
+	    build-miniperl build-generate_uudmap optdef.sh config.sh.* .config/ \
 	    debian/substvars debian/files debian/list.tmp $(tmp) $(build)
 
 install-stamp: build-stamp
@@ -187,6 +217,7 @@ install-stamp: build-stamp
 	$(checkperl)
 	rm -rf $(tmp) $(build)
 
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 	$(MAKE) install DESTDIR="$(tmp)"
 
 	# these end up in the wrong place
@@ -287,6 +318,7 @@ endif
 
 	# install debug binary as debugperl
 	cp perl.debug $(bin)/debugperl
+endif
 
 	# for the perl-config-data package
 	mkdir -p $(pcd)
@@ -325,6 +357,7 @@ endif
 	    exit 1; \
 	 fi
 
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 	# move pod out of -base modules and into .pod files in -doc
 	$(PERL_TO_USE) debian/splitdoc $(build)/perl-base
 
@@ -409,6 +442,7 @@ endif
 
 	$(PERL_TO_USE) $(build)/perl/usr/bin/pod2man --official \
 	    debian/rename >$(build)/perl/usr/share/man/man1/prename.1
+endif
 
 	# install docs
 	for p in $(packages); \
@@ -446,6 +480,7 @@ endif
 	    fi; \
 	done
 
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 	# remove empty directories left after moving module docs
 	find $(build)/perl-modules-$(version)/usr/share/perl/$(fullversion) \
 	    -depth -type d -empty | xargs -r rmdir
@@ -462,6 +497,7 @@ endif
 	  mkdir -p $$ccdir; \
 	  ln -s ../$(fullversion)/Config.pm $$ccdir; \
 	  ln -s ../$(fullversion)/Config_heavy.pl $$ccdir
+endif
 
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -n9
@@ -469,6 +505,7 @@ endif
 	    \( -name changelog\* -o \( -size +4k ! -name copyright \) \) \
 	    -print | xargs -r gzip -n9
 
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 ifeq ($(strip),yes)
 	# strip
 	find $(build)/*/usr/bin $(build)/*/usr/lib -type f \
@@ -515,6 +552,7 @@ endif
 	ln -s perlbug.1.gz $(build)/perl/usr/share/man/man1/perlthanks.1.gz
 
 	ln -s changelog.gz $(build)/perl/usr/share/doc/perl/Changes.gz
+endif
 
 	# fixperms
 	find $(build) -print | xargs -r chown -h root:root
@@ -531,6 +569,7 @@ endif
 binary-indep: build-stamp install-stamp
 	$(checkdir)
 	$(checkroot)
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 	rm -f debian/substvars
 	for p in $(indep_pkgs); \
 	do \
@@ -554,11 +593,13 @@ binary-indep: build-stamp install-stamp
 	        xargs -0r touch --no-dereference --date='$(build_date)'; \
 	    dpkg --build $(build)/$$p ..; \
 	done
+endif
 
 # Build architecture-dependent files here.
 binary-arch: build-stamp install-stamp
 	$(checkdir)
 	$(checkroot)
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 ifeq ($(installtype),static)
 	echo 'libperl $(version) libperl$(version) (= $${binary:Version})' \
 	    >debian/shlibs.local
@@ -569,6 +610,7 @@ else
 	echo 'libperl $(version)' >debian/shlibs.local
 	echo 'libperl $(version) libperl$(version) (>= $(package_upstream_version))' \
 	    >debian/perl-base.shlibs
+endif
 endif
 
 	for p in $(arch_pkgs); \
