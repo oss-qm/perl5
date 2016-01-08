@@ -33,7 +33,9 @@ strip	    := $(shell /bin/bash debian/config.debian --strip)
 archtriplet := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 arch        := $(shell dpkg-architecture -qDEB_HOST_ARCH)
 srcdir      := $(shell pwd)
-packages    := $(shell sed -n 's/^Package: *\(.*\)/\1/p' debian/control)
+packages    := $(shell sed -n 's/^Package: *//p' debian/control)
+arch_pkgs   := $(shell sed -n '/^Package:/ { s/^Package: *//; h }; /^Architecture: any/ { x; p }' debian/control)
+indep_pkgs  := $(shell sed -n '/^Package:/ { s/^Package: *//; h }; /^Architecture: all/ { x; p }' debian/control)
 build_date  := $(shell dpkg-parsechangelog | sed -n -e 's/^Date: //p')
 tmp	    = debian/tmp
 bin         = $(tmp)/usr/bin
@@ -485,8 +487,7 @@ binary-indep: build-stamp install-stamp
 	$(checkdir)
 	$(checkroot)
 	rm -f debian/substvars
-	for p in `./perl.static -l -00ne 'print $$1 if /^Architecture:\s+all/m \
-	    and /^Package:\s+(.*)/m' debian/control`; \
+	for p in $(indep_pkgs); \
 	do \
 	    rm -rf $(build)/$$p/DEBIAN; \
 	    mkdir $(build)/$$p/DEBIAN; \
@@ -525,8 +526,7 @@ else
 	    >debian/perl-base.shlibs
 endif
 
-	for p in `./perl.static -l -00ne 'print $$1 if /^Architecture:\s+any/m \
-	    and /^Package:\s+(.*)/m' debian/control`; \
+	for p in $(arch_pkgs); \
 	do \
 	    rm -rf $(build)/$$p/DEBIAN debian/substvars; \
 	    mkdir $(build)/$$p/DEBIAN; \
@@ -545,8 +545,7 @@ endif
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
 	done
 	# dpkg-shlibdeps needs to be run only after all the shlibs are present
-	for p in `./perl.static -l -00ne 'print $$1 if /^Architecture:\s+any/m \
-	    and /^Package:\s+(.*)/m' debian/control`; \
+	for p in $(arch_pkgs); \
 	do \
 	    find $(build)/$$p/usr -type f \
 		\( -perm /111 -o -name \*.so\* \) -print | \
