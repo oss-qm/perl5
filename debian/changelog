@@ -4,6 +4,8 @@ perl (5.22.1-4) UNRELEASED; urgency=medium
     with perl 5.22 (Closes: #808805)
   * Add Breaks entry for versions of maildirsync not compatible
     with perl 5.22 (Closes: #809562)
+  * Add Breaks entry for versions of backuppc not compatible
+    with perl 5.22 (Closes: #810118)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Dec 2015 22:58:27 +0000
 
