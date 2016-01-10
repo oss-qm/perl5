@@ -55,7 +55,10 @@ checkdir    = test -d debian
 checkroot   = test `id -u` -eq 0
 checkperl   = $(SHELL) debian/checkperl
 
-PERL_TO_USE = $(srcdir)/perl.static
+# Invoking PERL_TO_USE is expected to find its standard library
+# without additional command line arguments, so include lib/ here
+# in its definition.
+PERL_TO_USE = $(srcdir)/perl.static -I $(srcdir)/lib
 
 # this may differ from $(fullversion) for release candidates and the like
 package_upstream_version = $(shell dpkg-parsechangelog | \
@@ -364,7 +367,7 @@ endif
 	cp debian/rename $(build)/perl/usr/bin/prename
 	chmod 755 $(build)/perl/usr/bin/prename
 
-	$(PERL_TO_USE) -Ilib $(build)/perl/usr/bin/pod2man --official \
+	$(PERL_TO_USE) $(build)/perl/usr/bin/pod2man --official \
 	    debian/rename >$(build)/perl/usr/share/man/man1/prename.1
 
 	# install docs

@@ -5,7 +5,6 @@
 # subroutines
 #
 
-BEGIN { unshift @INC, 'lib' }
 use strict;
 use File::Find;
 use File::Path;
