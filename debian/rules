@@ -55,6 +55,11 @@ checkdir    = test -d debian
 checkroot   = test `id -u` -eq 0
 checkperl   = $(SHELL) debian/checkperl
 
+DEB_HOST_GNU_TYPE       ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+
+OBJCOPY = $(DEB_HOST_GNU_TYPE)-objcopy
+STRIP = $(DEB_HOST_GNU_TYPE)-strip
+
 # Invoking PERL_TO_USE is expected to find its standard library
 # without additional command line arguments, so include lib/ here
 # in its definition.
@@ -448,12 +453,12 @@ ifeq ($(strip),yes)
 			dir=$${path%/*}; \
 			test -d $(debug)$$dir || mkdir -p $(debug)$$dir; \
 			# stash debugging symbols \
-			objcopy --only-keep-debug $$f $(debug)$$path; \
+			$(OBJCOPY) --only-keep-debug $$f $(debug)$$path; \
 			# strip \
-			strip --remove-section=.comment --remove-section=.note \
+			$(STRIP) --remove-section=.comment --remove-section=.note \
 			    $$extra $$f; \
 			# add debuglink \
-			objcopy --add-gnu-debuglink=$(debug)$$path $$f; \
+			$(OBJCOPY) --add-gnu-debuglink=$(debug)$$path $$f; \
 		esac; \
 	    done
 	    # versioned hardlink for the detached debug symbols
