@@ -13,6 +13,7 @@ find sub { push @ARGV, $File::Find::name if -f and /\.ph$/ }, @args;
 
 $^I = '';
 
+die "$0: no headers under @args?\n" unless @ARGV;
 while (<>)
 {
     # discard casts
