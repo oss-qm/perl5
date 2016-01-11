@@ -41,3 +41,5 @@ fixes/failed_require_diagnostics.diff
 fixes/array-cloning.diff
 fixes/perldb-threads.diff
 fixes/CVE-2015-8607_file_spec_taint_fix.diff
+fixes/encode-unicode-bom.diff
+debian/encode-unicode-bom-doc.diff
