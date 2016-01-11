@@ -223,7 +223,8 @@ endif
 	fi
 
 	# convert required header files
-	-cd /usr/include; $(PERL_TO_USE) -I $(srcdir)/lib \
+	-cd /usr/include; \
+	    $(srcdir)/debian/fake-config $(srcdir)/lib $(PERL_TO_USE) \
 	    $(srcdir)/utils/h2ph -a -d $(srcdir)/$(lib) \
 		`cat $(srcdir)/debian/headers`
 
