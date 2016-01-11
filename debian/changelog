@@ -3,6 +3,8 @@ perl (5.22.1-4) UNRELEASED; urgency=medium
   * Add Breaks entry for versions of libsbuild-perl, maildirsync,
     and backuppc not compatible with perl 5.22
     (Closes: #808805, #809562, #810118)
+  * Apply patch from Niko Tyni restoring debugperl functionality
+    (Closes: #810326)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Dec 2015 22:58:27 +0000
 

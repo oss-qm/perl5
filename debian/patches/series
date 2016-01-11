@@ -46,3 +46,4 @@ fixes/encode-unicode-bom.diff
 debian/encode-unicode-bom-doc.diff
 debian/kfreebsd-softupdates.diff
 fixes/autodie-scope.diff
+debian/debugperl-compat-fix.diff
