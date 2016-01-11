@@ -47,3 +47,4 @@ debian/encode-unicode-bom-doc.diff
 debian/kfreebsd-softupdates.diff
 fixes/autodie-scope.diff
 debian/debugperl-compat-fix.diff
+fixes/CVE-2015-8607_file_spec_taint_fix.diff
