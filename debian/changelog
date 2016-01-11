@@ -1,9 +1,9 @@
-perl (5.20.2-3+deb8u3) UNRELEASED; urgency=medium
+perl (5.20.2-3+deb8u3) jessie; urgency=medium
 
   * Backport Encode::Unicode BOM fix from Encode-2.77. (Closes: #798727)
     + break+replace libencode-perl (<< 2.63-1+deb8u1) accordingly
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 11 Jan 2016 22:09:57 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 11 Jan 2016 23:06:58 +0000
 
 perl (5.20.2-3+deb8u2) jessie-security; urgency=high
 
