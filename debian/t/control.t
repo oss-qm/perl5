@@ -42,6 +42,9 @@ my %ok = (
        "libfile-spec-perl" => {
                "3.48_01" => "3.4801",
        },
+       "libencode-perl" => {
+               "2.60" => "2.63-1+deb8u1",
+       },
 );
 
 # list special cases where a Breaks entry doesn't need to imply
