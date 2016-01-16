@@ -183,10 +183,10 @@ Multi-Arch: foreign
 Depends: perl-base (>= ${Upstream-Version}-1)
 Pre-Depends: dpkg (>= 1.17.17)
 Recommends: perl (>= ${Upstream-Version}-1),
-Conflicts: defoma (<< 0.11.12),
+Conflicts: perl-modules,
+ defoma (<< 0.11.12),
  mono-gac (<< 2.10.8.1-3)
-Breaks: perl-modules,
- perl (<< ${Upstream-Version}~),
+Breaks: perl (<< ${Upstream-Version}~),
  libpod-parser-perl (<< 1.63),
  pdl (<< 1:2.007-4),
  libansicolor-perl (<< 4.03),
