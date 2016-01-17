@@ -2,6 +2,13 @@ perl (5.22.1-6) UNRELEASED; urgency=medium
 
   * Annotate test suite specific build dependencies with <!nocheck> for
     better build profile support.
+  * Add packaging infrastructure for cross build support (#285559 et al.)
+    + Configure probes still need to run on native builds; we now stash
+      the results in libperl5.22 and copy them back to the source
+      package. See debian/cross/README.
+    + The full process is not quite established yet, and no commitment
+      is made on the long term feasibility of this approach. We will
+      see how it goes.
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 29 Jan 2016 15:27:14 +0200
 
