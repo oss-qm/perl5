@@ -1,3 +1,9 @@
+perl (5.22.1-4+cross1) UNRELEASED; urgency=medium
+
+  * Add cross build support. (Closes: #285559)
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 23 Jan 2016 19:09:18 +0200
+
 perl (5.22.1-4) unstable; urgency=high
 
   * Add Breaks entry for versions of libsbuild-perl, maildirsync,
