@@ -1,6 +1,8 @@
 perl (5.22.1-5) UNRELEASED; urgency=medium
 
-  * 
+  [ Dominic Hargreaves ]
+  * Add Breaks entry for versions of mailagent not compatible with
+    perl 5.22
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 16 Jan 2016 14:54:05 +0200
 
