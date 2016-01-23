@@ -1,0 +1,34 @@
+From bacc8798379e85948d16987ba8b7c2d5064634ef Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sun, 10 Jan 2016 22:35:53 +0200
+Subject: Fix the Configure escape with usecrosscompile but no targethost
+
+Commit 97076f2 added a graceful exit to Configure when targethost is
+not defined but usecrosscompile is. However, this is not reached because
+there is a similar check a bit earlier that makes Configure bail out.
+
+Make the earlier check warn instead of croaking.
+
+The use case for this combination is supplying an external config.sh
+suitable for the target platform, avoiding the need for configuration
+probes.
+
+Bug: https://rt.perl.org/Ticket/Display.html?id=127234
+Patch-Name: fixes/crosscompile-no-targethost.diff
+---
+ Configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Configure b/Configure
+index 6fcc3bc..7207202 100755
+--- a/Configure
++++ b/Configure
+@@ -2944,7 +2944,7 @@ $define|true|[yY]*)
+ 	*)  echo "Using targetarch $targetarch." >&4 ;;
+ 	esac
+ 	case "$targethost" in
+-	'') echo "Targethost not defined." >&4; croak=y ;;
++	'') echo "Targethost not defined." >&4; croak=n ;;
+ 	*)  echo "Using targethost $targethost." >&4
+ 	esac
+ 	locincpth=' '

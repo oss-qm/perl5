@@ -1,0 +1,36 @@
+From 594e00617afd0d0ccc9986fde3e47ffe4bdfa4b8 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Thu, 21 Jan 2016 18:47:05 +0200
+Subject: Add an environment variable to skip running configuration probes
+
+When cross-compiling, running the probes is hard or impossible,
+but compiling them seems to get most things right at least on modern
+systems. Having an opt-in method to skip the running part by setting
+TIME_HIRES_DONT_RUN_PROBES=1 in the environment makes cross-compiling
+possible on such systems.
+
+The available method of skipping the probes completely based on %Config
+information does not seem usable: $Config{d_nanosleep} was short lived
+(perl-5.8.0-259-g2d73687 until perl-5.8.0-1750-g6bdd71e), and the
+d_clock* entries don't seem to ever have existed. See also the thread
+around http://www.nntp.perl.org/group/perl.perl5.porters/2003/07/msg77404.html
+
+Bug: https://rt.cpan.org/Ticket/Display.html?id=111391
+Patch-Name: debian/cross-time-hires.diff
+---
+ cpan/Time-HiRes/Makefile.PL | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cpan/Time-HiRes/Makefile.PL b/cpan/Time-HiRes/Makefile.PL
+index 394cb91..714e1e6 100644
+--- a/cpan/Time-HiRes/Makefile.PL
++++ b/cpan/Time-HiRes/Makefile.PL
+@@ -150,7 +150,7 @@ __EOD__
+ 	    my $res = system($cccmd);
+ 	    $ok = defined($res) && $res == 0 && -s $tmp_exe && -x _;
+ 
+-	    if ( $ok && exists $args{run} && $args{run}) {
++	    if ( $ok && exists $args{run} && $args{run} && !$ENV{TIME_HIRES_DONT_RUN_PROBES} ) {
+ 		my $tmp_exe =
+ 		    File::Spec->catfile(File::Spec->curdir, $tmp_exe);
+ 		printf "Running $tmp_exe..." if $VERBOSE;

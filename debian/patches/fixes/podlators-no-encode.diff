@@ -1,0 +1,94 @@
+From 18a4083e5bdcb6fc36fc63a98a998eac2ff6d751 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Wed, 13 Jan 2016 22:57:14 +0200
+Subject: Degrade gracefully if utf8 is requested but Encode is not available
+
+This might happen if perl wasn't built with the Encode extension,
+or in case somebody tries to use Pod::Man with miniperl.
+
+Bug: https://rt.cpan.org/Ticket/Display.html?id=111156
+Origin: backport, http://git.eyrie.org/?p=perl/podlators.git;a=commit;h=80a5b294774be3000fce3e442f48add9c01b35ad
+Patch-Name: fixes/podlators-no-encode.diff
+---
+ cpan/podlators/lib/Pod/Man.pm    | 16 ++++++++++++++--
+ cpan/podlators/t/man/no-encode.t | 37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+), 2 deletions(-)
+ create mode 100644 cpan/podlators/t/man/no-encode.t
+
+diff --git a/cpan/podlators/lib/Pod/Man.pm b/cpan/podlators/lib/Pod/Man.pm
+index 24e49a0..ff80333 100644
+--- a/cpan/podlators/lib/Pod/Man.pm
++++ b/cpan/podlators/lib/Pod/Man.pm
+@@ -30,8 +30,14 @@ use strict;
+ use subs qw(makespace);
+ use vars qw(@ISA %ESCAPES $PREAMBLE $VERSION);
+ 
+-use Carp qw(croak);
+-use Encode qw(encode);
++use Carp qw(carp croak);
++
++my $has_encode;
++
++BEGIN {
++    $has_encode = eval { require Encode; Encode->import('encode'); 1 };
++}
++
+ use Pod::Simple ();
+ 
+ @ISA = qw(Pod::Simple);
+@@ -139,6 +145,12 @@ sub new {
+     }
+     delete $$self{errors};
+ 
++    # degrade back to non-utf8 if Encode is not available
++    if ($$self{utf8} and !$has_encode) {
++        carp "utf8 mode requested but Encode::encode() not available, falling back to non-utf8";
++        delete $$self{utf8};
++    }
++
+     # Initialize various other internal constants based on our arguments.
+     $self->init_fonts;
+     $self->init_quotes;
+diff --git a/cpan/podlators/t/man/no-encode.t b/cpan/podlators/t/man/no-encode.t
+new file mode 100644
+index 0000000..040a75b
+--- /dev/null
++++ b/cpan/podlators/t/man/no-encode.t
+@@ -0,0 +1,37 @@
++#!/usr/bin/perl
++#
++# Tests for graceful degradation to non-utf8 output
++# in case Encode is not available
++
++use 5.006;
++use strict;
++use warnings;
++
++use Test::More tests => 6;
++
++BEGIN {
++    ok(!$INC{'Encode.pm'}, 'Encode is not loaded yet');
++    unshift @INC, sub { die 'refusing to load Encode' if $_[1] eq 'Encode.pm' };
++    ok(! eval { require Encode; 1 }, 'cannot load Encode anymore');
++    use_ok('Pod::Man');
++}
++
++local $SIG{__WARN__} = sub { die 'no warnings expected' };
++
++my ($parser, $output);
++my $pod = "=encoding latin1\n\n=head1 NAME\n\nBeyonc\xE9!";
++
++$parser = Pod::Man->new(utf8 => 0, name => 'test');
++$parser->output_string(\$output);
++$parser->parse_string_document($pod);
++like($output, qr/Beyonce/, 'works without Encode for non-utf8 output');
++
++my $output2;
++{
++    local $SIG{__WARN__} = sub {like($_[0], qr/falling back to non-utf8/,
++        'Pod::Man->new() warns with utf8 when Encode is not available') };
++    $parser = Pod::Man->new(utf8 => 1, name => 'test');
++}
++$parser->output_string(\$output2);
++$parser->parse_string_document($pod);
++is($output2, $output, 'degraded gracefully to non-utf8 output');
