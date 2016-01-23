@@ -68,6 +68,7 @@ ifeq ($(DEB_HOST_GNU_TYPE), $(DEB_BUILD_GNU_TYPE))
 	PERL_TO_USE = $(srcdir)/perl.static
 else
 	PERL_TO_USE = $(shell which perl)
+	export TIME_HIRES_DONT_RUN_PROBES=1
 endif
 
 # this may differ from $(fullversion) for release candidates and the like
