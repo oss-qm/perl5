@@ -8,7 +8,7 @@
 
 # Package name      : perl5
 # Source directory  : .
-# Configuration time: Sat Dec 26 07:28:43 UTC 2015
+# Configuration time: Mon Jan 11 22:29:23 UTC 2016
 # Configured by     : Debian Project
 # Target system     : linux localhost 3.16.0 #1 smp debian 3.16.0 x86_64 gnulinux 
 
@@ -107,7 +107,7 @@ ccsymbols=''
 ccversion=''
 cf_by='Debian Project'
 cf_email='perl@packages.debian.org'
-cf_time='Sat Dec 26 07:28:43 UTC 2015'
+cf_time='Mon Jan 11 22:29:23 UTC 2016'
 charbits='8'
 charsize='1'
 chgrp=''
