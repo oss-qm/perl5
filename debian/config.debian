@@ -165,7 +165,37 @@ then
 else
 	# cross builds
 
-	# First, ask Configure to compile a build system miniperl and
+	# find a ready made config.sh, currently in debian/cross/<arch>
+	basedir=debian/cross/${host_arch}
+	baseconfig=${basedir}/config.sh.static
+	if [ ! -f $baseconfig ]; then
+	    echo "need $baseconfig for cross build!" 1>&2
+	    exit 1
+	fi
+
+	# check for a new upstream version, invalidating old config.sh files
+	crossversion=$(sed -n "s/^version='\(.*\)'/\1/ p" $baseconfig)
+	if [ "$fullver" != "$crossversion" ]; then
+	    echo "Fatal: need $baseconfig for cross build but it needs refreshing from $crossversion to $fullver!" 1>&2
+	    echo "To fix: make a native build and run debian/cross/extract-config-sh on the results" 1>&2
+	    echo "        (or fix $baseconfig by hand)" 1>&2
+	    exit 1
+	fi
+
+	# arch-specific REFRESH files can be used to invalidate the old config.sh
+	# files regardless of the version
+	#   there can be a comment inside the REFRESH file
+	#   example use case: changed Configure parameters
+	if [ -e $basedir/REFRESH ]; then
+	    echo "Fatal: need $baseconfig for cross build but it needs refreshing!" 1>&2
+	    cat $basedir/REFRESH 1>&2
+	    echo "To fix: make a native build and run debian/cross/extract-config-sh on the results" 1>&2
+	    echo "        (or fix $baseconfig by hand)" 1>&2
+	    echo "Then remove $basedir/REFRESH" 1>&2
+	    exit 1
+	fi
+
+	# Next, ask Configure to compile a build system miniperl and
 	# generate_uudmap executable in host/
 	#
 	# It's tempting to use the system perl for this, but that fails
@@ -181,13 +211,8 @@ else
 	    cp host/generate_uudmap build-generate_uudmap
 	fi
 
-	# get ready made config.sh, currently in debian/cross/<arch>
-	basedir=debian/cross/${host_arch}
-	baseconfig=${basedir}/config.sh.static
-	if [ ! -f $baseconfig ]; then
-	    echo "need $baseconfig for cross build!" 1>&2
-	    exit 1
-	fi
+	# Actually use the old config.sh files
+
 	cp $baseconfig ./config.sh
 	if [ "$build_type" = "static" ]; then
 		# notes for the build log
