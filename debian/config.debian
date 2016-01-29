@@ -142,6 +142,24 @@ then
     $extra_path					\
     -dEs $opts
 
+	# note about the debian/cross files for the build log
+	crossconfig=debian/cross/${host_arch}/config.sh.static
+	if [ "$build_type" = "static" ]; then
+	 if [ -f $crossconfig ] && \
+	    ! diff --ignore-matching-lines="cf_time" \
+	          --ignore-matching-lines="Configuration time" \
+	          --ignore-matching-lines="Extracted from Debian package" \
+	          $crossconfig config.sh >/dev/null
+	 then
+	    echo "Note: source package config.sh for cross building differs from generated one"
+	    echo "Note: consider refreshing with debian/cross/extract-config-sh after the build"
+	    diff -u0 $crossconfig config.sh | head -100
+	    echo --------------------------------------------------
+	 else
+	    echo "Note: source package config.sh for cross building is up to date with the generated one (good!)"
+	 fi
+	fi
+
     # for the Configure -S call below
     override=
 else
@@ -155,6 +173,7 @@ else
 	# XS modules from lib/, particularly as <*> uses File::Glob on
 	# full perls (but not miniperl)
 	if [ ! -x build-miniperl ]; then
+	    echo "Cross build: making a native miniperl for the build process"
 	    ./Configure -dE -Dusecrosscompile
 	    # host/ gets cleaned between builds by 'make distclean', so
 	    # stash the results
@@ -170,13 +189,22 @@ else
 	    exit 1
 	fi
 	cp $baseconfig ./config.sh
-	if [ "$build_type" != "static" ]; then
+	if [ "$build_type" = "static" ]; then
+		# notes for the build log
+		echo "Cross build: recycling old probed configuration from $baseconfig"
+		grep '^cf_time' $baseconfig
+		md5sum $baseconfig
+		# debian/cross/extract-config-sh appends a comment so show that
+		grep "Extracted from Debian package version" $baseconfig
+	else
 		patchconfig=${basedir}/config.sh.$build_type.patch
 		if [ ! -f "$patchconfig" ]; then
 			echo "need $patchconfig for cross build!" 1>&2
 			exit 1
 		fi
 		patch config.sh < $patchconfig
+		echo "Cross build: recycling old probed configuration from $patchconfig"
+		md5sum $patchconfig
 	fi
 
 	# override configuration for cross building
