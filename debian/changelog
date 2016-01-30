@@ -7,6 +7,7 @@ perl (5.22.1-5) UNRELEASED; urgency=medium
   [ Niko Tyni ]
   * Make perl-modules-5.22 Conflict with perl-modules rather than Break it.
     Thanks to Adam Conrad. (Closes: #810164)
+  * Fix umask in mkstemp(3) calls. (Closes: #810924)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 16 Jan 2016 14:54:05 +0200
 
