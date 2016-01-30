@@ -1,4 +1,4 @@
-perl (5.22.1-5) UNRELEASED; urgency=medium
+perl (5.22.1-5) unstable; urgency=medium
 
   [ Dominic Hargreaves ]
   * Add Breaks entry for versions of mailagent not compatible with
@@ -9,7 +9,7 @@ perl (5.22.1-5) UNRELEASED; urgency=medium
     Thanks to Adam Conrad. (Closes: #810164)
   * Fix umask in mkstemp(3) calls. (Closes: #810924)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 16 Jan 2016 14:54:05 +0200
+ -- Niko Tyni <ntyni@debian.org>  Sat, 30 Jan 2016 11:41:34 +0200
 
 perl (5.22.1-4) unstable; urgency=high
 
