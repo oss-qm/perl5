@@ -1,4 +1,4 @@
-perl (5.22.1-6) UNRELEASED; urgency=medium
+perl (5.22.1-6) experimental; urgency=medium
 
   * Annotate test suite specific build dependencies with <!nocheck> for
     better build profile support.
@@ -9,8 +9,10 @@ perl (5.22.1-6) UNRELEASED; urgency=medium
     + The full process is not quite established yet, and no commitment
       is made on the long term feasibility of this approach. We will
       see how it goes.
+    + Uploading to experimental to bootstrap the thing: we can then
+      gather the generated files from autobuilt binary packages.
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 29 Jan 2016 15:27:14 +0200
+ -- Niko Tyni <ntyni@debian.org>  Tue, 02 Feb 2016 19:11:23 +0200
 
 perl (5.22.1-5) unstable; urgency=medium
 
