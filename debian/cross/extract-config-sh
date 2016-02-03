@@ -69,7 +69,7 @@ for deb in "$@"; do
 done
 
 if [ -d .git ]; then
-    debs=$(basename --zero --multiple "$@" | xargs -0 -i printf ' %s\n' {})
+    debs=$(sha1sum "$@")
     git commit -m "Refresh cross config.sh files for$archlist" \
                -m "Files extracted by $0 from:" \
                -m "$debs"
