@@ -13,12 +13,13 @@
 
 set -e
 
-while getopts s:p:d: f
+while getopts s:p:d:v: f
 do
     case $f in
     p) package="$OPTARG";;
     s) sources="$OPTARG";;
     d) debdir="$OPTARG";;
+    v) version="$OPTARG";;
     esac
 done
 shift `expr $OPTIND - 1`
@@ -36,14 +37,20 @@ if [ ! -n "$sources" ]; then
     sources="deb http://httpredir.debian.org/debian unstable main"
 fi
 
+if [ ! -n "$version" ]; then
+    version=$(dpkg-parsechangelog -Sversion)
+fi
+
 if [ ! -n "$debdir" ]; then
     debdir=.
 fi
 
 if [ $# = 0 ]; then
-    echo "Usage: $0 [ -p <package> [ -d <debdir> ] [ -s "<full sources.list line>" ] <arch> [...]" 1>&2
+    echo "Usage: $0 [ -p <package> ] [ -d <debdir> ] [ -v <version> ] [ -s '<full sources.list line>' ] <arch> [...]" 1>&2
     exit 1
 fi
+
+EXITCODE=0
 
 for ARCH in "$@"
 do
@@ -54,6 +61,7 @@ do
                 -o Acquire::Languages=none \
                 -o Dir::Etc::Sourcelist=$APTTMP/sources.list"
     apt-get $APTOPTIONS update
-    (cd "$debdir" && apt-get $APTOPTIONS download $package:$ARCH)
+    (cd "$debdir"; apt-get $APTOPTIONS download $package:$ARCH=$version) || EXITCODE=$?
     rm -rf "$APTTMP"
 done
+exit $EXITCODE
