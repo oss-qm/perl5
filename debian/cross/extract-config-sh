@@ -70,7 +70,7 @@ done
 
 if [ -d .git ]; then
     debs=$(sha1sum "$@")
-    git commit -m "Refresh cross config.sh files for$archlist" \
+    git commit -m "Refresh cross build support files for$archlist" \
                -m "Files extracted by $0 from:" \
                -m "$debs"
 fi
