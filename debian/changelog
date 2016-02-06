@@ -1,3 +1,12 @@
+perl (5.22.1-7) UNRELEASED; urgency=medium
+
+  * small tweaks to cross support file import infrastructure
+  * debian/copyright changes:
+    + move license grants in Comment sections to placate lintian
+    + include CC0-1.0 License for Test-Simple
+
+ -- Niko Tyni <ntyni@debian.org>  Sat, 06 Feb 2016 12:30:36 +0200
+
 perl (5.22.1-6) experimental; urgency=medium
 
   * Annotate test suite specific build dependencies with <!nocheck> for
