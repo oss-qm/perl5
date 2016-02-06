@@ -1,9 +1,19 @@
 perl (5.22.1-7) UNRELEASED; urgency=medium
 
   * small tweaks to cross support file import infrastructure
-  * debian/copyright changes:
-    + move license grants in Comment sections to placate lintian
-    + include CC0-1.0 License for Test-Simple
+  * debian/copyright: include CC0-1.0 License for Test-Simple
+  * Changes prompted by lintian:
+    + debian/copyright: move license grants into Comment sections
+    + Bump build dependency on dpkg-dev to 1.17.14 for build profile support
+      (Closes: #813811)
+    + Call ldconfig in libperl5.22 postrm script.
+    + Override lintian warning about file conflict over /usr/bin/perldoc.
+    + Install manual pages for perl5.22-<arch> and cpan5.22-<arch>.
+    + Fix POD errors in Memoize, Encode-Unicode and ok.
+  * Remove libperl-dev dependency on perl. (Closes: #813384)
+    + this enables experimental support for cross building applications
+      linking against libperl; see /usr/share/doc/libperl-dev/README.cross
+      for more information.
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 06 Feb 2016 12:30:36 +0200
 
