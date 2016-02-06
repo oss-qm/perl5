@@ -8,13 +8,13 @@
 
 # Package name      : perl5
 # Source directory  : .
-# Configuration time: Sat Jan 16 12:54:05 UTC 2016
+# Configuration time: Tue Feb  2 17:11:23 UTC 2016
 # Configured by     : Debian Project
 # Target system     : linux localhost 3.16.0 #1 smp debian 3.16.0 mips gnulinux 
 
 : Configure command line arguments.
 config_arg0='Configure'
-config_args='-Dusethreads -Duselargefiles -Dcc=mipsel-linux-gnu-gcc -Dcpp=mipsel-linux-gnu-cpp -Dld=mipsel-linux-gnu-gcc -Dccflags=-DDEBIAN -Wdate-time -D_FORTIFY_SOURCE=2 -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Dldflags= -Wl,-z,relro -Dlddlflags=-shared -Wl,-z,relro -Dcccdlflags=-fPIC -Darchname=mipsel-linux-gnu -Dprefix=/usr -Dprivlib=/usr/share/perl/5.22 -Darchlib=/usr/lib/mipsel-linux-gnu/perl/5.22 -Dvendorprefix=/usr -Dvendorlib=/usr/share/perl5 -Dvendorarch=/usr/lib/mipsel-linux-gnu/perl5/5.22 -Dsiteprefix=/usr/local -Dsitelib=/usr/local/share/perl/5.22.1 -Dsitearch=/usr/local/lib/mipsel-linux-gnu/perl/5.22.1 -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 -Dsiteman1dir=/usr/local/man/man1 -Dsiteman3dir=/usr/local/man/man3 -Duse64bitint -Dman1ext=1 -Dman3ext=3perl -Dpager=/usr/bin/sensible-pager -Uafs -Ud_csh -Ud_ualarm -Uusesfio -Uusenm -Ui_libutil -Uversiononly -DDEBUGGING=-g -Doptimize=-O2 -Uuseshrplib -Dotherlibdirs=/usr/lib/mipsel-linux-gnu/perl-base -des'
+config_args='-Dusethreads -Duselargefiles -Dcc=mipsel-linux-gnu-gcc -Dcpp=mipsel-linux-gnu-cpp -Dld=mipsel-linux-gnu-gcc -Dccflags=-DDEBIAN -Wdate-time -D_FORTIFY_SOURCE=2 -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Dldflags= -Wl,-z,relro -Dlddlflags=-shared -Wl,-z,relro -Dcccdlflags=-fPIC -Darchname=mipsel-linux-gnu -Dprefix=/usr -Dprivlib=/usr/share/perl/5.22 -Darchlib=/usr/lib/mipsel-linux-gnu/perl/5.22 -Dvendorprefix=/usr -Dvendorlib=/usr/share/perl5 -Dvendorarch=/usr/lib/mipsel-linux-gnu/perl5/5.22 -Dsiteprefix=/usr/local -Dsitelib=/usr/local/share/perl/5.22.1 -Dsitearch=/usr/local/lib/mipsel-linux-gnu/perl/5.22.1 -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 -Dsiteman1dir=/usr/local/man/man1 -Dsiteman3dir=/usr/local/man/man3 -Duse64bitint -Dman1ext=1 -Dman3ext=3perl -Dpager=/usr/bin/sensible-pager -Uafs -Ud_csh -Ud_ualarm -Uusesfio -Uusenm -Ui_libutil -Uversiononly -DDEBUGGING=-g -Doptimize=-O2 -dEs -Uuseshrplib -Dotherlibdirs=/usr/lib/mipsel-linux-gnu/perl-base'
 config_argc=39
 config_arg1='-Dusethreads'
 config_arg2='-Duselargefiles'
@@ -52,9 +52,9 @@ config_arg33='-Ui_libutil'
 config_arg34='-Uversiononly'
 config_arg35='-DDEBUGGING=-g'
 config_arg36='-Doptimize=-O2'
-config_arg37='-Uuseshrplib'
-config_arg38='-Dotherlibdirs=/usr/lib/mipsel-linux-gnu/perl-base'
-config_arg39='-des'
+config_arg37='-dEs'
+config_arg38='-Uuseshrplib'
+config_arg39='-Dotherlibdirs=/usr/lib/mipsel-linux-gnu/perl-base'
 
 Author=''
 Date=''
@@ -107,7 +107,7 @@ ccsymbols=''
 ccversion=''
 cf_by='Debian Project'
 cf_email='perl@packages.debian.org'
-cf_time='Sat Jan 16 12:54:05 UTC 2016'
+cf_time='Tue Feb  2 17:11:23 UTC 2016'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1225,3 +1225,4 @@ PERL_PATCHLEVEL=''
 PERL_CONFIG_SH=true
 : Variables propagated from previous config.sh file.
 libdb_needs_pthread='N'
+# Extracted from Debian package version 5.22.1-6
