@@ -385,6 +385,14 @@ endif
 		fi; \
 	    done
 
+	# copy manual pages for {perl,cpan}<version>-<arch>
+	test -d     $(build)/libperl$(version)/usr/share/man/man1 || \
+	   mkdir -p $(build)/libperl$(version)/usr/share/man/man1
+	cp $(build)/perl-base/usr/share/man/man1/perl.1 \
+	   $(build)/libperl$(version)/usr/share/man/man1/perl$(version)-$(archtriplet).1
+	cp $(build)/perl/usr/share/man/man1/cpan.1 \
+	   $(build)/libperl$(version)/usr/share/man/man1/cpan$(version)-$(archtriplet).1
+
 	# remove some linked man pages (symlinked later and cause
 	# problems as-is when compressing)
 	rm -f $(build)/perl/usr/share/man/man1/pstruct.1 \
