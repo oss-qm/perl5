@@ -1,0 +1,27 @@
+From a86645638270b0ead322a3f486d8281a7c1ff1b7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ville=20Skytt=C3=A4?= <ville.skytta@iki.fi>
+Date: Sat, 7 Nov 2015 13:49:58 +0200
+Subject: Unicode.pm: Fix POD error
+
+Bug: https://github.com/dankogai/p5-encode/pull/45
+Origin: backport, https://github.com/dankogai/p5-encode/commit/33a3e11086631ab96566f54a866187c663913375
+Patch-Name: fixes/encode-unicode-pod.diff
+---
+ cpan/Encode/Unicode/Unicode.pm | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/cpan/Encode/Unicode/Unicode.pm b/cpan/Encode/Unicode/Unicode.pm
+index bcd6df8..848bcf7 100644
+--- a/cpan/Encode/Unicode/Unicode.pm
++++ b/cpan/Encode/Unicode/Unicode.pm
+@@ -178,7 +178,9 @@ When BE or LE is omitted during decode(), it checks if BOM is at the
+ beginning of the string; if one is found, the endianness is set to
+ what the BOM says.  
+ 
+-=item Default Byte Order
++=item *
++
++Default Byte Order
+ 
+ When no BOM is found, Encode 2.76 and blow croaked.  Since Encode
+ 2.77, it falls back to BE accordingly to RFC2781 and the Unicode

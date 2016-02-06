@@ -52,3 +52,6 @@ fixes/mkstemp-umask.diff
 fixes/crosscompile-no-targethost.diff
 fixes/podlators-no-encode.diff
 debian/cross-time-hires.diff
+fixes/encode-unicode-pod.diff
+fixes/memoize-pod.diff
+fixes/ok-pod.diff
