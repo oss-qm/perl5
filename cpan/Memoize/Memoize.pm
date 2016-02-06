@@ -748,6 +748,8 @@ cache that was populated by the first call.  C<complicated> ends up
 being called only once, and both subsequent calls return C<3> from the
 cache, regardless of the calling context.
 
+=back
+
 =head3 List values in scalar context
 
 Consider this function:
@@ -796,8 +798,6 @@ keep the two sets of return values separate.  For example:
 This normalizer function will store scalar context return values in
 the disk file under keys that begin with C<S:>, and list context
 return values under keys that begin with C<L:>.
-
-=back
 
 =head1 OTHER FACILITIES
 
