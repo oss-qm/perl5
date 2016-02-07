@@ -1,0 +1,24 @@
+--- config.sh.static	2016-02-07 14:59:54.758557984 +0200
++++ config.sh.shared	2016-02-07 14:59:54.666556338 +0200
+@@ -17 +17 @@
+-config_args='-Dusethreads -Duselargefiles -Dcc=mips64el-linux-gnuabi64-gcc -Dcpp=mips64el-linux-gnuabi64-cpp -Dld=mips64el-linux-gnuabi64-gcc -Dccflags=-DDEBIAN -Wdate-time -D_FORTIFY_SOURCE=2 -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Dldflags= -Wl,-z,relro -Dlddlflags=-shared -Wl,-z,relro -Dcccdlflags=-fPIC -Darchname=mips64el-linux-gnuabi64 -Dprefix=/usr -Dprivlib=/usr/share/perl/5.22 -Darchlib=/usr/lib/mips64el-linux-gnuabi64/perl/5.22 -Dvendorprefix=/usr -Dvendorlib=/usr/share/perl5 -Dvendorarch=/usr/lib/mips64el-linux-gnuabi64/perl5/5.22 -Dsiteprefix=/usr/local -Dsitelib=/usr/local/share/perl/5.22.1 -Dsitearch=/usr/local/lib/mips64el-linux-gnuabi64/perl/5.22.1 -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 -Dsiteman1dir=/usr/local/man/man1 -Dsiteman3dir=/usr/local/man/man3 -Duse64bitint -Dman1ext=1 -Dman3ext=3perl -Dpager=/usr/bin/sensible-pager -Uafs -Ud_csh -Ud_ualarm -Uusesfio -Uusenm -Ui_libutil -Uversiononly -DDEBUGGING=-g -Doptimize=-O2 -dEs -Uuseshrplib -Dotherlibdirs=/usr/lib/mips64el-linux-gnuabi64/perl-base'
++config_args='-Dusethreads -Duselargefiles -Dcc=mips64el-linux-gnuabi64-gcc -Dcpp=mips64el-linux-gnuabi64-cpp -Dld=mips64el-linux-gnuabi64-gcc -Dccflags=-DDEBIAN -Wdate-time -D_FORTIFY_SOURCE=2 -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Dldflags= -Wl,-z,relro -Dlddlflags=-shared -Wl,-z,relro -Dcccdlflags=-fPIC -Darchname=mips64el-linux-gnuabi64 -Dprefix=/usr -Dprivlib=/usr/share/perl/5.22 -Darchlib=/usr/lib/mips64el-linux-gnuabi64/perl/5.22 -Dvendorprefix=/usr -Dvendorlib=/usr/share/perl5 -Dvendorarch=/usr/lib/mips64el-linux-gnuabi64/perl5/5.22 -Dsiteprefix=/usr/local -Dsitelib=/usr/local/share/perl/5.22.1 -Dsitearch=/usr/local/lib/mips64el-linux-gnuabi64/perl/5.22.1 -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 -Dsiteman1dir=/usr/local/man/man1 -Dsiteman3dir=/usr/local/man/man3 -Duse64bitint -Dman1ext=1 -Dman3ext=3perl -Dpager=/usr/bin/sensible-pager -Uafs -Ud_csh -Ud_ualarm -Uusesfio -Uusenm -Ui_libutil -Uversiononly -DDEBUGGING=-g -Doptimize=-O2 -dEs -Duseshrplib -Dlibperl=libperl.so.5.22.1'
+@@ -56,2 +56,2 @@
+-config_arg38='-Uuseshrplib'
+-config_arg39='-Dotherlibdirs=/usr/lib/mips64el-linux-gnuabi64/perl-base'
++config_arg38='-Duseshrplib'
++config_arg39='-Dlibperl=libperl.so.5.22.1'
+@@ -453 +453 @@
+-d_perl_otherlibdirs='define'
++d_perl_otherlibdirs='undef'
+@@ -894 +894 @@
+-libperl='libperl.a'
++libperl='libperl.so.5.22.1'
+@@ -973 +973 @@
+-otherlibdirs='/usr/lib/mips64el-linux-gnuabi64/perl-base'
++otherlibdirs=' '
+@@ -1174 +1174 @@
+-useshrplib='false'
++useshrplib='true'
+@@ -1228 +1227,0 @@
+-# Extracted from Debian package version 5.22.1-6
