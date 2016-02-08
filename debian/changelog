@@ -1,4 +1,4 @@
-perl (5.22.1-7) UNRELEASED; urgency=medium
+perl (5.22.1-7) unstable; urgency=medium
 
   * small tweaks to cross support file import infrastructure
   * debian/copyright: include CC0-1.0 License for Test-Simple
@@ -17,8 +17,9 @@ perl (5.22.1-7) UNRELEASED; urgency=medium
   * Add cross build support files for amd64, i386, powerpc, ppc64el, armel,
     armhf, arm64, s390x, mipsel, mips64el, kfreebsd-amd64 and kfreebsd-i386.
     (Closes: #285559)
+  * Upload to unstable.
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 06 Feb 2016 12:30:36 +0200
+ -- Niko Tyni <ntyni@debian.org>  Mon, 08 Feb 2016 22:09:56 +0200
 
 perl (5.22.1-6) experimental; urgency=medium
 
