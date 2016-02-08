@@ -16,6 +16,7 @@ perl (5.22.1-7) UNRELEASED; urgency=medium
       for more information.
   * Add cross build support files for amd64, i386, powerpc, ppc64el, armel,
     armhf, arm64, s390x, mipsel, mips64el, kfreebsd-amd64 and kfreebsd-i386.
+    (Closes: #285559)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 06 Feb 2016 12:30:36 +0200
 
