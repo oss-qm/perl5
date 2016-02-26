@@ -55,3 +55,4 @@ debian/cross-time-hires.diff
 fixes/encode-unicode-pod.diff
 fixes/memoize-pod.diff
 fixes/ok-pod.diff
+fixes/CVE-2016-2381_duplicate_env.diff
