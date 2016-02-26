@@ -1,9 +1,9 @@
-perl (5.22.1-8) UNRELEASED; urgency=high
+perl (5.22.1-8) unstable; urgency=high
 
   * [SECURITY] CVE-2016-2381 fix duplicate environment variable taint
     checking issue
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 26 Feb 2016 21:21:55 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 26 Feb 2016 21:59:01 +0000
 
 perl (5.22.1-7) unstable; urgency=medium
 
