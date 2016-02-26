@@ -1,3 +1,10 @@
+perl (5.14.2-21+deb7u3) UNRELEASED; urgency=medium
+
+  * Work around a t/op/stat.t failure on GNU/kFreeBSD, possibly related
+    to softupdates. Fix by Steven Chamberlain. (Closes: #796798)
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 26 Feb 2016 21:49:24 +0000
+
 perl (5.14.2-21+deb7u2) stable; urgency=low
 
   * [SECURITY] CVE-2014-4330: don't recurse infinitely in Data::Dumper
