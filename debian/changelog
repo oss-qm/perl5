@@ -1,11 +1,11 @@
-perl (5.14.2-21+deb7u3) UNRELEASED; urgency=high
+perl (5.14.2-21+deb7u3) wheezy-security; urgency=high
 
   * Work around a t/op/stat.t failure on GNU/kFreeBSD, possibly related
     to softupdates. Fix by Steven Chamberlain. (Closes: #796798)
   * [SECURITY] CVE-2016-2381 fix duplicate environment variable taint
     checking issue
 
- -- Dominic Hargreaves <dom@earth.li>  Fri, 26 Feb 2016 21:49:24 +0000
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 26 Feb 2016 23:20:43 +0000
 
 perl (5.14.2-21+deb7u2) stable; urgency=low
 
