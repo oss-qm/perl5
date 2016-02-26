@@ -88,3 +88,4 @@ fixes/sdbm_off_by_one.diff
 fixes/socket_unpack_sockaddr_un_heap_buffer_overflow.diff
 fixes/data_dump_infinite_recurse.diff
 debian/kfreebsd-softupdates.diff
+fixes/CVE-2016-2381_duplicate_env.diff
