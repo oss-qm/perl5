@@ -196,17 +196,17 @@ sub import { print map "<\$_>", \@_ }
 SWTESTPM
     close $f or die "Could not close: $!";
     $r = runperl(
-	switches    => [ "-M$package" ],
+	switches    => [ "-I.", "-M$package" ],
 	prog	    => '1',
     );
     is( $r, "<$package>", '-M' );
     $r = runperl(
-	switches    => [ "-M$package=foo" ],
+	switches    => [ "-I.", "-M$package=foo" ],
 	prog	    => '1',
     );
     is( $r, "<$package><foo>", '-M with import parameter' );
     $r = runperl(
-	switches    => [ "-m$package" ],
+	switches    => [ "-I.", "-m$package" ],
 	prog	    => '1',
     );
 
