@@ -86,7 +86,7 @@ OUTER: foreach my $file (@files) {
 }
 
 foreach (@progs) {
-    my $command = "$^X $_ --tap";
+    my $command = "$^X -I. $_ --tap";
     system $command
         and die "Failed to run $command: $?";
 }
