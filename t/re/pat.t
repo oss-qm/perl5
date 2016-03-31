@@ -1607,7 +1607,7 @@ EOP
             # #123562]
 
             my $code='
-                BEGIN{require q(test.pl);}
+                BEGIN{require q(./test.pl);}
                 use Encode qw(_utf8_on);
                 my $malformed = "a\x80\n";
                 _utf8_on($malformed);

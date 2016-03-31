@@ -59,7 +59,7 @@ while (@ARGV) {
     }
 }
 
-require "$ARGS{TARG_DIR}regen/embed_lib.pl";
+require "./$ARGS{TARG_DIR}regen/embed_lib.pl";
 
 {
     my @PLATFORM = qw(aix win32 wince os2 netware vms test);
