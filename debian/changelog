@@ -1,3 +1,10 @@
+perl (5.20.2-3+deb8u5) UNRELEASED; urgency=medium
+
+  * Apply patch from Niko Tyni fixing debugperl crashes with XS
+    modules (Closes: #816280)
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 01 Apr 2016 22:13:30 +0100
+
 perl (5.20.2-3+deb8u4) jessie-security; urgency=high
 
   * Work around a t/op/stat.t failure on GNU/kFreeBSD, possibly related
