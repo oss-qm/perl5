@@ -145,18 +145,22 @@ then
 	# note about the debian/cross files for the build log
 	crossconfig=debian/cross/${host_arch}/config.sh.static
 	if [ "$build_type" = "static" ]; then
-	 if [ -f $crossconfig ] && \
-	    ! diff --ignore-matching-lines="cf_time" \
+	 if [ -f $crossconfig ]; then
+	  if ! diff --ignore-matching-lines="cf_time" \
 	          --ignore-matching-lines="Configuration time" \
 	          --ignore-matching-lines="Extracted from Debian package" \
 	          $crossconfig config.sh >/dev/null
-	 then
+	  then
 	    echo "Note: source package config.sh for cross building differs from generated one"
 	    echo "Note: consider refreshing with debian/cross/extract-config-sh after the build"
 	    diff -u0 $crossconfig config.sh | head -100
 	    echo --------------------------------------------------
-	 else
+	  else
 	    echo "Note: source package config.sh for cross building is up to date with the generated one (good!)"
+	  fi
+	 else
+	    echo "Note: no source package config.sh for cross building"
+	    echo "Note: consider including it with debian/cross/extract-config-sh after the build"
 	 fi
 	fi
 
