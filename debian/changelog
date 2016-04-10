@@ -1,8 +1,11 @@
-perl (5.22.2~rc1-1) UNRELEASED; urgency=medium
+perl (5.22.2~rc1-1) experimental; urgency=medium
 
-  * New upstream release candidate
+  * New upstream release candidate.
+    + update versions of libmodule-corelist-perl and libfile-spec-perl
+      Breaks and Replaces for 5.22.2-RC1
+  * Fix a misleading cross build note in build logs. (Closes: #820633)
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 10 Apr 2016 22:45:43 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 10 Apr 2016 23:35:40 +0300
 
 perl (5.22.1-9) unstable; urgency=medium
 
