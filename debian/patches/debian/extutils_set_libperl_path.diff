@@ -1,4 +1,4 @@
-From f40d1d5f3e68a1369d4088fd1c0fac982ccabc44 Mon Sep 17 00:00:00 2001
+From e57403223c2167e9f8ff6c6a080b8ca427db9663 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 10 May 2014 23:34:14 +0300
 Subject: EU:MM: set location of libperl.a under /usr/lib
@@ -26,7 +26,7 @@ index 5f1b87f..570a631 100644
  	$libperl ||= "libperl$self->{LIB_EXT}";
  	$libperl   = "$dir/$libperl";
 diff --git a/pp.c b/pp.c
-index db1f626..c2e3b3c 100644
+index 3173c5a..993fa43 100644
 --- a/pp.c
 +++ b/pp.c
 @@ -1,4 +1,4 @@

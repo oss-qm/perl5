@@ -1,4 +1,4 @@
-From fec6d9ad88a43e665abe79342025d02c71d166da Mon Sep 17 00:00:00 2001
+From 454c4004854fb6d084caabced6c36bbea5b5fd0e Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Postpone LD_LIBRARY_PATH evaluation to the binary targets.
@@ -16,7 +16,7 @@ Patch-Name: debian/fakeroot.diff
  1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/Makefile.SH b/Makefile.SH
-index b6999b2..07eed68 100755
+index c078b90..471e1ee 100755
 --- a/Makefile.SH
 +++ b/Makefile.SH
 @@ -39,10 +39,7 @@ case "$useshrplib" in

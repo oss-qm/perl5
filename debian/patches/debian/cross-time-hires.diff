@@ -1,4 +1,4 @@
-From 594e00617afd0d0ccc9986fde3e47ffe4bdfa4b8 Mon Sep 17 00:00:00 2001
+From d4e239d2b3d2ce1ff2da08cf67b2083acfb3acd2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 21 Jan 2016 18:47:05 +0200
 Subject: Add an environment variable to skip running configuration probes

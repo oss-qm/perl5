@@ -1,4 +1,4 @@
-From 32744a670f6efe451d14eda17b9655d4a83bd079 Mon Sep 17 00:00:00 2001
+From 826578ac182fa8704ab8286efec1a7b69cccb729 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 23 May 2015 21:15:06 +0200
 Subject: Update t/porting/customized.dat for files patched in Debian
