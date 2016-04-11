@@ -579,7 +579,7 @@ endif
 	do \
 	    rm -rf $(build)/$$p/DEBIAN debian/substvars; \
 	    mkdir $(build)/$$p/DEBIAN; \
-	    for c in preinst postinst prerm postrm shlibs; \
+	    for c in preinst postinst prerm postrm shlibs triggers; \
 	    do \
 		test -f debian/$$p.$$c || continue; \
 		cp debian/$$p.$$c $(build)/$$p/DEBIAN/$$c; \
