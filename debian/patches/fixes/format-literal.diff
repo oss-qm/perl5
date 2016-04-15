@@ -1,4 +1,4 @@
-From d209f6a2c51324fa168dda9ba25a7958847c9a34 Mon Sep 17 00:00:00 2001
+From 83a7e7163c3312799ee603673e6597fa05a5f15a Mon Sep 17 00:00:00 2001
 From: Aaron Crane <arc@cpan.org>
 Date: Thu, 14 Apr 2016 11:23:12 +0100
 Subject: Avoid passing non-literal to format function

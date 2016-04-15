@@ -33,7 +33,6 @@ debian/devel-ppport-reproducibility.diff
 debian/encode-unicode-bom-doc.diff
 debian/kfreebsd-softupdates.diff
 fixes/autodie-scope.diff
-debian/debugperl-compat-fix.diff
 fixes/crosscompile-no-targethost.diff
 fixes/memoize-pod.diff
 fixes/ok-pod.diff
