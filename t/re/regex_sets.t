@@ -9,7 +9,8 @@ BEGIN {
     chdir 't' if -d 't';
     @INC = ('../lib','.','../ext/re');
     require './test.pl';
-    require './test.pl'; require './charset_tools.pl';
+    require './charset_tools.pl';
+    require './loc_tools.pl';
     skip_all_without_unicode_tables();
 }
 
@@ -26,7 +27,6 @@ like("a", qr/(?[ [a]      # This is a comment
 like("a", qr/(?[ [a]      # [[:notaclass:]]
                     ])/, 'A comment isn\'t parsed');
 unlike(uni_to_native("\x85"), qr/(?[ \t ])/, 'NEL is white space');
-unlike(uni_to_native("\x85"), qr/(?[ [\t] ])/, '... including within nested []');
 like(uni_to_native("\x85"), qr/(?[ \t + \ ])/, 'can escape NEL to match');
 like(uni_to_native("\x85"), qr/(?[ [\] ])/, '... including within nested []');
 like("\t", qr/(?[ \t + \ ])/, 'can do basic union');
@@ -97,6 +97,58 @@ eval 'my $x = qr/(?[ [a] ])/; qr/(?[ $x ])/';
 is($@, "", 'qr/(?[ [a] ])/ can be interpolated');
 
 like("B", qr/(?[ [B] | ! ( [^B] ) ])/, "[perl #125892]");
+
+like("a", qr/(?[ (?#comment) [a]])/, "Can have (?#comments)");
+
+if (! is_miniperl() && locales_enabled('LC_CTYPE')) {
+    my $utf8_locale = find_utf8_ctype_locale;
+    SKIP: {
+        skip("No utf8 locale available on this platform", 8) unless $utf8_locale;
+
+        setlocale(&POSIX::LC_ALL, "C");
+        use locale;
+
+        $kelvin_fold = qr/(?[ \N{KELVIN SIGN} ])/i;
+        my $single_char_class = qr/(?[ \: ])/;
+
+        setlocale(&POSIX::LC_ALL, $utf8_locale);
+
+        like("\N{KELVIN SIGN}", $kelvin_fold,
+             '(?[ \N{KELVIN SIGN} ]) matches itself under /i in UTF8-locale');
+        like("K", $kelvin_fold,
+                '(?[ \N{KELVIN SIGN} ]) matches "K" under /i in UTF8-locale');
+        like("k", $kelvin_fold,
+                '(?[ \N{KELVIN SIGN} ]) matches "k" under /i in UTF8-locale');
+        like(":", $single_char_class,
+             '(?[ : ]) matches itself in UTF8-locale (a single character class)');
+
+        setlocale(&POSIX::LC_ALL, "C");
+
+        # These should generate warnings (the above 4 shouldn't), but like()
+        # suppresses them, so the warnings tests are in t/lib/warnings/regexec
+        $^W = 0;   # Suppress the warnings that occur when run by hand with
+                   # the -w option
+        like("\N{KELVIN SIGN}", $kelvin_fold,
+             '(?[ \N{KELVIN SIGN} ]) matches itself under /i in C locale');
+        like("K", $kelvin_fold,
+                '(?[ \N{KELVIN SIGN} ]) matches "K" under /i in C locale');
+        like("k", $kelvin_fold,
+                '(?[ \N{KELVIN SIGN} ]) matches "k" under /i in C locale');
+        like(":", $single_char_class,
+             '(?[ : ]) matches itself in C locale (a single character class)');
+    }
+}
+
+# Tests that no warnings given for valid Unicode digit range.
+my $arabic_digits = qr/(?[ [ ٠ - ٩ ] ])/;
+for my $char ("٠", "٥", "٩") {
+    use charnames ();
+    my @got = capture_warnings(sub {
+                like("٠", $arabic_digits, "Matches "
+                                                . charnames::viacode(ord $char));
+            });
+    is (@got, 0, "... without warnings");
+}
 
 # RT #126181: \cX behaves strangely inside (?[])
 {

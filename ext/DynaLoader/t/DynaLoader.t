@@ -2,7 +2,12 @@
 
 use strict;
 use Config;
-require '../../t/test.pl';
+push @INC, '.';
+if (-f 't/test.pl') {
+  require 't/test.pl';
+} else {
+  require '../../t/test.pl';
+}
 
 my %modules;
 
@@ -112,7 +117,7 @@ SKIP: {
     # (not at least by that name) that the dl_findfile()
     # could find.
     skip( "dl_findfile test not appropriate on $^O", 1 )
-	if $^O =~ /(win32|vms|openbsd|bitrig|cygwin|vos)/i;
+	if $^O =~ /(win32|vms|openbsd|bitrig|cygwin|vos|os390)/i;
     # Play safe and only try this test if this system
     # looks pretty much Unix-like.
     skip( "dl_findfile test not appropriate on $^O", 1 )

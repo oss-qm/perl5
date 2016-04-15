@@ -9,6 +9,7 @@ BEGIN {
     require './test.pl';
     set_up_inc('../lib');
     skip_all_without_unicode_tables();
+    skip_all_if_miniperl("miniperl, no Unicode::Normalize");
     require Config; import Config;
     require './charset_tools.pl';
     require './loc_tools.pl';   # Contains find_utf8_ctype_locale()
@@ -430,12 +431,9 @@ foreach my $test_ref (@CF) {
 SKIP: {
     use feature qw( fc unicode_strings );
 
-    eval { require POSIX; import POSIX 'locale_h'; };
-    unless (defined &POSIX::LC_ALL) {
-       skip "no POSIX (or no Fcntl, or no dynamic loading)", 256;
-    }
+    skip "locales not available", 256 unless locales_enabled('LC_ALL');
 
-    setlocale(&POSIX::LC_ALL, "C") if $Config{d_setlocale};
+    setlocale(&POSIX::LC_ALL, "C");
 
     # This tests both code paths in pp_fc
 

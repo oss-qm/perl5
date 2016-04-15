@@ -220,6 +220,7 @@ if ($Config{osname} eq 'catamount' and @extspec) {
     # Snowball's chance of building extensions.
     die "This is $Config{osname}, not building $extspec[0], sorry.\n";
 }
+$ENV{PERL_CORE} = 1;
 
 foreach my $spec (@extspec)  {
     my $mname = $spec;
@@ -271,7 +272,6 @@ sub build_extension {
     $perl ||= "$up/miniperl";
     my $return_dir = $up;
     my $lib_dir = "$up/lib";
-    $ENV{PERL_CORE} = 1;
 
     my ($makefile, $makefile_no_minus_f);
     if (IS_VMS) {
@@ -352,35 +352,26 @@ sub build_extension {
 
 	    print "\nCreating Makefile.PL in $ext_dir for $mname\n" if $verbose;
 	    my ($fromname, $key, $value);
-	    if ($mname eq 'podlators') {
-		# We need to special case this somewhere, and this is fewer
-		# lines of code than a core-only Makefile.PL, and no more
-		# complex
-		$fromname = 'VERSION';
-		$key = 'DISTNAME';
-		$value = 'podlators';
-		$mname = 'Pod';
-	    } else {
-		$key = 'ABSTRACT_FROM';
-		# We need to cope well with various possible layouts
-		my @dirs = split /::/, $mname;
-		my $leaf = pop @dirs;
-		my $leafname = "$leaf.pm";
-		my $pathname = join '/', @dirs, $leafname;
-		my @locations = ($leafname, $pathname, "lib/$pathname");
-		foreach (@locations) {
-		    if (-f $_) {
-			$fromname = $_;
-			last;
-		    }
-		}
 
-		unless ($fromname) {
-		    die "For $mname tried @locations in $ext_dir but can't find source";
+	    $key = 'ABSTRACT_FROM';
+	    # We need to cope well with various possible layouts
+	    my @dirs = split /::/, $mname;
+	    my $leaf = pop @dirs;
+	    my $leafname = "$leaf.pm";
+	    my $pathname = join '/', @dirs, $leafname;
+	    my @locations = ($leafname, $pathname, "lib/$pathname");
+	    foreach (@locations) {
+		if (-f $_) {
+		    $fromname = $_;
+		    last;
 		}
-		($value = $fromname) =~ s/\.pm\z/.pod/;
-		$value = $fromname unless -e $value;
-	    }
+	}
+
+	unless ($fromname) {
+	    die "For $mname tried @locations in $ext_dir but can't find source";
+	}
+	($value = $fromname) =~ s/\.pm\z/.pod/;
+	$value = $fromname unless -e $value;
 
             if ($mname eq 'Pod::Checker') {
                 # the abstract in the .pm file is unparseable by MM,
@@ -520,7 +511,11 @@ EOM
 	   local $ENV{PERL_MM_USE_DEFAULT} = 1;
 	    system $perl, @args;
 	};
-	warn "$code from $ext_dir\'s Makefile.PL" if $code;
+	if($code != 0){
+	    #make sure next build attempt/run of make_ext.pl doesn't succeed
+	    _unlink($makefile);
+	    die "Unsuccessful Makefile.PL($ext_dir): code=$code";
+	}
 
 	# Right. The reason for this little hack is that we're sitting inside
 	# a program run by ./miniperl, but there are tasks we need to perform
@@ -612,6 +607,7 @@ sub just_pm_to_blib {
     my ($first) = $mname =~ /^([^:]+)/;
 
     my $pm_to_blib = IS_VMS ? 'pm_to_blib.ts' : 'pm_to_blib';
+    my $silent = defined $ENV{MAKEFLAGS} && $ENV{MAKEFLAGS} =~ /\b(s|silent|quiet)\b/;
 
     foreach my $leaf (<*>) {
         if (-d $leaf) {
@@ -656,7 +652,8 @@ sub just_pm_to_blib {
     die "Inconsistent module $mname has both lib/ and $first/"
         if $has_lib && $has_topdir;
 
-    print "\nRunning pm_to_blib for $ext_dir directly\n";
+    print "\nRunning pm_to_blib for $ext_dir directly\n"
+      unless $silent;
 
     my %pm;
     if ($has_top) {

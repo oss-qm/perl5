@@ -24,6 +24,9 @@
 /* less I/O calls during each require */
 #  define PERL_DISABLE_PMC
 
+/* unnecessery for miniperl to lookup anything from an "installed" perl */
+#  define WIN32_NO_REGISTRY
+
 /* allow minitest to work */
 #  define PERL_TEXTMODE_SCRIPTS
 #endif
@@ -60,9 +63,6 @@
 #  ifdef PERL_GLOBAL_STRUCT
 #    error PERL_GLOBAL_STRUCT cannot be defined with PERL_IMPLICIT_SYS
 #  endif
-#  define win32_get_privlib PerlEnv_lib_path
-#  define win32_get_sitelib PerlEnv_sitelib_path
-#  define win32_get_vendorlib PerlEnv_vendorlib_path
 #endif
 
 #ifdef __GNUC__
@@ -207,6 +207,13 @@ struct utsname {
 #ifndef WIN32_NO_SOCKETS
 #  define PERL_SOCK_SYSREAD_IS_RECV
 #  define PERL_SOCK_SYSWRITE_IS_SEND
+#endif
+
+#ifdef WIN32_NO_REGISTRY
+/* the last _ in WIN32_NO_REGISTRY_M_ is like the _ in aTHX_ */
+#  define WIN32_NO_REGISTRY_M_(x)
+#else
+#  define WIN32_NO_REGISTRY_M_(x) x,
 #endif
 
 #define PERL_NO_FORCE_LINK		/* no need for PL_force_link_funcs */
@@ -397,7 +404,7 @@ DllExport HWND		win32_create_message_window(void);
 DllExport int		win32_async_check(pTHX);
 
 extern int		my_fclose(FILE *);
-extern char *		win32_get_privlib(const char *pl, STRLEN *const len);
+extern char *		win32_get_privlib(WIN32_NO_REGISTRY_M_(const char *pl) STRLEN *const len);
 extern char *		win32_get_sitelib(const char *pl, STRLEN *const len);
 extern char *		win32_get_vendorlib(const char *pl, STRLEN *const len);
 
@@ -497,6 +504,7 @@ struct interp_intern {
     UINT	timerid;
     unsigned 	poll_count;
     Sighandler_t sigtable[SIG_SIZE];
+    bool sloppystat;
 };
 
 #define WIN32_POLL_INTERVAL 32768
@@ -530,6 +538,7 @@ struct interp_intern {
 #define w32_init_socktype	(PL_sys_intern.thr_intern.Winit_socktype)
 #define w32_use_showwindow	(PL_sys_intern.thr_intern.Wuse_showwindow)
 #define w32_showwindow	(PL_sys_intern.thr_intern.Wshowwindow)
+#define w32_sloppystat	(PL_sys_intern.sloppystat)
 
 #ifdef USE_ITHREADS
 void win32_wait_for_children(pTHX);
@@ -635,14 +644,6 @@ EXTERN_C _CRTIMP ioinfo* __pioinfo[];
 #undef  PERLIO_NOT_STDIO
 #endif
 #define PERLIO_NOT_STDIO 0
-
-#include "perlio.h"
-
-/*
- * This provides a layer of functions and macros to ensure extensions will
- * get to use the same RTL functions as the core.
- */
-#include "win32iop.h"
 
 #define EXEC_ARGV_CAST(x) ((const char *const *) x)
 

@@ -379,9 +379,6 @@ addbits($_, 7 => qw(OPpLVAL_INTRO LVINTRO))
 
 addbits($_, 4 => qw(OPpTARGET_MY TARGMY))
     for ops_with_flag('T'),
-    # This flag is also used to indicate matches against implicit $_,
-    # where $_ is lexical; e.g. my $_; ....; /foo/
-    qw(match subst pushre qr trans transr);
 ;
 
 
@@ -440,7 +437,7 @@ addbits($_, 6 => qw(OPpOUR_INTRO OURINTR)) # Variable was in an our()
 # We might be an lvalue to return
 addbits($_, 3 => qw(OPpMAYBE_LVSUB LVSUB))
     for qw(aassign rv2av rv2gv rv2hv padav padhv aelem helem aslice hslice
-           av2arylen keys rkeys kvaslice kvhslice substr pos vec multideref);
+           av2arylen keys kvaslice kvhslice substr pos vec multideref);
 
 
 
@@ -477,14 +474,32 @@ addbits($_, 7 => qw(OPpPV_IS_UTF8 UTF)) for qw(last redo next goto dump);
 
 
 
+# note that for refassign, this bit can mean either OPpPAD_STATE or
+# OPpOUR_INTRO depending on the type of the LH child, .e.g.
+#   \our   $foo = ...
+#   \state $foo = ...
+
 addbits($_, 6 => qw(OPpPAD_STATE STATE))  for qw(padav padhv padsv lvavref
                                                  lvref refassign pushmark);
 
+# NB: both sassign and aassign use the 'OPpASSIGN' naming convention
+# for their private flags
+
+# there *may* be common scalar items on both sides of a list assign:
+# run-time checking will be needed.
+addbits('aassign', 6 => qw(OPpASSIGN_COMMON_SCALAR COM_SCALAR));
+#
+# as above, but it's possible to check for non-commonality with just
+# a SvREFCNT(lhs) == 1 test for each lhs element
+addbits('aassign', 5 => qw(OPpASSIGN_COMMON_RC1 COM_RC1));
+
+# run-time checking is required for an aggregate on the LHS
+addbits('aassign', 4 => qw(OPpASSIGN_COMMON_AGG COM_AGG));
 
 
-addbits('aassign', 6 => qw(OPpASSIGN_COMMON COMMON));
 
-
+# NB: both sassign and aassign use the 'OPpASSIGN' naming convention
+# for their private flags
 
 addbits('sassign',
     6 => qw(OPpASSIGN_BACKWARDS BKWARD), # Left & right switched
@@ -604,12 +619,13 @@ addbits('rv2gv',
 );
 
 
+# NB OPpITER_REVERSED must always be bit 1: see pp_iter()
 
 addbits('enteriter',
-                    2 => qw(OPpITER_REVERSED REVERSED),# for (reverse ...)
-                    3 => qw(OPpITER_DEF      DEF),     # 'for $_' or 'for my $_'
+                    1 => qw(OPpITER_REVERSED REVERSED),# for (reverse ...)
+                    3 => qw(OPpITER_DEF      DEF),     # 'for $_'
 );
-addbits('iter',     2 => qw(OPpITER_REVERSED REVERSED));
+addbits('iter',     1 => qw(OPpITER_REVERSED REVERSED));
 
 
 
@@ -691,11 +707,6 @@ for (grep { $_ !~ /^l?stat$/ } ops_with_flag('-')) {
 
 
 
-addbits($_, 1 => qw(OPpGREP_LEX GREPLEX)) # iterate over lexical $_
-    for qw(mapwhile mapstart grepwhile grepstart);
-
-
-
 addbits('entereval',
     1 => qw(OPpEVAL_HAS_HH       HAS_HH ), # Does it have a copy of %^H ?
     2 => qw(OPpEVAL_UNICODE      UNI    ),
@@ -735,6 +746,7 @@ addbits($_,
                              3   OPpLVREF_CV   CV
                          )],
          },
+   #6 => qw(OPpPAD_STATE STATE),
    #7 => qw(OPpLVAL_INTRO LVINTRO),
 ) for 'refassign', 'lvref';
 

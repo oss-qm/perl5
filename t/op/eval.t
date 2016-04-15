@@ -6,7 +6,7 @@ BEGIN {
     set_up_inc('../lib');
 }
 
-plan(tests => 133);
+plan(tests => 134);
 
 eval 'pass();';
 
@@ -442,9 +442,9 @@ is($got, "ok\n", 'eval and last');
 }
 
 # a syntax error in an eval called magically (eg via tie or overload)
-# resulted in an assertion failure in S_docatch, since doeval had already
-# popped the EVAL context due to the failure, but S_docatch expected the
-# context to still be there.
+# resulted in an assertion failure in S_docatch, since doeval_compile had
+# already popped the EVAL context due to the failure, but S_docatch
+# expected the context to still be there.
 
 {
     my $ok  = 0;
@@ -645,6 +645,14 @@ sub _117941 { package _117941; eval '$a' }
 delete $::{"_117941::"};
 _117941();
 pass("eval in freed package does not crash");
+
+# eval is supposed normally to clear $@ on success
+
+{
+    $@ = 1;
+    eval q{$@ = 2};
+    ok(!$@, 'eval clearing $@');
+}
 
 # RT #127786
 # this used to give an assertion failure

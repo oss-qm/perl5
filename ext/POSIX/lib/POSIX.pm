@@ -4,7 +4,7 @@ use warnings;
 
 our ($AUTOLOAD, %SIGRT);
 
-our $VERSION = '1.53_01';
+our $VERSION = '1.65';
 
 require XSLoader;
 
@@ -389,6 +389,21 @@ my %default_export_tags = (
     utime_h =>	[],
 );
 
+if ($^O eq 'MSWin32') {
+    $default_export_tags{winsock_h} = [qw(
+	WSAEINTR WSAEBADF WSAEACCES WSAEFAULT WSAEINVAL WSAEMFILE WSAEWOULDBLOCK
+	WSAEINPROGRESS WSAEALREADY WSAENOTSOCK WSAEDESTADDRREQ WSAEMSGSIZE
+	WSAEPROTOTYPE WSAENOPROTOOPT WSAEPROTONOSUPPORT WSAESOCKTNOSUPPORT
+	WSAEOPNOTSUPP WSAEPFNOSUPPORT WSAEAFNOSUPPORT WSAEADDRINUSE
+	WSAEADDRNOTAVAIL WSAENETDOWN WSAENETUNREACH WSAENETRESET WSAECONNABORTED
+	WSAECONNRESET WSAENOBUFS WSAEISCONN WSAENOTCONN WSAESHUTDOWN
+	WSAETOOMANYREFS WSAETIMEDOUT WSAECONNREFUSED WSAELOOP WSAENAMETOOLONG
+	WSAEHOSTDOWN WSAEHOSTUNREACH WSAENOTEMPTY WSAEPROCLIM WSAEUSERS
+	WSAEDQUOT WSAESTALE WSAEREMOTE WSAEDISCON WSAENOMORE WSAECANCELLED
+	WSAEINVALIDPROCTABLE WSAEINVALIDPROVIDER WSAEPROVIDERFAILEDINIT
+	WSAEREFUSED)];
+}
+
 my %other_export_tags = (
     fenv_h => [qw(
         FE_DOWNWARD FE_TONEAREST FE_TOWARDZERO FE_UPWARD fegetround fesetround
@@ -403,6 +418,21 @@ my %other_export_tags = (
     )],
 
     stdlib_h_c99 => [ @{$default_export_tags{stdlib_h}}, 'strtold' ],
+
+    nan_payload => [ qw(getpayload setpayload setpayloadsig issignaling) ],
+
+    signal_h_si_code => [qw(
+        ILL_ILLOPC ILL_ILLOPN ILL_ILLADR ILL_ILLTRP ILL_PRVOPC ILL_PRVREG
+        ILL_COPROC ILL_BADSTK
+        FPE_INTDIV FPE_INTOVF FPE_FLTDIV FPE_FLTOVF FPE_FLTUND
+        FPE_FLTRES FPE_FLTINV FPE_FLTSUB
+        SEGV_MAPERR SEGV_ACCERR
+        BUS_ADRALN BUS_ADRERR BUS_OBJERR
+        TRAP_BRKPT TRAP_TRACE
+        CLD_EXITED CLD_KILLED CLD_DUMPED CLD_TRAPPED CLD_STOPPED CLD_CONTINUED
+        POLL_IN POLL_OUT POLL_MSG POLL_ERR POLL_PRI POLL_HUP
+        SI_USER SI_QUEUE SI_TIMER SI_ASYNCIO SI_MESGQ
+  )],
 );
 
 {
@@ -415,7 +445,11 @@ my %other_export_tags = (
   our @EXPORT = keys %export;
 
   our @EXPORT_OK = (qw(close lchown nice open pipe read sleep times write
-		       printf sprintf),
+		       printf sprintf lround),
+                    # lround() should really be in @EXPORT and in the
+                    # :math_h_c99 tag, but we're too far into the 5.24 code
+                    # freeze for that to be done now. This can be revisited in
+                    # the 5.25.x cycle.
 		    grep {!exists $export{$_}} keys %reimpl, keys %replacement, keys %export_ok);
 
   our %EXPORT_TAGS = ( %default_export_tags, %other_export_tags );

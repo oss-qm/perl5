@@ -15,6 +15,7 @@ BEGIN {
 use strict;
 use warnings;
 use 5.010;
+our ($REGMARK, $REGERROR);
 
 sub run_tests;
 
@@ -26,57 +27,6 @@ run_tests() unless caller;
 # Tests start here.
 #
 sub run_tests {
-
-    {
-        no warnings 'deprecated';
-
-        my $message = '\C matches octet';
-        $_ = "a\x{100}b";
-        ok(/(.)(\C)(\C)(.)/, $message);
-        is($1, "a", $message);
-        if ($::IS_ASCII) {     # ASCII (or equivalent), should be UTF-8
-            is($2, "\xC4", $message);
-            is($3, "\x80", $message);
-        }
-        elsif ($::IS_EBCDIC) { # EBCDIC (or equivalent), should be UTF-EBCDIC
-            is($2, "\x8C", $message);
-            is($3, "\x41", $message);
-        }
-        else {
-            SKIP: {
-                ok 0, "Unexpected platform", "ord ('A') =" . ord 'A';
-                skip "Unexpected platform";
-            }
-        }
-        is($4, "b", $message);
-    }
-
-    {
-        no warnings 'deprecated';
-
-        my $message = '\C matches octet';
-        $_ = "\x{100}";
-        ok(/(\C)/g, $message);
-        if ($::IS_ASCII) {
-            is($1, "\xC4", $message);
-        }
-        elsif ($::IS_EBCDIC) {
-            is($1, "\x8C", $message);
-        }
-        else {
-            ok 0, "Unexpected platform", "ord ('A') = " . ord 'A';
-        }
-        ok(/(\C)/g, $message);
-        if ($::IS_ASCII) {
-            is($1, "\x80", $message);
-        }
-        elsif ($::IS_EBCDIC) {
-            is($1, "\x41", $message);
-        }
-        else {
-            ok 0, "Unexpected platform", "ord ('A') = " . ord 'A';
-        }
-    }
 
     {
         # Japhy -- added 03/03/2001
@@ -265,13 +215,16 @@ sub run_tests {
         ## Should probably put in tests for all the POSIX stuff,
         ## but not sure how to guarantee a specific locale......
 
-        skip "Not an ASCII platform", 2 unless $::IS_ASCII;
         my $message = 'Test [[:cntrl:]]';
         my $AllBytes = join "" => map {chr} 0 .. 255;
         (my $x = $AllBytes) =~ s/[[:cntrl:]]//g;
+        $x = join "", sort { $a cmp $b }
+                      map { chr utf8::native_to_unicode(ord $_) } split "", $x;
         is($x, join("", map {chr} 0x20 .. 0x7E, 0x80 .. 0xFF), $message);
 
         ($x = $AllBytes) =~ s/[^[:cntrl:]]//g;
+        $x = join "", sort { $a cmp $b }
+                       map { chr utf8::native_to_unicode(ord $_) } split "", $x;
         is($x, (join "", map {chr} 0x00 .. 0x1F, 0x7F), $message);
     }
 
@@ -281,24 +234,6 @@ sub run_tests {
         my $a = "Hello \x{263A} World";
         my @a = ($a =~ /./gs);
         is($#a, 12, $message);
-    }
-
-    {
-        no warnings 'deprecated';
-
-        my $message = '. matches \n with /s';
-        my $str1 = "foo\nbar";
-        my $str2 = "foo\n\x{100}bar";
-        my ($a, $b) = map {chr} $::IS_ASCII ? (0xc4, 0x80) : (0x8c, 0x41);
-        my @a;
-        @a = $str1 =~ /./g;   is(@a, 6, $message); is("@a", "f o o b a r", $message);
-        @a = $str1 =~ /./gs;  is(@a, 7, $message); is("@a", "f o o \n b a r", $message);
-        @a = $str1 =~ /\C/g;  is(@a, 7, $message); is("@a", "f o o \n b a r", $message);
-        @a = $str1 =~ /\C/gs; is(@a, 7, $message); is("@a", "f o o \n b a r", $message);
-        @a = $str2 =~ /./g;   is(@a, 7, $message); is("@a", "f o o \x{100} b a r", $message);
-        @a = $str2 =~ /./gs;  is(@a, 8, $message); is("@a", "f o o \n \x{100} b a r", $message);
-        @a = $str2 =~ /\C/g;  is(@a, 9, $message); is("@a", "f o o \n $a $b b a r", $message);
-        @a = $str2 =~ /\C/gs; is(@a, 9, $message); is("@a", "f o o \n $a $b b a r", $message);
     }
 
     {
@@ -492,11 +427,6 @@ sub run_tests {
                                          =~ /^(\X)!/ &&
                $1 eq "\N{LATIN CAPITAL LETTER E}\N{COMBINING GRAVE ACCENT}", $message);
 
-        no warnings 'deprecated';
-
-        $message = '\C and \X';
-        like("!abc!", qr/a\Cc/, $message);
-        like("!abc!", qr/a\Xc/, $message);
     }
 
     {
@@ -552,13 +482,6 @@ sub run_tests {
             $& eq "Francais", $message);
         ok("Fran\N{LATIN SMALL LETTER C WITH CEDILLA}ais" =~ /Fran.ais/ &&
             $& eq "Fran\N{LATIN SMALL LETTER C WITH CEDILLA}ais", $message);
-        {
-            no warnings 'deprecated';
-            ok("Fran\N{LATIN SMALL LETTER C}ais" =~ /Fran\Cais/ &&
-                $& eq "Francais", $message);
-            # COMBINING CEDILLA is two bytes when encoded
-            like("Franc\N{COMBINING CEDILLA}ais", qr/Franc\C\Cais/, $message);
-        }
         ok("Fran\N{LATIN SMALL LETTER C}ais" =~ /Fran\Xais/ &&
             $& eq "Francais", $message);
         ok("Fran\N{LATIN SMALL LETTER C WITH CEDILLA}ais" =~ /Fran\Xais/  &&
@@ -1114,8 +1037,6 @@ sub run_tests {
         # differently
         undef $w;
         eval q [ok "\N{TOO-LONG-STR}" =~ /^\N{TOO-LONG-STR}$/, 'Verify that what once was too long a string works'];
-        eval 'q(syntax error) =~ /\N{MALFORMED}/';
-        ok $@ && $@ =~ /Malformed/, 'Verify that malformed utf8 gives an error';
         eval 'q() =~ /\N{4F}/';
         ok $@ && $@ =~ /Invalid character/, 'Verify that leading digit in name gives error';
         eval 'q() =~ /\N{COM,MA}/';
@@ -1369,7 +1290,7 @@ sub run_tests {
 
     {
         # Test named commits and the $REGERROR var
-        our $REGERROR;
+        local $REGERROR;
         for my $name ('', ':foo') {
             for my $pat ("(*PRUNE$name)",
                          ($name ? "(*MARK$name)" : "") . "(*SKIP$name)",
@@ -1388,6 +1309,7 @@ sub run_tests {
         # Test named commits and the $REGERROR var
         package Fnorble;
         our $REGERROR;
+        local $REGERROR;
         for my $name ('', ':foo') {
             for my $pat ("(*PRUNE$name)",
                          ($name ? "(*MARK$name)" : "") . "(*SKIP$name)",
@@ -1405,7 +1327,7 @@ sub run_tests {
     {
         # Test named commits and the $REGERROR var
 	my $message = '$REGERROR';
-        our $REGERROR;
+        local $REGERROR;
         for my $word (qw (bar baz bop)) {
             $REGERROR = "";
             "aaaaa$word" =~
@@ -1475,7 +1397,8 @@ sub run_tests {
     {
         my $message = '$REGMARK';
         our @r = ();
-        our ($REGMARK, $REGERROR);
+        local $REGMARK;
+        local $REGERROR;
         like('foofoo', qr/foo (*MARK:foo) (?{push @r,$REGMARK}) /x, $message);
         is("@r","foo", $message);
         is($REGMARK, "foo", $message);
@@ -1742,8 +1665,8 @@ sub run_tests {
     {
         # Test for keys in %+ and %-
         my $message = 'Test keys in %+ and %-';
-        no warnings 'uninitialized', 'deprecated', 'experimental::lexical_topic';
-        my $_ = "abcdef";
+        no warnings 'uninitialized';
+        local $_ = "abcdef";
         /(?<foo>a)|(?<foo>b)/;
         is((join ",", sort keys %+), "foo", $message);
         is((join ",", sort keys %-), "foo", $message);
@@ -1763,8 +1686,7 @@ sub run_tests {
 
     {
         # length() on captures, the numbered ones end up in Perl_magic_len
-        no warnings 'deprecated', 'experimental::lexical_topic';
-        my $_ = "aoeu " . uni_to_native("\xe6") . "var ook";
+        local $_ = "aoeu " . uni_to_native("\xe6") . "var ook";
         /^ \w+ \s (?<eek>\S+)/x;
 
         is(length $`,      0, q[length $`]);
@@ -2391,16 +2313,19 @@ EOF
         is "$1" || $@, "foo", 'multichar \N{...} stringified and retoked';
     }
     {   # empty \N{...} tripping roundly
+        no warnings 'deprecated';
         BEGIN { $^H{charnames} = sub { "" } }
         my $qr = qr$(a\N{foo}t)$;
         "at" =~ eval "qr/$qr/";
         is "$1" || $@, "at", 'empty \N{...} stringified and retoked';
     }
 
+    is (scalar split(/\b{sb}/, "Don't think twice.  It's all right."),
+        2, '\b{wb} splits sentences correctly');
 
-    #
-    # Keep the following tests last -- they may crash perl
-    #
+
+    # !!! NOTE!  Keep the following tests last -- they may crash perl
+
     print "# Tests that follow may crash perl\n";
     {
         eval '/\k/';
@@ -2448,15 +2373,14 @@ EOF
     sub Is_32_Bit_Super { return "110000\tFFFFFFFF\n" }
     sub Is_Portable_Super { return '!utf8::Any' }   # Matches beyond 32 bits
 
-  SKIP:
     {   # Assertion was failing on on 64-bit platforms; just didn't work on 32.
-        skip("EBCDIC only goes to 31 bits", 4) if $::IS_EBCDIC;
         no warnings qw(non_unicode portable);
+        no warnings 'deprecated'; # These are above IV_MAX
         use Config;
 
         # We use 'ok' instead of 'like' because the warnings are lexically
         # scoped, and want to turn them off, so have to do the match in this
-        # scope.   (EBCDIC platforms can't handle above 2**32 - 1
+        # scope.
         if ($Config{uvsize} < 8) {
             ok(chr(0xFFFF_FFFE) =~ /\p{Is_32_Bit_Super}/,
                             "chr(0xFFFF_FFFE) can match a Unicode property");
@@ -2494,6 +2418,28 @@ EOF
                             "Overlapping ranges in user-defined properties");
     }
 
+    { # [perl #125990], the final 2 tests below each caused a panic.
+        # The \0's are not necessary; it could be a printable character
+        # instead, but were in the ticket, so using them.
+        my $sharp_s = chr utf8::unicode_to_native(0xdf);
+        my $string        = ("\0" x 8)
+                          . ($sharp_s x 3)
+                          . ("\0" x 42)
+                          .  "ý";
+        my $folded_string = ("\0" x 8)
+                          . ("ss" x 3)
+                          . ("\0" x 42)
+                          .  "ý";
+        utf8::downgrade($string);
+        utf8::downgrade($folded_string);
+
+        like($string, qr/$string/i, "LATIN SMALL SHARP S matches itself under /id");
+        unlike($folded_string, qr/$string/i, "LATIN SMALL SHARP S doesn't match 'ss' under /di");
+        no warnings 'deprecated';
+        like($folded_string, qr/\N{}$string/i, "\\N{} earlier than LATIN SMALL SHARP S transforms /di into /ui, matches 'ss'");
+        like($folded_string, qr/$string\N{}/i, "\\N{} after LATIN SMALL SHARP S transforms /di into /ui, matches 'ss'");
+    }
+
     { # Regexp:Grammars was broken:
   # http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2013-06/msg01290.html
         fresh_perl_like('use warnings; "abc" =~ qr{(?&foo){0}abc(?<foo>)}',
@@ -2502,8 +2448,27 @@ EOF
                         'No segfault on qr{(?&foo){0}abc(?<foo>)}');
     }
 
+    SKIP:
+    {   # [perl #125826] buffer overflow in TRIE_STORE_REVCHAR
+        # (during compilation, so use a fresh perl)
+        $Config{uvsize} == 8
+	  or skip("need large code-points for this test", 1);
+
+        # This is above IV_MAX on 32 bit machines, so turn off those warnings
+	fresh_perl_is('no warnings "deprecated"; /\x{E000000000}|/ and print qq(ok\n)', "ok\n", {},
+		      "buffer overflow in TRIE_STORE_REVCHAR");
+    }
+
+    {
+        fresh_perl_like('use warnings; s 0(?(?!00000000000000000000000000·000000)\500000000 0000000000000000000000000000000000000000000000000000·00000000000000000000000000000000 0',
+                        qr/Switch \(\?\(condition\)\.\.\. not terminated/,
+                        {},
+                        'No segfault [perl #126886]');
+    }
+
     # !!! NOTE that tests that aren't at all likely to crash perl should go
-    # a ways above, above these last ones.
+    # a ways above, above these last ones.  There's a comment there that, like
+    # this comment, contains the word 'NOTE'
 
     done_testing();
 } # End of sub run_tests

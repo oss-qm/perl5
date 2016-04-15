@@ -112,6 +112,20 @@ my %expect = (
             M_1_PI M_2_PI M_2_SQRTPI M_E M_LN10 M_LN2 M_LOG10E M_LOG2E M_PI
             M_PI_2 M_PI_4 M_SQRT1_2 M_SQRT2 INFINITY NAN
         ),
+        # this stuff was added for Windows in 5.23
+        ($^O eq 'MSWin32' ? qw(
+            WSAEINTR WSAEBADF WSAEACCES WSAEFAULT WSAEINVAL WSAEMFILE WSAEWOULDBLOCK
+            WSAEINPROGRESS WSAEALREADY WSAENOTSOCK WSAEDESTADDRREQ WSAEMSGSIZE
+            WSAEPROTOTYPE WSAENOPROTOOPT WSAEPROTONOSUPPORT WSAESOCKTNOSUPPORT
+            WSAEOPNOTSUPP WSAEPFNOSUPPORT WSAEAFNOSUPPORT WSAEADDRINUSE
+            WSAEADDRNOTAVAIL WSAENETDOWN WSAENETUNREACH WSAENETRESET WSAECONNABORTED
+            WSAECONNRESET WSAENOBUFS WSAEISCONN WSAENOTCONN WSAESHUTDOWN
+            WSAETOOMANYREFS WSAETIMEDOUT WSAECONNREFUSED WSAELOOP WSAENAMETOOLONG
+            WSAEHOSTDOWN WSAEHOSTUNREACH WSAENOTEMPTY WSAEPROCLIM WSAEUSERS
+            WSAEDQUOT WSAESTALE WSAEREMOTE WSAEDISCON WSAENOMORE WSAECANCELLED
+            WSAEINVALIDPROCTABLE WSAEINVALIDPROVIDER WSAEPROVIDERFAILEDINIT
+            WSAEREFUSED
+        ) : ()),
         # adding new functions to EXPORT is a BACKWARD COMPATIBILITY BREAKING CHANGE
         # it is OK to add new constants, but new functions may only go in EXPORT_OK
     ],
@@ -138,6 +152,24 @@ my %expect = (
             nearbyint nextafter nexttoward remainder remquo rint round scalbn
             signbit tgamma trunc y0 y1 yn strtold
         ),
+        # this stuff was added in 5.23
+        qw(
+            getpayload issignaling setpayload setpayloadsig
+            ILL_ILLOPC ILL_ILLOPN ILL_ILLADR ILL_ILLTRP ILL_PRVOPC ILL_PRVREG
+            ILL_COPROC ILL_BADSTK
+            FPE_INTDIV FPE_INTOVF FPE_FLTDIV FPE_FLTOVF FPE_FLTUND
+            FPE_FLTRES FPE_FLTINV FPE_FLTSUB
+            SEGV_MAPERR SEGV_ACCERR
+            BUS_ADRALN BUS_ADRERR BUS_OBJERR
+            TRAP_BRKPT TRAP_TRACE
+            CLD_EXITED CLD_KILLED CLD_DUMPED CLD_TRAPPED CLD_STOPPED CLD_CONTINUED
+            POLL_IN POLL_OUT POLL_MSG POLL_ERR POLL_PRI POLL_HUP
+            SI_USER SI_QUEUE SI_TIMER SI_ASYNCIO SI_MESGQ
+        ),
+        # this was implemented in 5.21, but not exported; it was added to
+        # @EXPORT_OK late in 5.23, and will be added to :math_h_c99 tag early
+        # in 5.25
+        qw( lround ),
     ],
 );
 

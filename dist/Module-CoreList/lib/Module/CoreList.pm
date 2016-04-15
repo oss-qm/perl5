@@ -4,7 +4,7 @@ use vars qw/$VERSION %released %version %families %upstream
 	    %bug_tracker %deprecated %delta/;
 use Module::CoreList::TieHashDelta;
 use version;
-$VERSION = '5.20160410';
+$VERSION = '5.20160420';
 
 sub _released_order {   # Sort helper, to make '?' sort after everything else
     (substr($released{$a}, 0, 1) eq "?")
@@ -291,7 +291,7 @@ sub changes_between {
     5.023007 => '2016-01-20',
     5.023008 => '2016-02-20',
     5.023009 => '2016-03-20',
-    5.022002 => '????-??-??',
+    5.024000 => '2016-06-01',
   );
 
 for my $version ( sort { $a <=> $b } keys %released ) {
@@ -12360,25 +12360,21 @@ for my $version ( sort { $a <=> $b } keys %released ) {
             'Win32API::File::ExtUtils::Myconst2perl'=> 1,
         }
     },
-    5.022002 => {
-        delta_from => 5.022001,
+    5.024000 => {
+        delta_from => 5.023009,
         changed => {
-            'B::Op_private'         => '5.022002',
-            'Config'                => '5.022002',
-            'Cwd'                   => '3.56_01',
-            'File::Spec'            => '3.56_01',
-            'File::Spec::Cygwin'    => '3.56_01',
-            'File::Spec::Epoc'      => '3.56_01',
-            'File::Spec::Functions' => '3.56_01',
-            'File::Spec::Mac'       => '3.56_01',
-            'File::Spec::OS2'       => '3.56_01',
-            'File::Spec::Unix'      => '3.56_01',
-            'File::Spec::VMS'       => '3.56_01',
-            'File::Spec::Win32'     => '3.56_01',
-            'Module::CoreList'      => '5.20160410',
-            'Module::CoreList::TieHashDelta'=> '5.20160410',
-            'Module::CoreList::Utils'=> '5.20160410',
-            'XS::APItest'           => '0.72_01',
+            'B::Op_private'         => '5.024000',
+            'Config'                => '5.024',
+            'File::Path'            => '2.12_01',
+            'File::Spec::AmigaOS'   => '3.64',
+            'ODBM_File'             => '1.14',
+            'POSIX'                 => '1.65',
+            'Pod::Man'              => '4.07',
+            'Pod::ParseLink'        => '4.07',
+            'Pod::Text'             => '4.07',
+            'Pod::Text::Color'      => '4.07',
+            'Pod::Text::Overstrike' => '4.07',
+            'Pod::Text::Termcap'    => '4.07',
         },
         removed => {
         }
@@ -13023,8 +13019,8 @@ for my $version (sort { $a <=> $b } keys %delta) {
         removed => {
         }
     },
-    5.022002 => {
-        delta_from => 5.022001,
+    5.024000 => {
+        delta_from => 5.023009,
         changed => {
         },
         removed => {
@@ -13166,7 +13162,6 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'ExtUtils::MakeMaker::Locale'=> 'cpan',
     'ExtUtils::MakeMaker::version'=> 'cpan',
     'ExtUtils::MakeMaker::version::regex'=> 'cpan',
-    'ExtUtils::MakeMaker::version::vpp'=> 'cpan',
     'ExtUtils::Manifest'    => 'cpan',
     'ExtUtils::Mkbootstrap' => 'cpan',
     'ExtUtils::Mksymlists'  => 'cpan',
@@ -13246,6 +13241,14 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'Locale::Script'        => 'cpan',
     'MIME::Base64'          => 'cpan',
     'MIME::QuotedPrint'     => 'cpan',
+    'Math::BigFloat'        => 'cpan',
+    'Math::BigFloat::Trace' => 'cpan',
+    'Math::BigInt'          => 'cpan',
+    'Math::BigInt::Calc'    => 'cpan',
+    'Math::BigInt::CalcEmu' => 'cpan',
+    'Math::BigInt::FastCalc'=> 'cpan',
+    'Math::BigInt::Trace'   => 'cpan',
+    'Math::BigRat'          => 'cpan',
     'Math::Complex'         => 'cpan',
     'Math::Trig'            => 'cpan',
     'Memoize'               => 'cpan',
@@ -13388,7 +13391,6 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'TAP::Parser::YAMLish::Writer'=> 'cpan',
     'Term::ANSIColor'       => 'cpan',
     'Term::Cap'             => 'cpan',
-    'Test'                  => 'cpan',
     'Test::Builder'         => 'cpan',
     'Test::Builder::IO::Scalar'=> 'cpan',
     'Test::Builder::Module' => 'cpan',
@@ -13407,7 +13409,6 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'Text::Tabs'            => 'cpan',
     'Text::Wrap'            => 'cpan',
     'Tie::RefHash'          => 'cpan',
-    'Time::HiRes'           => 'cpan',
     'Time::Local'           => 'cpan',
     'Time::Piece'           => 'cpan',
     'Time::Seconds'         => 'cpan',
@@ -13423,24 +13424,25 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'Unicode::Normalize'    => 'cpan',
     'Win32'                 => 'cpan',
     'Win32API::File'        => 'cpan',
-    'Win32API::File::ExtUtils::Myconst2perl'=> 'cpan',
+    'Win32API::File::inc::ExtUtils::Myconst2perl'=> 'cpan',
     'autodie'               => 'cpan',
     'autodie::Scope::Guard' => 'cpan',
     'autodie::Scope::GuardStack'=> 'cpan',
-    'autodie::ScopeUtil'    => 'cpan',
+    'autodie::Util'         => 'cpan',
     'autodie::exception'    => 'cpan',
     'autodie::exception::system'=> 'cpan',
     'autodie::hints'        => 'cpan',
     'autodie::skip'         => 'cpan',
+    'bigint'                => 'cpan',
+    'bignum'                => 'cpan',
+    'bigrat'                => 'cpan',
     'encoding'              => 'cpan',
-    'encoding::warnings'    => 'cpan',
     'experimental'          => 'cpan',
     'ok'                    => 'cpan',
     'parent'                => 'cpan',
     'perlfaq'               => 'cpan',
     'version'               => 'cpan',
     'version::regex'        => 'cpan',
-    'version::vpp'          => 'cpan',
 );
 
 %bug_tracker = (
@@ -13567,7 +13569,6 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'ExtUtils::MakeMaker::Locale'=> 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=ExtUtils-MakeMaker',
     'ExtUtils::MakeMaker::version'=> 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=ExtUtils-MakeMaker',
     'ExtUtils::MakeMaker::version::regex'=> 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=ExtUtils-MakeMaker',
-    'ExtUtils::MakeMaker::version::vpp'=> 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=ExtUtils-MakeMaker',
     'ExtUtils::Manifest'    => 'http://github.com/Perl-Toolchain-Gang/ExtUtils-Manifest/issues',
     'ExtUtils::Mkbootstrap' => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=ExtUtils-MakeMaker',
     'ExtUtils::Mksymlists'  => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=ExtUtils-MakeMaker',
@@ -13647,6 +13648,14 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'Locale::Script'        => undef,
     'MIME::Base64'          => undef,
     'MIME::QuotedPrint'     => undef,
+    'Math::BigFloat'        => undef,
+    'Math::BigFloat::Trace' => undef,
+    'Math::BigInt'          => undef,
+    'Math::BigInt::Calc'    => undef,
+    'Math::BigInt::CalcEmu' => undef,
+    'Math::BigInt::FastCalc'=> undef,
+    'Math::BigInt::Trace'   => undef,
+    'Math::BigRat'          => undef,
     'Math::Complex'         => undef,
     'Math::Trig'            => undef,
     'Memoize'               => undef,
@@ -13789,7 +13798,6 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'TAP::Parser::YAMLish::Writer'=> 'http://rt.cpan.org/Public/Dist/Display.html?Name=Test-Harness',
     'Term::ANSIColor'       => 'https://rt.cpan.org/Dist/Display.html?Name=Term-ANSIColor',
     'Term::Cap'             => undef,
-    'Test'                  => undef,
     'Test::Builder'         => 'http://github.com/Test-More/test-more/issues/',
     'Test::Builder::IO::Scalar'=> 'http://github.com/Test-More/test-more/issues/',
     'Test::Builder::Module' => 'http://github.com/Test-More/test-more/issues/',
@@ -13808,7 +13816,6 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'Text::Tabs'            => undef,
     'Text::Wrap'            => undef,
     'Tie::RefHash'          => undef,
-    'Time::HiRes'           => undef,
     'Time::Local'           => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Time-Local',
     'Time::Piece'           => undef,
     'Time::Seconds'         => undef,
@@ -13824,24 +13831,25 @@ for my $version (sort { $a <=> $b } keys %deprecated) {
     'Unicode::Normalize'    => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Unicode-Normalize',
     'Win32'                 => undef,
     'Win32API::File'        => undef,
-    'Win32API::File::ExtUtils::Myconst2perl'=> undef,
+    'Win32API::File::inc::ExtUtils::Myconst2perl'=> undef,
     'autodie'               => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
     'autodie::Scope::Guard' => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
     'autodie::Scope::GuardStack'=> 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
-    'autodie::ScopeUtil'    => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
+    'autodie::Util'         => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
     'autodie::exception'    => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
     'autodie::exception::system'=> 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
     'autodie::hints'        => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
     'autodie::skip'         => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=autodie',
+    'bigint'                => undef,
+    'bignum'                => undef,
+    'bigrat'                => undef,
     'encoding'              => undef,
-    'encoding::warnings'    => undef,
     'experimental'          => 'http://rt.cpan.org/Public/Dist/Display.html?Name=experimental',
     'ok'                    => 'http://github.com/Test-More/test-more/issues/',
     'parent'                => undef,
     'perlfaq'               => 'https://github.com/perl-doc-cats/perlfaq/issues',
     'version'               => 'https://rt.cpan.org/Public/Dist/Display.html?Name=version',
     'version::regex'        => 'https://rt.cpan.org/Public/Dist/Display.html?Name=version',
-    'version::vpp'          => 'https://rt.cpan.org/Public/Dist/Display.html?Name=version',
 );
 
 # Create aliases with trailing zeros for $] use

@@ -15,7 +15,7 @@ BEGIN {
 
 use Config;
 
-plan tests => 129;
+plan tests => 131;
 
 # run some code N times. If the number of SVs at the end of loop N is
 # greater than (N-1)*delta at the end of loop 1, we've got a leak
@@ -493,3 +493,47 @@ $x = $mdr::a[0]{foo}{$mdr::k}{$mdr::i};
 $x = $mdr::h[0]{foo}{$mdr::k}{$mdr::i};
 $x = $mdr::r->[0]{foo}{$mdr::k}{$mdr::i};
 EOF
+
+# un-localizing a tied (or generally magic) item could leak if the things
+# called by mg_set() died
+
+{
+    package MG_SET;
+
+    sub TIESCALAR {  bless [] }
+    sub FETCH { 1; }
+    my $do_die = 0;
+    sub STORE { die if $do_die; }
+
+    sub f {
+        local $s;
+        tie $s, 'MG_SET';
+        local $s;
+        $do_die = 1;
+    }
+    sub g {
+        eval { my $x = f(); };
+    }
+
+    ::leak(5,0, \&g, "MG_SET");
+}
+
+# check that @_ isn't leaked when dieing while goto'ing a new sub
+
+{
+    package my_goto;
+    sub TIEARRAY { bless [] }
+    sub FETCH { 1 }
+    sub STORE { die if $_[0][0]; $_[0][0] = 1 }
+
+    sub f { eval { g() } }
+    sub g {
+        my @a;
+        tie @a, "my_goto";
+        local $a[0];
+        goto &h;
+    }
+    sub h {}
+
+    ::leak(5, 0, \&f, q{goto shouldn't leak @_});
+}

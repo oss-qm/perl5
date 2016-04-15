@@ -7,11 +7,13 @@
 #   Makefile creation script.
 #
 # COPYRIGHT
-#   Copyright (C) 2014 Steve Hay.  All rights reserved.
+#   Copyright (C) 2014, 2015 Steve Hay.  All rights reserved.
 #
 # LICENCE
-#   You may distribute under the terms of either the GNU General Public License
-#   or the Artistic License, as specified in the LICENCE file.
+#   This script is free software; you can redistribute it and/or modify it under
+#   the same terms as Perl itself, i.e. under the terms of either the GNU
+#   General Public License or the Artistic License, as specified in the LICENCE
+#   file.
 #
 #===============================================================================
 
@@ -64,7 +66,7 @@ MAIN: {
         ABSTRACT => 'Collection of network protocol modules',
         AUTHOR   => 'Graham Barr <gbarr@pobox.com>, Steve Hay <shay@cpan.org>',
         LICENSE  => 'perl_5',
-        VERSION  => '3.05',
+        VERSION  => '3.08',
 
         META_MERGE => {
             'meta-spec' => {
@@ -125,6 +127,17 @@ MAIN: {
                     }
                 },
 
+                changestest => {
+                    description => 'Changes testing',
+                    prereqs => {
+                        test => {
+                            requires => {
+                                'Test::CPAN::Changes' => '0'
+                            }
+                        }
+                    }
+                },
+
                 critictest => {
                     description => 'Perl::Critic testing',
                     prereqs => {
@@ -165,7 +178,7 @@ MAIN: {
         CONFIGURE_REQUIRES => {
             'ExtUtils::MakeMaker' => '6.64',
             'Getopt::Std'         => '0',
-            'IO:File'             => '0',
+            'IO::File'            => '0',
             'perl'                => '5.008001',
             'strict'              => '0',
             'vars'                => '0',
@@ -193,10 +206,11 @@ MAIN: {
             'Time::Local'    => '0',
             'constant'       => '0',
             'strict'         => '0',
+            'utf8'           => '0',
             'vars'           => '0'
         },
 
-        INSTALLDIRS => 'perl',
+        INSTALLDIRS => ($] < 5.011 ? 'perl' : 'site'),
 
         realclean => {
             FILES => $CfgFile

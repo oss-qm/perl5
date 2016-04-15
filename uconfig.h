@@ -915,8 +915,8 @@
  *	This symbol contains the ~name expanded version of ARCHLIB, to be used
  *	in programs that are not prepared to deal with ~ expansion at run-time.
  */
-/*#define ARCHLIB "/usr/local/lib/perl5/5.22/unknown"		/ **/
-/*#define ARCHLIB_EXP "/usr/local/lib/perl5/5.22/unknown"		/ **/
+/*#define ARCHLIB "/usr/local/lib/perl5/5.24/unknown"		/ **/
+/*#define ARCHLIB_EXP "/usr/local/lib/perl5/5.24/unknown"		/ **/
 
 /* ARCHNAME:
  *	This symbol holds a string representing the architecture name.
@@ -1917,7 +1917,7 @@
 /* LONG_DOUBLESIZE:
  *	This symbol contains the size of a long double, so that the
  *	C preprocessor can make decisions based on it.  It is only
- *	defined if the system supports long doubles.   Note that this
+ *	defined if the system supports long doubles.  Note that this
  *	is sizeof(long double), which may include unused bytes.
  */
 /* HAS_LDEXPL:
@@ -2292,6 +2292,48 @@
  */
 /*#define HAS_SIGACTION	/ **/
 
+/* HAS_SIGINFO_SI_ERRNO:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_errno member
+ */
+/*#define HAS_SIGINFO_SI_ERRNO	/ **/
+
+/* HAS_SIGINFO_SI_PID:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_pid member
+ */
+/*#define HAS_SIGINFO_SI_PID	/ **/
+
+/* HAS_SIGINFO_SI_UID:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_uid member
+ */
+/*#define HAS_SIGINFO_SI_UID	/ **/
+
+/* HAS_SIGINFO_SI_ADDR:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_addr member
+ */
+/*#define HAS_SIGINFO_SI_ADDR	/ **/
+
+/* HAS_SIGINFO_SI_STATUS:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_status member
+ */
+/*#define HAS_SIGINFO_SI_STATUS	/ **/
+
+/* HAS_SIGINFO_SI_BAND:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_band member
+ */
+/*#define HAS_SIGINFO_SI_BAND	/ **/
+
+/* HAS_SIGINFO_SI_VALUE:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_value member
+ */
+/*#define HAS_SIGINFO_SI_VALUE	/ **/
+
 /* HAS_SIGSETJMP:
  *	This variable indicates to the C program that the sigsetjmp()
  *	routine is available to save the calling process's registers
@@ -2331,36 +2373,6 @@
  *	This symbol, if defined, indicates that the BSD socketpair() call is
  *	supported.
  */
-/* HAS_MSG_CTRUNC:
- *	This symbol, if defined, indicates that the MSG_CTRUNC is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_DONTROUTE:
- *	This symbol, if defined, indicates that the MSG_DONTROUTE is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_OOB:
- *	This symbol, if defined, indicates that the MSG_OOB is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_PEEK:
- *	This symbol, if defined, indicates that the MSG_PEEK is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_PROXY:
- *	This symbol, if defined, indicates that the MSG_PROXY is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_SCM_RIGHTS:
- *	This symbol, if defined, indicates that the SCM_RIGHTS is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
 /* HAS_SOCKADDR_SA_LEN:
  *	This symbol, if defined, indicates that the struct sockaddr
  *	structure has a member called sa_len, indicating the length of
@@ -2393,12 +2405,6 @@
 /*#define	HAS_SOCKET		/ **/
 /*#define	HAS_SOCKETPAIR	/ **/
 /*#define	HAS_SOCKADDR_SA_LEN	/ **/
-/*#define	HAS_MSG_CTRUNC	/ **/
-/*#define	HAS_MSG_DONTROUTE	/ **/
-/*#define	HAS_MSG_OOB	/ **/
-/*#define	HAS_MSG_PEEK	/ **/
-/*#define	HAS_MSG_PROXY	/ **/
-/*#define	HAS_SCM_RIGHTS	/ **/
 /*#define	HAS_SOCKADDR_IN6	/ **/
 /*#define	HAS_SIN6_SCOPE_ID	/ **/
 /*#define	HAS_IP_MREQ	/ **/
@@ -3082,8 +3088,8 @@
  *	This symbol contains the ~name expanded version of PRIVLIB, to be used
  *	in programs that are not prepared to deal with ~ expansion at run-time.
  */
-#define PRIVLIB "/usr/local/lib/perl5/5.22"		/**/
-#define PRIVLIB_EXP "/usr/local/lib/perl5/5.22"		/**/
+#define PRIVLIB "/usr/local/lib/perl5/5.24"		/**/
+#define PRIVLIB_EXP "/usr/local/lib/perl5/5.24"		/**/
 
 /* CAN_PROTOTYPE:
  *	If defined, this macro indicates that the C compiler can handle
@@ -3226,8 +3232,8 @@
  *	This symbol contains the ~name expanded version of SITEARCH, to be used
  *	in programs that are not prepared to deal with ~ expansion at run-time.
  */
-/*#define SITEARCH "/usr/local/lib/perl5/5.22/unknown"		/ **/
-/*#define SITEARCH_EXP "/usr/local/lib/perl5/5.22/unknown"		/ **/
+/*#define SITEARCH "/usr/local/lib/perl5/5.24/unknown"		/ **/
+/*#define SITEARCH_EXP "/usr/local/lib/perl5/5.24/unknown"		/ **/
 
 /* SITELIB:
  *	This symbol contains the name of the private library for this package.
@@ -3249,8 +3255,8 @@
  *	removed.  The elements in inc_version_list (inc_version_list.U) can
  *	be tacked onto this variable to generate a list of directories to search.
  */
-#define SITELIB "/usr/local/lib/perl5/5.22"		/**/
-#define SITELIB_EXP "/usr/local/lib/perl5/5.22"		/**/
+#define SITELIB "/usr/local/lib/perl5/5.24"		/**/
+#define SITELIB_EXP "/usr/local/lib/perl5/5.24"		/**/
 #define SITELIB_STEM "/usr/local/lib/perl5"		/**/
 
 /* Size_t_size:
@@ -3561,6 +3567,13 @@
  *	It may be undefined on VMS.
  */
 /*#define FCNTL_CAN_LOCK		/ **/
+
+/* HAS_FDCLOSE:
+ *	This symbol, if defined, indicates that the fdclose routine is
+ *	available to free a FILE structure without closing the underlying
+ *	file descriptor.  This function appeared in FreeBSD 10.2.
+ */
+/*#define HAS_FDCLOSE		/ **/
 
 /* HAS_FDIM:
  *	This symbol, if defined, indicates that the fdim routine is
@@ -4051,6 +4064,13 @@
  */
 /*#define HAS_MALLOC_GOOD_SIZE	/ **/
 
+/* HAS_MEMMEM:
+ *	This symbol, if defined, indicates that the memmem routine is
+ *	available to return a pointer to the start of the first occurance
+ *	of a substring in a memory area (or NULL if not found).
+ */
+/*#define HAS_MEMMEM		/ **/
+
 /* HAS_MKDTEMP:
  *	This symbol, if defined, indicates that the mkdtemp routine is
  *	available to exclusively create a uniquely named temporary directory.
@@ -4074,16 +4094,8 @@
  *	a prototype for the modfl() function.  Otherwise, it is up
  *	to the program to supply one.
  */
-/* HAS_MODFL_POW32_BUG:
- *	This symbol, if defined, indicates that the modfl routine is
- *	broken for long doubles >= pow(2, 32).
- *	For example from 4294967303.150000 one would get 4294967302.000000
- *	and 1.150000.  The bug has been seen in certain versions of glibc,
- *	release 2.2.2 is known to be okay.
- */
 /*#define HAS_MODFL		/ **/
 /*#define HAS_MODFL_PROTO		/ **/
-/*#define HAS_MODFL_POW32_BUG		/ **/
 
 /* HAS_MPROTECT:
  *	This symbol, if defined, indicates that the mprotect system call is
@@ -4109,6 +4121,23 @@
  *	the current rounding mode) to x.
  */
 /*#define HAS_NEARBYINT		/ **/
+
+/* HAS_NEWLOCALE:
+ *	This symbol, if defined, indicates that the newlocale routine is
+ *	available to return a new locale object or modify an existing
+ *	locale object.
+ */
+/* HAS_FREELOCALE:
+ *	This symbol, if defined, indicates that the freelocale routine is
+ *	available to deallocates the resources associated with a locale object.
+ */
+/* HAS_USELOCALE:
+ *	This symbol, if defined, indicates that the uselocale routine is
+ *	available to set the current locale for the calling thread.
+ */
+/*#define	HAS_NEWLOCALE	/ **/
+/*#define	HAS_FREELOCALE	/ **/
+/*#define	HAS_USELOCALE	/ **/
 
 /* HAS_NEXTAFTER:
  *	This symbol, if defined, indicates that the nextafter routine is
@@ -4766,6 +4795,27 @@
  */
 /*#define	I_USTAT		/ **/
 
+/* DOUBLEINFBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes for the double precision infinity.
+ */
+/* DOUBLENANBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes (0xHH) for the double precision not-a-number.
+ */
+/* LONGDBLINFBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes for the long double precision infinity.
+ */
+/* LONGDBLNANBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes (0xHH) for the long double precision not-a-number.
+ */
+#define DOUBLEINFBYTES  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x7f		/**/
+#define DOUBLENANBYTES  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f		/**/
+#define LONGDBLINFBYTES 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00		/**/
+#define LONGDBLNANBYTES 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00		/**/
+
 /* PERL_PRIfldbl:
  *	This symbol, if defined, contains the string used by stdio to
  *	format long doubles (format 'f') for output.
@@ -4808,6 +4858,30 @@
 /*#define PERL_PRIgldbl	"llg"	/ **/
 /*#define PERL_PRIeldbl	"lle"	/ **/
 /*#define PERL_SCNfldbl	"llf"	/ **/
+
+/* DOUBLEMANTBITS:
+ *	This symbol, if defined, tells how many mantissa bits
+ *	there are in double precision floating point format.
+ *	Note that this is usually DBL_MANT_DIG minus one, since
+ *	with the standard IEEE 754 formats DBL_MANT_DIG includes
+ *	the implicit bit, which doesn't really exist.
+ */
+/* LONGDBLMANTBITS:
+ *	This symbol, if defined, tells how many mantissa bits
+ *	there are in long double precision floating point format.
+ *	Note that this can be LDBL_MANT_DIG minus one,
+ *	since LDBL_MANT_DIG can include the IEEE 754 implicit bit.
+ *	The common x86-style 80-bit long double does not have
+ *	an implicit bit.
+ */
+/* NVMANTBITS:
+ *	This symbol, if defined, tells how many mantissa bits
+ *	(not including implicit bit) there are in a Perl NV.
+ *	This depends on which floating point type was chosen.
+ */
+#define DOUBLEMANTBITS  52
+#define LONGDBLMANTBITS 64
+#define NVMANTBITS      52
 
 /* NEED_VA_COPY:
  *	This symbol, if defined, indicates that the system stores
@@ -5174,6 +5248,6 @@
 #endif
 
 /* Generated from:
- * 02c4c9c3e2a7fb7b5c1d2fd7e34acd5c6706d5fd7c40544a1e714355c2f2b264 config_h.SH
- * 45fb46f69ab3d7fd8ea14fc29d490d044cbdd81e8a0111bc0b37aff4321d6182 uconfig.sh
+ * dc6a0dd949dd1c707248914e2fdada06beb0e6193be5e94cb1423c6f050e65c3 config_h.SH
+ * fc611849cb5b1e14ec1687b255dac15414cc5e2e11b192d94e08136cfe277f75 uconfig.sh
  * ex: set ro: */

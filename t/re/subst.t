@@ -5,10 +5,13 @@ BEGIN {
     require './test.pl';
     set_up_inc('../lib');
     require Config; import Config;
+    require constant;
+    constant->import(constcow => *Config::{NAME});
     require './charset_tools.pl';
+    require './loc_tools.pl';
 }
 
-plan( tests => 268 );
+plan( tests => 270 );
 
 $_ = 'david';
 $a = s/david/rules/r;
@@ -16,6 +19,11 @@ ok( $_ eq 'david' && $a eq 'rules', 'non-destructive substitute' );
 
 $a = "david" =~ s/david/rules/r;
 ok( $a eq 'rules', 's///r with constant' );
+
+#[perl #127635] failed with -DPERL_NO_COW perl build (George smoker uses flag)
+#Modification of a read-only value attempted at ../t/re/subst.t line 23.
+$a = constcow =~ s/Config/David/r;
+ok( $a eq 'David::', 's///r with COW constant' );
 
 $a = "david" =~ s/david/"is"."great"/er;
 ok( $a eq 'isgreat', 's///er' );
@@ -264,10 +272,10 @@ if (defined $Config{ebcdic} && $Config{ebcdic} eq 'define') {	# EBCDIC.
 ok( $_ eq 'abcdefghijklmnopqrstuvwxyz0123456789' );
 
 SKIP: {
-    skip("not ASCII",1) unless (ord("+") == ord(",") - 1
-			     && ord(",") == ord("-") - 1
-			     && ord("a") == ord("b") - 1
-			     && ord("b") == ord("c") - 1);
+    skip("ASCII-centric test",1) unless (ord("+") == ord(",") - 1
+			              && ord(",") == ord("-") - 1
+			              && ord("a") == ord("b") - 1
+			              && ord("b") == ord("c") - 1);
     $_ = '+,-';
     tr/+--/a-c/;
     ok( $_ eq 'abc' );
@@ -457,9 +465,7 @@ $pv1 =~ s/A/\x{100}/;
 substr($pv2,0,1) = "\x{100}";
 is($pv1, $pv2);
 
-SKIP: {
-    skip("EBCDIC", 3) if ord("A") == 193; 
-
+{
     {   
 	# Gregor Chrupala <gregor.chrupala@star-group.net>
 	use utf8;
@@ -1054,8 +1060,7 @@ SKIP: {
     );
 
 SKIP: {
-    eval { require POSIX; POSIX->import("locale_h"); };
-    if ($@ || !eval { &POSIX::LC_ALL; 1 }) {
+    if (! locales_enabled('LC_ALL')) {
         skip "Can't test locale (maybe you are missing POSIX)", 6;
     }
 
@@ -1084,4 +1089,16 @@ SKIP: {
     # RT #126602 double free if the value being modified is freed in the replacement
     fresh_perl_is('s//*_=0;s|0||;00.y0/e; print qq(ok\n)', "ok\n", { stderr => 1 },
                   "[perl #126602] s//*_=0;s|0||/e crashes");
+}
+
+{
+    #RT 126260 gofs is in chars, not bytes
+
+    # in something like /..\G/, the engine should start matching two
+    # chars before pos(). At one point it was matching two bytes before.
+
+    my $s = "\x{121}\x{122}\x{123}";
+    pos($s) = 2;
+    $s =~ s/..\G//g;
+    is($s, "\x{123}", "#RT 126260 gofs");
 }

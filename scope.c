@@ -29,14 +29,32 @@
 SV**
 Perl_stack_grow(pTHX_ SV **sp, SV **p, SSize_t n)
 {
+    SSize_t extra;
+    SSize_t current = (p - PL_stack_base);
+
     PERL_ARGS_ASSERT_STACK_GROW;
 
+    if (UNLIKELY(n < 0))
+        Perl_croak(aTHX_
+            "panic: stack_grow() negative count (%"IVdf")", (IV)n);
+
     PL_stack_sp = sp;
-#ifndef STRESS_REALLOC
-    av_extend(PL_curstack, (p - PL_stack_base) + (n) + 128);
+    extra =
+#ifdef STRESS_REALLOC
+        1;
 #else
-    av_extend(PL_curstack, (p - PL_stack_base) + (n) + 1);
+        128;
 #endif
+    /* If the total might wrap, panic instead. This is really testing
+     * that (current + n + extra < SSize_t_MAX), but done in a way that
+     * can't wrap */
+    if (UNLIKELY(   current         > SSize_t_MAX - extra
+                 || current + extra > SSize_t_MAX - n
+    ))
+        /* diag_listed_as: Out of memory during %s extend */
+        Perl_croak(aTHX_ "Out of memory during stack extend");
+
+    av_extend(PL_curstack, current + n + extra);
     return PL_stack_sp;
 }
 
@@ -62,7 +80,7 @@ Perl_new_stackinfo(pTHX_ I32 stitems, I32 cxitems)
     si->si_cxix = -1;
     si->si_type = PERLSI_UNDEF;
     Newx(si->si_cxstack, cxitems, PERL_CONTEXT);
-    /* Without any kind of initialising PUSHSUBST()
+    /* Without any kind of initialising CX_PUSHSUBST()
      * in pp_subst() will read uninitialised heap. */
     PoisonNew(si->si_cxstack, cxitems, PERL_CONTEXT);
     return si;
@@ -113,21 +131,28 @@ Perl_markstack_grow(pTHX)
     Renew(PL_markstack, newmax, I32);
     PL_markstack_max = PL_markstack + newmax;
     PL_markstack_ptr = PL_markstack + oldmax;
+    DEBUG_s(DEBUG_v(PerlIO_printf(Perl_debug_log,
+            "MARK grow %p %"IVdf" by %"IVdf"\n",
+            PL_markstack_ptr, (IV)*PL_markstack_ptr, (IV)oldmax)));
     return PL_markstack_ptr;
 }
 
 void
 Perl_savestack_grow(pTHX)
 {
-    PL_savestack_max = GROW(PL_savestack_max) + 4;
-    Renew(PL_savestack, PL_savestack_max, ANY);
+    PL_savestack_max = GROW(PL_savestack_max);
+    /* Note that we allocate SS_MAXPUSH slots higher than ss_max
+     * so that SS_ADD_END(), SSGROW() etc can do a simper check */
+    Renew(PL_savestack, PL_savestack_max + SS_MAXPUSH, ANY);
 }
 
 void
 Perl_savestack_grow_cnt(pTHX_ I32 need)
 {
     PL_savestack_max = PL_savestack_ix + need;
-    Renew(PL_savestack, PL_savestack_max, ANY);
+    /* Note that we allocate SS_MAXPUSH slots higher than ss_max
+     * so that SS_ADD_END(), SSGROW() etc can do a simper check */
+    Renew(PL_savestack, PL_savestack_max + SS_MAXPUSH, ANY);
 }
 
 #undef GROW
@@ -173,7 +198,7 @@ Perl_free_tmps(pTHX)
 #ifdef PERL_POISON
 	PoisonWith(PL_tmps_stack + PL_tmps_ix + 1, 1, SV *, 0xAB);
 #endif
-	if (LIKELY(sv && sv != &PL_sv_undef)) {
+	if (LIKELY(sv)) {
 	    SvTEMP_off(sv);
 	    SvREFCNT_dec_NN(sv);		/* note, can modify tmps_ix!!! */
 	}
@@ -189,15 +214,12 @@ S_save_scalar_at(pTHX_ SV **sptr, const U32 flags)
     PERL_ARGS_ASSERT_SAVE_SCALAR_AT;
 
     osv = *sptr;
-    sv  = (flags & SAVEf_KEEPOLDELEM) ? osv : (*sptr = newSV(0));
-
-    if (SvTYPE(osv) >= SVt_PVMG && SvMAGIC(osv)) {
-	if (SvGMAGICAL(osv)) {
-	    SvFLAGS(osv) |= (SvFLAGS(osv) &
-	       (SVp_IOK|SVp_NOK|SVp_POK)) >> PRIVSHIFT;
-	}
-	if (!(flags & SAVEf_KEEPOLDELEM))
-	    mg_localize(osv, sv, cBOOL(flags & SAVEf_SETMAGIC));
+    if (flags & SAVEf_KEEPOLDELEM)
+        sv = osv;
+    else {
+        sv  = (*sptr = newSV(0));
+        if (SvTYPE(osv) >= SVt_PVMG && SvMAGIC(osv))
+            mg_localize(osv, sv, cBOOL(flags & SAVEf_SETMAGIC));
     }
 
     return sv;
@@ -276,6 +298,19 @@ Perl_save_set_svflags(pTHX_ SV* sv, U32 mask, U32 val)
     SS_ADD_UV(SAVEt_SET_SVFLAGS);
     SS_ADD_END(4);
 }
+
+/*
+=for apidoc save_gp
+
+Saves the current GP of gv on the save stack to be restored on scope exit.
+
+If empty is true, replace the GP with a new GP.
+
+If empty is false, mark gv with GVf_INTRO so the next reference
+assigned is localized, which is how C< local *foo = $someref; > works.
+
+=cut
+*/
 
 void
 Perl_save_gp(pTHX_ GV *gv, I32 empty)
@@ -700,6 +735,18 @@ Perl_save_svref(pTHX_ SV **sptr)
     return save_scalar_at(sptr, SAVEf_SETMAGIC); /* XXX - FIXME - see #60360 */
 }
 
+
+void
+Perl_savetmps(pTHX)
+{
+    dSS_ADD;
+    SS_ADD_IV(PL_tmps_floor);
+    PL_tmps_floor = PL_tmps_ix;
+    SS_ADD_UV(SAVEt_TMPSFLOOR);
+    SS_ADD_END(2);
+}
+
+
 I32
 Perl_save_alloc(pTHX_ I32 size, I32 pad)
 {
@@ -718,16 +765,6 @@ Perl_save_alloc(pTHX_ I32 size, I32 pad)
     PL_savestack_ix += elems;
     SSPUSHUV(SAVEt_ALLOC | elems_shifted);
     return start;
-}
-
-void
-Perl_save_aliased_sv(pTHX_ GV *gv)
-{
-    dSS_ADD;
-    PERL_ARGS_ASSERT_SAVE_ALIASED_SV;
-    SS_ADD_PTR(gp_ref(GvGP(gv)));
-    SS_ADD_UV(SAVEt_GP_ALIASED_SV | cBOOL(GvALIASED_SV(gv)) << 8);
-    SS_ADD_END(2);
 }
 
 
@@ -830,9 +867,18 @@ Perl_leave_scope(pTHX_ I32 base)
 	    *svp = ARG0_SV;
 	    SvREFCNT_dec(sv);
             if (UNLIKELY(SvSMAGICAL(ARG0_SV))) {
+                /* mg_set could die, skipping the freeing of ARG0_SV and
+                 * refsv; Ensure that they're always freed in that case */
+                dSS_ADD;
+                SS_ADD_PTR(ARG0_SV);
+                SS_ADD_UV(SAVEt_FREESV);
+                SS_ADD_PTR(refsv);
+                SS_ADD_UV(SAVEt_FREESV);
+                SS_ADD_END(4);
                 PL_localizing = 2;
                 mg_set(ARG0_SV);
                 PL_localizing = 0;
+                break;
             }
 	    SvREFCNT_dec_NN(ARG0_SV);
 	    SvREFCNT_dec(refsv);
@@ -887,23 +933,25 @@ Perl_leave_scope(pTHX_ I32 base)
 	case SAVEt_AV:				/* array reference */
 	    SvREFCNT_dec(GvAV(ARG1_GV));
 	    GvAV(ARG1_GV) = ARG0_AV;
+          avhv_common:
             if (UNLIKELY(SvSMAGICAL(ARG0_SV))) {
+                /* mg_set might die, so make sure ARG1 isn't leaked */
+                dSS_ADD;
+                SS_ADD_PTR(ARG1_SV);
+                SS_ADD_UV(SAVEt_FREESV);
+                SS_ADD_END(2);
                 PL_localizing = 2;
                 mg_set(ARG0_SV);
                 PL_localizing = 0;
+                break;
             }
 	    SvREFCNT_dec_NN(ARG1_GV);
 	    break;
 	case SAVEt_HV:				/* hash reference */
 	    SvREFCNT_dec(GvHV(ARG1_GV));
 	    GvHV(ARG1_GV) = ARG0_HV;
-            if (UNLIKELY(SvSMAGICAL(ARG0_SV))) {
-                PL_localizing = 2;
-                mg_set(ARG0_SV);
-                PL_localizing = 0;
-            }
-	    SvREFCNT_dec_NN(ARG1_GV);
-	    break;
+            goto avhv_common;
+
 	case SAVEt_INT_SMALL:
 	    *(int*)ARG0_PTR = (int)(uv >> SAVE_TIGHT_SHIFT);
 	    break;
@@ -912,6 +960,9 @@ Perl_leave_scope(pTHX_ I32 base)
 	    break;
 	case SAVEt_STRLEN:			/* STRLEN/size_t ref */
 	    *(STRLEN*)ARG0_PTR = (STRLEN)arg1.any_iv;
+	    break;
+	case SAVEt_TMPSFLOOR:			/* restore PL_tmps_floor */
+	    PL_tmps_floor = (SSize_t)arg0.any_iv;
 	    break;
 	case SAVEt_BOOL:			/* bool reference */
 	    *(bool*)ARG0_PTR = cBOOL(uv >> 8);
@@ -1201,9 +1252,11 @@ Perl_leave_scope(pTHX_ I32 base)
 		SV **svp;
 		assert (ARG1_PTR);
 		svp = AvARRAY((PAD*)ARG1_PTR) + (PADOFFSET)arg0.any_uv;
-		/* This mortalizing used to be done by POPLOOP() via itersave.
-		   But as we have all the information here, we can do it here,
-		   save even having to have itersave in the struct.  */
+                /* This mortalizing used to be done by CX_POOPLOOP() via
+                   itersave.  But as we have all the information here, we
+                   can do it here, save even having to have itersave in
+                   the struct.
+                   */
 		sv_2mortal(*svp);
 		*svp = ARG2_SV;
 	    }
@@ -1252,24 +1305,6 @@ Perl_leave_scope(pTHX_ I32 base)
 	case SAVEt_READONLY_OFF:
 	    SvREADONLY_off(ARG0_SV);
 	    break;
-	case SAVEt_GP_ALIASED_SV: {
-	    /* The GP may have been abandoned, leaving the savestack with
-	       the only remaining reference to it.  */
-	    GP * const gp = (GP *)ARG0_PTR;
-	    if (gp->gp_refcnt == 1) {
-		GV * const gv = (GV *)sv_2mortal(newSV_type(SVt_PVGV));
-		isGV_with_GP_on(gv);
-		GvGP_set(gv,gp);
-		gp_free(gv);
-		isGV_with_GP_off(gv);
-	    }
-	    else {
-		gp->gp_refcnt--;
-		if (uv >> 8) gp->gp_flags |=  GPf_ALIASED_SV;
-		else	     gp->gp_flags &= ~GPf_ALIASED_SV;
-	    }
-	    break;
-	}
 	default:
 	    Perl_croak(aTHX_ "panic: leave_scope inconsistency %u", type);
 	}
@@ -1292,6 +1327,7 @@ Perl_cx_dump(pTHX_ PERL_CONTEXT *cx)
 		      PTR2UV(cx->blk_oldcop));
 	PerlIO_printf(Perl_debug_log, "BLK_OLDMARKSP = %ld\n", (long)cx->blk_oldmarksp);
 	PerlIO_printf(Perl_debug_log, "BLK_OLDSCOPESP = %ld\n", (long)cx->blk_oldscopesp);
+	PerlIO_printf(Perl_debug_log, "BLK_OLDSAVEIX = %ld\n", (long)cx->blk_oldsaveix);
 	PerlIO_printf(Perl_debug_log, "BLK_OLDPM = 0x%"UVxf"\n",
 		      PTR2UV(cx->blk_oldpm));
 	switch (cx->blk_gimme) {
@@ -1352,22 +1388,25 @@ Perl_cx_dump(pTHX_ PERL_CONTEXT *cx)
 		PTR2UV(cx->blk_eval.retop));
 	break;
 
+    case CXt_LOOP_PLAIN:
     case CXt_LOOP_LAZYIV:
     case CXt_LOOP_LAZYSV:
-    case CXt_LOOP_FOR:
-    case CXt_LOOP_PLAIN:
+    case CXt_LOOP_LIST:
+    case CXt_LOOP_ARY:
 	PerlIO_printf(Perl_debug_log, "BLK_LOOP.LABEL = %s\n", CxLABEL(cx));
-	PerlIO_printf(Perl_debug_log, "BLK_LOOP.RESETSP = %ld\n",
-		(long)cx->blk_loop.resetsp);
 	PerlIO_printf(Perl_debug_log, "BLK_LOOP.MY_OP = 0x%"UVxf"\n",
 		PTR2UV(cx->blk_loop.my_op));
-	/* XXX: not accurate for LAZYSV/IV */
-	PerlIO_printf(Perl_debug_log, "BLK_LOOP.ITERARY = 0x%"UVxf"\n",
-		PTR2UV(cx->blk_loop.state_u.ary.ary));
-	PerlIO_printf(Perl_debug_log, "BLK_LOOP.ITERIX = %ld\n",
-		(long)cx->blk_loop.state_u.ary.ix);
-	PerlIO_printf(Perl_debug_log, "BLK_LOOP.ITERVAR = 0x%"UVxf"\n",
-		PTR2UV(CxITERVAR(cx)));
+        if (CxTYPE(cx) != CXt_LOOP_PLAIN) {
+            PerlIO_printf(Perl_debug_log, "BLK_LOOP.ITERVAR = 0x%"UVxf"\n",
+                    PTR2UV(CxITERVAR(cx)));
+            PerlIO_printf(Perl_debug_log, "BLK_LOOP.ITERSAVE = 0x%"UVxf"\n",
+                    PTR2UV(cx->blk_loop.itersave));
+            /* XXX: not accurate for LAZYSV/IV/LIST */
+            PerlIO_printf(Perl_debug_log, "BLK_LOOP.ITERARY = 0x%"UVxf"\n",
+                    PTR2UV(cx->blk_loop.state_u.ary.ary));
+            PerlIO_printf(Perl_debug_log, "BLK_LOOP.ITERIX = %ld\n",
+                    (long)cx->blk_loop.state_u.ary.ix);
+        }
 	break;
 
     case CXt_SUBST:

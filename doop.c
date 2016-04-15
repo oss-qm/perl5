@@ -16,7 +16,7 @@
 
 /* This file contains some common functions needed to carry out certain
  * ops. For example, both pp_sprintf() and pp_prtf() call the function
- * do_printf() found in this file.
+ * do_sprintf() found in this file.
  */
 
 #include "EXTERN.h"
@@ -1002,6 +1002,7 @@ Perl_do_vop(pTHX_ I32 optype, SV *sv, SV *left, SV *right)
     const char *rsave;
     bool left_utf;
     bool right_utf;
+    bool do_warn_above_ff = ckWARN_d(WARN_DEPRECATED);
     STRLEN needlen = 0;
 
     PERL_ARGS_ASSERT_DO_VOP;
@@ -1017,7 +1018,7 @@ Perl_do_vop(pTHX_ I32 optype, SV *sv, SV *left, SV *right)
     }
     rsave = rc = SvPV_nomg_const(right, rightlen);
 
-    /* This need to come after SvPV to ensure that string overloading has
+    /* This needs to come after SvPV to ensure that string overloading has
        fired off.  */
 
     left_utf = DO_UTF8(left);
@@ -1082,6 +1083,12 @@ Perl_do_vop(pTHX_ I32 optype, SV *sv, SV *left, SV *right)
 		rulen -= ulen;
 		duc = luc & ruc;
 		dc = (char*)uvchr_to_utf8((U8*)dc, duc);
+                if (do_warn_above_ff && (luc > 0xff || ruc > 0xff)) {
+                    Perl_warner(aTHX_ packWARN(WARN_DEPRECATED),
+                                deprecated_above_ff_msg, PL_op_desc[optype]);
+                    /* Warn only once per operation */
+                    do_warn_above_ff = FALSE;
+                }
 	    }
 	    if (sv == left || sv == right)
 		(void)sv_usepvn(sv, dcorig, needlen);
@@ -1097,6 +1104,11 @@ Perl_do_vop(pTHX_ I32 optype, SV *sv, SV *left, SV *right)
 		rulen -= ulen;
 		duc = luc ^ ruc;
 		dc = (char*)uvchr_to_utf8((U8*)dc, duc);
+                if (do_warn_above_ff && (luc > 0xff || ruc > 0xff)) {
+                    Perl_warner(aTHX_ packWARN(WARN_DEPRECATED),
+                                deprecated_above_ff_msg, PL_op_desc[optype]);
+                    do_warn_above_ff = FALSE;
+                }
 	    }
 	    goto mop_up_utf;
 	case OP_BIT_OR:
@@ -1109,6 +1121,11 @@ Perl_do_vop(pTHX_ I32 optype, SV *sv, SV *left, SV *right)
 		rulen -= ulen;
 		duc = luc | ruc;
 		dc = (char*)uvchr_to_utf8((U8*)dc, duc);
+                if (do_warn_above_ff && (luc > 0xff || ruc > 0xff)) {
+                    Perl_warner(aTHX_ packWARN(WARN_DEPRECATED),
+                                deprecated_above_ff_msg, PL_op_desc[optype]);
+                    do_warn_above_ff = FALSE;
+                }
 	    }
 	  mop_up_utf:
 	    if (rulen)
@@ -1220,11 +1237,12 @@ Perl_do_kv(pTHX)
     dSP;
     HV * const keys = MUTABLE_HV(POPs);
     HE *entry;
-    const I32 gimme = GIMME_V;
+    SSize_t extend_size;
+    const U8 gimme = GIMME_V;
     const I32 dokv =     (PL_op->op_type == OP_RV2HV || PL_op->op_type == OP_PADHV);
     /* op_type is OP_RKEYS/OP_RVALUES if pp_rkeys delegated to here */
-    const I32 dokeys =   dokv || (PL_op->op_type == OP_KEYS || PL_op->op_type == OP_RKEYS);
-    const I32 dovalues = dokv || (PL_op->op_type == OP_VALUES || PL_op->op_type == OP_RVALUES);
+    const I32 dokeys =   dokv || (PL_op->op_type == OP_KEYS);
+    const I32 dovalues = dokv || (PL_op->op_type == OP_VALUES);
 
     (void)hv_iterinit(keys);	/* always reset iterator regardless */
 
@@ -1255,7 +1273,10 @@ Perl_do_kv(pTHX)
 	RETURN;
     }
 
-    EXTEND(SP, HvUSEDKEYS(keys) * (dokeys + dovalues));
+    /* 2*HvUSEDKEYS() should never be big enough to truncate or wrap */
+    assert(HvUSEDKEYS(keys) <= (SSize_t_MAX >> 1));
+    extend_size = (SSize_t)HvUSEDKEYS(keys) * (dokeys + dovalues);
+    EXTEND(SP, extend_size);
 
     while ((entry = hv_iternext(keys))) {
 	if (dokeys) {
@@ -1263,8 +1284,7 @@ Perl_do_kv(pTHX)
 	    XPUSHs(sv);
 	}
 	if (dovalues) {
-	    SV *tmpstr;
-	    tmpstr = hv_iterval(keys,entry);
+	    SV *tmpstr = hv_iterval(keys,entry);
 	    DEBUG_H(Perl_sv_setpvf(aTHX_ tmpstr, "%lu%%%d=%lu",
 			    (unsigned long)HeHASH(entry),
 			    (int)HvMAX(keys)+1,

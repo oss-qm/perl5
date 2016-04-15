@@ -127,7 +127,7 @@ S_save_magic_flags(pTHX_ I32 mgs_ix, SV *sv, U32 flags)
 /*
 =for apidoc mg_magical
 
-Turns on the magical status of an SV.  See C<sv_magic>.
+Turns on the magical status of an SV.  See C<L</sv_magic>>.
 
 =cut
 */
@@ -160,7 +160,7 @@ Perl_mg_magical(SV *sv)
 =for apidoc mg_get
 
 Do magic before a value is retrieved from the SV.  The type of SV must
-be >= SVt_PVMG.  See C<sv_magic>.
+be >= C<SVt_PVMG>.  See C<L</sv_magic>>.
 
 =cut
 */
@@ -245,7 +245,7 @@ Perl_mg_get(pTHX_ SV *sv)
 /*
 =for apidoc mg_set
 
-Do magic after a value is assigned to the SV.  See C<sv_magic>.
+Do magic after a value is assigned to the SV.  See C<L</sv_magic>>.
 
 =cut
 */
@@ -285,10 +285,10 @@ Perl_mg_set(pTHX_ SV *sv)
 =for apidoc mg_length
 
 Reports on the SV's length in bytes, calling length magic if available,
-but does not set the UTF8 flag on the sv.  It will fall back to 'get'
+but does not set the UTF8 flag on C<sv>.  It will fall back to 'get'
 magic if there is no 'length' magic, but with no indication as to
-whether it called 'get' magic.  It assumes the sv is a PVMG or
-higher.  Use sv_len() instead.
+whether it called 'get' magic.  It assumes C<sv> is a C<PVMG> or
+higher.  Use C<sv_len()> instead.
 
 =cut
 */
@@ -352,7 +352,7 @@ Perl_mg_size(pTHX_ SV *sv)
 /*
 =for apidoc mg_clear
 
-Clear something magical that the SV represents.  See C<sv_magic>.
+Clear something magical that the SV represents.  See C<L</sv_magic>>.
 
 =cut
 */
@@ -403,7 +403,7 @@ S_mg_findext_flags(const SV *sv, int type, const MGVTBL *vtbl, U32 flags)
 /*
 =for apidoc mg_find
 
-Finds the magic pointer for type matching the SV.  See C<sv_magic>.
+Finds the magic pointer for C<type> matching the SV.  See C<L</sv_magic>>.
 
 =cut
 */
@@ -418,7 +418,7 @@ Perl_mg_find(const SV *sv, int type)
 =for apidoc mg_findext
 
 Finds the magic pointer of C<type> with the given C<vtbl> for the C<SV>.  See
-C<sv_magicext>.
+C<L</sv_magicext>>.
 
 =cut
 */
@@ -447,7 +447,7 @@ Perl_mg_find_mglob(pTHX_ SV *sv)
 /*
 =for apidoc mg_copy
 
-Copies the magic from one SV to another.  See C<sv_magic>.
+Copies the magic from one SV to another.  See C<L</sv_magic>>.
 
 =cut
 */
@@ -486,12 +486,12 @@ Perl_mg_copy(pTHX_ SV *sv, SV *nsv, const char *key, I32 klen)
 =for apidoc mg_localize
 
 Copy some of the magic from an existing SV to new localized version of that
-SV.  Container magic (eg %ENV, $1, tie)
-gets copied, value magic doesn't (eg
-taint, pos).
+SV.  Container magic (I<e.g.>, C<%ENV>, C<$1>, C<tie>)
+gets copied, value magic doesn't (I<e.g.>,
+C<taint>, C<pos>).
 
-If setmagic is false then no set magic will be called on the new (empty) SV.
-This typically means that assignment will soon follow (e.g. 'local $x = $y'),
+If C<setmagic> is false then no set magic will be called on the new (empty) SV.
+This typically means that assignment will soon follow (e.g. S<C<'local $x = $y'>>),
 and that will handle the magic.
 
 =cut
@@ -553,7 +553,7 @@ S_mg_free_struct(pTHX_ SV *sv, MAGIC *mg)
 /*
 =for apidoc mg_free
 
-Free any magic storage used by the SV.  See C<sv_magic>.
+Free any magic storage used by the SV.  See C<L</sv_magic>>.
 
 =cut
 */
@@ -579,7 +579,7 @@ Perl_mg_free(pTHX_ SV *sv)
 /*
 =for apidoc Am|void|mg_free_type|SV *sv|int how
 
-Remove any magic of type I<how> from the SV I<sv>.  See L</sv_magic>.
+Remove any magic of type C<how> from the SV C<sv>.  See L</sv_magic>.
 
 =cut
 */
@@ -1041,6 +1041,11 @@ Perl_magic_get(pTHX_ SV *sv, MAGIC *mg)
 			  *PL_compiling.cop_warnings);
 	    }
 	}
+#ifdef WIN32
+	else if (strEQ(remaining, "IN32_SLOPPY_STAT")) {
+	    sv_setiv(sv, w32_sloppystat);
+	}
+#endif
 	break;
     case '+':
 	if (PL_curpm && (rx = PM_GETRE(PL_curpm))) {
@@ -1210,7 +1215,7 @@ Perl_magic_setenv(pTHX_ SV *sv, MAGIC *mg)
     }
 #endif
 
-#if !defined(OS2) && !defined(AMIGAOS) && !defined(WIN32) && !defined(MSDOS)
+#if !defined(OS2) && !defined(WIN32) && !defined(MSDOS)
 			    /* And you'll never guess what the dog had */
 			    /*   in its mouth... */
     if (TAINTING_get) {
@@ -1270,7 +1275,7 @@ Perl_magic_setenv(pTHX_ SV *sv, MAGIC *mg)
 	    }
 	}
     }
-#endif /* neither OS2 nor AMIGAOS nor WIN32 nor MSDOS */
+#endif /* neither OS2 nor WIN32 nor MSDOS */
 
     return 0;
 }
@@ -1782,7 +1787,7 @@ The C<flags> can be:
 
 The arguments themselves are any values following the C<flags> argument.
 
-Returns the SV (if any) returned by the method, or NULL on failure.
+Returns the SV (if any) returned by the method, or C<NULL> on failure.
 
 
 =cut
@@ -1810,7 +1815,9 @@ Perl_magic_methcall(pTHX_ SV *sv, const MAGIC *mg, SV *meth, U32 flags,
     PUSHSTACKi(PERLSI_MAGIC);
     PUSHMARK(SP);
 
-    EXTEND(SP, argc+1);
+    /* EXTEND() expects a signed argc; don't wrap when casting */
+    assert(argc <= I32_MAX);
+    EXTEND(SP, (I32)argc+1);
     PUSHs(SvTIED_obj(sv, mg));
     if (flags & G_UNDEF_FILL) {
 	while (argc--) {
@@ -2561,13 +2568,92 @@ Perl_magic_setlvref(pTHX_ SV *sv, MAGIC *mg)
     return 0;
 }
 
+static void
+S_set_dollarzero(pTHX_ SV *sv)
+    PERL_TSA_REQUIRES(PL_dollarzero_mutex)
+{
+#ifdef USE_ITHREADS
+    dVAR;
+#endif
+    const char *s;
+    STRLEN len;
+#ifdef HAS_SETPROCTITLE
+    /* The BSDs don't show the argv[] in ps(1) output, they
+     * show a string from the process struct and provide
+     * the setproctitle() routine to manipulate that. */
+    if (PL_origalen != 1) {
+        s = SvPV_const(sv, len);
+#   if __FreeBSD_version > 410001
+        /* The leading "-" removes the "perl: " prefix,
+         * but not the "(perl) suffix from the ps(1)
+         * output, because that's what ps(1) shows if the
+         * argv[] is modified. */
+        setproctitle("-%s", s);
+#   else	/* old FreeBSDs, NetBSD, OpenBSD, anyBSD */
+        /* This doesn't really work if you assume that
+         * $0 = 'foobar'; will wipe out 'perl' from the $0
+         * because in ps(1) output the result will be like
+         * sprintf("perl: %s (perl)", s)
+         * I guess this is a security feature:
+         * one (a user process) cannot get rid of the original name.
+         * --jhi */
+        setproctitle("%s", s);
+#   endif
+    }
+#elif defined(__hpux) && defined(PSTAT_SETCMD)
+    if (PL_origalen != 1) {
+        union pstun un;
+        s = SvPV_const(sv, len);
+        un.pst_command = (char *)s;
+        pstat(PSTAT_SETCMD, un, len, 0, 0);
+    }
+#else
+    if (PL_origalen > 1) {
+        I32 i;
+        /* PL_origalen is set in perl_parse(). */
+        s = SvPV_force(sv,len);
+        if (len >= (STRLEN)PL_origalen-1) {
+            /* Longer than original, will be truncated. We assume that
+             * PL_origalen bytes are available. */
+            Copy(s, PL_origargv[0], PL_origalen-1, char);
+        }
+        else {
+            /* Shorter than original, will be padded. */
+#ifdef PERL_DARWIN
+            /* Special case for Mac OS X: see [perl #38868] */
+            const int pad = 0;
+#else
+            /* Is the space counterintuitive?  Yes.
+             * (You were expecting \0?)
+             * Does it work?  Seems to.  (In Linux 2.4.20 at least.)
+             * --jhi */
+            const int pad = ' ';
+#endif
+            Copy(s, PL_origargv[0], len, char);
+            PL_origargv[0][len] = 0;
+            memset(PL_origargv[0] + len + 1,
+                   pad,  PL_origalen - len - 1);
+        }
+        PL_origargv[0][PL_origalen-1] = 0;
+        for (i = 1; i < PL_origargc; i++)
+            PL_origargv[i] = 0;
+#ifdef HAS_PRCTL_SET_NAME
+        /* Set the legacy process name in addition to the POSIX name on Linux */
+        if (prctl(PR_SET_NAME, (unsigned long)s, 0, 0, 0) != 0) {
+            /* diag_listed_as: SKIPME */
+            Perl_croak(aTHX_ "Can't set $0 with prctl(): %s", Strerror(errno));
+        }
+#endif
+    }
+#endif
+}
+
 int
 Perl_magic_set(pTHX_ SV *sv, MAGIC *mg)
 {
 #ifdef USE_ITHREADS
     dVAR;
 #endif
-    const char *s;
     I32 paren;
     const REGEXP * rx;
     I32 i;
@@ -2619,10 +2705,12 @@ Perl_magic_set(pTHX_ SV *sv, MAGIC *mg)
 
     case '\004':	/* ^D */
 #ifdef DEBUGGING
-	s = SvPV_nolen_const(sv);
-	PL_debug = get_debug_opts(&s, 0) | DEBUG_TOP_FLAG;
-	if (DEBUG_x_TEST || DEBUG_B_TEST)
-	    dump_all_perl(!DEBUG_B_TEST);
+        {
+            const char *s = SvPV_nolen_const(sv);
+            PL_debug = get_debug_opts(&s, 0) | DEBUG_TOP_FLAG;
+            if (DEBUG_x_TEST || DEBUG_B_TEST)
+                dump_all_perl(!DEBUG_B_TEST);
+        }
 #else
 	PL_debug = (SvIV(sv)) | DEBUG_TOP_FLAG;
 #endif
@@ -2800,6 +2888,11 @@ Perl_magic_set(pTHX_ SV *sv, MAGIC *mg)
 		}
 	    }
 	}
+#ifdef WIN32
+	else if (strEQ(mg->mg_ptr+1, "IN32_SLOPPY_STAT")) {
+	    w32_sloppystat = (bool)sv_true(sv);
+	}
+#endif
 	break;
     case '.':
 	if (PL_localizing) {
@@ -2811,12 +2904,12 @@ Perl_magic_set(pTHX_ SV *sv, MAGIC *mg)
 	break;
     case '^':
 	Safefree(IoTOP_NAME(GvIOp(PL_defoutgv)));
-	s = IoTOP_NAME(GvIOp(PL_defoutgv)) = savesvpv(sv);
+	IoTOP_NAME(GvIOp(PL_defoutgv)) = savesvpv(sv);
 	IoTOP_GV(GvIOp(PL_defoutgv)) =  gv_fetchsv(sv, GV_ADD, SVt_PVIO);
 	break;
     case '~':
 	Safefree(IoFMT_NAME(GvIOp(PL_defoutgv)));
-	s = IoFMT_NAME(GvIOp(PL_defoutgv)) = savesvpv(sv);
+	IoFMT_NAME(GvIOp(PL_defoutgv)) = savesvpv(sv);
 	IoFMT_GV(GvIOp(PL_defoutgv)) =  gv_fetchsv(sv, GV_ADD, SVt_PVIO);
 	break;
     case '=':
@@ -3111,74 +3204,7 @@ Perl_magic_set(pTHX_ SV *sv, MAGIC *mg)
 	break;
     case '0':
 	LOCK_DOLLARZERO_MUTEX;
-#ifdef HAS_SETPROCTITLE
-	/* The BSDs don't show the argv[] in ps(1) output, they
-	 * show a string from the process struct and provide
-	 * the setproctitle() routine to manipulate that. */
-	if (PL_origalen != 1) {
-	    s = SvPV_const(sv, len);
-#   if __FreeBSD_version > 410001
-	    /* The leading "-" removes the "perl: " prefix,
-	     * but not the "(perl) suffix from the ps(1)
-	     * output, because that's what ps(1) shows if the
-	     * argv[] is modified. */
-	    setproctitle("-%s", s);
-#   else	/* old FreeBSDs, NetBSD, OpenBSD, anyBSD */
-	    /* This doesn't really work if you assume that
-	     * $0 = 'foobar'; will wipe out 'perl' from the $0
-	     * because in ps(1) output the result will be like
-	     * sprintf("perl: %s (perl)", s)
-	     * I guess this is a security feature:
-	     * one (a user process) cannot get rid of the original name.
-	     * --jhi */
-	    setproctitle("%s", s);
-#   endif
-	}
-#elif defined(__hpux) && defined(PSTAT_SETCMD)
-	if (PL_origalen != 1) {
-	     union pstun un;
-	     s = SvPV_const(sv, len);
-	     un.pst_command = (char *)s;
-	     pstat(PSTAT_SETCMD, un, len, 0, 0);
-	}
-#else
-	if (PL_origalen > 1) {
-	    /* PL_origalen is set in perl_parse(). */
-	    s = SvPV_force(sv,len);
-	    if (len >= (STRLEN)PL_origalen-1) {
-		/* Longer than original, will be truncated. We assume that
-		 * PL_origalen bytes are available. */
-		Copy(s, PL_origargv[0], PL_origalen-1, char);
-	    }
-	    else {
-		/* Shorter than original, will be padded. */
-#ifdef PERL_DARWIN
-		/* Special case for Mac OS X: see [perl #38868] */
-		const int pad = 0;
-#else
-		/* Is the space counterintuitive?  Yes.
-		 * (You were expecting \0?)
-		 * Does it work?  Seems to.  (In Linux 2.4.20 at least.)
-		 * --jhi */
-		const int pad = ' ';
-#endif
-		Copy(s, PL_origargv[0], len, char);
-		PL_origargv[0][len] = 0;
-		memset(PL_origargv[0] + len + 1,
-		       pad,  PL_origalen - len - 1);
-	    }
-	    PL_origargv[0][PL_origalen-1] = 0;
-	    for (i = 1; i < PL_origargc; i++)
-		PL_origargv[i] = 0;
-#ifdef HAS_PRCTL_SET_NAME
-	    /* Set the legacy process name in addition to the POSIX name on Linux */
-	    if (prctl(PR_SET_NAME, (unsigned long)s, 0, 0, 0) != 0) {
-		/* diag_listed_as: SKIPME */
-		Perl_croak(aTHX_ "Can't set $0 with prctl(): %s", Strerror(errno));
-	    }
-#endif
-	}
-#endif
+        S_set_dollarzero(aTHX_ sv);
 	UNLOCK_DOLLARZERO_MUTEX;
 	break;
     }
@@ -3279,7 +3305,7 @@ Perl_sighandler(int sig)
 	if (hek)
 	    Perl_ck_warner(aTHX_ packWARN(WARN_SIGNAL),
 				"SIG%s handler \"%"HEKf"\" not defined.\n",
-			         PL_sig_name[sig], hek);
+			         PL_sig_name[sig], HEKfARG(hek));
 	     /* diag_listed_as: SIG%s handler "%s" not defined */
 	else Perl_ck_warner(aTHX_ packWARN(WARN_SIGNAL),
 			   "SIG%s handler \"__ANON__\" not defined.\n",
@@ -3314,13 +3340,27 @@ Perl_sighandler(int sig)
 		    * addr, status, and band are defined by POSIX/SUSv3. */
 		   (void)hv_stores(sih, "signo", newSViv(sip->si_signo));
 		   (void)hv_stores(sih, "code", newSViv(sip->si_code));
-#if 0 /* XXX TODO: Configure scan for the existence of these, but even that does not help if the SA_SIGINFO is not implemented according to the spec. */
-		   hv_stores(sih, "errno",      newSViv(sip->si_errno));
-		   hv_stores(sih, "status",     newSViv(sip->si_status));
-		   hv_stores(sih, "uid",        newSViv(sip->si_uid));
-		   hv_stores(sih, "pid",        newSViv(sip->si_pid));
-		   hv_stores(sih, "addr",       newSVuv(PTR2UV(sip->si_addr)));
-		   hv_stores(sih, "band",       newSViv(sip->si_band));
+#ifdef HAS_SIGINFO_SI_ERRNO
+		   (void)hv_stores(sih, "errno",      newSViv(sip->si_errno));
+#endif
+#ifdef HAS_SIGINFO_SI_STATUS
+		   (void)hv_stores(sih, "status",     newSViv(sip->si_status));
+#endif
+#ifdef HAS_SIGINFO_SI_UID
+		   {
+			SV *uid = newSV(0);
+			sv_setuid(uid, sip->si_uid);
+			(void)hv_stores(sih, "uid", uid);
+		   }
+#endif
+#ifdef HAS_SIGINFO_SI_PID
+		   (void)hv_stores(sih, "pid",        newSViv(sip->si_pid));
+#endif
+#ifdef HAS_SIGINFO_SI_ADDR
+		   (void)hv_stores(sih, "addr",       newSVuv(PTR2UV(sip->si_addr)));
+#endif
+#ifdef HAS_SIGINFO_SI_BAND
+		   (void)hv_stores(sih, "band",       newSViv(sip->si_band));
 #endif
 		   EXTEND(SP, 2);
 		   PUSHs(rv);
@@ -3395,12 +3435,6 @@ S_restore_magic(pTHX_ const void *p)
 
     if (SvTYPE(sv) >= SVt_PVMG && SvMAGIC(sv)) {
 	SvTEMP_off(sv); /* if it's still magical, this value isn't temporary */
-#ifdef PERL_OLD_COPY_ON_WRITE
-	/* While magic was saved (and off) sv_setsv may well have seen
-	   this SV as a prime candidate for COW.  */
-	if (SvIsCOW(sv))
-	    sv_force_normal_flags(sv, 0);
-#endif
 	if (mgs->mgs_flags)
 	    SvFLAGS(sv) |= mgs->mgs_flags;
 	else
@@ -3457,7 +3491,7 @@ S_unwind_handler_stack(pTHX_ const void *p)
 /*
 =for apidoc magic_sethint
 
-Triggered by a store to %^H, records the key/value pair to
+Triggered by a store to C<%^H>, records the key/value pair to
 C<PL_compiling.cop_hints_hash>.  It is assumed that hints aren't storing
 anything that would need a deep copy.  Maybe we should warn if we find a
 reference.
@@ -3489,7 +3523,7 @@ Perl_magic_sethint(pTHX_ SV *sv, MAGIC *mg)
 /*
 =for apidoc magic_clearhint
 
-Triggered by a delete from %^H, records the key to
+Triggered by a delete from C<%^H>, records the key to
 C<PL_compiling.cop_hints_hash>.
 
 =cut
@@ -3513,7 +3547,7 @@ Perl_magic_clearhint(pTHX_ SV *sv, MAGIC *mg)
 /*
 =for apidoc magic_clearhints
 
-Triggered by clearing %^H, resets C<PL_compiling.cop_hints_hash>.
+Triggered by clearing C<%^H>, resets C<PL_compiling.cop_hints_hash>.
 
 =cut
 */

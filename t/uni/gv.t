@@ -121,26 +121,33 @@ is (scalar %ᕘ, 0);
     *ᕘ = undef;
     like($msg, qr/Undefined value assigned to typeglob/);
 
+    my $O_grave = utf8::unicode_to_native(0xd2);
+    my $E_grave = utf8::unicode_to_native(0xc8);
+    my $pat = sprintf(
+        # It took a lot of experimentation to get the backslashes right (khw)
+        "Argument \"\\*main::(?:PW\\\\x\\{%x}MPF"
+                            . "|SKR\\\\x\\{%x}\\\\x\\{%x}\\\\x\\{%x})\" "
+                            . "isn't numeric in sprintf",
+                              $O_grave, $E_grave, $E_grave, $E_grave);
+    $pat = qr/$pat/;
+
     no warnings 'once';
     # test warnings for converting globs to other forms
     my $copy = *PWÒMPF;
     foreach ($copy, *SKRÈÈÈ) {
 	$msg = '';
 	my $victim = sprintf "%d", $_;
-	like($msg, qr/Argument "\*main::(\p{ASCII}|\Q\x{\E\p{ASCII_Hex_Digit}{2}\}){3}\Q...\E" isn't numeric in sprintf/,
-	     "Warning on conversion to IV");
+	like($msg, $pat, "Warning on conversion to IV");
 	is($victim, 0);
 
 	$msg = '';
 	$victim = sprintf "%u", $_;
-	like($msg, qr/Argument "\*main::(\p{ASCII}|\Q\x{\E\p{ASCII_Hex_Digit}{2}\}){3}\Q...\E" isn't numeric in sprintf/,
-	     "Warning on conversion to UV");
+	like($msg, $pat, "Warning on conversion to UV");
 	is($victim, 0);
 
 	$msg = '';
 	$victim = sprintf "%e", $_;
-	like($msg, qr/Argument "\*main::(\p{ASCII}|\Q\x{\E\p{ASCII_Hex_Digit}{2}\}){3}\Q...\E" isn't numeric in sprintf/,
-	     "Warning on conversion to NV");
+	like($msg, $pat, "Warning on conversion to NV");
 	like($victim, qr/^0\.0+E\+?00/i, "Expect floating point zero");
 
 	$msg = '';
@@ -183,7 +190,10 @@ is (*{*Ẋ{GLOB}}, "*main::STDOUT");
 	$warn .= $_[0];
     };
     my $val = *Ẋ{FILEHANDLE};
-    print {*Ẋ{IO}} ($warn =~ /is deprecated/
+
+    # deprecation warning removed in v5.23 -- rjbs, 2015-12-31
+    # https://rt.perl.org/Ticket/Display.html?id=127060
+    print {*Ẋ{IO}} (! defined $warn
 		    ? "ok $test\n" : "not ok $test\n");
     curr_test(++$test);
 }

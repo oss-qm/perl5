@@ -338,29 +338,6 @@ Perl_boot_core_PerlIO(pTHX)
 #endif
 
 
-#ifdef PERLIO_IS_STDIO
-
-void
-PerlIO_init(pTHX)
-{
-    PERL_UNUSED_CONTEXT;
-    /*
-     * Does nothing (yet) except force this file to be included in perl
-     * binary. That allows this file to force inclusion of other functions
-     * that may be required by loadable extensions e.g. for
-     * FileHandle::tmpfile
-     */
-}
-
-#undef PerlIO_tmpfile
-PerlIO *
-PerlIO_tmpfile(void)
-{
-    return tmpfile();
-}
-
-#else                           /* PERLIO_IS_STDIO */
-
 /*======================================================================================*/
 /*
  * Implement all the PerlIO interface ourselves.
@@ -2211,10 +2188,10 @@ PerlIOBase_dup(pTHX_ PerlIO *f, PerlIO *o, CLONE_PARAMS *param, int flags)
 	char buf[8];
 	assert(self);
 	PerlIO_debug("PerlIOBase_dup %s f=%p o=%p param=%p\n",
-		     self ? self->name : "(Null)",
+		     self->name,
 		     (void*)f, (void*)o, (void*)param);
-	if (self && self->Getarg)
-	    arg = (*self->Getarg)(aTHX_ o, param, flags);
+	if (self->Getarg)
+	  arg = (*self->Getarg)(aTHX_ o, param, flags);
 	f = PerlIO_push(aTHX_ f, self, PerlIO_modestr(o,buf), arg);
 	if (f && PerlIOBase(o)->flags & PERLIO_F_UTF8)
 	    PerlIOBase(f)->flags |= PERLIO_F_UTF8;
@@ -2227,7 +2204,9 @@ PerlIOBase_dup(pTHX_ PerlIO *f, PerlIO *o, CLONE_PARAMS *param, int flags)
 
 /* Must be called with PL_perlio_mutex locked. */
 static void
-S_more_refcounted_fds(pTHX_ const int new_fd) {
+S_more_refcounted_fds(pTHX_ const int new_fd)
+  PERL_TSA_REQUIRES(PL_perlio_mutex)
+{
     dVAR;
     const int old_max = PL_perlio_fd_refcnt_size;
     const int new_max = 16 + (new_fd & ~15);
@@ -3147,7 +3126,9 @@ PerlIOStdio_invalidate_fileno(pTHX_ FILE *f)
     /* XXX this could use PerlIO_canset_fileno() and
      * PerlIO_set_fileno() support from Configure
      */
-#  if defined(__UCLIBC__)
+#  if defined(HAS_FDCLOSE)
+    return fdclose(f, NULL) == 0 ? 1 : 0;
+#  elif defined(__UCLIBC__)
     /* uClibc must come before glibc because it defines __GLIBC__ as well. */
     f->__filedes = -1;
     return 1;
@@ -3260,6 +3241,28 @@ PerlIOStdio_close(pTHX_ PerlIO *f)
 		return 0;
 	    if (stdio == stdout || stdio == stderr)
 		return PerlIO_flush(f);
+        }
+#ifdef USE_ITHREADS
+        MUTEX_LOCK(&PL_perlio_mutex);
+        /* Right. We need a mutex here because for a brief while we
+           will have the situation that fd is actually closed. Hence if
+           a second thread were to get into this block, its dup() would
+           likely return our fd as its dupfd. (after all, it is closed)
+           Then if we get to the dup2() first, we blat the fd back
+           (messing up its temporary as a side effect) only for it to
+           then close its dupfd (== our fd) in its close(dupfd) */
+
+        /* There is, of course, a race condition, that any other thread
+           trying to input/output/whatever on this fd will be stuffed
+           for the duration of this little manoeuvrer. Perhaps we
+           should hold an IO mutex for the duration of every IO
+           operation if we know that invalidate doesn't work on this
+           platform, but that would suck, and could kill performance.
+
+           Except that correctness trumps speed.
+           Advice from klortho #11912. */
+#endif
+	if (invalidate) {
             /* Tricky - must fclose(stdio) to free memory but not close(fd)
 	       Use Sarathy's trick from maint-5.6 to invalidate the
 	       fileno slot of the FILE *
@@ -3268,30 +3271,9 @@ PerlIOStdio_close(pTHX_ PerlIO *f)
 	    SAVE_ERRNO;
 	    invalidate = PerlIOStdio_invalidate_fileno(aTHX_ stdio);
 	    if (!invalidate) {
-#ifdef USE_ITHREADS
-		MUTEX_LOCK(&PL_perlio_mutex);
-		/* Right. We need a mutex here because for a brief while we
-		   will have the situation that fd is actually closed. Hence if
-		   a second thread were to get into this block, its dup() would
-		   likely return our fd as its dupfd. (after all, it is closed)
-		   Then if we get to the dup2() first, we blat the fd back
-		   (messing up its temporary as a side effect) only for it to
-		   then close its dupfd (== our fd) in its close(dupfd) */
-
-		/* There is, of course, a race condition, that any other thread
-		   trying to input/output/whatever on this fd will be stuffed
-		   for the duration of this little manoeuvrer. Perhaps we
-		   should hold an IO mutex for the duration of every IO
-		   operation if we know that invalidate doesn't work on this
-		   platform, but that would suck, and could kill performance.
-
-		   Except that correctness trumps speed.
-		   Advice from klortho #11912. */
-#endif
 		dupfd = PerlLIO_dup(fd);
 #ifdef USE_ITHREADS
 		if (dupfd < 0) {
-		    MUTEX_UNLOCK(&PL_perlio_mutex);
 		    /* Oh cXap. This isn't going to go well. Not sure if we can
 		       recover from here, or if closing this particular FILE *
 		       is a good idea now.  */
@@ -3316,10 +3298,10 @@ PerlIOStdio_close(pTHX_ PerlIO *f)
 	if (dupfd >= 0) {
 	    PerlLIO_dup2(dupfd,fd);
 	    PerlLIO_close(dupfd);
-#ifdef USE_ITHREADS
-	    MUTEX_UNLOCK(&PL_perlio_mutex);
-#endif
 	}
+#ifdef USE_ITHREADS
+        MUTEX_UNLOCK(&PL_perlio_mutex);
+#endif
 	return result;
     }
 }
@@ -5099,7 +5081,6 @@ Perl_PerlIO_restore_errno(pTHX_ PerlIO *f)
 #undef HAS_FSETPOS
 #undef HAS_FGETPOS
 
-#endif                          /* PERLIO_IS_STDIO */
 
 /*======================================================================================*/
 /*

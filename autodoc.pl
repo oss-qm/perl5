@@ -263,7 +263,7 @@ removed without notice.\n\n$docs" if $flags =~ /x/;
 sub sort_helper {
     # Do a case-insensitive dictionary sort, with only alphabetics
     # significant, falling back to using everything for determinancy
-    return (uc($a =~ s/[[^:alpha]]//r) cmp uc($b =~ s/[[^:alpha]]//r))
+    return (uc($a =~ s/[[:^alpha:]]//r) cmp uc($b =~ s/[[:^alpha:]]//r))
            || uc($a) cmp uc($b)
            || $a cmp $b;
 }
@@ -304,11 +304,14 @@ interfaces are subject to change.  Functions that are not listed in this
 document are not intended for public use, and should NOT be used under any
 circumstances.
 
-If you use one of the undocumented functions below, you may wish to consider
-creating and submitting documentation
-for it.  If your patch is accepted, this
-will indicate that the interface is stable (unless it is explicitly marked
-otherwise).
+If you feel you need to use one of these functions, first send email to
+L<perl5-porters@perl.org|mailto:perl5-porters@perl.org>.  It may be
+that there is a good reason for the function not being documented, and it
+should be removed from this list; or it may just be that no one has gotten
+around to documenting it.  In the latter case, you will be asked to submit a
+patch to document the function.  Once your patch is accepted, it will indicate
+that the interface is stable (unless it is explicitly marked otherwise) and
+usable by you.
 
 =over
 
@@ -393,6 +396,11 @@ not part of the public API, and should not be used by extension writers at
 all.  For these reasons, blindly using functions listed in proto.h is to be
 avoided when writing extensions.
 
+In Perl, unlike C, a string of characters may generally contain embedded
+C<NUL> characters.  Sometimes in the documentation a Perl string is referred
+to as a "buffer" to distinguish it from a C string, but sometimes they are
+both just referred to as strings.
+
 Note that all Perl API global variables must be referenced with the C<PL_>
 prefix.  Again, those not listed here are not to be used by extension writers,
 and can be changed or removed without notice; same with macros.
@@ -404,6 +412,14 @@ whose ordinal numbers are in the range 0 - 127).
 And documentation and comments may still use the term ASCII, when
 sometimes in fact the entire range from 0 - 255 is meant.
 
+The non-ASCII characters below 256 can have various meanings, depending on
+various things.  (See, most notably, L<perllocale>.)  But usually the whole
+range can be referred to as ISO-8859-1.  Often, the term "Latin-1" (or
+"Latin1") is used as an equivalent for ISO-8859-1.  But some people treat
+"Latin1" as referring just to the characters in the range 128 through 255, or
+somethimes from 160 through 255.
+This documentation uses "Latin1" and "Latin-1" to refer to all 256 characters.
+
 Note that Perl can be compiled and run under either ASCII or EBCDIC (See
 L<perlebcdic>).  Most of the documentation (and even comments in the code)
 ignore the EBCDIC possibility.  
@@ -414,8 +430,8 @@ whenever this documentation refers to C<utf8>
 (and variants of that name, including in function names),
 it also (essentially transparently) means C<UTF-EBCDIC>.
 But the ordinals of characters differ between ASCII, EBCDIC, and
-the UTF- encodings, and a string encoded in UTF-EBCDIC may occupy more bytes
-than in UTF-8.
+the UTF- encodings, and a string encoded in UTF-EBCDIC may occupy a different
+number of bytes than in UTF-8.
 
 The listing below is alphabetical, case insensitive.
 

@@ -51,6 +51,86 @@
 # include <ws2tcpip.h>
 #endif
 
+#ifdef WIN32
+
+/* VC 6 with its original headers doesn't know about sockaddr_storage, VC 2003 does*/
+#ifndef _SS_MAXSIZE
+
+#  define _SS_MAXSIZE 128
+#  define _SS_ALIGNSIZE (sizeof(__int64))
+
+#  define _SS_PAD1SIZE (_SS_ALIGNSIZE - sizeof (short))
+#  define _SS_PAD2SIZE (_SS_MAXSIZE - (sizeof (short) + _SS_PAD1SIZE \
+                                                    + _SS_ALIGNSIZE))
+
+struct sockaddr_storage {
+    short ss_family;
+    char __ss_pad1[_SS_PAD1SIZE];
+    __int64 __ss_align;
+    char __ss_pad2[_SS_PAD2SIZE];
+};
+
+typedef int socklen_t;
+
+#define in6_addr in_addr6
+
+#define INET_ADDRSTRLEN  22
+#define INET6_ADDRSTRLEN 65
+
+#endif
+
+static int inet_pton(int af, const char *src, void *dst)
+{
+  struct sockaddr_storage ss;
+  int size = sizeof(ss);
+  ss.ss_family = af; /* per MSDN */
+
+  if (WSAStringToAddress((char*)src, af, NULL, (struct sockaddr *)&ss, &size) != 0)
+    return 0;
+
+  switch(af) {
+    case AF_INET:
+      *(struct in_addr *)dst = ((struct sockaddr_in *)&ss)->sin_addr;
+      return 1;
+    case AF_INET6:
+      *(struct in6_addr *)dst = ((struct sockaddr_in6 *)&ss)->sin6_addr;
+      return 1;
+    default:
+      WSASetLastError(WSAEAFNOSUPPORT);
+      return -1;
+  }
+}
+
+static const char *inet_ntop(int af, const void *src, char *dst, socklen_t size)
+{
+  struct sockaddr_storage ss;
+  unsigned long s = size;
+
+  ZeroMemory(&ss, sizeof(ss));
+  ss.ss_family = af;
+
+  switch(af) {
+    case AF_INET:
+      ((struct sockaddr_in *)&ss)->sin_addr = *(struct in_addr *)src;
+      break;
+    case AF_INET6:
+      ((struct sockaddr_in6 *)&ss)->sin6_addr = *(struct in6_addr *)src;
+      break;
+    default:
+      return NULL;
+  }
+
+  /* cannot directly use &size because of strict aliasing rules */
+  if (WSAAddressToString((struct sockaddr *)&ss, sizeof(ss), NULL, dst, &s) != 0)
+    return NULL;
+  else
+    return dst;
+}
+
+#define HAS_INETPTON
+#define HAS_INETNTOP
+#endif
+
 #ifdef NETWARE
 NETDB_DEFINE_CONTEXT
 NETINET_DEFINE_CONTEXT
@@ -78,6 +158,10 @@ NETINET_DEFINE_CONTEXT
 # define INADDR_LOOPBACK	 0x7F000001
 #endif /* INADDR_LOOPBACK */
 
+#ifndef INET_ADDRSTRLEN
+#define INET_ADDRSTRLEN 16
+#endif
+
 #ifndef C_ARRAY_LENGTH
 #define C_ARRAY_LENGTH(arr) (sizeof(arr) / sizeof(*(arr)))
 #endif /* !C_ARRAY_LENGTH */
@@ -93,6 +177,14 @@ NETINET_DEFINE_CONTEXT
 #ifndef Newx
 # define Newx(v,n,t) New(0,v,n,t)
 #endif /* !Newx */
+
+#ifndef SvPVx_nolen
+#if defined(__GNUC__) && !defined(PERL_GCC_BRACE_GROUPS_FORBIDDEN)
+#  define SvPVx_nolen(sv) ({SV *_sv = (sv); SvPV_nolen(_sv); })
+#else /* __GNUC__ */
+#  define SvPVx_nolen(sv) ((PL_Sv = (sv)), SvPV_nolen(PL_Sv))
+#endif /* __GNU__ */
+#endif /* !SvPVx_nolen */
 
 #ifndef croak_sv
 # define croak_sv(sv)	croak(SvPVx_nolen(sv))
@@ -769,8 +861,8 @@ unpack_sockaddr_un(sun_sv)
 #   else
 		const int maxlen = (int)sizeof(addr.sun_path);
 #   endif
-		for (addr_len = 0; addr.sun_path[addr_len]
-		     && addr_len < maxlen; addr_len++);
+		for (addr_len = 0; addr_len < maxlen
+		     && addr.sun_path[addr_len]; addr_len++);
 	}
 
 	ST(0) = sv_2mortal(newSVpvn(addr.sun_path, addr_len));
