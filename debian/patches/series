@@ -38,3 +38,4 @@ debian/debugperl-compat-fix.diff
 fixes/crosscompile-no-targethost.diff
 fixes/memoize-pod.diff
 fixes/ok-pod.diff
+fixes/format-literal.diff

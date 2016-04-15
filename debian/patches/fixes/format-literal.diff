@@ -1,0 +1,45 @@
+From 9d7dbe2e76b1dda2c33b1222bee38d874b7fc8a1 Mon Sep 17 00:00:00 2001
+From: Aaron Crane <arc@cpan.org>
+Date: Thu, 14 Apr 2016 11:23:12 +0100
+Subject: Avoid passing non-literal to format function
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This avoids the following error, reported by Jitka Plesníková
+<jplesnik@redhat.com> in a test of RC1:
+
+op.c: In function 'Perl_ck_ftst':
+op.c:9754:58: error: format not a string literal and no format arguments [-Werror=format-security]
+                 Perl_warner(aTHX_ packWARN(WARN_SYNTAX), array_passed_to_stat);
+
+In addition, the string in question is now made const.
+
+Patch-Name: fixes/format-literal.diff
+Origin: http://code.activestate.com/lists/perl5-porters/228281/
+---
+ op.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/op.c b/op.c
+index fcb1bc6..4b6b227 100644
+--- a/op.c
++++ b/op.c
+@@ -109,7 +109,7 @@ recursive, but it's recursive on basic blocks, not on tree nodes.
+ #define CALL_RPEEP(o) PL_rpeepp(aTHX_ o)
+ #define CALL_OPFREEHOOK(o) if (PL_opfreehook) PL_opfreehook(aTHX_ o)
+ 
+-static char array_passed_to_stat[] = "Array passed to stat will be coerced to a scalar";
++static const char array_passed_to_stat[] = "Array passed to stat will be coerced to a scalar";
+ 
+ /* Used to avoid recursion through the op tree in scalarvoid() and
+    op_free()
+@@ -9751,7 +9751,7 @@ Perl_ck_ftst(pTHX_ OP *o)
+             }
+             else {
+                 /* diag_listed_as: Array passed to stat will be coerced to a scalar%s */
+-                Perl_warner(aTHX_ packWARN(WARN_SYNTAX), array_passed_to_stat);
++                Perl_warner(aTHX_ packWARN(WARN_SYNTAX), "%s", array_passed_to_stat);
+             }
+        }
+ 	scalar((OP *) kid);
