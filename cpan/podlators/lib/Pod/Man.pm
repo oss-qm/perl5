@@ -11,9 +11,10 @@
 # me any patches at the address above in addition to sending them to the
 # standard Perl mailing lists.
 #
-# Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-#     2010, 2012, 2013 Russ Allbery <rra@stanford.edu>
+# Written by Russ Allbery <rra@cpan.org>
 # Substantial contributions by Sean Burke <sburke@cpan.org>
+# Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+#     2010, 2012, 2013, 2014, 2015, 2016 Russ Allbery <rra@cpan.org>
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -24,25 +25,25 @@
 
 package Pod::Man;
 
-require 5.005;
-
+use 5.006;
 use strict;
+use warnings;
+
 use subs qw(makespace);
 use vars qw(@ISA %ESCAPES $PREAMBLE $VERSION);
 
 use Carp qw(carp croak);
-
-my $has_encode;
-
-BEGIN {
-    $has_encode = eval { require Encode; Encode->import('encode'); 1 };
-}
-
 use Pod::Simple ();
+
+# Conditionally import Encode and set $HAS_ENCODE if it is available.
+our $HAS_ENCODE;
+BEGIN {
+    $HAS_ENCODE = eval { require Encode };
+}
 
 @ISA = qw(Pod::Simple);
 
-$VERSION = '2.28';
+$VERSION = '4.07';
 
 # Set the debugging level.  If someone has inserted a debug function into this
 # class already, use that.  Otherwise, use any Pod::Simple debug function
@@ -145,9 +146,19 @@ sub new {
     }
     delete $$self{errors};
 
-    # degrade back to non-utf8 if Encode is not available
-    if ($$self{utf8} and !$has_encode) {
-        carp "utf8 mode requested but Encode::encode() not available, falling back to non-utf8";
+    # Degrade back to non-utf8 if Encode is not available.
+    #
+    # Suppress the warning message when PERL_CORE is set, indicating this is
+    # running as part of the core Perl build.  Perl builds podlators (and all
+    # pure Perl modules) before Encode and other XS modules, so Encode won't
+    # yet be available.  Rely on the Perl core build to generate man pages
+    # later, after all the modules are available, so that UTF-8 handling will
+    # be correct.
+    if ($$self{utf8} and !$HAS_ENCODE) {
+        if (!$ENV{PERL_CORE}) {
+            carp ('utf8 mode requested but Encode module not available,'
+                    . ' falling back to non-utf8');
+        }
         delete $$self{utf8};
     }
 
@@ -216,10 +227,10 @@ sub init_quotes {
         $$self{LQUOTE} = $$self{RQUOTE} = '';
     } elsif (length ($$self{quotes}) == 1) {
         $$self{LQUOTE} = $$self{RQUOTE} = $$self{quotes};
-    } elsif ($$self{quotes} =~ /^(.)(.)$/
-             || $$self{quotes} =~ /^(..)(..)$/) {
-        $$self{LQUOTE} = $1;
-        $$self{RQUOTE} = $2;
+    } elsif (length ($$self{quotes}) % 2 == 0) {
+        my $length = length ($$self{quotes}) / 2;
+        $$self{LQUOTE} = substr ($$self{quotes}, 0, $length);
+        $$self{RQUOTE} = substr ($$self{quotes}, $length);
     } else {
         croak(qq(Invalid quote specification "$$self{quotes}"))
     }
@@ -674,10 +685,11 @@ sub switchquotes {
         # to Roman rather than the actual previous font when used in headings.
         # troff output may still be broken, but at least we can fix nroff by
         # just switching the font changes to the non-fixed versions.
-        $nroff =~ s/\Q$$self{FONTS}{100}\E(.*?)\\f[PR]/$1/g;
-        $nroff =~ s/\Q$$self{FONTS}{101}\E(.*?)\\f([PR])/\\fI$1\\f$2/g;
-        $nroff =~ s/\Q$$self{FONTS}{110}\E(.*?)\\f([PR])/\\fB$1\\f$2/g;
-        $nroff =~ s/\Q$$self{FONTS}{111}\E(.*?)\\f([PR])/\\f\(BI$1\\f$2/g;
+        my $font_end = "(?:\\f[PR]|\Q$$self{FONTS}{100}\E)";
+        $nroff =~ s/\Q$$self{FONTS}{100}\E(.*?)\\f([PR])/$1/g;
+        $nroff =~ s/\Q$$self{FONTS}{101}\E(.*?)$font_end/\\fI$1\\fP/g;
+        $nroff =~ s/\Q$$self{FONTS}{110}\E(.*?)$font_end/\\fB$1\\fP/g;
+        $nroff =~ s/\Q$$self{FONTS}{111}\E(.*?)$font_end/\\f\(BI$1\\fP/g;
 
         # Now finally output the command.  Bother with .ie only if the nroff
         # and troff output aren't the same.
@@ -753,7 +765,7 @@ sub outindex {
 sub output {
     my ($self, @text) = @_;
     if ($$self{ENCODE}) {
-        print { $$self{output_fh} } encode ('UTF-8', join ('', @text));
+        print { $$self{output_fh} } Encode::encode ('UTF-8', join ('', @text));
     } else {
         print { $$self{output_fh} } @text;
     }
@@ -800,7 +812,7 @@ sub start_document {
         } else {
             ($name, $section) = $self->devise_title;
         }
-        my $date = $$self{date} || $self->devise_date;
+        my $date = defined($$self{date}) ? $$self{date} : $self->devise_date;
         $self->preamble ($name, $section, $date)
             unless $self->bare_output or DEBUG > 9;
     }
@@ -852,44 +864,49 @@ sub devise_title {
     }
 
     # If the section isn't 3, then the name defaults to just the basename of
-    # the file.  Otherwise, assume we're dealing with a module.  We want to
-    # figure out the full module name from the path to the file, but we don't
-    # want to include too much of the path into the module name.  Lose
-    # anything up to the first off:
-    #
-    #     */lib/*perl*/         standard or site_perl module
-    #     */*perl*/lib/         from -Dprefix=/opt/perl
-    #     */*perl*/             random module hierarchy
-    #
-    # which works.  Also strip off a leading site, site_perl, or vendor_perl
-    # component, any OS-specific component, and any version number component,
-    # and strip off an initial component of "lib" or "blib/lib" since that's
-    # what ExtUtils::MakeMaker creates.  splitdir requires at least File::Spec
-    # 0.8.
+    # the file.
     if ($section !~ /^3/) {
         require File::Basename;
         $name = uc File::Basename::basename ($name);
     } else {
         require File::Spec;
         my ($volume, $dirs, $file) = File::Spec->splitpath ($name);
+
+        # Otherwise, assume we're dealing with a module.  We want to figure
+        # out the full module name from the path to the file, but we don't
+        # want to include too much of the path into the module name.  Lose
+        # anything up to the first of:
+        #
+        #     */lib/*perl*/         standard or site_perl module
+        #     */*perl*/lib/         from -Dprefix=/opt/perl
+        #     */*perl*/             random module hierarchy
+        #
+        # Also strip off a leading site, site_perl, or vendor_perl component,
+        # any OS-specific component, and any version number component, and
+        # strip off an initial component of "lib" or "blib/lib" since that's
+        # what ExtUtils::MakeMaker creates.
+        #
+        # splitdir requires at least File::Spec 0.8.
         my @dirs = File::Spec->splitdir ($dirs);
-        my $cut = 0;
-        my $i;
-        for ($i = 0; $i < @dirs; $i++) {
-            if ($dirs[$i] =~ /perl/) {
-                $cut = $i + 1;
-                $cut++ if ($dirs[$i + 1] && $dirs[$i + 1] eq 'lib');
-                last;
+        if (@dirs) {
+            my $cut = 0;
+            my $i;
+            for ($i = 0; $i < @dirs; $i++) {
+                if ($dirs[$i] =~ /perl/) {
+                    $cut = $i + 1;
+                    $cut++ if ($dirs[$i + 1] && $dirs[$i + 1] eq 'lib');
+                    last;
+                }
             }
+            if ($cut > 0) {
+                splice (@dirs, 0, $cut);
+                shift @dirs if ($dirs[0] =~ /^(site|vendor)(_perl)?$/);
+                shift @dirs if ($dirs[0] =~ /^[\d.]+$/);
+                shift @dirs if ($dirs[0] =~ /^(.*-$^O|$^O-.*|$^O)$/);
+            }
+            shift @dirs if $dirs[0] eq 'lib';
+            splice (@dirs, 0, 2) if ($dirs[0] eq 'blib' && $dirs[1] eq 'lib');
         }
-        if ($cut > 0) {
-            splice (@dirs, 0, $cut);
-            shift @dirs if ($dirs[0] =~ /^(site|vendor)(_perl)?$/);
-            shift @dirs if ($dirs[0] =~ /^[\d.]+$/);
-            shift @dirs if ($dirs[0] =~ /^(.*-$^O|$^O-.*|$^O)$/);
-        }
-        shift @dirs if $dirs[0] eq 'lib';
-        splice (@dirs, 0, 2) if ($dirs[0] eq 'blib' && $dirs[1] eq 'lib');
 
         # Remove empty directories when building the module name; they
         # occur too easily on Unix by doubling slashes.
@@ -1514,7 +1531,7 @@ sub preamble_template {
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .\"
-.\" If the F register is turned on, we'll generate index entries on stderr for
+.\" If the F register is >0, we'll generate index entries on stderr for
 .\" titles (.TH), headers (.SH), subsections (.SS), items (.Ip), and index
 .\" entries marked with X<> in POD.  Of course, you'll have to process the
 .\" output yourself in some meaningful fashion.
@@ -1522,20 +1539,16 @@ sub preamble_template {
 .\" Avoid warning from groff about undefined register 'F'.
 .de IX
 ..
-.nr rF 0
-.if \n(.g .if rF .nr rF 1
-.if (\n(rF:(\n(.g==0)) \{
-.    if \nF \{
-.        de IX
-.        tm Index:\\$1\t\\n%\t"\\$2"
+.if !\nF .nr F 0
+.if \nF>0 \{\
+.    de IX
+.    tm Index:\\$1\t\\n%\t"\\$2"
 ..
-.        if !\nF==2 \{
-.            nr % 0
-.            nr F 2
-.        \}
+.    if !\nF==2 \{\
+.        nr % 0
+.        nr F 2
 .    \}
 .\}
-.rr rF
 ----END OF PREAMBLE----
 #'# for cperl-mode
 
@@ -1619,7 +1632,7 @@ __END__
 =for stopwords
 en em ALLCAPS teeny fixedbold fixeditalic fixedbolditalic stderr utf8
 UTF-8 Allbery Sean Burke Ossanna Solaris formatters troff uppercased
-Christiansen nourls parsers
+Christiansen nourls parsers Kernighan
 
 =head1 NAME
 
@@ -1682,8 +1695,8 @@ argument.
 
 =item center
 
-Sets the centered page header to use instead of "User Contributed Perl
-Documentation".
+Sets the centered page header for the C<.TH> macro.  The default, if this
+option is not specified, is "User Contributed Perl Documentation".
 
 =item date
 
@@ -1732,12 +1745,16 @@ for B<troff> output.
 
 =item name
 
-Set the name of the manual page.  Without this option, the manual name is
-set to the uppercased base name of the file being converted unless the
-manual section is 3, in which case the path is parsed to see if it is a Perl
-module path.  If it is, a path like C<.../lib/Pod/Man.pm> is converted into
-a name like C<Pod::Man>.  This option, if given, overrides any automatic
-determination of the name.
+Set the name of the manual page for the C<.TH> macro.  Without this
+option, the manual name is set to the uppercased base name of the file
+being converted unless the manual section is 3, in which case the path is
+parsed to see if it is a Perl module path.  If it is, a path like
+C<.../lib/Pod/Man.pm> is converted into a name like C<Pod::Man>.  This
+option, if given, overrides any automatic determination of the name.
+
+If generating a manual page from standard input, this option is required,
+since there's otherwise no way for Pod::Man to know what to use for the
+manual page name.
 
 If generating a manual page from standard input, this option is required,
 since there's otherwise no way for Pod::Man to know what to use for the
@@ -1762,10 +1779,9 @@ important.
 =item quotes
 
 Sets the quote marks used to surround CE<lt>> text.  If the value is a
-single character, it is used as both the left and right quote; if it is two
-characters, the first character is used as the left quote and the second as
-the right quoted; and if it is four characters, the first two are used as
-the left quote and the second two as the right quote.
+single character, it is used as both the left and right quote.  Otherwise,
+it is split in half, and the first half of the string is used as the left
+quote and the second is used as the right quote.
 
 This may also be set to the special value C<none>, in which case no quote
 marks are added around CE<lt>> text (but the font is still changed for troff
@@ -1773,11 +1789,16 @@ output).
 
 =item release
 
-Set the centered footer.  By default, this is the version of Perl you run
-Pod::Man under.  Note that some system an macro sets assume that the
-centered footer will be a modification date and will prepend something like
-"Last modified: "; if this is the case, you may want to set C<release> to
-the last modified date and C<date> to the version number.
+Set the centered footer for the C<.TH> macro.  By default, this is set to
+the version of Perl you run Pod::Man under.  Setting this to the empty
+string will cause some *roff implementations to use the system default
+value.
+
+Note that some system C<an> macro sets assume that the centered footer
+will be a modification date and will prepend something like "Last
+modified: ".  If this is the case for your target system, you may want to
+set C<release> to the last modified date and C<date> to the version
+number.
 
 =item section
 
@@ -1817,10 +1838,10 @@ by many implementations and may even result in segfaults and other bad
 behavior.
 
 Be aware that, when using this option, the input encoding of your POD
-source must be properly declared unless it is US-ASCII or Latin-1.  POD
-input without an C<=encoding> command will be assumed to be in Latin-1,
-and if it's actually in UTF-8, the output will be double-encoded.  See
-L<perlpod(1)> for more information on the C<=encoding> command.
+source should be properly declared unless it's US-ASCII.  Pod::Simple will
+attempt to guess the encoding and may be successful if it's Latin-1 or
+UTF-8, but it will produce warnings.  Use the C<=encoding> command to
+declare the encoding.  See L<perlpod(1)> for more information.
 
 =back
 
@@ -1861,8 +1882,8 @@ canonical versions of B<nroff> and B<troff> don't either).
 =item Invalid quote specification "%s"
 
 (F) The quote specification given (the C<quotes> option to the
-constructor) was invalid.  A quote specification must be one, two, or four
-characters long.
+constructor) was invalid.  A quote specification must be either one
+character long or an even number (greater than one) characters long.
 
 =item POD document had syntax errors
 
@@ -1875,12 +1896,19 @@ option was set to C<die>.
 
 =over 4
 
+=item PERL_CORE
+
+If set and Encode is not available, silently fall back to non-UTF-8 mode
+without complaining to standard error.  This environment variable is set
+during Perl core builds, which build Encode after podlators.  Encode is
+expected to not (yet) be available in that case.
+
 =item POD_MAN_DATE
 
 If set, this will be used as the value of the left-hand footer unless the
 C<date> option is explicitly set, overriding the timestamp of the input
 file or the current time.  This is primarily useful to ensure reproducible
-builds of the same output file given the same souce and Pod::Man version,
+builds of the same output file given the same source and Pod::Man version,
 even when file timestamps may not be consistent.
 
 =item SOURCE_DATE_EPOCH
@@ -1951,7 +1979,7 @@ only matters for troff output.
 
 =head1 AUTHOR
 
-Russ Allbery <rra@stanford.edu>, based I<very> heavily on the original
+Russ Allbery <rra@cpan.org>, based I<very> heavily on the original
 B<pod2man> by Tom Christiansen <tchrist@mox.perl.com>.  The modifications to
 work with Pod::Simple instead of Pod::Parser were originally contributed by
 Sean Burke (but I've since hacked them beyond recognition and all bugs are
@@ -1960,7 +1988,7 @@ mine).
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008,
-2009, 2010, 2012, 2013, 2014, 2015 Russ Allbery <rra@cpan.org>
+2009, 2010, 2012, 2013, 2014, 2015, 2016 Russ Allbery <rra@cpan.org>
 
 This program is free software; you may redistribute it and/or modify it
 under the same terms as Perl itself.

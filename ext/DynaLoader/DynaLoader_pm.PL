@@ -68,7 +68,7 @@ unlink "DynaLoader.pm" if -f "DynaLoader.pm";
 open OUT, ">DynaLoader.pm" or die $!;
 print OUT <<'EOT';
 
-# Generated from DynaLoader_pm.PL
+# Generated from DynaLoader_pm.PL, this file is unique for every OS
 
 package DynaLoader;
 
@@ -85,10 +85,16 @@ package DynaLoader;
 # Tim.Bunce@ig.co.uk, August 1994
 
 BEGIN {
-    $VERSION = '1.32';
+    $VERSION = '1.38';
 }
 
-use Config;
+EOT
+
+if (!$ENV{PERL_BUILD_EXPAND_CONFIG_VARS}) {
+    print OUT "use Config;\n";
+}
+
+print OUT <<'EOT';
 
 # enable debug/trace messages from DynaLoader perl code
 $dl_debug = $ENV{PERL_DL_DEBUG} || 0 unless defined $dl_debug;
@@ -132,17 +138,15 @@ $Is_VMS    = $^O eq 'VMS';
 <</$^O-eq-VMS>>
 $do_expand = <<$^O-eq-VMS>>1<<|$^O-eq-VMS>>0<</$^O-eq-VMS>>;
 
-@dl_require_symbols = ();       # names of symbols we need
-@dl_resolve_using   = ();       # names of files to link with
+@dl_require_symbols = ();       # names of symbols we need<<$^O-eq-freemint>>
+@dl_resolve_using   = ();       # names of files to link with<</$^O-eq-freemint>><<$^O-eq-hpux>>
+@dl_resolve_using   = ();       # names of files to link with<</$^O-eq-hpux>>
 @dl_library_path    = ();       # path to look for files
 
 #XSLoader.pm may have added elements before we were required
 #@dl_shared_objects  = ();       # shared objects for symbols we have 
 #@dl_librefs         = ();       # things we have loaded
 #@dl_modules         = ();       # Modules we have loaded
-
-# This is a fix to support DLD's unfortunate desire to relink -lc
-@dl_resolve_using = dl_findfile('-lc') if $dlsrc eq "dl_dld.xs";
 
 EOT
 
@@ -315,6 +319,7 @@ sub bootstrap {
     <</$^O-eq-os2>>
     my @modparts = split(/::/,$module);
     my $modfname = $modparts[-1];
+    my $modfname_orig = $modfname; # For .bs file search
 
     # Some systems have restrictions on files names for DLL's etc.
     # mod2fname returns appropriate file base name (typically truncated)
@@ -334,9 +339,10 @@ sub bootstrap {
 		       "(auto/$modpname/$modfname.$dl_dlext)\n"
 	if $dl_debug;
 
+    my $dir;
     foreach (@INC) {
 	<<$^O-eq-VMS>>chop($_ = VMS::Filespec::unixpath($_));<</$^O-eq-VMS>>
-	    my $dir = "$_/auto/$modpname";
+	    $dir = "$_/auto/$modpname";
 	
 	next unless -d $dir; # skip over uninteresting directories
 	
@@ -361,7 +367,9 @@ sub bootstrap {
     # Execute optional '.bootstrap' perl script for this module.
     # The .bs file can be used to configure @dl_resolve_using etc to
     # match the needs of the individual module on this architecture.
-    my $bs = $file;
+    # N.B. The .bs file does not following the naming convention used
+    # by mod2fname.
+    my $bs = "$dir/$modfname_orig";
     $bs =~ s/(\.\w+)?(;\d*)?$/\.bs/; # look for .bs 'beside' the library
     if (-s $bs) { # only read file if it's not empty
         print STDERR "BS: $bs ($^O, $dlsrc)\n" if $dl_debug;
@@ -372,7 +380,7 @@ sub bootstrap {
     my $boot_symbol_ref;
 
     <<$^O-eq-darwin>>
-    if ($boot_symbol_ref = dl_find_symbol(0, $bootname)) {
+    if ($boot_symbol_ref = dl_find_symbol(0, $bootname, 1)) {
         goto boot; #extension library has already been loaded, e.g. darwin
     }
     <</$^O-eq-darwin>>
@@ -393,13 +401,13 @@ sub bootstrap {
 	croak("Can't load '$file' for module $module: ".dl_error());
 
     push(@dl_librefs,$libref);  # record loaded object
-
+<<$^O-eq-freemint>>
     my @unresolved = dl_undef_symbols();
     if (@unresolved) {
 	require Carp;
 	Carp::carp("Undefined symbols present after loading $file: @unresolved\n");
     }
-
+<</$^O-eq-freemint>>
     $boot_symbol_ref = dl_find_symbol($libref, $bootname) or
          croak("Can't find '$bootname' symbol in $file\n");
 
@@ -416,7 +424,6 @@ sub bootstrap {
 }
 
 sub dl_findfile {
-    # Read ext/DynaLoader/DynaLoader.doc for detailed information.
     # This function does not automatically consider the architecture
     # or the perl library auto directories.
     my (@args) = @_;
@@ -473,7 +480,6 @@ sub dl_findfile {
             push(@names,"cyg$_.$dl_so")  unless m:/:;
 	    <</$^O-eq-cygwin>>
             push(@names,"lib$_.$dl_so")  unless m:/:;
-            push(@names,"$_.a")          if !m/\.a$/ and $dlsrc eq "dl_dld.xs";
             push(@names, $_);
         }
 	my $dirsep = '/';
@@ -543,7 +549,7 @@ sub dl_find_symbol_anywhere
     my $sym = shift;
     my $libref;
     foreach $libref (@dl_librefs) {
-	my $symref = dl_find_symbol($libref,$sym);
+	my $symref = dl_find_symbol($libref,$sym,1);
 	return $symref if $symref;
     }
     return undef;
@@ -899,7 +905,7 @@ Syntax:
 
 Create a new Perl external subroutine named $perl_name using $symref as
 a pointer to the function which implements the routine.  This is simply
-a direct call to newXSUB().  Returns a reference to the installed
+a direct call to newXS()/newXS_flags().  Returns a reference to the installed
 function.
 
 The $filename parameter is used by Perl to identify the source file for

@@ -23,7 +23,7 @@ BEGIN {
     skip_all_without_unicode_tables();
 }
 
-plan tests => 25;  # Update this when adding/deleting tests.
+plan tests => 58;  #** update watchdog timeouts proportionally when adding tests
 
 use strict;
 use warnings;
@@ -41,7 +41,7 @@ run_tests() unless caller;
 sub run_tests {
 
 
-    watchdog(($::running_as_thread && $::running_as_thread) ? 50 : 75);
+    watchdog(($::running_as_thread && $::running_as_thread) ? 150 : 225);
 
     {
         # [perl #120446]
@@ -118,7 +118,41 @@ sub run_tests {
         ok ($s !~ /.*?:::\s*ab/si, 'PREGf_IMPLICIT/si');
         ok ($s !~ /.*?:::\s*ab/ms, 'PREGf_IMPLICIT/ms');
         ok ($s !~ /.*?:::\s*ab/msi,'PREGf_IMPLICIT/msi');
+
+        for my $star ('*', '{0,}') {
+            for my $greedy ('', '?') {
+                for my $flags ('', 'i', 'm', 'mi') {
+                    for my $s ('', 's') {
+                        my $XBOL = $s ? 'SBOL' : 'MBOL';
+                        my $text = "anchored($XBOL) implicit";
+TODO:
+                        {
+                            local $main::TODO = 'regdump gets mangled by the VMS pipe implementation' if $^O eq 'VMS';
+                            fresh_perl_like(<<"PROG", qr/\b\Q$text\E\b/, {}, "/.${star}${greedy}X/${flags}${s} anchors implicitly");
+BEGIN { \@INC = ('../lib', '.', '../ext/re'); }
+use re 'debug';
+qr/.${star}${greedy}:::\\s*ab/${flags}${s}
+PROG
+                        }
+                    }
+                }
+            }
+        }
     }
+
+    {
+        # [perl #127855] Slowdown in m//g on COW strings of certain lengths
+        # this should take milliseconds, but took 10's of seconds.
+        my $elapsed= -time;
+        my $len= 4e6;
+        my $zeros= 40000;
+        my $str= ( "0" x $zeros ) . ( "1" x ( $len - $zeros ) );
+        my $substr= substr( $str, 1 );
+        1 while $substr=~m/0/g;
+        $elapsed += time;
+        ok( $elapsed <= 1, "should not COW on long string with substr and m//g");
+    }
+
 
 } # End of sub run_tests
 

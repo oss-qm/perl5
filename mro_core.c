@@ -191,6 +191,10 @@ Perl_mro_meta_dup(pTHX_ struct mro_meta* smeta, CLONE_PARAMS* param)
 
     newmeta->super = NULL;
 
+    /* clear the destructor cache */
+    newmeta->destroy = NULL;
+    newmeta->destroy_gen = 0;
+
     return newmeta;
 }
 
@@ -199,7 +203,7 @@ Perl_mro_meta_dup(pTHX_ struct mro_meta* smeta, CLONE_PARAMS* param)
 /*
 =for apidoc mro_get_linear_isa_dfs
 
-Returns the Depth-First Search linearization of @ISA
+Returns the Depth-First Search linearization of C<@ISA>
 the given stash.  The return value is a read-only AV*.
 C<level> should be 0 (it is used internally in this
 function's recursion).
@@ -461,7 +465,7 @@ Perl_mro_get_linear_isa(pTHX_ HV *stash)
 =for apidoc mro_isa_changed_in
 
 Takes the necessary steps (cache invalidations, mostly)
-when the @ISA of the given package has changed.  Invoked
+when the C<@ISA> of the given package has changed.  Invoked
 by the C<setisa> magic, should not need to invoke directly.
 
 =cut
@@ -538,8 +542,8 @@ Perl_mro_isa_changed_in(pTHX_ HV* stash)
     /* pessimise derefs for now. Will get recalculated by Gv_AMupdate() */
     HvAUX(stash)->xhv_aux_flags &= ~HvAUXf_NO_DEREF;
 
-    /* DESTROY can be cached in SvSTASH. */
-    if (!SvOBJECT(stash)) SvSTASH(stash) = NULL;
+    /* DESTROY can be cached in meta. */
+    meta->destroy_gen = 0;
 
     /* Iterate the isarev (classes that are our children),
        wiping out their linearization, method and isa caches
@@ -1295,7 +1299,7 @@ XS code.
 
 2) Assigning a reference to a readonly scalar
 constant into a stash entry in order to create
-a constant subroutine (like constant.pm
+a constant subroutine (like F<constant.pm>
 does).
 
 This same method is available from pure perl
@@ -1320,8 +1324,8 @@ Perl_mro_method_changed_in(pTHX_ HV *stash)
     /* Inc the package generation, since a local method changed */
     HvMROMETA(stash)->pkg_gen++;
 
-    /* DESTROY can be cached in SvSTASH. */
-    if (!SvOBJECT(stash)) SvSTASH(stash) = NULL;
+    /* DESTROY can be cached in meta */
+    HvMROMETA(stash)->destroy_gen = 0;
 
     /* If stash is UNIVERSAL, or one of UNIVERSAL's parents,
        invalidate all method caches globally */
@@ -1346,7 +1350,7 @@ Perl_mro_method_changed_in(pTHX_ HV *stash)
             mrometa->cache_gen++;
             if(mrometa->mro_nextmethod)
                 hv_clear(mrometa->mro_nextmethod);
-            if (!SvOBJECT(revstash)) SvSTASH(revstash) = NULL;
+            mrometa->destroy_gen = 0;
         }
     }
 

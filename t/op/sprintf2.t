@@ -55,6 +55,11 @@ if ($Config{nvsize} == 8 &&
         [ '% a',      ' 1',      ' 0x1p+0' ],
         [ '% a',      '-1',      '-0x1p+0' ],
 
+        [ '%+ a',     '1',       '+0x1p+0' ],
+        [ '%+ a',     '-1',      '-0x1p+0' ],
+        [ '% +a',     ' 1',      '+0x1p+0' ],
+        [ '% +a',     '-1',      '-0x1p+0' ],
+
         [ '%8a',      '3.14',   '0x1.91eb851eb851fp+1' ],
         [ '%13a',     '3.14',   '0x1.91eb851eb851fp+1' ],
         [ '%20a',     '3.14',   '0x1.91eb851eb851fp+1' ],
@@ -112,6 +117,11 @@ if ($Config{nvsize} == 8 &&
         [ '% a',      ' 1',      ' 0x8p-3' ],
         [ '% a',      '-1',      '-0x8p-3' ],
 
+        [ '%+ a',     '1',       '+0x8p-3' ],
+        [ '%+ a',     '-1',      '-0x8p-3' ],
+        [ '% +a',     ' 1',      '+0x8p-3' ],
+        [ '% +a',     '-1',      '-0x8p-3' ],
+
         [ '%8a',      '3.14',    '0xc.8f5c28f5c28f5c3p-2' ],
         [ '%13a',     '3.14',    '0xc.8f5c28f5c28f5c3p-2' ],
         [ '%20a',     '3.14',    '0xc.8f5c28f5c28f5c3p-2' ],
@@ -165,6 +175,11 @@ if ($Config{nvsize} == 8 &&
 	[ '%+a', '-1',     '-0x1p+0' ],
 	[ '% a', '1',      ' 0x1p+0' ],
 	[ '% a', '-1',     '-0x1p+0' ],
+
+        [ '%+ a', '1',     '+0x1p+0' ],
+        [ '%+ a', '-1',    '-0x1p+0' ],
+        [ '% +a', ' 1',    '+0x1p+0' ],
+        [ '% +a', '-1',    '-0x1p+0' ],
 
 	[ '%8a',      '3.14', '0x1.91eb851eb851eb851eb851eb851fp+1' ],
 	[ '%13a',     '3.14', '0x1.91eb851eb851eb851eb851eb851fp+1' ],
@@ -674,10 +689,10 @@ SKIP: {
         unless ($Config{uselongdouble} &&
                 ($Config{longdblkind} == 5 ||
                  $Config{longdblkind} == 6)
-                # TODO: gating on 'linux' here is only due to lack of
-                # testing in other big-endian platforms (e.g. AIX or IRIX),
-                # with more evidence this subtest could be either relaxed
-                # or removed.
+                # Gating on 'linux' (ppc) here is due to the differing
+                # double-double implementations: other (also big-endian)
+                # double-double platforms (e.g. AIX on ppc or IRIX on mips)
+                # do not behave similarly.
                 && $^O eq 'linux'
                 );
     # [rt.perl.org 125633]

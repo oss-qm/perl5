@@ -144,6 +144,7 @@ my @death =
 '/(?i-l:foo)/' => 'Regexp modifier "l" may not appear after the "-" {#} m/(?i-l{#}:foo)/',
 
  '/((x)/' => 'Unmatched ( {#} m/({#}(x)/',
+ '/{(}/' => 'Unmatched ( {#} m/{({#}}/',    # [perl #127599]
 
  "/x{$inf_p1}/" => "Quantifier in {,} bigger than $inf_m1 {#} m/x{{#}$inf_p1}/",
 
@@ -185,7 +186,9 @@ my @death =
 
  '/[z-a]/' => 'Invalid [] range "z-a" {#} m/[z-a{#}]/',
 
- '/\p/' => 'Empty \p{} {#} m/\p{#}/',
+ '/\p/' => 'Empty \p {#} m/\p{#}/',
+ '/\P/' => 'Empty \P {#} m/\P{#}/',
+ '/\p{}/' => 'Empty \p{} {#} m/\p{{#}}/',
  '/\P{}/' => 'Empty \P{} {#} m/\P{{#}}/',
 
 '/a\b{cde/' => 'Missing right brace on \b{} {#} m/a\b{{#}cde/',
@@ -197,15 +200,13 @@ my @death =
  '/\b{gc}/' => "'gc' is an unknown bound type {#} m/\\b{gc{#}}/",
  '/\B{gc}/' => "'gc' is an unknown bound type {#} m/\\B{gc{#}}/",
 
- '/(?[[[:word]]])/' => "Unmatched ':' in POSIX class {#} m/(?[[[:word{#}]]])/",
- '/(?[[:word]])/' => "Unmatched ':' in POSIX class {#} m/(?[[:word{#}]])/",
- '/(?[[[:digit: ])/' => "Unmatched '[' in POSIX class {#} m/(?[[[:digit:{#} ])/",
- '/(?[[:digit: ])/' => "Unmatched '[' in POSIX class {#} m/(?[[:digit:{#} ])/",
- '/(?[[[::]]])/' => "POSIX class [::] unknown {#} m/(?[[[::]{#}]])/",
- '/(?[[[:w:]]])/' => "POSIX class [:w:] unknown {#} m/(?[[[:w:]{#}]])/",
- '/(?[[:w:]])/' => "POSIX class [:w:] unknown {#} m/(?[[:w:]{#}])/",
+ '/(?[[[::]]])/' => "Syntax error in (?[...]) in regex m/(?[[[::]]])/",
+ '/(?[[[:w:]]])/' => "Syntax error in (?[...]) in regex m/(?[[[:w:]]])/",
+ '/(?[[:w:]])/' => "",
+ '/[][[:alpha:]]' => "",    # [perl #127581]
+ '/([.].*)[.]/'   => "",    # [perl #127582]
+ '/[.].*[.]/'     => "",    # [perl #127604]
  '/(?[a])/' =>  'Unexpected character {#} m/(?[a{#}])/',
- '/(?[\t])/l' => '(?[...]) not valid in locale {#} m/(?[{#}\t])/',
  '/(?[ + \t ])/' => 'Unexpected binary operator \'+\' with no preceding operand {#} m/(?[ +{#} \t ])/',
  '/(?[ \cK - ( + \t ) ])/' => 'Unexpected binary operator \'+\' with no preceding operand {#} m/(?[ \cK - ( +{#} \t ) ])/',
  '/(?[ \cK ( \t ) ])/' => 'Unexpected \'(\' with no preceding operator {#} m/(?[ \cK ({#} \t ) ])/',
@@ -221,8 +222,8 @@ my @death =
  '/(?[ \cK + ])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[ \cK + {#}])/',
  '/(?[ ( ) ])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[ ( ) {#}])/',
  '/(?[[0]+()+])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[[0]+()+{#}])/',
- '/(?[ \p{foo} ])/' => 'Property \'foo\' is unknown {#} m/(?[ \p{foo}{#} ])/',
- '/(?[ \p{ foo = bar } ])/' => 'Property \'foo = bar\' is unknown {#} m/(?[ \p{ foo = bar }{#} ])/',
+ '/(?[ \p{foo} ])/' => 'Can\'t find Unicode property definition "foo" {#} m/(?[ \p{foo}{#} ])/',
+ '/(?[ \p{ foo = bar } ])/' => 'Can\'t find Unicode property definition "foo = bar" {#} m/(?[ \p{ foo = bar }{#} ])/',
  '/(?[ \8 ])/' => 'Unrecognized escape \8 in character class {#} m/(?[ \8{#} ])/',
  '/(?[ \t ]/' => 'Syntax error in (?[...]) in regex m/(?[ \t ]/',
  '/(?[ [ \t ]/' => 'Syntax error in (?[...]) in regex m/(?[ [ \t ]/',
@@ -261,6 +262,11 @@ my @death =
  '/((?# This is a comment in the middle of a token)?:foo)/' => 'In \'(?...)\', the \'(\' and \'?\' must be adjacent {#} m/((?# This is a comment in the middle of a token)?{#}:foo)/',
  '/((?# This is a comment in the middle of a token)*FAIL)/' => 'In \'(*VERB...)\', the \'(\' and \'*\' must be adjacent {#} m/((?# This is a comment in the middle of a token)*{#}FAIL)/',
  '/(?[\ &!])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[\ &!{#}])/',    # [perl #126180]
+ '/(?[\ +!])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[\ +!{#}])/',    # [perl #126180]
+ '/(?[\ -!])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[\ -!{#}])/',    # [perl #126180]
+ '/(?[\ ^!])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[\ ^!{#}])/',    # [perl #126180]
+ '/(?[\ |!])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[\ |!{#}])/',    # [perl #126180]
+ '/(?[()-!])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[()-!{#}])/',    # [perl #126204]
  '/(?[!()])/' => 'Incomplete expression within \'(?[ ])\' {#} m/(?[!(){#}])/',      # [perl #126404]
 );
 
@@ -294,10 +300,6 @@ my @death_only_under_strict = (
                      => 'Non-hex character {#} m/\x{ABCDEFG{#}}/',
     'm/[\x{ABCDEFG}]/' => 'Illegal hexadecimal digit \'G\' ignored',
                        => 'Non-hex character {#} m/[\x{ABCDEFG{#}}]/',
-    'm/[[:ascii]]/' => "",
-                    => 'Unmatched \':\' in POSIX class {#} m/[[:ascii{#}]]/',
-    'm/[\N{}]/' => 'Ignoring zero length \\N{} in character class {#} m/[\\N{}{#}]/',
-                => 'Zero length \\N{} {#} m/[\\N{}]{#}/',
     "m'[\\y]\\x{100}'" => 'Unrecognized escape \y in character class passed through {#} m/[\y{#}]\x{100}/',
                        => 'Unrecognized escape \y in character class {#} m/[\y{#}]\x{100}/',
     'm/[a-\d]\x{100}/' => 'False [] range "a-\d" {#} m/[a-\d{#}]\x{100}/',
@@ -350,7 +352,6 @@ my @death_only_under_strict = (
 
 # These need the character 'ネ' as a marker for mark_as_utf8()
 my @death_utf8 = mark_as_utf8(
- '/ネ[[=ネ=]]ネ/' => 'POSIX syntax [= =] is reserved for future extensions {#} m/ネ[[=ネ=]{#}]ネ/',
  '/ネ(?<= .*)/' =>  'Variable length lookbehind not implemented in regex m/ネ(?<= .*)/',
 
  '/(?<= ネ{1000})/' => 'Lookbehind longer than 255 not implemented in regex m/(?<= ネ{1000})/',
@@ -397,23 +398,18 @@ my @death_utf8 = mark_as_utf8(
  '/ネ[\x{ネ]/' => 'Missing right brace on \x{} {#} m/ネ[\x{{#}ネ]/',
 
  '/ネ\o{ネ/' => 'Missing right brace on \o{ {#} m/ネ\o{{#}ネ/',
- '/ネ[[:ネ:]]ネ/' => 'POSIX class [:ネ:] unknown {#} m/ネ[[:ネ:]{#}]ネ/',
-
- '/ネ[[=ネ=]]ネ/' => 'POSIX syntax [= =] is reserved for future extensions {#} m/ネ[[=ネ=]{#}]ネ/',
-
- '/ネ[[.ネ.]]ネ/' => 'POSIX syntax [. .] is reserved for future extensions {#} m/ネ[[.ネ.]{#}]ネ/',
+ '/ネ[[:ネ:]]ネ/' => "",
 
  '/[ネ-a]ネ/' => 'Invalid [] range "ネ-a" {#} m/[ネ-a{#}]ネ/',
 
  '/ネ\p{}ネ/' => 'Empty \p{} {#} m/ネ\p{{#}}ネ/',
 
- '/ネ(?[[[:ネ]]])ネ/' => "Unmatched ':' in POSIX class {#} m/ネ(?[[[:ネ{#}]]])ネ/",
- '/ネ(?[[[:ネ: ])ネ/' => "Unmatched '[' in POSIX class {#} m/ネ(?[[[:ネ:{#} ])ネ/",
- '/ネ(?[[[::]]])ネ/' => "POSIX class [::] unknown {#} m/ネ(?[[[::]{#}]])ネ/",
- '/ネ(?[[[:ネ:]]])ネ/' => "POSIX class [:ネ:] unknown {#} m/ネ(?[[[:ネ:]{#}]])ネ/",
- '/ネ(?[[:ネ:]])ネ/' => "POSIX class [:ネ:] unknown {#} m/ネ(?[[:ネ:]{#}])ネ/",
+ '/ネ(?[[[:ネ]]])ネ/' => "Syntax error in (?[...]) in regex m/ネ(?[[[:ネ]]])ネ/",
+ '/ネ(?[[[:ネ: ])ネ/' => "Syntax error in (?[...]) in regex m/ネ(?[[[:ネ: ])ネ/",
+ '/ネ(?[[[::]]])ネ/' => "Syntax error in (?[...]) in regex m/ネ(?[[[::]]])ネ/",
+ '/ネ(?[[[:ネ:]]])ネ/' => "Syntax error in (?[...]) in regex m/ネ(?[[[:ネ:]]])ネ/",
+ '/ネ(?[[:ネ:]])ネ/' => "",
  '/ネ(?[ネ])ネ/' =>  'Unexpected character {#} m/ネ(?[ネ{#}])ネ/',
- '/ネ(?[ネ])/l' => '(?[...]) not valid in locale {#} m/ネ(?[{#}ネ])/',
  '/ネ(?[ + [ネ] ])/' => 'Unexpected binary operator \'+\' with no preceding operand {#} m/ネ(?[ +{#} [ネ] ])/',
  '/ネ(?[ \cK - ( + [ネ] ) ])/' => 'Unexpected binary operator \'+\' with no preceding operand {#} m/ネ(?[ \cK - ( +{#} [ネ] ) ])/',
  '/ネ(?[ \cK ( [ネ] ) ])/' => 'Unexpected \'(\' with no preceding operator {#} m/ネ(?[ \cK ({#} [ネ] ) ])/',
@@ -422,8 +418,8 @@ my @death_utf8 = mark_as_utf8(
  '/(?[ \o{ネ} ])ネ/' => 'Non-octal character {#} m/(?[ \o{ネ{#}} ])ネ/',
  '/ネ(?[ \o{} ])ネ/' => 'Number with no digits {#} m/ネ(?[ \o{}{#} ])ネ/',
  '/(?[ \x{ネ} ])ネ/' => 'Non-hex character {#} m/(?[ \x{ネ{#}} ])ネ/',
- '/(?[ \p{ネ} ])/' => 'Property \'ネ\' is unknown {#} m/(?[ \p{ネ}{#} ])/',
- '/(?[ \p{ ネ = bar } ])/' => 'Property \'ネ = bar\' is unknown {#} m/(?[ \p{ ネ = bar }{#} ])/',
+ '/(?[ \p{ネ} ])/' => 'Can\'t find Unicode property definition "ネ" {#} m/(?[ \p{ネ}{#} ])/',
+ '/(?[ \p{ ネ = bar } ])/' => 'Can\'t find Unicode property definition "ネ = bar" {#} m/(?[ \p{ ネ = bar }{#} ])/',
  '/ネ(?[ \t ]/' => 'Syntax error in (?[...]) in regex m/ネ(?[ \t ]/',
  '/(?[ \t + \e # ネ This was supposed to be a comment ])/' => 'Syntax error in (?[...]) in regex m/(?[ \t + \e # ネ This was supposed to be a comment ])/',
  'm/(*ネ)ネ/' => q<Unknown verb pattern 'ネ' {#} m/(*ネ){#}ネ/>,
@@ -467,6 +463,8 @@ my @warning = (
     '/\B{gcb}/a' => "Using /u for '\\B{gcb}' instead of /a {#} m/\\B{gcb}{#}/",
     'm/[:blank:]\x{100}/' => 'POSIX syntax [: :] belongs inside character classes {#} m/[:blank:]{#}\x{100}/',
     'm/[[:cntrl:]][:^ascii:]\x{100}/' =>  'POSIX syntax [: :] belongs inside character classes {#} m/[[:cntrl:]][:^ascii:]{#}\x{100}/',
+    'm/[[:ascii]]\x{100}/' => "Assuming NOT a POSIX class since there is no terminating ':' {#} m/[[:ascii{#}]]\\x{100}/",
+    'm/(?[[:word]])\x{100}/' => "Assuming NOT a POSIX class since there is no terminating ':' {#} m/(?[[:word{#}]])\\x{100}/",
     "m'\\y\\x{100}'"     => 'Unrecognized escape \y passed through {#} m/\y{#}\x{100}/',
     '/x{3,1}/'   => 'Quantifier {n,m} with n > m can\'t match {#} m/x{3,1}{#}/',
     '/\08/' => '\'\08\' resolved to \'\o{0}8\' {#} m/\08{#}/',
@@ -485,8 +483,8 @@ my @warning = (
     '/\_/' => "",
     '/[\006]/' => "",
     '/[:alpha:]\x{100}/' => 'POSIX syntax [: :] belongs inside character classes {#} m/[:alpha:]{#}\x{100}/',
-    '/[:zog:]\x{100}/' => 'POSIX syntax [: :] belongs inside character classes {#} m/[:zog:]{#}\x{100}/',
-    '/[.zog.]\x{100}/' => 'POSIX syntax [. .] belongs inside character classes {#} m/[.zog.]{#}\x{100}/',
+    '/[:zog:]\x{100}/' => 'POSIX syntax [: :] belongs inside character classes (but this one isn\'t fully valid) {#} m/[:zog:]{#}\x{100}/',
+    '/[.zog.]\x{100}/' => 'POSIX syntax [. .] belongs inside character classes (but this one isn\'t implemented) {#} m/[.zog.]{#}\x{100}/',
     '/[a-b]/' => "",
     '/(?c)\x{100}/' => 'Useless (?c) - use /gc modifier {#} m/(?c{#})\x{100}/',
     '/(?-c)\x{100}/' => 'Useless (?-c) - don\'t use /gc modifier {#} m/(?-c{#})\x{100}/',
@@ -518,13 +516,51 @@ my @warning = (
     "/(?[ [ A - $B_hex ] ])/" => "Ranges of ASCII printables should be some subset of \"0-9\", \"A-Z\", or \"a-z\" {#} m/(?[ [ A - $B_hex {#}] ])/",
     "/(?[ [ $low_mixed_alpha - $high_mixed_alpha ] ])/" => "Ranges of ASCII printables should be some subset of \"0-9\", \"A-Z\", or \"a-z\" {#} m/(?[ [ $low_mixed_alpha - $high_mixed_alpha {#}] ])/",
     "/(?[ [ $low_mixed_digit - $high_mixed_digit ] ])/" => "Ranges of ASCII printables should be some subset of \"0-9\", \"A-Z\", or \"a-z\" {#} m/(?[ [ $low_mixed_digit - $high_mixed_digit {#}] ])/",
+    "/[alnum]/" => "",
+    "/[^alnum]/" => "",
+    '/[:blank]\x{100}/' => 'POSIX syntax [: :] belongs inside character classes (but this one isn\'t fully valid) {#} m/[:blank{#}]\x{100}/',
+    '/[[:digit]]\x{100}/' => 'Assuming NOT a POSIX class since there is no terminating \':\' {#} m/[[:digit{#}]]\x{100}/', # [perl # 8904]
+    '/[[:digit:foo]\x{100}/' => 'Assuming NOT a POSIX class since there is no terminating \']\' {#} m/[[:digit:{#}foo]\x{100}/',
+    '/[[:di#it:foo]\x{100}/x' => 'Assuming NOT a POSIX class since there is no terminating \']\' {#} m/[[:di#it:{#}foo]\x{100}/',
+    '/[[:dgit]]\x{100}/' => 'Assuming NOT a POSIX class since there is no terminating \':\' {#} m/[[:dgit{#}]]\x{100}/',
+    '/[[:dgit:foo]\x{100}/' => 'Assuming NOT a POSIX class since there is no terminating \']\' {#} m/[[:dgit:{#}foo]\x{100}/',
+    '/[[:dgt]]\x{100}/' => "",      # Far enough away from a real class to not be recognized as one
+    '/[[:dgt:foo]\x{100}/' => "",
+    '/[[:DIGIT]]\x{100}/' => [ 'Assuming NOT a POSIX class since the name must be all lowercase letters {#} m/[[:DIGIT{#}]]\x{100}/',
+                               'Assuming NOT a POSIX class since there is no terminating \':\' {#} m/[[:DIGIT{#}]]\x{100}/',
+                           ],
+    '/[[digit]\x{100}/' => [ 'Assuming NOT a POSIX class since there must be a starting \':\' {#} m/[[{#}digit]\x{100}/',
+                             'Assuming NOT a POSIX class since there is no terminating \':\' {#} m/[[digit{#}]\x{100}/',
+                           ],
+    '/[[alpha]]\x{100}/' => [ 'Assuming NOT a POSIX class since there must be a starting \':\' {#} m/[[{#}alpha]]\x{100}/',
+                              'Assuming NOT a POSIX class since there is no terminating \':\' {#} m/[[alpha{#}]]\x{100}/',
+                           ],
+    '/[[^word]\x{100}/' => [ 'Assuming NOT a POSIX class since the \'^\' must come after the colon {#} m/[[^{#}word]\x{100}/',
+                              'Assuming NOT a POSIX class since there must be a starting \':\' {#} m/[[^{#}word]\x{100}/',
+                              'Assuming NOT a POSIX class since there is no terminating \':\' {#} m/[[^word{#}]\x{100}/',
+                            ],
+    '/[[   ^   :   x d i g i t   :   ]   ]\x{100}/' => [ 'Assuming NOT a POSIX class since no blanks are allowed in one {#} m/[[   {#}^   :   x d i g i t   :   ]   ]\x{100}/',
+                                               'Assuming NOT a POSIX class since the \'^\' must come after the colon {#} m/[[   ^{#}   :   x d i g i t   :   ]   ]\x{100}/',
+                                               'Assuming NOT a POSIX class since no blanks are allowed in one {#} m/[[   ^   {#}:   x d i g i t   :   ]   ]\x{100}/',
+                                               'Assuming NOT a POSIX class since no blanks are allowed in one {#} m/[[   ^   :   {#}x d i g i t   :   ]   ]\x{100}/',
+                                               'Assuming NOT a POSIX class since no blanks are allowed in one {#} m/[[   ^   :   x d i g i t   :   ]{#}   ]\x{100}/',
+                            ],
+    '/[foo:lower:]]\x{100}/' => 'Assuming NOT a POSIX class since it doesn\'t start with a \'[\' {#} m/[foo{#}:lower:]]\x{100}/',
+    '/[[;upper;]]\x{100}/' => [ 'Assuming NOT a POSIX class since a semi-colon was found instead of a colon {#} m/[[;{#}upper;]]\x{100}/',
+                                'Assuming NOT a POSIX class since a semi-colon was found instead of a colon {#} m/[[;upper;]{#}]\x{100}/',
+                              ],
+    '/[foo;punct;]]\x{100}/' => [ 'Assuming NOT a POSIX class since it doesn\'t start with a \'[\' {#} m/[foo{#};punct;]]\x{100}/',
+                                  'Assuming NOT a POSIX class since a semi-colon was found instead of a colon {#} m/[foo;{#}punct;]]\x{100}/',
+                                  'Assuming NOT a POSIX class since a semi-colon was found instead of a colon {#} m/[foo;punct;]{#}]\x{100}/',
+                                ],
+
 ); # See comments before this for why '\x{100}' is generally needed
 
 # These need the character 'ネ' as a marker for mark_as_utf8()
 my @warnings_utf8 = mark_as_utf8(
     'm/ネ\b*ネ/' => '\b* matches null string many times {#} m/ネ\b*{#}ネ/',
     '/(?=ネ)*/' => '(?=ネ)* matches null string many times {#} m/(?=ネ)*{#}/',
-    'm/ネ[:foo:]ネ/' => 'POSIX syntax [: :] belongs inside character classes {#} m/ネ[:foo:]{#}ネ/',
+    'm/ネ[:foo:]ネ/' => 'POSIX syntax [: :] belongs inside character classes (but this one isn\'t fully valid) {#} m/ネ[:foo:]{#}ネ/',
     '/ネ(?c)ネ/' => 'Useless (?c) - use /gc modifier {#} m/ネ(?c{#})ネ/',
     '/utf8 ネ (?ogc) ネ/' => [
         'Useless (?o) - use /o modifier {#} m/utf8 ネ (?o{#}gc) ネ/',
@@ -676,6 +712,8 @@ for my $strict ("",  "no warnings 'experimental::re_strict'; use re 'strict';") 
 
             {
                 $_ = "x";
+                #use feature 'unicode_eval';
+                #print STDERR __LINE__, ": ", "eval '$strict no warnings; $regex'", "\n";
                 eval "$strict no warnings; $regex";
             }
             if (is($@, "", "$strict $regex did not die")) {

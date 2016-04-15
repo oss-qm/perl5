@@ -128,7 +128,7 @@ $b = quotemeta <<'EOF';
 BEGIN { $^I = ".bak"; }
 BEGIN { $^W = 1; }
 BEGIN { $/ = "\n"; $\ = "\n"; }
-LINE: while (defined($_ = <ARGV>)) {
+LINE: while (defined($_ = readline ARGV)) {
     chomp $_;
     our(@F) = split(' ', $_, 0);
     '???';
@@ -628,12 +628,27 @@ local our($rhu, $barb);
 ####
 # <>
 my $foo;
-$_ .= <ARGV> . <$foo>;
+$_ .= <> . <ARGV> . <$foo>;
+<$foo>;
+<${foo}>;
+<$ foo>;
+>>>>
+my $foo;
+$_ .= readline(ARGV) . readline(ARGV) . readline($foo);
+readline $foo;
+glob $foo;
+glob $foo;
 ####
 # readline
 readline 'FH';
 readline *$_;
+readline *{$_};
+readline ${"a"};
+>>>>
+readline 'FH';
+readline *$_;
 readline *{$_;};
+readline ${'a';};
 ####
 # <<>>
 $_ = <<>>;
@@ -1307,6 +1322,62 @@ print /a/u, s/b/c/u;
     print /a/d, s/b/c/d;
 }
 ####
+# all the flags (qr//)
+$_ = qr/X/m;
+$_ = qr/X/s;
+$_ = qr/X/i;
+$_ = qr/X/x;
+$_ = qr/X/p;
+$_ = qr/X/o;
+$_ = qr/X/u;
+$_ = qr/X/a;
+$_ = qr/X/l;
+$_ = qr/X/n;
+####
+use feature 'unicode_strings';
+$_ = qr/X/d;
+####
+# all the flags (m//)
+/X/m;
+/X/s;
+/X/i;
+/X/x;
+/X/p;
+/X/o;
+/X/u;
+/X/a;
+/X/l;
+/X/n;
+/X/g;
+/X/cg;
+####
+use feature 'unicode_strings';
+/X/d;
+####
+# all the flags (s///)
+s/X//m;
+s/X//s;
+s/X//i;
+s/X//x;
+s/X//p;
+s/X//o;
+s/X//u;
+s/X//a;
+s/X//l;
+s/X//n;
+s/X//g;
+s/X/'';/e;
+s/X//r;
+####
+use feature 'unicode_strings';
+s/X//d;
+####
+# all the flags (tr///)
+tr/X/Y/c;
+tr/X//d;
+tr/X//s;
+tr/X//r;
+####
 # [perl #119807] s//\(3)/ge should not warn when deparsed (\3 warns)
 s/foo/\(3);/eg;
 ####
@@ -1363,8 +1434,13 @@ tr/a/b/r + $a =~ tr/p/q/r;
 ####
 # [perl #90898]
 <a,>;
+glob 'a,';
+>>>>
+glob 'a,';
+glob 'a,';
 ####
 # [perl #91008]
+# SKIP ?$] >= 5.023 && "autoderef deleted in this Perl version"
 # CONTEXT no warnings 'experimental::autoderef';
 each $@;
 keys $~;
@@ -1871,12 +1947,12 @@ my sub f {}
 print f();
 >>>>
 use feature 'lexical_subs';
-BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x55\x01"}
+BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x15"}
 my sub f {
-    BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x01"}
+    BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x15"}
     
 }
-BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x01"}
+BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x15"}
 print f();
 ####
 # SKIP ?$] < 5.017004 && "lexical subs not implemented on this Perl version"
@@ -1887,13 +1963,13 @@ state sub f {}
 print f();
 >>>>
 use feature 'lexical_subs';
-BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x55\x01"}
+BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x15"}
 CORE::state sub f {
-    BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x01"}
+    BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x15"}
     use feature 'state';
     
 }
-BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x55\x01"}
+BEGIN {${^WARNING_BITS} = "\x54\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x54\x55\x55\x15"}
 use feature 'state';
 print f();
 ####

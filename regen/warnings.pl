@@ -16,7 +16,7 @@
 #
 # This script is normally invoked from regen.pl.
 
-$VERSION = '1.34';
+$VERSION = '1.36';
 
 BEGIN {
     require 'regen/regen_lib.pl';
@@ -89,13 +89,9 @@ my $tree = {
                                     [ 5.017, DEFAULT_ON ],
                                 'experimental::regex_sets' =>
                                     [ 5.017, DEFAULT_ON ],
-                                'experimental::lexical_topic' =>
-                                    [ 5.017, DEFAULT_ON ],
                                 'experimental::smartmatch' =>
                                     [ 5.017, DEFAULT_ON ],
                                 'experimental::postderef' =>
-                                    [ 5.019, DEFAULT_ON ],
-                                'experimental::autoderef' =>
                                     [ 5.019, DEFAULT_ON ],
                                 'experimental::signatures' =>
                                     [ 5.019, DEFAULT_ON ],
@@ -362,8 +358,8 @@ EOM
 
   print $warn <<'EOM';
 
-#define isLEXWARN_on 	(PL_curcop->cop_warnings != pWARN_STD)
-#define isLEXWARN_off	(PL_curcop->cop_warnings == pWARN_STD)
+#define isLEXWARN_on 	cBOOL(PL_curcop->cop_warnings != pWARN_STD)
+#define isLEXWARN_off	cBOOL(PL_curcop->cop_warnings == pWARN_STD)
 #define isWARN_ONCE	(PL_dowarn & (G_WARN_ON|G_WARN_ONCE))
 #define isWARN_on(c,x)	(IsSet((U8 *)(c + 1), 2*(x)))
 #define isWARNf_on(c,x)	(IsSet((U8 *)(c + 1), 2*(x)+1))
@@ -493,11 +489,12 @@ package warnings;
 VERSION
 
 # Verify that we're called correctly so that warnings will work.
+# Can't use Carp, since Carp uses us!
+# String regexps because constant folding = smaller optree = less memory vs regexp literal
 # see also strict.pm.
-unless ( __FILE__ =~ /(^|[\/\\])\Q${\__PACKAGE__}\E\.pmc?$/ ) {
-    my (undef, $f, $l) = caller;
-    die("Incorrect use of pragma '${\__PACKAGE__}' at $f line $l.\n");
-}
+die sprintf "Incorrect use of pragma '%s' at %s line %d.\n", __PACKAGE__, +(caller)[1,2]
+    if __FILE__ !~ ( '(?x) \b     '.__PACKAGE__.'  \.pmc? \z' )
+    && __FILE__ =~ ( '(?x) \b (?i:'.__PACKAGE__.') \.pmc? \z' );
 
 KEYWORDS
 

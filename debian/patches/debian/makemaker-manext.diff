@@ -1,4 +1,4 @@
-From 700a0ed19b808ba0942c5780b7adb79ee4606e18 Mon Sep 17 00:00:00 2001
+From 188a3157b547817dae906023ad4ba8134316eae3 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 1 Jul 2015 22:23:53 +0300
 Subject: Make EU::MakeMaker honour MANnEXT settings in generated manpage
@@ -15,10 +15,10 @@ Bug-Debian: https://bugs.debian.org/247370
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
-index 4c00129..88d0896 100644
+index 129ad9e..63ad0ec 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
-@@ -919,7 +919,7 @@ END
+@@ -928,7 +928,7 @@ END
      foreach my $section (qw(1 3)) {
          my $pods = $self->{"MAN${section}PODS"};
          my $p2m = sprintf <<CMD, $] > 5.008 ? " -u" : "";

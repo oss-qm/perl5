@@ -17,12 +17,14 @@ SHA1 digests for this release are:
  [TAR.XZ SHA1]   perl-5.[VERSION.SUBVERSION].tar.xz
 
 You can find a full list of changes in the file "perldelta.pod" located in
-the "pod" directory inside the release and on the web.
+the "pod" directory inside the release and on the web at
+
+https://metacpan.org/pod/release/[AUTHOR]/perl-5.[VERSION.SUBVERSION]/pod/perldelta.pod
 
 [ACKNOWLEDGEMENTS SECTION FROM PERLDELTA]
 
 We expect to release version [NEXT BLEAD VERSION.SUBVERSION] on [FUTURE
-DATE].  The next major stable release of Perl 5, version 22.0, should
-appear in May 2015.
+DATE].  The next major stable release of Perl 5, version 24.0, should
+appear in May 2016.
 
 [YOUR SALUTATION HERE]

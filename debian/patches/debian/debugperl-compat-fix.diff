@@ -1,4 +1,4 @@
-From a646875c043710463e7f1ce6406d2bb7560d5462 Mon Sep 17 00:00:00 2001
+From 2a742779de37d7831873e54bdd3ce4b219905b60 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 8 Jan 2016 14:27:36 +0200
 Subject: Disable PERL_TRACK_MEMPOOL for debugging builds
@@ -14,7 +14,7 @@ Patch-Name: debian/debugperl-compat-fix.diff
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/perl.h b/perl.h
-index e840450..3fb765c 100644
+index 396bc92..6ebf5d2 100644
 --- a/perl.h
 +++ b/perl.h
 @@ -187,7 +187,9 @@

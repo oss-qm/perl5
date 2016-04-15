@@ -4,7 +4,6 @@ use strict;
 use 5.008;
 use warnings;
 use warnings FATAL => 'all';
-no warnings 'experimental::autoderef';
 use Data::Dumper;
 $Data::Dumper::Useqq= 1;
 our $hex_fmt= "0x%02X";
@@ -611,6 +610,8 @@ sub length_optree {
 
     my $else= ( $opt{else} ||= 0 );
 
+    return $else if $self->{count} == 0;
+
     my $method = $type =~ /generic/ ? 'generic_optree' : 'optree';
     if ($method eq 'optree' && scalar keys %{$self->{size}{$type}} == 1) {
 
@@ -873,7 +874,7 @@ sub calculate_mask(@) {
     my @final_results;
     foreach my $count (reverse sort { $a <=> $b } keys %hash) {
         my $need = 2 ** $count;     # Need 8 values for 3 differing bits, etc
-        foreach my $bits (sort keys $hash{$count}) {
+        foreach my $bits (sort keys $hash{$count}->%*) {
 
             print STDERR __LINE__, ": For $count bit(s) difference ($bits), need $need; have ", scalar @{$hash{$count}{$bits}}, "\n" if DEBUG;
 
@@ -961,7 +962,7 @@ sub calculate_mask(@) {
     # individually.
     my @individuals;
     foreach my $count (reverse sort { $a <=> $b } keys %hash) {
-        foreach my $bits (sort keys $hash{$count}) {
+        foreach my $bits (sort keys $hash{$count}->%*) {
             foreach my $remaining (@{$hash{$count}{$bits}}) {
 
                 # If we already know about this value, just ignore it.
@@ -1458,7 +1459,11 @@ EOF
     } else {
         # Some of the sources for these macros come from Unicode tables
         my $sources_list = "lib/unicore/mktables.lst";
-        my @sources = ($0, qw(lib/unicore/mktables lib/Unicode/UCD.pm));
+        my @sources = ($0, qw(lib/unicore/mktables
+                              lib/Unicode/UCD.pm
+                              regen/regcharclass_multi_char_folds.pl
+                              regen/charset_translations.pl
+                             ));
         {
             # Depend on mktables’ own sources.  It’s a shorter list of files than
             # those that Unicode::UCD uses.
@@ -1626,11 +1631,11 @@ REPLACEMENT: Unicode REPLACEMENT CHARACTER
 
 NONCHAR: Non character code points
 => UTF8 :fast
-\p{Nchar}
+\p{_Perl_Nchar}
 
 SURROGATE: Surrogate characters
 => UTF8 :fast
-\p{Gc=Cs}
+\p{_Perl_Surrogate}
 
 # This program was run with this enabled, and the results copied to utf8.h;
 # then this was commented out because it takes so long to figure out these 2
@@ -1692,4 +1697,4 @@ PROBLEMATIC_LOCALE_FOLDEDS_START : The first folded character of folds which are
 
 PATWS: pattern white space
 => generic cp : safe
-\p{PatWS}
+\p{_Perl_PatWS}

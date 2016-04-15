@@ -94,43 +94,43 @@ S_append_flags(pTHX_ SV *sv, U32 flags, const struct flag_to_name *start,
 /*
 =for apidoc pv_escape
 
-Escapes at most the first "count" chars of pv and puts the results into
-dsv such that the size of the escaped string will not exceed "max" chars
+Escapes at most the first C<count> chars of C<pv> and puts the results into
+C<dsv> such that the size of the escaped string will not exceed C<max> chars
 and will not contain any incomplete escape sequences.  The number of bytes
-escaped will be returned in the STRLEN *escaped parameter if it is not null.
-When the dsv parameter is null no escaping actually occurs, but the number
+escaped will be returned in the C<STRLEN *escaped> parameter if it is not null.
+When the C<dsv> parameter is null no escaping actually occurs, but the number
 of bytes that would be escaped were it not null will be calculated.
 
-If flags contains PERL_PV_ESCAPE_QUOTE then any double quotes in the string
+If flags contains C<PERL_PV_ESCAPE_QUOTE> then any double quotes in the string
 will also be escaped.
 
 Normally the SV will be cleared before the escaped string is prepared,
-but when PERL_PV_ESCAPE_NOCLEAR is set this will not occur.
+but when C<PERL_PV_ESCAPE_NOCLEAR> is set this will not occur.
 
-If PERL_PV_ESCAPE_UNI is set then the input string is treated as UTF-8
-if PERL_PV_ESCAPE_UNI_DETECT is set then the input string is scanned
+If C<PERL_PV_ESCAPE_UNI> is set then the input string is treated as UTF-8
+if C<PERL_PV_ESCAPE_UNI_DETECT> is set then the input string is scanned
 using C<is_utf8_string()> to determine if it is UTF-8.
 
-If PERL_PV_ESCAPE_ALL is set then all input chars will be output
-using C<\x01F1> style escapes, otherwise if PERL_PV_ESCAPE_NONASCII is set, only
+If C<PERL_PV_ESCAPE_ALL> is set then all input chars will be output
+using C<\x01F1> style escapes, otherwise if C<PERL_PV_ESCAPE_NONASCII> is set, only
 non-ASCII chars will be escaped using this style; otherwise, only chars above
 255 will be so escaped; other non printable chars will use octal or
 common escaped patterns like C<\n>.
-Otherwise, if PERL_PV_ESCAPE_NOBACKSLASH
+Otherwise, if C<PERL_PV_ESCAPE_NOBACKSLASH>
 then all chars below 255 will be treated as printable and
 will be output as literals.
 
-If PERL_PV_ESCAPE_FIRSTCHAR is set then only the first char of the
+If C<PERL_PV_ESCAPE_FIRSTCHAR> is set then only the first char of the
 string will be escaped, regardless of max.  If the output is to be in hex,
 then it will be returned as a plain hex
 sequence.  Thus the output will either be a single char,
 an octal escape sequence, a special escape like C<\n> or a hex value.
 
-If PERL_PV_ESCAPE_RE is set then the escape char used will be a '%' and
-not a '\\'.  This is because regexes very often contain backslashed
-sequences, whereas '%' is not a particularly common character in patterns.
+If C<PERL_PV_ESCAPE_RE> is set then the escape char used will be a C<"%"> and
+not a C<"\\">.  This is because regexes very often contain backslashed
+sequences, whereas C<"%"> is not a particularly common character in patterns.
 
-Returns a pointer to the escaped text as held by dsv.
+Returns a pointer to the escaped text as held by C<dsv>.
 
 =cut
 */
@@ -249,23 +249,23 @@ Perl_pv_escape( pTHX_ SV *dsv, char const * const str,
 =for apidoc pv_pretty
 
 Converts a string into something presentable, handling escaping via
-pv_escape() and supporting quoting and ellipses.
+C<pv_escape()> and supporting quoting and ellipses.
 
-If the PERL_PV_PRETTY_QUOTE flag is set then the result will be 
+If the C<PERL_PV_PRETTY_QUOTE> flag is set then the result will be
 double quoted with any double quotes in the string escaped.  Otherwise
-if the PERL_PV_PRETTY_LTGT flag is set then the result be wrapped in
+if the C<PERL_PV_PRETTY_LTGT> flag is set then the result be wrapped in
 angle brackets. 
 
-If the PERL_PV_PRETTY_ELLIPSES flag is set and not all characters in
+If the C<PERL_PV_PRETTY_ELLIPSES> flag is set and not all characters in
 string were output then an ellipsis C<...> will be appended to the
 string.  Note that this happens AFTER it has been quoted.
 
-If start_color is non-null then it will be inserted after the opening
-quote (if there is one) but before the escaped text.  If end_color
+If C<start_color> is non-null then it will be inserted after the opening
+quote (if there is one) but before the escaped text.  If C<end_color>
 is non-null then it will be inserted after the escaped text but before
 any quotes or ellipses.
 
-Returns a pointer to the prettified text as held by dsv.
+Returns a pointer to the prettified text as held by C<dsv>.
 
 =cut           
 */
@@ -968,6 +968,7 @@ Perl_do_op_dump(pTHX_ I32 level, PerlIO *file, const OP *o)
         for (i=0; i < count;  i++)
             Perl_dump_indent(aTHX_ level+1, file, "%"UVuf" => 0x%"UVxf"\n",
                                     i, items[i].uv);
+	break;
     }
 
     case OP_CONST:
@@ -1106,7 +1107,7 @@ Perl_gv_dump(pTHX_ GV *gv)
         Perl_dump_indent(aTHX_ 1, Perl_debug_log, "-> %s",
                      generic_pv_escape( tmp, name, len, SvUTF8(sv) ));
     }
-    PerlIO_putc(Perl_debug_log, '\n');
+    (void)PerlIO_putc(Perl_debug_log, '\n');
     Perl_dump_indent(aTHX_ 0, Perl_debug_log, "}\n");
 }
 
@@ -1116,7 +1117,7 @@ Perl_gv_dump(pTHX_ GV *gv)
  */
 
 static const struct { const char type; const char *name; } magic_names[] = {
-#include "mg_names.c"
+#include "mg_names.inc"
 	/* this null string terminates the list */
 	{ 0,                         NULL },
 };
@@ -1227,7 +1228,7 @@ Perl_do_magic_dump(pTHX_ I32 level, PerlIO *file, const MAGIC *mg, I32 nest, I32
 		 " ???? - " __FILE__
 		 " does not know how to handle this MG_LEN"
 		);
-            PerlIO_putc(file, '\n');
+            (void)PerlIO_putc(file, '\n');
         }
 	if (mg->mg_type == PERL_MAGIC_utf8) {
 	    const STRLEN * const cache = (STRLEN *) mg->mg_ptr;
@@ -1270,7 +1271,7 @@ Perl_do_hv_dump(pTHX_ I32 level, PerlIO *file, const char *name, HV *sv)
                                    HvNAMELEN(sv), HvNAMEUTF8(sv)));
     }
     else
-	PerlIO_putc(file, '\n');
+        (void)PerlIO_putc(file, '\n');
 }
 
 void
@@ -1285,7 +1286,7 @@ Perl_do_gv_dump(pTHX_ I32 level, PerlIO *file, const char *name, GV *sv)
                               generic_pv_escape( tmpsv, GvNAME(sv), GvNAMELEN(sv), GvNAMEUTF8(sv) ));
     }
     else
-	PerlIO_putc(file, '\n');
+        (void)PerlIO_putc(file, '\n');
 }
 
 void
@@ -1309,7 +1310,7 @@ Perl_do_gvgv_dump(pTHX_ I32 level, PerlIO *file, const char *name, GV *sv)
                               generic_pv_escape( tmp, GvNAME(sv), GvNAMELEN(sv), GvNAMEUTF8(sv)));
     }
     else
-	PerlIO_putc(file, '\n');
+        (void)PerlIO_putc(file, '\n');
 }
 
 const struct flag_to_name first_sv_flags_names[] = {
@@ -1415,13 +1416,22 @@ const struct flag_to_name regexp_core_intflags_names[] = {
     {PREGf_CUTGROUP_SEEN,   "CUTGROUP_SEEN,"},
     {PREGf_USE_RE_EVAL,     "USE_RE_EVAL,"},
     {PREGf_NOSCAN,          "NOSCAN,"},
-    {PREGf_CANY_SEEN,       "CANY_SEEN,"},
     {PREGf_GPOS_SEEN,       "GPOS_SEEN,"},
     {PREGf_GPOS_FLOAT,      "GPOS_FLOAT,"},
     {PREGf_ANCH_MBOL,       "ANCH_MBOL,"},
     {PREGf_ANCH_SBOL,       "ANCH_SBOL,"},
     {PREGf_ANCH_GPOS,       "ANCH_GPOS,"},
 };
+
+/* Perl_do_sv_dump():
+ *
+ * level:   amount to indent the output
+ * sv:      the object to dump
+ * nest:    the current level of recursion
+ * maxnest: the maximum allowed level of recursion
+ * dumpops: if true, also dump the ops associated with a CV
+ * pvlim:   limit on the length of any strings that are output
+ * */
 
 void
 Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bool dumpops, STRLEN pvlim)
@@ -1555,20 +1565,11 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 	 && type != SVt_REGEXP && !isGV_with_GP(sv) && !SvVALID(sv))
 	|| (type == SVt_IV && !SvROK(sv))) {
 	if (SvIsUV(sv)
-#ifdef PERL_OLD_COPY_ON_WRITE
-	               || SvIsCOW(sv)
-#endif
 	                             )
 	    Perl_dump_indent(aTHX_ level, file, "  UV = %"UVuf, (UV)SvUVX(sv));
 	else
 	    Perl_dump_indent(aTHX_ level, file, "  IV = %"IVdf, (IV)SvIVX(sv));
-#ifdef PERL_OLD_COPY_ON_WRITE
-	if (SvIsCOW_shared_hash(sv))
-	    PerlIO_printf(file, "  (HASH)");
-	else if (SvIsCOW_normal(sv))
-	    PerlIO_printf(file, "  (COW from 0x%"UVxf")", (UV)SvUVX(sv));
-#endif
-	PerlIO_putc(file, '\n');
+	(void)PerlIO_putc(file, '\n');
     }
 
     if ((type >= SVt_PVNV && type != SVt_PVAV && type != SVt_PVHV
@@ -1630,7 +1631,7 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 	    if (!re)
 		Perl_dump_indent(aTHX_ level, file, "  LEN = %"IVdf"\n",
 				       (IV)SvLEN(sv));
-#ifdef PERL_NEW_COPY_ON_WRITE
+#ifdef PERL_COPY_ON_WRITE
 	    if (SvIsCOW(sv) && SvLEN(sv))
 		Perl_dump_indent(aTHX_ level, file, "  COW_REFCNT = %d\n",
 				       CowREFCNT(sv));
@@ -1661,7 +1662,7 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 	    Perl_dump_indent(aTHX_ level, file, "  ALLOC = 0x%"UVxf"\n", PTR2UV(AvALLOC(sv)));
 	}
 	else
-	    PerlIO_putc(file, '\n');
+            (void)PerlIO_putc(file, '\n');
 	Perl_dump_indent(aTHX_ level, file, "  FILL = %"IVdf"\n", (IV)AvFILLp(sv));
 	Perl_dump_indent(aTHX_ level, file, "  MAX = %"IVdf"\n", (IV)AvMAX(sv));
 	Perl_dump_indent(aTHX_ level, file, "  ARYLEN = 0x%"UVxf"\n",
@@ -1722,7 +1723,7 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 			PerlIO_printf(file, ", ");
 		}
             }
-	    PerlIO_putc(file, ')');
+	    (void)PerlIO_putc(file, ')');
 	    /* The "quality" of a hash is defined as the total number of
 	       comparisons needed to access every element once, relative
 	       to the expected number needed for a random hash.
@@ -1741,10 +1742,10 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 		pow2 = pow2 << 1;
 	    theoret = usedkeys;
 	    theoret += theoret * (theoret-1)/pow2;
-	    PerlIO_putc(file, '\n');
+	    (void)PerlIO_putc(file, '\n');
 	    Perl_dump_indent(aTHX_ level, file, "  hash quality = %.1"NVff"%%", theoret/sum*100);
 	}
-	PerlIO_putc(file, '\n');
+	(void)PerlIO_putc(file, '\n');
 	Perl_dump_indent(aTHX_ level, file, "  KEYS = %"IVdf"\n", (IV)usedkeys);
         {
             STRLEN count = 0;
@@ -1780,7 +1781,7 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
                 PerlIO_printf(file, " (LAST = 0x%"UVxf")", (UV)HvLASTRAND_get(sv));
             }
 #endif
-            PerlIO_putc(file, '\n');
+            (void)PerlIO_putc(file, '\n');
         }
 	{
 	    MAGIC * const mg = mg_find(sv, PERL_MAGIC_symtab);
@@ -2042,7 +2043,7 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 	Perl_dump_indent(aTHX_ level, file, "    GPFLAGS = 0x%"UVxf
 					    " (%s)\n",
 			       (UV)GvGPFLAGS(sv),
-			       GvALIASED_SV(sv) ? "ALIASED_SV" : "");
+			       "");
 	Perl_dump_indent(aTHX_ level, file, "    LINE = %"IVdf"\n", (IV)GvLINE(sv));
 	Perl_dump_indent(aTHX_ level, file, "    FILE = \"%s\"\n", GvFILE(sv));
 	do_gv_dump (level, file, "    EGV", GvEGV(sv));
@@ -2211,6 +2212,8 @@ Perl_runops_debug(pTHX)
         ++PL_op_exec_cnt[PL_op->op_type];
 #endif
 	if (PL_debug) {
+            ENTER;
+            SAVETMPS;
 	    if (PL_watchaddr && (*PL_watchaddr != PL_watchok))
 		PerlIO_printf(Perl_debug_log,
 			      "WARNING: %"UVxf" changed from %"UVxf" to %"UVxf"\n",
@@ -2228,9 +2231,11 @@ Perl_runops_debug(pTHX)
 
 	    if (DEBUG_t_TEST_) debop(PL_op);
 	    if (DEBUG_P_TEST_) debprof(PL_op);
+            FREETMPS;
+            LEAVE;
 	}
 
-        OP_ENTRY_PROBE(OP_NAME(PL_op));
+        PERL_DTRACE_PROBE_OP(PL_op);
     } while ((PL_op = PL_op->op_ppaddr(aTHX)));
     DEBUG_l(Perl_deb(aTHX_ "leaving RUNOPS level\n"));
     PERL_ASYNC_CHECK();
@@ -2242,7 +2247,7 @@ Perl_runops_debug(pTHX)
 
 /* print the names of the n lexical vars starting at pad offset off */
 
-void
+STATIC void
 S_deb_padvar(pTHX_ PADOFFSET off, int n, bool paren)
 {
     PADNAME *sv;
@@ -2318,7 +2323,7 @@ S_append_gv_name(pTHX_ GV *gv, SV *out)
     }
     sv = newSV(0);
     gv_fullname4(sv, gv, NULL, FALSE);
-    Perl_sv_catpvf(aTHX_ out, "%c%-p", '$', sv);
+    Perl_sv_catpvf(aTHX_ out, "$%"SVf, SVfARG(sv));
     SvREFCNT_dec_NN(sv);
 }
 
@@ -2525,8 +2530,8 @@ Perl_debop(pTHX_ const OP *o)
         break;
 
     case OP_MULTIDEREF:
-        PerlIO_printf(Perl_debug_log, "(%-p)",
-            multideref_stringify(o, deb_curcv(cxstack_ix)));
+        PerlIO_printf(Perl_debug_log, "(%"SVf")",
+            SVfARG(multideref_stringify(o, deb_curcv(cxstack_ix))));
         break;
 
     default:

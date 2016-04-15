@@ -248,12 +248,15 @@
 #  define c99_ilogb	ilogbq
 #  define c99_lgamma	lgammaq
 #  define c99_log1p	log1pq
-#  define c99_llrint	llrintq
 #  define c99_log2	log2q
 /* no logbq */
-#  define c99_lround	llroundq
-#  define c99_lrint	lrintq
-#  define c99_lround	lroundq
+#  if defined(USE_64_BIT_INT) && QUADKIND == QUAD_IS_LONG_LONG
+#    define c99_lrint	llrintq
+#    define c99_lround	llroundq
+#  else
+#    define c99_lrint	lrintq
+#    define c99_lround	lroundq
+#  endif
 #  define c99_nan	nanq
 #  define c99_nearbyint	nearbyintq
 #  define c99_nextafter	nextafterq
@@ -1115,6 +1118,169 @@ static NV my_trunc(NV x)
 #  define c99_trunc my_trunc
 #endif
 
+#undef NV_PAYLOAD_DEBUG
+
+/* NOTE: the NaN payload API implementation is hand-rolled, since the
+ * APIs are only proposed ones as of June 2015, so very few, if any,
+ * platforms have implementations yet, so HAS_SETPAYLOAD and such are
+ * unlikely to be helpful.
+ *
+ * XXX - if the core numification wants to actually generate
+ * the nan payload in "nan(123)", and maybe "nans(456)", for
+ * signaling payload", this needs to be moved to e.g. numeric.c
+ * (look for grok_infnan)
+ *
+ * Conversely, if the core stringification wants the nan payload
+ * and/or the nan quiet/signaling distinction, S_getpayload()
+ * from this file needs to be moved, to e.g. sv.c (look for S_infnan_2pv),
+ * and the (trivial) functionality of issignaling() copied
+ * (for generating "NaNS", or maybe even "NaNQ") -- or maybe there
+ * are too many formatting parameters for simple stringification?
+ */
+
+/* While it might make sense for the payload to be UV or IV,
+ * to avoid conversion loss, the proposed ISO interfaces use
+ * a floating point input, which is then truncated to integer,
+ * and only the integer part being used.  This is workable,
+ * except for: (1) the conversion loss (2) suboptimal for
+ * 32-bit integer platforms.  A workaround API for (2) and
+ * in general for bit-honesty would be an array of integers
+ * as the payload... but the proposed C API does nothing of
+ * the kind. */
+#if NVSIZE == UVSIZE
+#  define NV_PAYLOAD_TYPE UV
+#else
+#  define NV_PAYLOAD_TYPE NV
+#endif
+
+#ifdef LONGDOUBLE_DOUBLEDOUBLE
+#  define NV_PAYLOAD_SIZEOF_ASSERT(a) assert(sizeof(a) == NVSIZE / 2)
+#else
+#  define NV_PAYLOAD_SIZEOF_ASSERT(a) assert(sizeof(a) == NVSIZE)
+#endif
+
+static void S_setpayload(NV* nvp, NV_PAYLOAD_TYPE payload, bool signaling)
+{
+  dTHX;
+  static const U8 m[] = { NV_NAN_PAYLOAD_MASK };
+  static const U8 p[] = { NV_NAN_PAYLOAD_PERM };
+  UV a[(NVSIZE + UVSIZE - 1) / UVSIZE] = { 0 };
+  int i;
+  NV_PAYLOAD_SIZEOF_ASSERT(m);
+  NV_PAYLOAD_SIZEOF_ASSERT(p);
+  *nvp = NV_NAN;
+  /* Divide the input into the array in "base unsigned integer" in
+   * little-endian order.  Note that the integer might be smaller than
+   * an NV (if UV is U32, for example). */
+#if NVSIZE == UVSIZE
+  a[0] = payload;  /* The trivial case. */
+#else
+  {
+    NV t1 = c99_trunc(payload); /* towards zero (drop fractional) */
+#ifdef NV_PAYLOAD_DEBUG
+    Perl_warn(aTHX_ "t1 = %"NVgf" (payload %"NVgf")\n", t1, payload);
+#endif
+    if (t1 <= UV_MAX) {
+      a[0] = (UV)t1;  /* Fast path, also avoids rounding errors (right?) */
+    } else {
+      /* UVSIZE < NVSIZE or payload > UV_MAX.
+       *
+       * This may happen for example if:
+       * (1) UVSIZE == 32 and common 64-bit double NV
+       *     (32-bit system not using -Duse64bitint)
+       * (2) UVSIZE == 64 and the x86-style 80-bit long double NV
+       *     (note that here the room for payload is actually the 64 bits)
+       * (3) UVSIZE == 64 and the 128-bit IEEE 764 quadruple NV
+       *     (112 bits in mantissa, 111 bits room for payload)
+       *
+       * NOTE: this is very sensitive to correctly functioning
+       * fmod()/fmodl(), and correct casting of big-unsigned-integer to NV.
+       * If these don't work right, especially the low order bits
+       * are in danger.  For example Solaris and AIX seem to have issues
+       * here, especially if using 32-bit UVs. */
+      NV t2;
+      for (i = 0, t2 = t1; i < (int)C_ARRAY_LENGTH(a); i++) {
+        a[i] = (UV)Perl_fmod(t2, (NV)UV_MAX);
+        t2 = Perl_floor(t2 / (NV)UV_MAX);
+      }
+    }
+  }
+#endif
+#ifdef NV_PAYLOAD_DEBUG
+  for (i = 0; i < (int)C_ARRAY_LENGTH(a); i++) {
+    Perl_warn(aTHX_ "a[%d] = 0x%"UVxf"\n", i, a[i]);
+  }
+#endif
+  for (i = 0; i < (int)sizeof(p); i++) {
+    if (m[i] && p[i] < sizeof(p)) {
+      U8 s = (p[i] % UVSIZE) << 3;
+      UV u = a[p[i] / UVSIZE] & ((UV)0xFF << s);
+      U8 b = (U8)((u >> s) & m[i]);
+      ((U8 *)(nvp))[i] &= ~m[i]; /* For NaNs with non-zero payload bits. */
+      ((U8 *)(nvp))[i] |= b;
+#ifdef NV_PAYLOAD_DEBUG
+      Perl_warn(aTHX_ "set p[%2d] = %02x (i = %d, m = %02x, s = %2d, b = %02x, u = %08"UVxf")\n", i, ((U8 *)(nvp))[i], i, m[i], s, b, u);
+#endif
+      a[p[i] / UVSIZE] &= ~u;
+    }
+  }
+  if (signaling) {
+    NV_NAN_SET_SIGNALING(nvp);
+  }
+#ifdef USE_LONG_DOUBLE
+# if LONG_DOUBLEKIND == 3 || LONG_DOUBLEKIND == 4
+#  if LONG_DOUBLESIZE > 10
+  memset((char *)nvp + 10, '\0', LONG_DOUBLESIZE - 10); /* x86 long double */
+#  endif
+# endif
+#endif
+  for (i = 0; i < (int)C_ARRAY_LENGTH(a); i++) {
+    if (a[i]) {
+      Perl_warn(aTHX_ "payload lost bits (%"UVxf")", a[i]);
+      break;
+    }
+  }
+#ifdef NV_PAYLOAD_DEBUG
+  for (i = 0; i < NVSIZE; i++) {
+    PerlIO_printf(Perl_debug_log, "%02x ", ((U8 *)(nvp))[i]);
+  }
+  PerlIO_printf(Perl_debug_log, "\n");
+#endif
+}
+
+static NV_PAYLOAD_TYPE S_getpayload(NV nv)
+{
+  dTHX;
+  static const U8 m[] = { NV_NAN_PAYLOAD_MASK };
+  static const U8 p[] = { NV_NAN_PAYLOAD_PERM };
+  UV a[(NVSIZE + UVSIZE - 1) / UVSIZE] = { 0 };
+  int i;
+  NV payload;
+  NV_PAYLOAD_SIZEOF_ASSERT(m);
+  NV_PAYLOAD_SIZEOF_ASSERT(p);
+  payload = 0;
+  for (i = 0; i < (int)sizeof(p); i++) {
+    if (m[i] && p[i] < NVSIZE) {
+      U8 s = (p[i] % UVSIZE) << 3;
+      a[p[i] / UVSIZE] |= (UV)(((U8 *)(&nv))[i] & m[i]) << s;
+    }
+  }
+  for (i = (int)C_ARRAY_LENGTH(a) - 1; i >= 0; i--) {
+#ifdef NV_PAYLOAD_DEBUG
+    Perl_warn(aTHX_ "a[%d] = %"UVxf"\n", i, a[i]);
+#endif
+    payload *= UV_MAX;
+    payload += a[i];
+  }
+#ifdef NV_PAYLOAD_DEBUG
+  for (i = 0; i < NVSIZE; i++) {
+    PerlIO_printf(Perl_debug_log, "%02x ", ((U8 *)(&nv))[i]);
+  }
+  PerlIO_printf(Perl_debug_log, "\n");
+#endif
+  return payload;
+}
+
 /* XXX This comment is just to make I_TERMIO and I_SGTTY visible to
    metaconfig for future extension writers.  We don't use them in POSIX.
    (This is really sneaky :-)  --AD
@@ -1200,7 +1366,7 @@ char *tzname[] = { "" , "" };
 #else
 
 #  ifndef HAS_MKFIFO
-#    if defined(OS2)
+#    if defined(OS2) || defined(__amigaos4__)
 #      define mkfifo(a,b) not_here("mkfifo")
 #    else	/* !( defined OS2 ) */
 #      ifndef mkfifo
@@ -1216,7 +1382,9 @@ char *tzname[] = { "" , "" };
 #  ifdef HAS_UNAME
 #    include <sys/utsname.h>
 #  endif
-#  include <sys/wait.h>
+#  ifndef __amigaos4__
+#    include <sys/wait.h>
+#  endif
 #  ifdef I_UTIME
 #    include <utime.h>
 #  endif
@@ -1227,6 +1395,8 @@ typedef int SysRet;
 typedef long SysRetLong;
 typedef sigset_t* POSIX__SigSet;
 typedef HV* POSIX__SigAction;
+typedef int POSIX__SigNo;
+typedef int POSIX__Fd;
 #ifdef I_TERMIOS
 typedef struct termios* POSIX__Termios;
 #else /* Define termios types to int, and call not_here for the functions.*/
@@ -1360,7 +1530,7 @@ struct lconv_offset {
     size_t offset;
 };
 
-const struct lconv_offset lconv_strings[] = {
+static const struct lconv_offset lconv_strings[] = {
 #ifdef USE_LOCALE_NUMERIC
     {"decimal_point",     STRUCT_OFFSET(struct lconv, decimal_point)},
     {"thousands_sep",     STRUCT_OFFSET(struct lconv, thousands_sep)},
@@ -1388,18 +1558,18 @@ const struct lconv_offset lconv_strings[] = {
 
 /* The Linux man pages say these are the field names for the structure
  * components that are LC_NUMERIC; the rest being LC_MONETARY */
-#   define isLC_NUMERIC_STRING(name) (strcmp(name, "decimal_point")     \
-                                      || strcmp(name, "thousands_sep")  \
+#   define isLC_NUMERIC_STRING(name) (strEQ(name, "decimal_point")     \
+                                      || strEQ(name, "thousands_sep")  \
                                                                         \
                                       /* There should be no harm done   \
                                        * checking for this, even if     \
                                        * NO_LOCALECONV_GROUPING */      \
-                                      || strcmp(name, "grouping"))
+                                      || strEQ(name, "grouping"))
 #else
 #   define isLC_NUMERIC_STRING(name) (0)
 #endif
 
-const struct lconv_offset lconv_integers[] = {
+static const struct lconv_offset lconv_integers[] = {
 #ifdef USE_LOCALE_MONETARY
     {"int_frac_digits",   STRUCT_OFFSET(struct lconv, int_frac_digits)},
     {"frac_digits",       STRUCT_OFFSET(struct lconv, frac_digits)},
@@ -1482,8 +1652,10 @@ restore_sigmask(pTHX_ SV *osset_sv)
       * supposed to return -1 from sigaction unless the disposition
       * was unaffected.
       */
+#if !(defined(__amigaos4__) && defined(__NEWLIB__))
      sigset_t *ossetp = (sigset_t *) SvPV_nolen( osset_sv );
      (void)sigprocmask(SIG_SETMASK, ossetp, (sigset_t *)0);
+#endif
 }
 
 static void *
@@ -1606,103 +1778,6 @@ my_tzset(pTHX)
     tzset();
 }
 
-typedef int (*isfunc_t)(int);
-typedef void (*any_dptr_t)(void *);
-
-/* This needs to be ALIASed in a custom way, hence can't easily be defined as
-   a regular XSUB.  */
-static XSPROTO(is_common); /* prototype to pass -Wmissing-prototypes */
-static XSPROTO(is_common)
-{
-    dXSARGS;
-
-    if (items != 1)
-       croak_xs_usage(cv,  "charstring");
-
-    {
-	dXSTARG;
-	STRLEN	len;
-        /*int	RETVAL = 0;   YYY means uncomment this to return false on an
-                            * empty string input */
-	int	RETVAL;
-	unsigned char *s = (unsigned char *) SvPV(ST(0), len);
-	unsigned char *e = s + len;
-	isfunc_t isfunc = (isfunc_t) XSANY.any_dptr;
-
-        if (ckWARN_d(WARN_DEPRECATED)) {
-
-            /* Warn exactly once for each lexical place this function is
-             * called.  See thread at
-             * http://markmail.org/thread/jhqcag5njmx7jpyu */
-
-	    HV *warned = get_hv("POSIX::_warned", GV_ADD | GV_ADDMULTI);
-	    if (! hv_exists(warned, (const char *)&PL_op, sizeof(PL_op))) {
-                Perl_warner(aTHX_ packWARN(WARN_DEPRECATED),
-                            "Calling POSIX::%"HEKf"() is deprecated",
-                            HEKfARG(GvNAME_HEK(CvGV(cv))));
-		(void)hv_store(warned, (const char *)&PL_op, sizeof(PL_op), &PL_sv_yes, 0);
-            }
-        }
-
-        /*if (e > s) { YYY */
-	for (RETVAL = 1; RETVAL && s < e; s++)
-	    if (!isfunc(*s))
-		RETVAL = 0;
-        /*} YYY */
-	XSprePUSH;
-	PUSHi((IV)RETVAL);
-    }
-    XSRETURN(1);
-}
-
-MODULE = POSIX		PACKAGE = POSIX
-
-BOOT:
-{
-    CV *cv;
-    const char *file = __FILE__;
-
-
-    /* silence compiler warning about not_here() defined but not used */
-    if (0) not_here("");
-
-    /* Ensure we get the function, not a macro implementation. Like the C89
-       standard says we can...  */
-#undef isalnum
-    cv = newXS("POSIX::isalnum", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isalnum;
-#undef isalpha
-    cv = newXS("POSIX::isalpha", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isalpha;
-#undef iscntrl
-    cv = newXS("POSIX::iscntrl", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &iscntrl;
-#undef isdigit
-    cv = newXS("POSIX::isdigit", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isdigit;
-#undef isgraph
-    cv = newXS("POSIX::isgraph", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isgraph;
-#undef islower
-    cv = newXS("POSIX::islower", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &islower;
-#undef isprint
-    cv = newXS("POSIX::isprint", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isprint;
-#undef ispunct
-    cv = newXS("POSIX::ispunct", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &ispunct;
-#undef isspace
-    cv = newXS("POSIX::isspace", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isspace;
-#undef isupper
-    cv = newXS("POSIX::isupper", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isupper;
-#undef isxdigit
-    cv = newXS("POSIX::isxdigit", is_common, file);
-    XSANY.any_dptr = (any_dptr_t) &isxdigit;
-}
-
 MODULE = SigSet		PACKAGE = POSIX::SigSet		PREFIX = sig
 
 void
@@ -1724,7 +1799,7 @@ new(packname = "POSIX::SigSet", ...)
 SysRet
 addset(sigset, sig)
 	POSIX::SigSet	sigset
-	int		sig
+	POSIX::SigNo	sig
    ALIAS:
 	delset = 1
    CODE:
@@ -1745,7 +1820,7 @@ emptyset(sigset)
 int
 sigismember(sigset, sig)
 	POSIX::SigSet	sigset
-	int		sig
+	POSIX::SigNo	sig
 
 MODULE = Termios	PACKAGE = POSIX::Termios	PREFIX = cf
 
@@ -1771,7 +1846,7 @@ new(packname = "POSIX::Termios", ...)
 SysRet
 getattr(termios_ref, fd = 0)
 	POSIX::Termios	termios_ref
-	int		fd
+	POSIX::Fd		fd
     CODE:
 	RETVAL = tcgetattr(fd, termios_ref);
     OUTPUT:
@@ -1787,14 +1862,19 @@ getattr(termios_ref, fd = 0)
 SysRet
 setattr(termios_ref, fd = 0, optional_actions = DEF_SETATTR_ACTION)
 	POSIX::Termios	termios_ref
-	int		fd
+	POSIX::Fd	fd
 	int		optional_actions
     CODE:
 	/* The second argument to the call is mandatory, but we'd like to give
 	   it a useful default. 0 isn't valid on all operating systems - on
-	   Solaris (at least) TCSANOW, TCSADRAIN and TCSAFLUSH have the same
-	   values as the equivalent ioctls, TCSETS, TCSETSW and TCSETSF.  */
-	RETVAL = tcsetattr(fd, optional_actions, termios_ref);
+           Solaris (at least) TCSANOW, TCSADRAIN and TCSAFLUSH have the same
+           values as the equivalent ioctls, TCSETS, TCSETSW and TCSETSF.  */
+	if (optional_actions < 0) {
+            SETERRNO(EINVAL, LIB_INVARG);
+            RETVAL = -1;
+        } else {
+            RETVAL = tcsetattr(fd, optional_actions, termios_ref);
+        }
     OUTPUT:
 	RETVAL
 
@@ -1974,7 +2054,7 @@ WEXITSTATUS(status)
 #endif
 	    break;
 	default:
-	    Perl_croak(aTHX_ "Illegal alias %d for POSIX::W*", (int)ix);
+	    croak("Illegal alias %d for POSIX::W*", (int)ix);
 	}
     OUTPUT:
 	RETVAL
@@ -2090,6 +2170,9 @@ setlocale(category, locale = 0)
 #else
 	retval = setlocale(category, locale);
 #endif
+        DEBUG_L(PerlIO_printf(Perl_debug_log,
+            "%s:%d: %s\n", __FILE__, __LINE__,
+                _setlocale_debug_string(category, locale, retval)));
 	if (! retval) {
             /* Should never happen that a query would return an error, but be
              * sure and reset to C locale */
@@ -2101,6 +2184,7 @@ setlocale(category, locale = 0)
 
         /* Save retval since subsequent setlocale() calls may overwrite it. */
         retval = savepv(retval);
+        SAVEFREEPV(retval);
 
         /* For locale == 0, we may have switched to NUMERIC_UNDERLYING.  Switch
          * back */
@@ -2119,8 +2203,12 @@ setlocale(category, locale = 0)
 	    {
 		char *newctype;
 #ifdef LC_ALL
-		if (category == LC_ALL)
+		if (category == LC_ALL) {
 		    newctype = setlocale(LC_CTYPE, NULL);
+                    DEBUG_Lv(PerlIO_printf(Perl_debug_log,
+                        "%s:%d: %s\n", __FILE__, __LINE__,
+                        _setlocale_debug_string(LC_CTYPE, NULL, newctype)));
+                }
 		else
 #endif
 		    newctype = RETVAL;
@@ -2136,8 +2224,12 @@ setlocale(category, locale = 0)
 	    {
 		char *newcoll;
 #ifdef LC_ALL
-		if (category == LC_ALL)
+		if (category == LC_ALL) {
 		    newcoll = setlocale(LC_COLLATE, NULL);
+                    DEBUG_Lv(PerlIO_printf(Perl_debug_log,
+                        "%s:%d: %s\n", __FILE__, __LINE__,
+                        _setlocale_debug_string(LC_COLLATE, NULL, newcoll)));
+                }
 		else
 #endif
 		    newcoll = RETVAL;
@@ -2153,8 +2245,12 @@ setlocale(category, locale = 0)
 	    {
 		char *newnum;
 #ifdef LC_ALL
-		if (category == LC_ALL)
+		if (category == LC_ALL) {
 		    newnum = setlocale(LC_NUMERIC, NULL);
+                    DEBUG_Lv(PerlIO_printf(Perl_debug_log,
+                        "%s:%d: %s\n", __FILE__, __LINE__,
+                        _setlocale_debug_string(LC_NUMERIC, NULL, newnum)));
+                }
 		else
 #endif
 		    newnum = RETVAL;
@@ -2164,8 +2260,6 @@ setlocale(category, locale = 0)
 	}
     OUTPUT:
 	RETVAL
-    CLEANUP:
-        Safefree(RETVAL);
 
 NV
 acos(x)
@@ -2506,6 +2600,41 @@ fpclassify(x)
 	RETVAL
 
 NV
+getpayload(nv)
+	NV nv
+    CODE:
+	RETVAL = S_getpayload(nv);
+    OUTPUT:
+	RETVAL
+
+void
+setpayload(nv, payload)
+	NV nv
+	NV payload
+    CODE:
+	S_setpayload(&nv, payload, FALSE);
+    OUTPUT:
+	nv
+
+void
+setpayloadsig(nv, payload)
+	NV nv
+	NV payload
+    CODE:
+	nv = NV_NAN;
+	S_setpayload(&nv, payload, TRUE);
+    OUTPUT:
+	nv
+
+int
+issignaling(nv)
+	NV nv
+    CODE:
+	RETVAL = Perl_isnan(nv) && NV_NAN_IS_SIGNALING(&nv);
+    OUTPUT:
+	RETVAL
+
+NV
 copysign(x,y)
 	NV		x
 	NV		y
@@ -2696,60 +2825,38 @@ fma(x,y,z)
 	NV		z
     CODE:
 #ifdef c99_fma
+	RETVAL = c99_fma(x, y, z);
+#else
 	PERL_UNUSED_VAR(x);
 	PERL_UNUSED_VAR(y);
 	PERL_UNUSED_VAR(z);
-	RETVAL = c99_fma(x, y, z);
+	not_here("fma");
 #endif
     OUTPUT:
 	RETVAL
 
 NV
-nan(s = 0)
-	char*	s;
+nan(payload = 0)
+	NV payload
     CODE:
-	PERL_UNUSED_VAR(s);
-#ifdef c99_nan
-	RETVAL = c99_nan(s ? s : "");
-#elif defined(NV_NAN)
-	/* XXX if s != NULL, warn about unused argument,
-         * or implement the nan payload setting. */
-        /* NVSIZE == 8: the NaN "header" (the exponent) is 0x7FF (the 0x800
-         * is the sign bit, which should be irrelevant for NaN, so really
-         * also 0xFFF), leaving 64 - 12 = 52 bits for the NaN payload
-         * (6.5 bytes, note about infinities below).
-         *
-         * (USE_LONG_DOUBLE and)
-         * LONG_DOUBLEKIND == LONG_DOUBLE_IS_X86_80_BIT_LITTLE_ENDIAN:
-         * the NaN "header" is still 0x7FF, leaving 80 - 12 = 68 bits
-         * for the payload (8.5 bytes, note about infinities below).
-         *
-         * doubledouble? aargh. Maybe like doubles, 52 + 52 = 104 bits?
-         *
-         * NVSIZE == 16:
-         * the NaN "header" is still 0x7FF, leaving 128 - 12 = 116 bits
-         * for the payload (14.5 bytes, note about infinities below)
-         *
-         * Which ones of the NaNs are 'signaling' and which are 'quiet',
-         * depends.  In the IEEE-754 1985, nothing was specified.  But the
-         * majority of companies decided that the MSB of the mantissa was
-         * the bit for 'quiet'.  (Only PA-RISC and MIPS were different,
-         * using the MSB as 'signaling'.)  The IEEE-754 2008 *recommended*
-         * (but did not dictate) the MSB as the 'quiet' bit.
-         *
-         * In other words, on most platforms, and for 64-bit doubles:
-         * [7FF8000000000000, 7FFFFFFFFFFFFFFF] quiet
-         * [FFF8000000000000, FFFFFFFFFFFFFFFF] quiet
-         * [7FF0000000000001, 7FF7FFFFFFFFFFFF] signaling
-         * [FFF0000000000001, FFF7FFFFFFFFFFFF] signaling
-         *
-         * The C99 nan() is supposed to generate *quiet* NaNs.
-         *
-         * Note the asymmetry:
-         * The 7FF0000000000000 is positive infinity,
-         * the FFF0000000000000 is negative infinity.
-         */
-	RETVAL = NV_NAN;
+#ifdef NV_NAN
+        /* If no payload given, just return the default NaN.
+         * This makes a difference in platforms where the default
+         * NaN is not all zeros. */
+	if (items == 0) {
+          RETVAL = NV_NAN;
+	} else {
+          S_setpayload(&RETVAL, payload, FALSE);
+        }
+#elif defined(c99_nan)
+	{
+	  STRLEN elen = my_snprintf(PL_efloatbuf, PL_efloatsize, "%g", nv);
+          if ((IV)elen == -1) {
+	    RETVAL = NV_NAN;
+          } else {
+            RETVAL = c99_nan(PL_efloatbuf);
+          }
+        }
 #else
 	not_here("nan");
 #endif
@@ -2763,14 +2870,14 @@ jn(x,y)
     ALIAS:
 	yn = 1
     CODE:
-	PERL_UNUSED_VAR(x);
-	PERL_UNUSED_VAR(y);
 	RETVAL = NV_NAN;
         switch (ix) {
 	case 0:
 #ifdef bessel_jn
           RETVAL = bessel_jn(x, y);
 #else
+	  PERL_UNUSED_VAR(x);
+	  PERL_UNUSED_VAR(y);
           not_here("jn");
 #endif
             break;
@@ -2779,6 +2886,8 @@ jn(x,y)
 #ifdef bessel_yn
           RETVAL = bessel_yn(x, y);
 #else
+	  PERL_UNUSED_VAR(x);
+	  PERL_UNUSED_VAR(y);
           not_here("yn");
 #endif
             break;
@@ -2792,10 +2901,10 @@ sigaction(sig, optaction, oldaction = 0)
 	SV *			optaction
 	POSIX::SigAction	oldaction
     CODE:
-#if defined(WIN32) || defined(NETWARE)
+#if defined(WIN32) || defined(NETWARE) || (defined(__amigaos4__) && defined(__NEWLIB__))
 	RETVAL = not_here("sigaction");
 #else
-# This code is really grody because we're trying to make the signal
+# This code is really grody because we are trying to make the signal
 # interface look beautiful, which is hard.
 
 	{
@@ -2982,7 +3091,11 @@ sigpending(sigset)
     ALIAS:
 	sigsuspend = 1
     CODE:
+#ifdef __amigaos4__
+	RETVAL = not_here("sigpending");
+#else
 	RETVAL = ix ? sigsuspend(sigset) : sigpending(sigset);
+#endif
     OUTPUT:
 	RETVAL
     CLEANUP:
@@ -3019,26 +3132,34 @@ dup2(fd1, fd2)
 	int		fd1
 	int		fd2
     CODE:
+	if (fd1 >= 0 && fd2 >= 0) {
 #ifdef WIN32
-	/* RT #98912 - More Microsoft muppetry - failing to actually implemented
-	   the well known documented POSIX behaviour for a POSIX API.
-	   http://msdn.microsoft.com/en-us/library/8syseb29.aspx   */
-	RETVAL = dup2(fd1, fd2) == -1 ? -1 : fd2;
+            /* RT #98912 - More Microsoft muppetry - failing to
+               actually implemented the well known documented POSIX
+               behaviour for a POSIX API.
+               http://msdn.microsoft.com/en-us/library/8syseb29.aspx  */
+            RETVAL = dup2(fd1, fd2) == -1 ? -1 : fd2;
 #else
-	RETVAL = dup2(fd1, fd2);
+            RETVAL = dup2(fd1, fd2);
 #endif
+        } else {
+            SETERRNO(EBADF,RMS_IFI);
+            RETVAL = -1;
+        }
     OUTPUT:
 	RETVAL
 
 SV *
 lseek(fd, offset, whence)
-	int		fd
+	POSIX::Fd	fd
 	Off_t		offset
 	int		whence
     CODE:
-	Off_t pos = PerlLIO_lseek(fd, offset, whence);
-	RETVAL = sizeof(Off_t) > sizeof(IV)
-		 ? newSVnv((NV)pos) : newSViv((IV)pos);
+	{
+              Off_t pos = PerlLIO_lseek(fd, offset, whence);
+              RETVAL = sizeof(Off_t) > sizeof(IV)
+                ? newSVnv((NV)pos) : newSViv((IV)pos);
+        }
     OUTPUT:
 	RETVAL
 
@@ -3069,7 +3190,7 @@ read(fd, buffer, nbytes)
     PREINIT:
         SV *sv_buffer = SvROK(ST(1)) ? SvRV(ST(1)) : ST(1);
     INPUT:
-        int             fd
+	POSIX::Fd	fd
         size_t          nbytes
         char *          buffer = sv_grow( sv_buffer, nbytes+1 );
     CLEANUP:
@@ -3090,11 +3211,11 @@ setsid()
 
 pid_t
 tcgetpgrp(fd)
-	int		fd
+	POSIX::Fd	fd
 
 SysRet
 tcsetpgrp(fd, pgrp_id)
-	int		fd
+	POSIX::Fd	fd
 	pid_t		pgrp_id
 
 void
@@ -3116,7 +3237,7 @@ uname()
 
 SysRet
 write(fd, buffer, nbytes)
-	int		fd
+	POSIX::Fd	fd
 	char *		buffer
 	size_t		nbytes
 
@@ -3234,20 +3355,29 @@ strtol(str, base = 0)
 	long num;
 	char *unparsed;
     PPCODE:
-	num = strtol(str, &unparsed, base);
-#if IVSIZE <= LONGSIZE
-	if (num < IV_MIN || num > IV_MAX)
-	    PUSHs(sv_2mortal(newSVnv((double)num)));
-	else
+	if (base == 0 || (base >= 2 && base <= 36)) {
+            num = strtol(str, &unparsed, base);
+#if IVSIZE < LONGSIZE
+            if (num < IV_MIN || num > IV_MAX)
+                PUSHs(sv_2mortal(newSVnv((double)num)));
+            else
 #endif
-	    PUSHs(sv_2mortal(newSViv((IV)num)));
-	if (GIMME_V == G_ARRAY) {
-	    EXTEND(SP, 1);
-	    if (unparsed)
-		PUSHs(sv_2mortal(newSViv(strlen(unparsed))));
-	    else
-		PUSHs(&PL_sv_undef);
-	}
+                PUSHs(sv_2mortal(newSViv((IV)num)));
+            if (GIMME_V == G_ARRAY) {
+                EXTEND(SP, 1);
+                if (unparsed)
+                    PUSHs(sv_2mortal(newSViv(strlen(unparsed))));
+                else
+                    PUSHs(&PL_sv_undef);
+            }
+        } else {
+	    SETERRNO(EINVAL, LIB_INVARG);
+            PUSHs(&PL_sv_undef);
+            if (GIMME_V == G_ARRAY) {
+               EXTEND(SP, 1);
+               PUSHs(&PL_sv_undef);
+            }
+        }
 
 void
 strtoul(str, base = 0)
@@ -3259,20 +3389,29 @@ strtoul(str, base = 0)
     PPCODE:
 	PERL_UNUSED_VAR(str);
 	PERL_UNUSED_VAR(base);
-	num = strtoul(str, &unparsed, base);
+	if (base == 0 || (base >= 2 && base <= 36)) {
+            num = strtoul(str, &unparsed, base);
 #if IVSIZE <= LONGSIZE
-	if (num > IV_MAX)
-	    PUSHs(sv_2mortal(newSVnv((double)num)));
-	else
+            if (num > IV_MAX)
+                PUSHs(sv_2mortal(newSVnv((double)num)));
+            else
 #endif
-	    PUSHs(sv_2mortal(newSViv((IV)num)));
-	if (GIMME_V == G_ARRAY) {
-	    EXTEND(SP, 1);
-	    if (unparsed)
-		PUSHs(sv_2mortal(newSViv(strlen(unparsed))));
-	    else
-		PUSHs(&PL_sv_undef);
-	}
+                PUSHs(sv_2mortal(newSViv((IV)num)));
+            if (GIMME_V == G_ARRAY) {
+                EXTEND(SP, 1);
+                if (unparsed)
+                    PUSHs(sv_2mortal(newSViv(strlen(unparsed))));
+                else
+                  PUSHs(&PL_sv_undef);
+            }
+	} else {
+	    SETERRNO(EINVAL, LIB_INVARG);
+            PUSHs(&PL_sv_undef);
+            if (GIMME_V == G_ARRAY) {
+               EXTEND(SP, 1);
+               PUSHs(&PL_sv_undef);
+            }
+        }
 
 void
 strxfrm(src)
@@ -3315,27 +3454,37 @@ mkfifo(filename, mode)
 
 SysRet
 tcdrain(fd)
-	int		fd
+	POSIX::Fd	fd
     ALIAS:
 	close = 1
 	dup = 2
     CODE:
-	RETVAL = ix == 1 ? close(fd)
-	    : (ix < 1 ? tcdrain(fd) : dup(fd));
+	if (fd >= 0) {
+	    RETVAL = ix == 1 ? close(fd)
+	      : (ix < 1 ? tcdrain(fd) : dup(fd));
+	} else {
+	    SETERRNO(EBADF,RMS_IFI);
+	    RETVAL = -1;
+	}
     OUTPUT:
 	RETVAL
 
 
 SysRet
 tcflow(fd, action)
-	int		fd
+	POSIX::Fd	fd
 	int		action
     ALIAS:
 	tcflush = 1
 	tcsendbreak = 2
     CODE:
-	RETVAL = ix == 1 ? tcflush(fd, action)
-	    : (ix < 1 ? tcflow(fd, action) : tcsendbreak(fd, action));
+        if (action >= 0) {
+            RETVAL = ix == 1 ? tcflush(fd, action)
+              : (ix < 1 ? tcflow(fd, action) : tcsendbreak(fd, action));
+        } else {
+            SETERRNO(EINVAL,LIB_INVARG);
+            RETVAL = -1;
+        }
     OUTPUT:
 	RETVAL
 
@@ -3501,7 +3650,7 @@ cuserid(s = 0)
 
 SysRetLong
 fpathconf(fd, name)
-	int		fd
+	POSIX::Fd	fd
 	int		name
 
 SysRetLong
@@ -3536,7 +3685,7 @@ sysconf(name)
 
 char *
 ttyname(fd)
-	int		fd
+	POSIX::Fd	fd
 
 void
 getcwd()

@@ -69,7 +69,10 @@ EOF
 	exit 1
 fi
 
-if test ! -c /dev/null ; then
+if test -f /sys/utilities/MultiView ; then
+	# AmigaOS, test -c for /dev/null is not useful
+	:
+elif test ! -c /dev/null ; then
 	cat <<EOF
 ***
 *** I'm sorry, but /dev/null appears to be a file rather than a device.
@@ -472,6 +475,7 @@ d_fcntl_can_lock=''
 d_fd_macros=''
 d_fd_set=''
 d_fds_bits=''
+d_fdclose=''
 d_fdim=''
 d_fegetround=''
 d_fgetpos=''
@@ -650,6 +654,7 @@ d_mbtowc=''
 d_memchr=''
 d_memcmp=''
 d_memcpy=''
+d_memmem=''
 d_memmove=''
 d_memset=''
 d_mkdir=''
@@ -674,6 +679,9 @@ d_msync=''
 d_munmap=''
 d_nan=''
 d_nearbyint=''
+d_freelocale=''
+d_newlocale=''
+d_uselocale=''
 d_nextafter=''
 d_nexttoward=''
 d_nice=''
@@ -781,6 +789,13 @@ d_shmctl=''
 d_shmdt=''
 d_shmget=''
 d_sigaction=''
+d_siginfo_si_errno=''
+d_siginfo_si_pid=''
+d_siginfo_si_uid=''
+d_siginfo_si_addr=''
+d_siginfo_si_status=''
+d_siginfo_si_band=''
+d_siginfo_si_value=''
 d_signbit=''
 d_sigprocmask=''
 d_sigsetjmp=''
@@ -1062,6 +1077,10 @@ i_vfork=''
 d_inc_version_list=''
 inc_version_list=''
 inc_version_list_init=''
+doubleinfbytes=''
+doublenanbytes=''
+longdblinfbytes=''
+longdblnanbytes=''
 installprefix=''
 installprefixexp=''
 installstyle=''
@@ -1121,6 +1140,9 @@ installman3dir=''
 man3dir=''
 man3direxp=''
 man3ext=''
+doublemantbits=''
+longdblmantbits=''
+nvmantbits=''
 modetype=''
 multiarch=''
 mydomain=''
@@ -1669,7 +1691,6 @@ alldone=''
 error=''
 silent=''
 extractsh=''
-override=''
 knowitall=''
 rm -f optdef.sh posthint.sh
 cat >optdef.sh <<EOS
@@ -1699,7 +1720,7 @@ while test $# -gt 0; do
 	-s) shift; silent=true; realsilent=true;;
 	-E) shift; alldone=exit;;
 	-K) shift; knowitall=true;;
-	-O) shift; override=true;;
+	-O) shift;;
 	-S) shift; silent=true; extractsh=true;;
 	-D)
 		shift
@@ -1808,7 +1829,7 @@ Usage: $me [-dehrsEKOSV] [-f config.sh] [-D symbol] [-D symbol=value]
          -Dprefix=/opt/perl5      choose your destination
   -E : stop at the end of questions, after having produced config.sh.
   -K : do not use unless you know what you are doing.
-  -O : let -D and -U override definitions from loaded configuration file.
+  -O : ignored for backward compatibility
   -S : perform variable substitutions on all .SH files (can mix with -f)
   -U : undefine symbol:
          -U symbol    symbol gets the value 'undef'
@@ -1855,6 +1876,11 @@ esac
 
 : run the defines and the undefines, if any, but leave the file out there...
 touch optdef.sh
+grep '\\' optdef.sh >/dev/null 2>&1
+if test $? = 0; then
+    echo "Configure does not support \\ in -D arguments"
+    exit 1
+fi
 . ./optdef.sh
 : create the posthint manipulation script and leave the file out there...
 touch posthint.sh
@@ -1863,8 +1889,8 @@ touch posthint.sh
 package='perl5'
 first=`echo $package | sed -e 's/^\(.\).*/\1/'`
 last=`echo $package | sed -e 's/^.\(.*\)/\1/'`
-case "`echo AbyZ | tr '[:lower:]' '[:upper:]' 2>/dev/null`" in
-ABYZ) spackage=`echo $first | tr '[:lower:]' '[:upper:]'`$last;;
+case "`echo AbyZ | tr '[:lower:]' '[:upper:]' 2>/dev/null`"-"`echo AbyZ | tr '[:upper:]' '[:lower:]' 2>/dev/null`" in
+ABYZ-abyz) spackage=`echo $first | tr '[:lower:]' '[:upper:]'`$last;;
 *) spackage=`echo $first | tr '[a-z]' '[A-Z]'`$last;;
 esac
 
@@ -2025,7 +2051,7 @@ true)
 	echo "Fetching answers from $config_sh..."
 	cd ..
 	. $config_sh
-	test "$override" && . ./optdef.sh
+	. UU/optdef.sh
 	echo " "
 	. UU/extract
 	rm -rf UU
@@ -3196,8 +3222,8 @@ esac
 
 : see whether [:lower:] and [:upper:] are supported character classes
 echo " "
-case "`echo AbyZ | $tr '[:lower:]' '[:upper:]' 2>/dev/null`" in
-ABYZ)
+case "`echo AbyZ | $tr '[:lower:]' '[:upper:]' 2>/dev/null`"-"`echo AbyZ | $tr '[:upper:]' '[:lower:]' 2>/dev/null`" in
+ABYZ-abyz)
 	echo "Good, your tr supports [:lower:] and [:upper:] to convert case." >&4
 	up='[:upper:]'
 	low='[:lower:]'
@@ -3347,6 +3373,7 @@ EOM
 	$test -f /etc/saf/_sactab && osname=svr4
 	$test -d /usr/include/minix && osname=minix && osvers=`$uname -r`
 	$test -f /system/gnu_library/bin/ar.pm && osname=vos
+	$test -f /sys/utilities/MultiView && osname=amigaos
 	if $test -d /MachTen -o -d /MachTen_Folder; then
 		osname=machten
 		if $test -x /sbin/version; then
@@ -3777,7 +3804,7 @@ cd UU
 	hint=previous
 	;;
 esac
-test "$override" && . ./optdef.sh
+. ./optdef.sh
 
 : Restore computed paths
 for file in $loclist $trylist; do
@@ -4324,15 +4351,15 @@ case "$osname" in
 dos|vms)
 	: XXX Should be a Configure test for double-dots in filenames.
 	version=`echo $revision $patchlevel $subversion | \
-		 $awk '{ printf "%d_%d_%d\n", $1, $2, $3 }'`
+		 $awk '{ printf "%d_%d_%d", $1, $2, $3 }'`
 	api_versionstring=`echo $api_revision $api_version $api_subversion | \
-		 $awk '{ printf "%d_%d_%d\n", $1, $2, $3 }'`
+		 $awk '{ printf "%d_%d_%d", $1, $2, $3 }'`
 	;;
 *)
 	version=`echo $revision $patchlevel $subversion | \
-		 $awk '{ printf "%d.%d.%d\n", $1, $2, $3 }'`
+		 $awk '{ printf "%d.%d.%d", $1, $2, $3 }'`
 	api_versionstring=`echo $api_revision $api_version $api_subversion | \
-		 $awk '{ printf "%d.%d.%d\n", $1, $2, $3 }'`
+		 $awk '{ printf "%d.%d.%d", $1, $2, $3 }'`
 	;;
 esac
 : Special case the 5.005_xx maintenance series, which used 5.005
@@ -5445,15 +5472,19 @@ default|recommended)
 	# is to add the flag to the flags passed to the compiler at link time,
 	# as that way the compiler can do the right implementation dependant
 	# thing. (NWC)
-	case "$gccversion" in
-	?*)	set stack-protector-strong -fstack-protector-strong
-		eval $checkccflag
-		case "$dflt" in
-		*-fstack-protector-strong*) ;; # It got added.
-		*) # Try the plain/older -fstack-protector.
-		   set stack-protector -fstack-protector
-		   eval $checkccflag
-		   ;;
+	case "$osname" in
+	amigaos) ;; # -fstack-protector builds but doesn't work
+	*)	case "$gccversion" in
+		?*)	set stack-protector-strong -fstack-protector-strong
+			eval $checkccflag
+			case "$dflt" in
+			*-fstack-protector-strong*) ;; # It got added.
+			*) # Try the plain/older -fstack-protector.
+			   set stack-protector -fstack-protector
+			   eval $checkccflag
+			   ;;
+			esac
+			;;
 		esac
 		;;
 	esac
@@ -5530,7 +5561,12 @@ esac
 : the following weeds options from ccflags that are of no interest to cpp
 case "$cppflags" in
 '') cppflags="$ccflags" ;;
-*)  cppflags="$cppflags $ccflags" ;;
+*)  set X $ccflags; shift
+    case " $cppflags " in
+    *" $1 "*) ;;  # Try to avoid doubling the cppflags.
+    *) cppflags="$cppflags $ccflags" ;;
+    esac
+    ;;
 esac
 case "$gccversion" in
 1*) cppflags="$cppflags -D__GNUC__"
@@ -5734,6 +5770,11 @@ $cc -o ${mc_file} $optimize $ccflags $ldflags $* ${mc_file}.c $libs;'
 echo " "
 echo "Computing filename position in cpp output for #include directives..." >&4
 case "$osname" in
+amigaos) fieldn=3 ;;  # Workaround for a bug in abc (pdksh).
+esac
+case "$fieldn" in
+'')
+case "$osname" in
 vos) testaccess=-e ;;
 *)   testaccess=-r ;;
 esac
@@ -5758,6 +5799,8 @@ EOF
 chmod +x fieldn
 fieldn=`./fieldn`
 $rm -f foo.c fieldn
+;;
+esac
 case $fieldn in
 '') pos='???';;
 1) pos=first;;
@@ -6936,7 +6979,15 @@ int main() {
     exit(0);
   }
   if (b[0] == 0xBF && b[9] == 0xCD) {
-    /* is there ever big-endian 80-bit, really? */
+    /* Is there ever big-endian 80-bit, really?
+     *
+     * The Motorola 68881 had another "extended precision" format:
+     * sign:1 exp:15 zero:16 integer:1 mantissa:63
+     * for total of 96 bits of bytes.  The zero bits were unused.
+     * See "M68000 FAMILY PROGRAMMER’S REFERENCE MANUAL" for more details.
+     * If it ever becomes relevant, this format should be allocated
+     * a new doublekind code since it's quite different from the Intel x87.
+     */
     printf("4\n");
     exit(0);
   }
@@ -7652,7 +7703,7 @@ echo " "
 case "$ptrsize" in
 '')
 	echo "Checking to see how big your pointers are..." >&4
-	$cat >>try.c <<EOCP
+	$cat >try.c <<EOCP
 #include <stdio.h>
 #$i_stdlib I_STDLIB
 #ifdef I_STDLIB
@@ -8049,7 +8100,7 @@ cat <<EOM
 Perl can be built to support DTrace on platforms that support it.
 DTrace is a diagnosis and performance analysis tool from Sun.
 
-If this doesn't make any sense to you, just accept the default '$dflt'.
+If this doesn't make any sense to you, just accept the default.
 EOM
 
 while $test 1 ; do
@@ -8141,7 +8192,7 @@ int main(void) {
 EOM
 		dtraceobject=$undef
 		if $cc -c -o try.o $optimize $ccflags try.c \
-                    && $dtrace -G -s ../perldtrace.d try.o ; then
+                    && $dtrace -G -s ../perldtrace.d try.o >/dev/null 2>&1; then
 		        dtraceobject=$define
 			echo "Your dtrace builds an object file"
 		fi
@@ -8300,6 +8351,7 @@ runnm=false
 : with g++ one needs -shared to get is-in-libc to work for dlopen
 case "$gccversion" in
 '')	;;
+*Clang*)	;;
 *)	case "$d_cplusplus" in
 	"$define") ccflags="$ccflags -shared" ;;
 	esac
@@ -8449,7 +8501,7 @@ int main() {
     exit(1); /* fail */
 }
 EOM
-	if $cc $ccflags $ldflags try.c >/dev/null 2>&1 && $run ./a.out; then
+	if $cc $ccflags $ldflags -o a.out try.c >/dev/null 2>&1 && $run ./a.out; then
 	    bin_ELF="$define"
 	fi
 	$rm_try
@@ -10734,6 +10786,25 @@ while $test $# -ge 2; do
     shift 2;
 done > try.c;
 echo "int main () { struct $struct foo; char* bar; bar = (char*)foo.$field; }" >> try.c;
+set try;
+if eval $compile; then
+	val="$define";
+else
+	val="$undef";
+fi;
+set $varname;
+eval $setvar;
+$rm_try'
+
+: Define hasfield_t macro for Configure internal use
+hasfield_t='varname=$1; struct=$2; type=$3; field=$4; shift; shift; shift; shift;
+while $test $# -ge 2; do
+	case "$1" in
+	$define) echo "#include <$2>";;
+	esac ;
+    shift 2;
+done > try.c;
+echo "int main () { $struct foo; $type bar = foo.$field; }" >> try.c;
 set try;
 if eval $compile; then
 	val="$define";
@@ -13347,8 +13418,8 @@ echo " "
 echo "Let's see what value errno gets from read() on a $o_nonblock file..." >&4
 case "$eagain" in
 '')
-	case "$d_fork:$d_pipe" in
-	define:define)
+	case "$d_fork:$d_pipe:$d_alarm" in
+	define:define:define)
 	$cat head.c > try.c
 	$cat >>try.c <<EOCP
 #include <errno.h>
@@ -13977,6 +14048,10 @@ EOM
 	fi
 fi
 $rm_try
+
+: see if fdclose exists
+set fdclose d_fdclose
+eval $inlibc
 
 : see if fdim exists
 set fdim d_fdim
@@ -16278,6 +16353,10 @@ eval $inlibc
 set memcpy d_memcpy
 eval $inlibc
 
+: see if memmem exists
+set memmem d_memmem
+eval $inlibc
+
 : see if memmove exists
 set memmove d_memmove
 eval $inlibc
@@ -16544,6 +16623,18 @@ eval $inlibc
 
 : see if nearbyint exists
 set nearbyint d_nearbyint
+eval $inlibc
+
+: see if newlocale exists
+set newlocale d_newlocale
+eval $inlibc
+
+: see if freelocale exists
+set freelocale d_freelocale
+eval $inlibc
+
+: see if uselocale exists
+set uselocale d_uselocale
 eval $inlibc
 
 : see if nextafter exists
@@ -17180,14 +17271,21 @@ EOM
 set readlink d_readlink
 eval $inlibc
 
-: Check if exe is symlink to abs path of executing program
+: Check if there is a /proc symlink to the abs path of
+: the executing program.  We will honor hints of d_procselfexe=$undef
+: or procselfexe being non-empty, otherwise will try to determine both
+: if we have readlink.
+: AmigaOS will attempt to mount proc: aka /proc, if /proc/... is
+: referenced, and AmigaOS does not have a proc filesystem anyway.
 echo " "
-procselfexe=''
 val="$undef"
-case "$d_readlink" in
-    "$define")
-	: NetBSD first as /proc/self is a symlink to /proc/curproc, and it feels
-	: more tidy to avoid an extra level of symlink
+if $test "X$d_procselfexe" = Xundef; then
+	procselfexe=''
+elif $test "X$procselfexe" != X -a "X$procselfexe" != 'X '; then
+	val="$define"
+elif $test "X$d_readlink" = Xdefine; then
+        : NetBSD first as /proc/self is a symlink to /proc/curproc,
+        : and it feels more tidy to avoid an extra level of symlink
 	set NetBSD /proc/curproc/exe Linux /proc/self/exe FreeBSD /proc/curproc/file Solaris /proc/self/path/a.out
 	while test $# -gt 0; do
 	    type=$1; try=$2
@@ -17203,8 +17301,7 @@ case "$d_readlink" in
 		fi
 	    fi
 	done
-	;;
-esac
+fi
 $rm -f reflect
 set d_procselfexe
 eval $setvar
@@ -20380,6 +20477,269 @@ EOCP
 	;;
 esac
 
+: Check what kind of inf/nan your system has
+$echo "Checking the kind of infinities and nans you have..." >&4
+$cat >try.c <<EOP
+#define DOUBLESIZE $doublesize
+#$d_longdbl HAS_LONG_DOUBLE
+#ifdef HAS_LONG_DOUBLE
+#define LONGDBLSIZE $longdblsize
+#define LONGDBLKIND $longdblkind
+#endif
+#$i_math I_MATH
+#ifdef I_MATH
+#include <math.h>
+#endif
+#include <stdio.h>
+/* Note that whether the sign bit is on or off
+ * for NaN depends on the CPU/FPU, and possibly
+ * can be affected by the build toolchain.
+ *
+ * For example for older MIPS and HP-PA 2.0 the quiet NaN is:
+ * 0x7f, 0xf7, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+ * 0x7f, 0xf4, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+ * (respectively) as opposed to the more usual
+ * 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+ */
+static void bytes(unsigned char *p, unsigned int n) {
+  int i;
+  for (i = 0; i < n; i++) {
+    printf("0x%02x%s", p[i], i < n - 1 ? ", " : "\n");
+  }
+}
+int main(int argc, char *argv[]) {
+   /* We cannot use 1.0/0.0 and 0.0/0.0 (with L suffixes for long double)
+    * because some compilers are 'smart' and not only warn but refuse to
+    * compile such 'illegal' values. */
+   double dinf = exp(1e9);
+   double dnan = sqrt(-1.0);
+#ifdef HAS_LONG_DOUBLE
+   long double ldinf = (long double)exp(1e9);
+   long double ldnan = (long double)sqrt(-1.0);
+#endif
+  if (argc == 2) {
+    switch (argv[1][0]) {
+    case '1': bytes(&dinf, sizeof(dinf)); break;
+    case '2': bytes(&dnan, sizeof(dnan)); break;
+#ifdef HAS_LONG_DOUBLE
+# if LONG_DOUBLEKIND == 3 || LONG_DOUBLEKIND == 4
+/* the 80-bit long doubles might have garbage in their excess bytes */
+    memset((char *)&ldinf + 10, '\0', LONG_DOUBLESIZE - 10);
+# endif
+    case '3': bytes(&ldinf, sizeof(ldinf)); break;
+    case '4': bytes(&ldnan, sizeof(ldnan)); break;
+#endif
+    }
+  }
+  return 0;
+}
+EOP
+set try
+if eval $compile; then
+    doubleinfbytes=`$run ./try 1`
+    doublenanbytes=`$run ./try 2`
+    case "$d_longdbl" in
+    $define)
+      longdblinfbytes=`$run ./try 3`
+      longdblnanbytes=`$run ./try 4`
+      ;;
+    esac
+else
+    # Defaults in case the above test program failed.
+    case "$doublekind" in
+    1) # IEEE 754 32-bit LE
+       doubleinfbytes='0x00, 0x00, 0xf0, 0x7f'
+       doublenanbytes='0x00, 0x00, 0xf8, 0x7f'
+       ;;
+    2) # IEEE 754 32-bit BE
+       doubleinfbytes='0x7f, 0xf0, 0x00, 0x00'
+       doublenanbytes='0x7f, 0xf8, 0x00, 0x00'
+       ;;
+    3) # IEEE 754 64-bit LE
+       doubleinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x7f'
+       doublenanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f'
+       ;;
+    4) # IEEE 754 64-bit BE
+       doubleinfbytes='0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       doublenanbytes='0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       ;;
+    5) # IEEE 754 128-bit LE
+       doubleinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x7f'
+       doublenanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f'
+       ;;
+    6) # IEEE 754 128-bit BE
+       doubleinfbytes='0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       doublenanbytes='0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       ;;
+    7) # IEEE 754 64-bit mixed: 32-bit LEs in BE
+       doubleinfbytes='0x00, 0x00, 0xf0, 0x7f, 0x00, 0x00, 0x00, 0x00'
+       doublenanbytes='0x00, 0x00, 0xf8, 0x7f, 0x00, 0x00, 0x00, 0x00'
+       ;;
+    8) # IEEE 754 64-bit mixed: 32-bit BEs in LE
+       doubleinfbytes='0x00, 0x00, 0x00, 0x00, 0x7f, 0xf0, 0x00, 0x00'
+       doublenanbytes='0x00, 0x00, 0x00, 0x00, 0x7f, 0xf8, 0x00, 0x00'
+       ;;
+    *) # No idea.
+       doubleinfbytes=$undef
+       doublenanbytes=$undef
+       ;;
+    esac
+    case "$longdblkind" in
+    1) # IEEE 754 128-bit LE
+       longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x7f'
+       longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xff, 0x7f'
+       ;;
+    2) # IEEE 754 128-bit BE
+       longdblinfbytes='0x7f, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       longdblnanbytes='0x7f, 0xff, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       ;;
+    3) # IEEE 754 80-bit LE, 12 or 16 bytes (x86)
+       case "$longdblsize" in
+       12) # x86 32-bit (96 bits, or 4 x 32, or 12 x 8)
+           longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xff, 0x7f, 0x00, 0x00'
+           longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0x7f, 0x00, 0x00'
+           ;;
+       16) # x86_64
+           longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+           longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+           ;;
+       *)  # No idea.
+           longdblinfbytes=$undef
+           longdblnanbytes=$undef
+       ;;
+       esac
+       ;;
+    4) # IEEE 754 80-bit BE, 12 or 16 bytes
+       case "$longdblsize" in
+       12) # 32-bit system
+           longdblinfbytes='0x7f, 0xff, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+           longdblnanbytes='0x7f, 0xff, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+           ;;
+       16) # 64-bit system
+           longdblinfbytes='0x7f, 0xff, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+           longdblnanbytes='0x7f, 0xff, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+           ;;
+       *)  # No idea.
+           longdblinfbytes=$undef
+           longdblnanbytes=$undef
+       ;;
+       esac
+       ;;
+    5) # 128-bit LE-LE "double double"
+       longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x7f'
+       longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f'
+       ;;
+    6) # 128-bit BE-BE "double double"
+       longdblinfbytes='0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       longdblnanbytes='0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       ;;
+    7) # 128-bit LE-BE "double double"
+       longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       ;;
+    8) # 128-bit BE-LE "double double"
+       longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+       ;;
+    *) # No idea.
+       longdblinfbytes=$undef
+       longdblnanbytes=$undef
+       ;;
+    esac
+fi
+$rm_try
+
+: Check the length of the double mantissa
+$echo "Checking how many mantissa bits your doubles have..." >&4
+$cat >try.c <<EOP
+#$i_float I_FLOAT
+#$i_sunmath I_SUNMATH
+#ifdef I_FLOAT
+# include <float.h>
+#endif
+#ifdef I_SUNMATH
+# include <sunmath.h>
+#endif
+#ifdef DBL_MANT_DIG
+# define BITS (DBL_MANT_DIG - 1) /* the implicit bit does not count */
+#endif
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+#ifdef BITS
+  printf("%d\n", BITS);
+#endif
+  return 0;
+}
+EOP
+set try
+if eval $compile; then
+    doublemantbits=`$run ./try`
+else
+    doublemantbits="$undef"
+fi
+$rm_try
+
+: Check the length of the longdouble mantissa
+$echo "Checking how many mantissa bits your long doubles have..." >&4
+$cat >try.c <<EOP
+#$i_float I_FLOAT
+#$i_sunmath I_SUNMATH
+#ifdef I_FLOAT
+# include <float.h>
+#endif
+#ifdef I_SUNMATH
+# include <sunmath.h>
+#endif
+#$d_longdbl HAS_LONG_DOUBLE
+#if defined(HAS_LONG_DOUBLE) && defined(LDBL_MANT_DIG)
+# if ($longdblkind == 3) || ($longdblkind == 4) /* 80-bit extended precision */
+/* This format has no implicit bit.  Beware, however, that for
+ * this format the bare LDBL_MANT_DIG is misleading for inf/nan:
+ * the top three bits are used for inf (100) / qnan (11x) / snan (101),
+ * and the top bit must have been one since 387, zero is plain invalid.
+ * For normal fp values, the LDBL_MANT_DIG is fine, though. */
+#  define BITS LDBL_MANT_DIG
+# elif ($longdblkind == 5 || $longdblkind == 6 || $longdblkind == 7 || $longdblkind == 8) /* double double */
+/* LDBL_MANT_DIG of 106 (twice 53) would be logical, but for some
+ * reason e.g. Irix thinks 107.  But in any case, we want only
+ * the number of real bits, the implicit bits are of no interest.  */
+#  define BITS 2 * (DBL_MANT_DIG - 1)
+# else
+#  define BITS (LDBL_MANT_DIG - 1) /* the implicit bit does not count */
+# endif
+#endif
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+#ifdef BITS
+  printf("%d\n", BITS);
+#endif
+  return 0;
+}
+EOP
+set try
+if eval $compile; then
+    longdblmantbits=`$run ./try`
+else
+    longdblmantbits="$undef"
+fi
+$rm_try
+
+: Check the length of the NV mantissa
+$echo "Checking how many mantissa bits your NVs have..." >&4
+if test "X$usequadmath" = "X$define"; then
+  nvmantbits=112 # 128-1-15
+else
+  if test "X$nvsize" = "X$doublesize"; then
+    nvmantbits="$doublemantbits"
+  else
+     if test "X$nvsize" = "X$longdblsize"; then
+       nvmantbits="$longdblmantbits"
+     else
+       nvmantbits="$undef"
+     fi
+  fi
+fi
+
 : How can we generate normalized random numbers ?
 echo " "
 echo "Using our internal random number implementation..." >&4
@@ -21770,6 +22130,8 @@ EOM
 esac
 
 : Trace out the files included by signal.h, then look for SIGxxx names.
+case "$sig_num_init" in
+'')
 if [ "X$fieldn" = X ]; then
 	: Just make some guesses.  We check them later.
 	xxx="$sysroot/usr/include/signal.h $sysroot/usr/include/sys/signal.h"
@@ -22033,6 +22395,8 @@ echo $sig_name | $awk \
 }'
 sig_size=`echo $sig_name | awk '{print NF}'`
 $rm -f signal signal.c signal.awk signal.lst signal_cmd
+;;
+esac
 
 : Check size of size
 echo " "
@@ -22403,6 +22767,49 @@ case "$uidsign" in
 			fi
 		fi
 	fi
+	;;
+esac
+
+: see what siginfo fields we have
+case "$d_sigaction" in
+"$define")
+	echo "Checking if your siginfo_t has si_errno field...">&4
+	set d_siginfo_si_errno siginfo_t int si_errno $d_sigaction signal.h
+	eval $hasfield_t;
+
+	echo "Checking if your siginfo_t has si_pid field...">&4
+	set d_siginfo_si_pid siginfo_t $pidtype si_pid $d_sigaction signal.h
+	eval $hasfield_t;
+
+	echo "Checking if your siginfo_t has si_uid field...">&4
+	set d_siginfo_si_uid siginfo_t $uidtype si_uid $d_sigaction signal.h
+	eval $hasfield_t;
+
+	echo "Checking if your siginfo_t has si_addr field...">&4
+	set d_siginfo_si_addr siginfo_t "void *" si_addr $d_sigaction signal.h
+	eval $hasfield_t;
+
+	echo "Checking if your siginfo_t has si_status field...">&4
+	set d_siginfo_si_status siginfo_t int si_status $d_sigaction signal.h
+	eval $hasfield_t;
+
+	echo "Checking if your siginfo_t has si_band field...">&4
+	set d_siginfo_si_band siginfo_t long si_band $d_sigaction signal.h
+	eval $hasfield_t;
+
+	echo "Checking if your siginfo_t has si_value field...">&4
+	set d_siginfo_si_value siginfo_t "union sigval" si_value $d_sigaction signal.h
+	eval $hasfield_t;
+
+	;;
+*)
+	d_siginfo_si_errno="$undef"
+	d_siginfo_si_pid="$undef"
+	d_siginfo_si_uid="$undef"
+	d_siginfo_si_addr="$undef"
+	d_siginfo_si_status="$undef"
+	d_siginfo_si_band="$undef"
+	d_siginfo_si_value="$undef"
 	;;
 esac
 
@@ -22912,7 +23319,7 @@ case "$osname-$gccversion" in
 irix-) ccflags="\$ccflags -woff 1178" ;;
 os2-*) ccflags="\$ccflags -Zlinker /PM:VIO" ;;
 esac
-$cc -o try -Dcpp_stuff=$cpp_stuff $optimize \$ccflags $ldflags try.c $libs && $run ./try | $sed 's/ /\\\\ /g'
+$cc -o try -Dcpp_stuff=$cpp_stuff $optimize \$ccflags $ldflags try.c $libs 2>/dev/null && $run ./try  | $sed 's/ /\\\\ /g'
 EOSH
 chmod +x Cppsym.try
 $eunicefix Cppsym.try
@@ -23240,13 +23647,13 @@ find_extensions='
 	case "$xxx" in
 	    DynaLoader|dynaload) ;;
 	    *)
-	    this_ext=`echo $xxx | $sed -e s/-/\\\//g`;
+	    this_ext=`echo "$xxx" | $sed -e s/-/\\\//g`;
 	    case "$this_ext" in
 		Scalar/List/Utils) this_ext="List/Util"	;;
 		PathTools)         this_ext="Cwd"	;;
 	    esac;
-	    echo " $xs_extensions $nonxs_extensions" > $tdir/$$.tmp;
-	    if $contains " $this_ext " $tdir/$$.tmp; then
+	    echo " $xs_extensions $nonxs_extensions" > "$tdir/$$.tmp";
+	    if $contains " $this_ext " "$tdir/$$.tmp"; then
 		echo >&4;
 		echo "Duplicate directories detected for extension $xxx" >&4;
 		echo "Configure cannot correctly recover from this - shall I abort?" >&4;
@@ -23264,15 +23671,15 @@ find_extensions='
 		esac;
 		echo "Ok.  You will need to correct config.sh before running make." >&4;
 	    fi;
-	    $ls -1 $xxx > $tdir/$$.tmp;
-	    if   $contains "\.xs$" $tdir/$$.tmp > /dev/null 2>&1; then
+	    $ls -1 "$xxx" > "$tdir/$$.tmp";
+	    if   $contains "\.xs$" "$tdir/$$.tmp" > /dev/null 2>&1; then
 		xs_extensions="$xs_extensions $this_ext";
-	    elif $contains "\.c$"  $tdir/$$.tmp > /dev/null 2>&1; then
+	    elif $contains "\.c$"  "$tdir/$$.tmp" > /dev/null 2>&1; then
 		xs_extensions="$xs_extensions $this_ext";
-	    elif $test -d $xxx; then
+	    elif $test -d "$xxx"; then
 		nonxs_extensions="$nonxs_extensions $this_ext";
 	    fi;
-	    $rm -f $tdir/$$.tmp;
+	    $rm -f "$tdir/$$.tmp";
 	    ;;
 	esac;
     done'
@@ -23302,6 +23709,11 @@ known_extensions=`echo $nonxs_extensions $xs_extensions  | tr ' ' $trnl | $sort 
 avail_ext=''
 for xxx in $xs_extensions ; do
 	case "$xxx" in
+	Amiga*)
+		case "$osname" in
+		amigaos) avail_ext="$avail_ext $xxx" ;;
+		esac
+		;;
 	DB_File|db_file)
 		case "$i_db" in
 		$define) avail_ext="$avail_ext $xxx" ;;
@@ -23371,9 +23783,14 @@ for xxx in $xs_extensions ; do
 		esac
 		;;
 	Sys/Syslog|sys/syslog)
-		: XXX syslog requires socket
-		case "$d_socket" in
-		true|$define|y) avail_ext="$avail_ext $xxx" ;;
+		case $osname in
+			amigaos) ;; # not really very useful on AmigaOS
+			*)
+			: XXX syslog requires socket
+			case "$d_socket" in
+			true|$define|y) avail_ext="$avail_ext $xxx" ;;
+			esac
+			;;
 		esac
 		;;
 	Thread|thread)
@@ -23917,6 +24334,7 @@ d_fcntl='$d_fcntl'
 d_fcntl_can_lock='$d_fcntl_can_lock'
 d_fd_macros='$d_fd_macros'
 d_fd_set='$d_fd_set'
+d_fdclose='$d_fdclose'
 d_fdim='$d_fdim'
 d_fds_bits='$d_fds_bits'
 d_fegetround='$d_fegetround'
@@ -23939,6 +24357,7 @@ d_fpclassify='$d_fpclassify'
 d_fpclassl='$d_fpclassl'
 d_fpgetround='$d_fpgetround'
 d_fpos64_t='$d_fpos64_t'
+d_freelocale='$d_freelocale'
 d_frexpl='$d_frexpl'
 d_fs_data_s='$d_fs_data_s'
 d_fseeko='$d_fseeko'
@@ -24079,6 +24498,7 @@ d_mbtowc='$d_mbtowc'
 d_memchr='$d_memchr'
 d_memcmp='$d_memcmp'
 d_memcpy='$d_memcpy'
+d_memmem='$d_memmem'
 d_memmove='$d_memmove'
 d_memset='$d_memset'
 d_mkdir='$d_mkdir'
@@ -24111,6 +24531,7 @@ d_nan='$d_nan'
 d_ndbm='$d_ndbm'
 d_ndbm_h_uses_prototypes='$d_ndbm_h_uses_prototypes'
 d_nearbyint='$d_nearbyint'
+d_newlocale='$d_newlocale'
 d_nextafter='$d_nextafter'
 d_nexttoward='$d_nexttoward'
 d_nice='$d_nice'
@@ -24221,6 +24642,13 @@ d_shmctl='$d_shmctl'
 d_shmdt='$d_shmdt'
 d_shmget='$d_shmget'
 d_sigaction='$d_sigaction'
+d_siginfo_si_errno='$d_siginfo_si_errno'
+d_siginfo_si_pid='$d_siginfo_si_pid'
+d_siginfo_si_uid='$d_siginfo_si_uid'
+d_siginfo_si_addr='$d_siginfo_si_addr'
+d_siginfo_si_status='$d_siginfo_si_status'
+d_siginfo_si_band='$d_siginfo_si_band'
+d_siginfo_si_value='$d_siginfo_si_value'
 d_signbit='$d_signbit'
 d_sigprocmask='$d_sigprocmask'
 d_sigsetjmp='$d_sigsetjmp'
@@ -24303,6 +24731,7 @@ d_uname='$d_uname'
 d_union_semun='$d_union_semun'
 d_unordered='$d_unordered'
 d_unsetenv='$d_unsetenv'
+d_uselocale='$d_uselocale'
 d_usleep='$d_usleep'
 d_usleepproto='$d_usleepproto'
 d_ustat='$d_ustat'
@@ -24334,7 +24763,10 @@ db_version_patch='$db_version_patch'
 direntrytype='$direntrytype'
 dlext='$dlext'
 dlsrc='$dlsrc'
+doubleinfbytes='$doubleinfbytes'
 doublekind='$doublekind'
+doublemantbits='$doublemantbits'
+doublenanbytes='$doublenanbytes'
 doublesize='$doublesize'
 drand01='$drand01'
 drand48_r_proto='$drand48_r_proto'
@@ -24583,7 +25015,10 @@ lns='$lns'
 localtime_r_proto='$localtime_r_proto'
 locincpth='$locincpth'
 loclibpth='$loclibpth'
+longdblinfbytes='$longdblinfbytes'
 longdblkind='$longdblkind'
+longdblmantbits='$longdblmantbits'
+longdblnanbytes='$longdblnanbytes'
 longdblsize='$longdblsize'
 longlongsize='$longlongsize'
 longsize='$longsize'
@@ -24636,6 +25071,7 @@ nv_preserves_uv_bits='$nv_preserves_uv_bits'
 nveformat='$nveformat'
 nvfformat='$nvfformat'
 nvgformat='$nvgformat'
+nvmantbits='$nvmantbits'
 nvsize='$nvsize'
 nvtype='$nvtype'
 o_nonblock='$o_nonblock'

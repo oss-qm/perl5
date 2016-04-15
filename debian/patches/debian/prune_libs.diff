@@ -1,4 +1,4 @@
-From 2b4044474c1e6997865257aa68aaf5a2027bace9 Mon Sep 17 00:00:00 2001
+From f2162fd18279f441e446b4dc8865376fba16d02a Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.
@@ -14,10 +14,10 @@ Patch-Name: debian/prune_libs.diff
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Configure b/Configure
-index 5f5f279..2ca9f99 100755
+index ff864b0..be25580 100755
 --- a/Configure
 +++ b/Configure
-@@ -1455,8 +1455,7 @@ libswanted_uselargefiles=''
+@@ -1477,8 +1477,7 @@ libswanted_uselargefiles=''
  : set usesocks on the Configure command line to enable socks.
  : List of libraries we want.
  : If anyone needs extra -lxxx, put those in a hint file.
@@ -27,7 +27,7 @@ index 5f5f279..2ca9f99 100755
  : We probably want to search /usr/shlib before most other libraries.
  : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
  glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
-@@ -23642,7 +23641,7 @@ sunos*X4*)
+@@ -24059,7 +24058,7 @@ sunos*X4*)
      ;;
  *) case "$usedl" in
      $define|true|[yY]*)

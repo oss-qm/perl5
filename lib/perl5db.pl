@@ -528,7 +528,7 @@ BEGIN {
 # Debugger for Perl 5.00x; perl5db.pl patch level:
 use vars qw($VERSION $header);
 
-$VERSION = '1.49';
+$VERSION = '1.49_03';
 
 $header = "perl5db.pl version $VERSION";
 
@@ -1548,14 +1548,27 @@ We then determine what the console should be on various systems:
         $console = "con";
     }
 
+=item * AmigaOS - use C<CONSOLE:>.
+
+=cut
+
+    elsif ( $^O eq 'amigaos' ) {
+        $console = "CONSOLE:";
+    }
+
 =item * VMS - use C<sys$command>.
 
 =cut
 
-    else {
+    elsif ($^O eq 'VMS') {
+        $console = 'sys$command';
+    }
 
-        # everything else is ...
-        $console = "sys\$command";
+# Keep this last.
+
+    else {
+        _db_warn("Can't figure out your console, using stdin");
+        undef $console;
     }
 
 =pod
@@ -2490,7 +2503,11 @@ EOP
 # 'm' is method.
 # 'v' is the value (i.e: method name or subroutine ref).
 # 's' is subroutine.
-my %cmd_lookup =
+my %cmd_lookup;
+
+BEGIN
+{
+    %cmd_lookup =
 (
     '-' => { t => 'm', v => '_handle_dash_command', },
     '.' => { t => 's', v => \&_DB__handle_dot_command, },
@@ -2523,6 +2540,7 @@ my %cmd_lookup =
     (map { $_ => {t => 'm', v => '_handle_cmd_wrapper_commands' }, }
         qw(a A b B e E h i l L M o O v w W)),
 );
+};
 
 sub DB {
 
@@ -3319,6 +3337,9 @@ B<h q>, B<h R> or B<h o> to get additional info.
 EOP
 
         # Set the DB::eval context appropriately.
+        # At program termination disable any user actions.
+        $DB::action = undef;
+
         $DB::package     = 'main';
         $DB::usercontext = DB::_calc_usercontext($DB::package);
     } ## end elsif ($package eq 'DB::fake')

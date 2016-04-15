@@ -38,6 +38,10 @@
 
 #ifdef USE_ITHREADS
 
+#ifdef __amigaos4__
+#  undef YIELD
+#  define YIELD sleep(0)
+#endif
 #ifdef WIN32
 #  include <windows.h>
    /* Supposed to be in Winbase.h */
@@ -136,7 +140,14 @@ typedef struct {
 
 #define MY_POOL (*my_poolp)
 
-#ifndef WIN32
+#if defined(WIN32) || (defined(__amigaos4__) && defined(__NEWLIB__))
+#  undef THREAD_SIGNAL_BLOCKING
+#else
+#  define THREAD_SIGNAL_BLOCKING
+#endif
+
+#ifdef THREAD_SIGNAL_BLOCKING
+
 /* Block most signals for calling thread, setting the old signal mask to
  * oldmask, if it is not NULL */
 STATIC int
@@ -212,7 +223,7 @@ S_ithread_clear(pTHX_ ithread *thread)
                 ||
            (thread->state & PERL_ITHR_NONVIABLE));
 
-#ifndef WIN32
+#ifdef THREAD_SIGNAL_BLOCKING
     /* We temporarily set the interpreter context to the interpreter being
      * destroyed.  It's in no condition to handle signals while it's being
      * taken apart.
@@ -241,7 +252,7 @@ S_ithread_clear(pTHX_ ithread *thread)
     }
 
     PERL_SET_CONTEXT(aTHX);
-#ifndef WIN32
+#ifdef THREAD_SIGNAL_BLOCKING
     S_set_sigmask(&origmask);
 #endif
 }
@@ -253,6 +264,7 @@ S_ithread_clear(pTHX_ ithread *thread)
  */
 STATIC void
 S_ithread_free(pTHX_ ithread *thread)
+  PERL_TSA_RELEASE(thread->mutex)
 {
 #ifdef WIN32
     HANDLE handle;
@@ -315,6 +327,7 @@ S_ithread_free(pTHX_ ithread *thread)
 
 static void
 S_ithread_count_inc(pTHX_ ithread *thread)
+  PERL_TSA_EXCLUDES(thread->mutex)
 {
     MUTEX_LOCK(&thread->mutex);
     thread->count++;
@@ -463,6 +476,47 @@ S_good_stack_size(pTHX_ IV stack_size)
     return (stack_size);
 }
 
+/* run some code within a JMPENV environment.
+ * Having it in a separate small function helps avoid
+ * 'variable ‘foo’ might be clobbered by ‘longjmp’
+ * warnings.
+ * The three _p vars return values to the caller
+ */
+
+static int
+S_jmpenv_run(pTHX_ int action, ithread *thread,
+             int *len_p, int *exit_app_p, int *exit_code_p)
+{
+    dJMPENV;
+    volatile I32 oldscope = PL_scopestack_ix;
+    int jmp_rc = 0;
+
+    JMPENV_PUSH(jmp_rc);
+    if (jmp_rc == 0) {
+        if (action == 0) {
+            /* Run the specified function */
+            *len_p = (int)call_sv(thread->init_function, thread->gimme|G_EVAL);
+        }
+        else if (action == 1) {
+            /* Warn that thread died */
+            Perl_warn(aTHX_ "Thread %" UVuf " terminated abnormally: %" SVf, thread->tid, ERRSV);
+        }
+        else {
+            /* Warn if there are unjoined threads */
+            S_exit_warning(aTHX);
+        }
+    } else if (jmp_rc == 2) {
+        /* Thread exited */
+        *exit_app_p = 1;
+        *exit_code_p = STATUS_CURRENT;
+        while (PL_scopestack_ix > oldscope) {
+            LEAVE;
+        }
+    }
+    JMPENV_POP;
+    return jmp_rc;
+}
+
 
 /* Starts executing the thread.
  * Passed as the C level function to run in the new thread.
@@ -476,26 +530,42 @@ S_ithread_run(void * arg)
 #endif
 {
     ithread *thread = (ithread *)arg;
-    int jmp_rc = 0;
-    volatile I32 oldscope;
-    volatile int exit_app = 0;   /* Thread terminated using 'exit' */
-    volatile int exit_code = 0;
-    volatile int died = 0;       /* Thread terminated abnormally */
+    int exit_app = 0;   /* Thread terminated using 'exit' */
+    int exit_code = 0;
+    int died = 0;       /* Thread terminated abnormally */
 
-    dJMPENV;
 
     dTHXa(thread->interp);
 
     dMY_POOL;
 
-    /* Blocked until ->create() call finishes */
+    /* The following mutex lock + mutex unlock pair explained.
+     *
+     * parent:
+     * - calls ithread_create (and S_ithread_create), which:
+     *   - creates the new thread
+     *   - does MUTEX_LOCK(&thread->mutex)
+     *   - calls pthread_create(..., S_ithread_run,...)
+     * child:
+     * - starts the S_ithread_run (where we are now), which:
+     *   - tries to MUTEX_LOCK(&thread->mutex)
+     *   - blocks
+     * parent:
+     *   - continues doing more createy stuff
+     *   - does MUTEX_UNLOCK(&thread->mutex)
+     *   - continues
+     * child:
+     *   - finishes MUTEX_LOCK(&thread->mutex)
+     *   - does MUTEX_UNLOCK(&thread->mutex)
+     *   - continues
+     */
     MUTEX_LOCK(&thread->mutex);
     MUTEX_UNLOCK(&thread->mutex);
 
     PERL_SET_CONTEXT(thread->interp);
     S_ithread_set(aTHX_ thread);
 
-#ifndef WIN32
+#ifdef THREAD_SIGNAL_BLOCKING
     /* Thread starts with most signals blocked - restore the signal mask from
      * the ithread struct.
      */
@@ -506,8 +576,9 @@ S_ithread_run(void * arg)
 
     {
         AV *params = thread->params;
-        volatile int len = (int)av_len(params)+1;
+        int len = (int)av_len(params)+1;
         int ii;
+        int jmp_rc;
 
         dSP;
         ENTER;
@@ -520,22 +591,9 @@ S_ithread_run(void * arg)
         }
         PUTBACK;
 
-        oldscope = PL_scopestack_ix;
-        JMPENV_PUSH(jmp_rc);
-        if (jmp_rc == 0) {
-            /* Run the specified function */
-            len = (int)call_sv(thread->init_function, thread->gimme|G_EVAL);
-        } else if (jmp_rc == 2) {
-            /* Thread exited */
-            exit_app = 1;
-            exit_code = STATUS_CURRENT;
-            while (PL_scopestack_ix > oldscope) {
-                LEAVE;
-            }
-        }
-        JMPENV_POP;
+        jmp_rc = S_jmpenv_run(aTHX_ 0, thread, &len, &exit_app, &exit_code);
 
-#ifndef WIN32
+#ifdef THREAD_SIGNAL_BLOCKING
         /* The interpreter is finished, so this thread can stop receiving
          * signals.  This way, our signal handler doesn't get called in the
          * middle of our parent thread calling perl_destruct()...
@@ -568,20 +626,8 @@ S_ithread_run(void * arg)
             }
 
             if (ckWARN_d(WARN_THREADS)) {
-                oldscope = PL_scopestack_ix;
-                JMPENV_PUSH(jmp_rc);
-                if (jmp_rc == 0) {
-                    /* Warn that thread died */
-                    Perl_warn(aTHX_ "Thread %" UVuf " terminated abnormally: %" SVf, thread->tid, ERRSV);
-                } else if (jmp_rc == 2) {
-                    /* Warn handler exited */
-                    exit_app = 1;
-                    exit_code = STATUS_CURRENT;
-                    while (PL_scopestack_ix > oldscope) {
-                        LEAVE;
-                    }
-                }
-                JMPENV_POP;
+                (void)S_jmpenv_run(aTHX_ 1, thread, NULL,
+                                            &exit_app, &exit_code);
             }
         }
 
@@ -613,20 +659,7 @@ S_ithread_run(void * arg)
 
     /* Exit application if required */
     if (exit_app) {
-        oldscope = PL_scopestack_ix;
-        JMPENV_PUSH(jmp_rc);
-        if (jmp_rc == 0) {
-            /* Warn if there are unjoined threads */
-            S_exit_warning(aTHX);
-        } else if (jmp_rc == 2) {
-            /* Warn handler exited */
-            exit_code = STATUS_CURRENT;
-            while (PL_scopestack_ix > oldscope) {
-                LEAVE;
-            }
-        }
-        JMPENV_POP;
-
+        (void)S_jmpenv_run(aTHX_ 2, thread, NULL, &exit_app, &exit_code);
         my_exit(exit_code);
     }
 
@@ -685,17 +718,20 @@ S_SV_to_ithread(pTHX_ SV *sv)
 
 /* threads->create()
  * Called in context of parent thread.
- * Called with MY_POOL.create_destruct_mutex locked.  (Unlocked on error.)
+ * Called with my_pool->create_destruct_mutex locked.
+ * (Unlocked both on error and on success.)
  */
 STATIC ithread *
 S_ithread_create(
         PerlInterpreter *parent_perl,
+        my_pool_t *my_pool,
         SV       *init_function,
         IV        stack_size,
         int       gimme,
         int       exit_opt,
         int       params_start,
         int       num_params)
+  PERL_TSA_RELEASE(my_pool->create_destruct_mutex)
 {
     dTHXa(parent_perl);
     ithread     *thread;
@@ -711,16 +747,17 @@ S_ithread_create(
     int          rc_stack_size = 0;
     int          rc_thread_create = 0;
 #endif
-    dMY_POOL;
 
     /* Allocate thread structure in context of the main thread's interpreter */
     {
-        PERL_SET_CONTEXT(MY_POOL.main_thread.interp);
+        PERL_SET_CONTEXT(my_pool->main_thread.interp);
         thread = (ithread *)PerlMemShared_malloc(sizeof(ithread));
     }
     PERL_SET_CONTEXT(aTHX);
     if (!thread) {
-        MUTEX_UNLOCK(&MY_POOL.create_destruct_mutex);
+        /* This lock was acquired in ithread_create()
+         * prior to calling S_ithread_create(). */
+        MUTEX_UNLOCK(&my_pool->create_destruct_mutex);
         {
           int fd = PerlIO_fileno(Perl_error_log);
           if (fd >= 0) {
@@ -733,11 +770,11 @@ S_ithread_create(
     Zero(thread, 1, ithread);
 
     /* Add to threads list */
-    thread->next = &MY_POOL.main_thread;
-    thread->prev = MY_POOL.main_thread.prev;
-    MY_POOL.main_thread.prev = thread;
+    thread->next = &my_pool->main_thread;
+    thread->prev = my_pool->main_thread.prev;
+    my_pool->main_thread.prev = thread;
     thread->prev->next = thread;
-    MY_POOL.total_threads++;
+    my_pool->total_threads++;
 
     /* 1 ref to be held by the local var 'thread' in S_ithread_run().
      * 1 ref to be held by the threads object that we assume we will
@@ -751,9 +788,9 @@ S_ithread_create(
 
     /* Block new thread until ->create() call finishes */
     MUTEX_INIT(&thread->mutex);
-    MUTEX_LOCK(&thread->mutex);
+    MUTEX_LOCK(&thread->mutex); /* See S_ithread_run() for more detail. */
 
-    thread->tid = MY_POOL.tid_counter++;
+    thread->tid = my_pool->tid_counter++;
     thread->stack_size = S_good_stack_size(aTHX_ stack_size);
     thread->gimme = gimme;
     thread->state = exit_opt;
@@ -768,7 +805,7 @@ S_ithread_create(
     PL_srand_called = FALSE;   /* Set it to false so we can detect if it gets
                                   set during the clone */
 
-#ifndef WIN32
+#ifdef THREAD_SIGNAL_BLOCKING
     /* perl_clone() will leave us the new interpreter's context.  This poses
      * two problems for our signal handler.  First, it sets the new context
      * before the new interpreter struct is fully initialized, so our signal
@@ -930,7 +967,7 @@ S_ithread_create(
 #  endif
         }
 
-#ifndef WIN32
+#ifdef THREAD_SIGNAL_BLOCKING
     /* Now it's safe to accept signals, since we're in our own interpreter's
      * context and we have created the thread.
      */
@@ -961,7 +998,9 @@ S_ithread_create(
     if (rc_stack_size || rc_thread_create) {
 #endif
         /* Must unlock mutex for destruct call */
-        MUTEX_UNLOCK(&MY_POOL.create_destruct_mutex);
+        /* This lock was acquired in ithread_create()
+         * prior to calling S_ithread_create(). */
+        MUTEX_UNLOCK(&my_pool->create_destruct_mutex);
         thread->state |= PERL_ITHR_NONVIABLE;
         S_ithread_free(aTHX_ thread);   /* Releases MUTEX */
 #ifndef WIN32
@@ -976,9 +1015,15 @@ S_ithread_create(
         return (NULL);
     }
 
-    MY_POOL.running_threads++;
+    my_pool->running_threads++;
+    MUTEX_UNLOCK(&my_pool->create_destruct_mutex);
     return (thread);
+CLANG_DIAG_IGNORE(-Wthread-safety);
+/* warning: mutex 'thread->mutex' is not held on every path through here [-Wthread-safety-analysis] */
 }
+#if defined(__clang__) || defined(__clang)
+CLANG_DIAG_RESTORE;
+#endif
 
 #endif /* USE_ITHREADS */
 
@@ -1102,7 +1147,8 @@ ithread_create(...)
 
         /* Create thread */
         MUTEX_LOCK(&MY_POOL.create_destruct_mutex);
-        thread = S_ithread_create(aTHX_ function_to_call,
+        thread = S_ithread_create(aTHX_ &MY_POOL,
+                                        function_to_call,
                                         stack_size,
                                         context,
                                         exit_opt,
@@ -1112,10 +1158,13 @@ ithread_create(...)
             XSRETURN_UNDEF;     /* Mutex already unlocked */
         }
         ST(0) = sv_2mortal(S_ithread_to_SV(aTHX_ Nullsv, thread, classname, FALSE));
-        MUTEX_UNLOCK(&MY_POOL.create_destruct_mutex);
 
-        /* Let thread run */
+        /* Let thread run. */
+        /* See S_ithread_run() for more detail. */
+	CLANG_DIAG_IGNORE(-Wthread-safety);
+	/* warning: releasing mutex 'thread->mutex' that was not held [-Wthread-safety-analysis] */
         MUTEX_UNLOCK(&thread->mutex);
+	CLANG_DIAG_RESTORE;
 
         /* XSRETURN(1); - implied */
 

@@ -1,7 +1,8 @@
 #!perl -w
 
 BEGIN {
-    require 'loc_tools.pl';   # Contains find_utf8_ctype_locale()
+    require 'loc_tools.pl';   # Contains locales_enabled() and
+                              # find_utf8_ctype_locale()
 }
 
 use strict;
@@ -18,7 +19,7 @@ sub truth($) {  # Converts values so is() works
 
 my $locale;
 my $utf8_locale;
-if($Config{d_setlocale}) {
+if(locales_enabled('LC_ALL')) {
     require POSIX;
     $locale = POSIX::setlocale( &POSIX::LC_ALL, "C");
     if (defined $locale && $locale eq 'C') {
@@ -42,7 +43,7 @@ my %properties = (
                    alnum => 'Word',
                    wordchar => 'Word',
                    alphanumeric => 'Alnum',
-                   alpha => 'Alpha',
+                   alpha => 'XPosixAlpha',
                    ascii => 'ASCII',
                    blank => 'Blank',
                    cntrl => 'Control',
@@ -50,14 +51,14 @@ my %properties = (
                    graph => 'Graph',
                    idfirst => '_Perl_IDStart',
                    idcont => '_Perl_IDCont',
-                   lower => 'Lower',
+                   lower => 'XPosixLower',
                    print => 'Print',
                    psxspc => 'XPosixSpace',
                    punct => 'XPosixPunct',
                    quotemeta => '_Perl_Quotemeta',
                    space => 'XPerlSpace',
                    vertws => 'VertSpace',
-                   upper => 'Upper',
+                   upper => 'XPosixUpper',
                    xdigit => 'XDigit',
                 );
 
@@ -69,8 +70,13 @@ foreach my $name (sort keys %properties) {
     my $property = $properties{$name};
     my @invlist = prop_invlist($property, '_perl_core_internal_ok');
     if (! @invlist) {
-        fail("No inversion list found for $property");
-        next;
+
+        # An empty return could mean an unknown property, or merely that it is
+        # empty.  Call in scalar context to differentiate
+        if (! prop_invlist($property, '_perl_core_internal_ok')) {
+            fail("No inversion list found for $property");
+            next;
+        }
     }
 
     # Include all the Latin1 code points, plus 0x100.
@@ -270,7 +276,7 @@ foreach my $name (sort keys %to_properties) {
         fail("No inversion map found for $property");
         next;
     }
-    if ($format ne "al") {
+    if ($format !~ / ^ a l? $ /x) {
         fail("Unexpected inversion map format ('$format') found for $property");
         next;
     }

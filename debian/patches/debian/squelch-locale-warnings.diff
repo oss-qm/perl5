@@ -1,4 +1,4 @@
-From 70c280789bb1f3460347ec282ab3e861ebeb8313 Mon Sep 17 00:00:00 2001
+From 9381fc427015fd3bb43080946c08dd7080fdf0c7 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts
@@ -20,10 +20,10 @@ Patch-Name: debian/squelch-locale-warnings.diff
  2 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/locale.c b/locale.c
-index 7a4a418..fdf911d 100644
+index bf8713a..d43ad16 100644
 --- a/locale.c
 +++ b/locale.c
-@@ -674,7 +674,10 @@ Perl_init_i18nl10n(pTHX_ int printwarn)
+@@ -760,7 +760,10 @@ Perl_init_i18nl10n(pTHX_ int printwarn)
  
      const bool locwarn = (printwarn > 1
                            || (printwarn
@@ -36,10 +36,10 @@ index 7a4a418..fdf911d 100644
                                      /* disallow with "" or "0" */
                                      *bad_lang_use_once
 diff --git a/pod/perllocale.pod b/pod/perllocale.pod
-index 701b422..58cabaf 100644
+index 018f916..59b4efc 100644
 --- a/pod/perllocale.pod
 +++ b/pod/perllocale.pod
-@@ -1217,6 +1217,14 @@ B<NOTE>: C<PERL_BADLANG> only gives you a way to hide the warning message.
+@@ -1209,6 +1209,14 @@ B<NOTE>: C<PERL_BADLANG> only gives you a way to hide the warning message.
  The message tells about some problem in your system's locale support,
  and you should investigate what the problem is.
  

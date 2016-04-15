@@ -45,6 +45,10 @@
 int putenv(char *);
 #endif
 
+#ifdef __amigaos__
+# include "amigaos4/amigaio.h"
+#endif
+
 #ifdef HAS_SELECT
 # ifdef I_SYS_SELECT
 #  include <sys/select.h>
@@ -559,8 +563,34 @@ Perl_instr(const char *big, const char *little)
     return strstr((char*)big, (char*)little);
 }
 
-/* same as instr but allow embedded nulls.  The end pointers point to 1 beyond
- * the final character desired to be checked */
+/*
+=head1 Miscellaneous Functions
+
+=for apidoc Am|char *|ninstr|char * big|char * bigend|char * little|char * little_end
+
+Find the first (leftmost) occurrence of a sequence of bytes within another
+sequence.  This is the Perl version of C<strstr()>, extended to handle
+arbitrary sequences, potentially containing embedded C<NUL> characters (C<NUL>
+is what the initial C<n> in the function name stands for; some systems have an
+equivalent, C<memmem()>, but with a somewhat different API).
+
+Another way of thinking about this function is finding a needle in a haystack.
+C<big> points to the first byte in the haystack.  C<big_end> points to one byte
+beyond the final byte in the haystack.  C<little> points to the first byte in
+the needle.  C<little_end> points to one byte beyond the final byte in the
+needle.  All the parameters must be non-C<NULL>.
+
+The function returns C<NULL> if there is no occurrence of C<little> within
+C<big>.  If C<little> is the empty string, C<big> is returned.
+
+Because this function operates at the byte level, and because of the inherent
+characteristics of UTF-8 (or UTF-EBCDIC), it will work properly if both the
+needle and the haystack are strings with the same UTF-8ness, but not if the
+UTF-8ness differs.
+
+=cut
+
+*/
 
 char *
 Perl_ninstr(const char *big, const char *bigend, const char *little, const char *lend)
@@ -586,7 +616,18 @@ Perl_ninstr(const char *big, const char *bigend, const char *little, const char 
     return NULL;
 }
 
-/* reverse of the above--find last substring */
+/*
+=head1 Miscellaneous Functions
+
+=for apidoc Am|char *|rninstr|char * big|char * bigend|char * little|char * little_end
+
+Like C<L</ninstr>>, but instead finds the final (rightmost) occurrence of a
+sequence of bytes within another sequence, returning C<NULL> if there is no
+such occurrence.
+
+=cut
+
+*/
 
 char *
 Perl_rninstr(const char *big, const char *bigend, const char *little, const char *lend)
@@ -630,7 +671,7 @@ Perl_rninstr(const char *big, const char *bigend, const char *little, const char
 
 =for apidoc fbm_compile
 
-Analyses the string in order to make fast searches on it using fbm_instr()
+Analyses the string in order to make fast searches on it using C<fbm_instr()>
 -- the Boyer-Moore algorithm.
 
 =cut
@@ -723,20 +764,36 @@ Perl_fbm_compile(pTHX_ SV *sv, U32 flags)
 			  s[rarest], (UV)rarest));
 }
 
-/* If SvTAIL(littlestr), it has a fake '\n' at end. */
-/* If SvTAIL is actually due to \Z or \z, this gives false positives
-   if multiline */
 
 /*
 =for apidoc fbm_instr
 
 Returns the location of the SV in the string delimited by C<big> and
-C<bigend>.  It returns C<NULL> if the string can't be found.  The C<sv>
-does not have to be fbm_compiled, but the search will not be as fast
+C<bigend> (C<bigend>) is the char following the last char).
+It returns C<NULL> if the string can't be found.  The C<sv>
+does not have to be C<fbm_compiled>, but the search will not be as fast
 then.
 
 =cut
+
+If SvTAIL(littlestr) is true, a fake "\n" was appended to to the string
+during FBM compilation due to FBMcf_TAIL in flags. It indicates that
+the littlestr must be anchored to the end of bigstr (or to any \n if
+FBMrf_MULTILINE).
+
+E.g. The regex compiler would compile /abc/ to a littlestr of "abc",
+while /abc$/ compiles to "abc\n" with SvTAIL() true.
+
+A littlestr of "abc", !SvTAIL matches as /abc/;
+a littlestr of "ab\n", SvTAIL matches as:
+   without FBMrf_MULTILINE: /ab\n?\z/
+   with    FBMrf_MULTILINE: /ab\n/ || /ab\z/;
+
+(According to Ilya from 1999; I don't know if this is still true, DAPM 2015):
+  "If SvTAIL is actually due to \Z or \z, this gives false positives
+  if multiline".
 */
+
 
 char *
 Perl_fbm_instr(pTHX_ unsigned char *big, unsigned char *bigend, SV *littlestr, U32 flags)
@@ -762,82 +819,103 @@ Perl_fbm_instr(pTHX_ unsigned char *big, unsigned char *bigend, SV *littlestr, U
     switch (littlelen) { /* Special cases for 0, 1 and 2  */
     case 0:
 	return (char*)big;		/* Cannot be SvTAIL! */
+
     case 1:
-	    if (SvTAIL(littlestr) && !multiline) { /* Anchor only! */
-		/* Know that bigend != big.  */
-		if (bigend[-1] == '\n')
-		    return (char *)(bigend - 1);
-		return (char *) bigend;
-	    }
-	    s = big;
-	    while (s < bigend) {
-		if (*s == *little)
-		    return (char *)s;
-		s++;
-	    }
+	    if (SvTAIL(littlestr) && !multiline) /* Anchor only! */
+		/* [-1] is safe because we know that bigend != big.  */
+		return (char *) (bigend - (bigend[-1] == '\n'));
+
+	    s = (unsigned char *)memchr((void*)big, *little, bigend-big);
+            if (s)
+                return (char *)s;
 	    if (SvTAIL(littlestr))
 		return (char *) bigend;
 	    return NULL;
+
     case 2:
 	if (SvTAIL(littlestr) && !multiline) {
-	    if (bigend[-1] == '\n' && bigend[-2] == *little)
+            /* a littlestr with SvTAIL must be of the form "X\n" (where X
+             * is a single char). It is anchored, and can only match
+             * "....X\n"  or  "....X" */
+            if (bigend[-2] == *little && bigend[-1] == '\n')
 		return (char*)bigend - 2;
 	    if (bigend[-1] == *little)
 		return (char*)bigend - 1;
 	    return NULL;
 	}
-	{
-	    /* This should be better than FBM if c1 == c2, and almost
-	       as good otherwise: maybe better since we do less indirection.
-	       And we save a lot of memory by caching no table. */
-	    const unsigned char c1 = little[0];
-	    const unsigned char c2 = little[1];
 
-	    s = big + 1;
-	    bigend--;
-	    if (c1 != c2) {
-		while (s <= bigend) {
-		    if (s[0] == c2) {
-			if (s[-1] == c1)
-			    return (char*)s - 1;
-			s += 2;
-			continue;
-		    }
-		  next_chars:
-		    if (s[0] == c1) {
-			if (s == bigend)
-			    goto check_1char_anchor;
-			if (s[1] == c2)
-			    return (char*)s;
-			else {
-			    s++;
-			    goto next_chars;
-			}
-		    }
-		    else
-			s += 2;
-		}
-		goto check_1char_anchor;
-	    }
-	    /* Now c1 == c2 */
-	    while (s <= bigend) {
-		if (s[0] == c1) {
-		    if (s[-1] == c1)
-			return (char*)s - 1;
-		    if (s == bigend)
-			goto check_1char_anchor;
-		    if (s[1] == c1)
-			return (char*)s;
-		    s += 3;
-		}
-		else
-		    s += 2;
-	    }
-	}
-      check_1char_anchor:		/* One char and anchor! */
-	if (SvTAIL(littlestr) && (*bigend == *little))
-	    return (char *)bigend;	/* bigend is already decremented. */
-	return NULL;
+	{
+            /* memchr() is likely to be very fast, possibly using whatever
+             * hardware support is available, such as checking a whole
+             * cache line in one instruction.
+             * So for a 2 char pattern, calling memchr() is likely to be
+             * faster than running FBM, or rolling our own. The previous
+             * version of this code was roll-your-own which typically
+             * only needed to read every 2nd char, which was good back in
+             * the day, but no longer.
+             */
+	    unsigned char c1 = little[0];
+	    unsigned char c2 = little[1];
+
+            /* *** for all this case, bigend points to the last char,
+             * not the trailing \0: this makes the conditions slightly
+             * simpler */
+            bigend--;
+	    s = big;
+            if (c1 != c2) {
+                while (s < bigend) {
+                    /* do a quick test for c1 before calling memchr();
+                     * this avoids the expensive fn call overhead when
+                     * there are lots of c1's */
+                    if (LIKELY(*s != c1)) {
+                        s++;
+                        s = (unsigned char *)memchr((void*)s, c1, bigend - s);
+                        if (!s)
+                            break;
+                    }
+                    if (s[1] == c2)
+                        return (char*)s;
+
+                    /* failed; try searching for c2 this time; that way
+                     * we don't go pathologically slow when the string
+                     * consists mostly of c1's or vice versa.
+                     */
+                    s += 2;
+                    if (s > bigend)
+                        break;
+                    s = (unsigned char *)memchr((void*)s, c2, bigend - s + 1);
+                    if (!s)
+                        break;
+                    if (s[-1] == c1)
+                        return (char*)s - 1;
+                }
+            }
+            else {
+                /* c1, c2 the same */
+                while (s < bigend) {
+                    if (s[0] == c1) {
+                      got_1char:
+                        if (s[1] == c1)
+                            return (char*)s;
+                        s += 2;
+                    }
+                    else {
+                        s++;
+                        s = (unsigned char *)memchr((void*)s, c1, bigend - s);
+                        if (!s || s >= bigend)
+                            break;
+                        goto got_1char;
+                    }
+                }
+            }
+
+            /* failed to find 2 chars; try anchored match at end without
+             * the \n */
+            if (SvTAIL(littlestr) && bigend[0] == little[0])
+                return (char *)bigend;
+            return NULL;
+        }
+
     default:
 	break; /* Only lengths 0 1 and 2 have special-case code.  */
     }
@@ -857,7 +935,9 @@ Perl_fbm_instr(pTHX_ unsigned char *big, unsigned char *bigend, SV *littlestr, U
 	}
 	return NULL;
     }
+
     if (!SvVALID(littlestr)) {
+        /* not compiled; use Perl_ninstr() instead */
 	char * const b = ninstr((char*)big,(char*)bigend,
 			 (char*)little, (char*)little + littlelen);
 
@@ -891,15 +971,30 @@ Perl_fbm_instr(pTHX_ unsigned char *big, unsigned char *bigend, SV *littlestr, U
 	oldlittle = little;
 	if (s < bigend) {
 	    const unsigned char * const table = (const unsigned char *) mg->mg_ptr;
+            const unsigned char lastc = *little;
 	    I32 tmp;
 
 	  top2:
 	    if ((tmp = table[*s])) {
-		if ((s += tmp) < bigend)
-		    goto top2;
-		goto check_end;
+                /* *s != lastc; earliest position it could match now is
+                 * tmp slots further on */
+		if ((s += tmp) >= bigend)
+                    goto check_end;
+                if (LIKELY(*s != lastc)) {
+                    s++;
+                    s = (unsigned char *)memchr((void*)s, lastc, bigend - s);
+                    if (!s) {
+                        s = bigend;
+                        goto check_end;
+                    }
+                    goto top2;
+                }
 	    }
-	    else {		/* less expensive than calling strncmp() */
+
+
+            /* hand-rolled strncmp(): less expensive than calling the
+             * real function (maybe???) */
+	    {
 		unsigned char * const olds = s;
 
 		tmp = littlelen;
@@ -926,10 +1021,12 @@ Perl_fbm_instr(pTHX_ unsigned char *big, unsigned char *bigend, SV *littlestr, U
     }
 }
 
+
 /*
 =for apidoc foldEQ
 
-Returns true if the leading len bytes of the strings s1 and s2 are the same
+Returns true if the leading C<len> bytes of the strings C<s1> and C<s2> are the
+same
 case-insensitively; false otherwise.  Uppercase and lowercase ASCII range bytes
 match themselves and their opposite case counterparts.  Non-cased and non-ASCII
 range bytes match only themselves.
@@ -982,8 +1079,8 @@ Perl_foldEQ_latin1(const char *s1, const char *s2, I32 len)
 /*
 =for apidoc foldEQ_locale
 
-Returns true if the leading len bytes of the strings s1 and s2 are the same
-case-insensitively in the current locale; false otherwise.
+Returns true if the leading C<len> bytes of the strings C<s1> and C<s2> are the
+same case-insensitively in the current locale; false otherwise.
 
 =cut
 */
@@ -1110,7 +1207,7 @@ Perl_savesharedpv(pTHX_ const char *pv)
 =for apidoc savesharedpvn
 
 A version of C<savepvn()> which allocates the duplicate string in memory
-which is shared between threads.  (With the specific difference that a NULL
+which is shared between threads.  (With the specific difference that a C<NULL>
 pointer is not acceptable)
 
 =cut
@@ -1444,7 +1541,8 @@ Perl_mess_sv(pTHX_ SV *basemsg, bool consume)
 =for apidoc Am|SV *|vmess|const char *pat|va_list *args
 
 C<pat> and C<args> are a sprintf-style format pattern and encapsulated
-argument list.  These are used to generate a string message.  If the
+argument list, respectively.  These are used to generate a string message.  If
+the
 message does not end with a newline, then it will be extended with
 some indication of the current location in the code, as described for
 L</mess_sv>.
@@ -2049,6 +2147,9 @@ void
 Perl_my_setenv(pTHX_ const char *nam, const char *val)
 {
   dVAR;
+#ifdef __amigaos4__
+  amigaos4_obtain_environ(__FUNCTION__);
+#endif
 #ifdef USE_ITHREADS
   /* only parent thread can modify process environment */
   if (PL_curinterp == aTHX)
@@ -2090,7 +2191,11 @@ Perl_my_setenv(pTHX_ const char *nam, const char *val)
                 environ[i] = environ[i+1];
                 i++;
             }
+#ifdef __amigaos4__
+            goto my_setenv_out;
+#else
             return;
+#endif
         }
         if (!environ[i]) {                 /* does not exist yet */
             environ = (char**)safesysrealloc(environ, (i+2) * sizeof(char*));
@@ -2151,6 +2256,10 @@ Perl_my_setenv(pTHX_ const char *nam, const char *val)
     }
 #endif
   }
+#ifdef __amigaos4__
+my_setenv_out:
+  amigaos4_release_environ(__FUNCTION__);
+#endif
 }
 
 #else /* WIN32 || NETWARE */
@@ -2191,16 +2300,19 @@ Perl_unlnk(pTHX_ const char *f)	/* unlink all versions of a file */
 }
 #endif
 
-/* this is a drop-in replacement for bcopy() */
-#if (!defined(HAS_MEMCPY) && !defined(HAS_BCOPY)) || (!defined(HAS_MEMMOVE) && !defined(HAS_SAFE_MEMCPY) && !defined(HAS_SAFE_BCOPY))
-char *
-Perl_my_bcopy(const char *from, char *to, I32 len)
+/* this is a drop-in replacement for bcopy(), except for the return
+ * value, which we need to be able to emulate memcpy()  */
+#if !defined(HAS_MEMCPY) || (!defined(HAS_MEMMOVE) && !defined(HAS_SAFE_MEMCPY))
+void *
+Perl_my_bcopy(const void *vfrom, void *vto, size_t len)
 {
-    char * const retval = to;
+#if defined(HAS_BCOPY) && defined(HAS_SAFE_BCOPY)
+    bcopy(vfrom, vto, len);
+#else
+    const unsigned char *from = (const unsigned char *)vfrom;
+    unsigned char *to = (unsigned char *)vto;
 
     PERL_ARGS_ASSERT_MY_BCOPY;
-
-    assert(len >= 0);
 
     if (from - to >= 0) {
 	while (len--)
@@ -2212,56 +2324,52 @@ Perl_my_bcopy(const char *from, char *to, I32 len)
 	while (len--)
 	    *(--to) = *(--from);
     }
-    return retval;
+#endif
+
+    return vto;
 }
 #endif
 
 /* this is a drop-in replacement for memset() */
 #ifndef HAS_MEMSET
 void *
-Perl_my_memset(char *loc, I32 ch, I32 len)
+Perl_my_memset(void *vloc, int ch, size_t len)
 {
-    char * const retval = loc;
+    unsigned char *loc = (unsigned char *)vloc;
 
     PERL_ARGS_ASSERT_MY_MEMSET;
 
-    assert(len >= 0);
-
     while (len--)
 	*loc++ = ch;
-    return retval;
+    return vloc;
 }
 #endif
 
 /* this is a drop-in replacement for bzero() */
 #if !defined(HAS_BZERO) && !defined(HAS_MEMSET)
-char *
-Perl_my_bzero(char *loc, I32 len)
+void *
+Perl_my_bzero(void *vloc, size_t len)
 {
-    char * const retval = loc;
+    unsigned char *loc = (unsigned char *)vloc;
 
     PERL_ARGS_ASSERT_MY_BZERO;
 
-    assert(len >= 0);
-
     while (len--)
 	*loc++ = 0;
-    return retval;
+    return vloc;
 }
 #endif
 
 /* this is a drop-in replacement for memcmp() */
 #if !defined(HAS_MEMCMP) || !defined(HAS_SANE_MEMCMP)
-I32
-Perl_my_memcmp(const char *s1, const char *s2, I32 len)
+int
+Perl_my_memcmp(const void *vs1, const void *vs2, size_t len)
 {
-    const U8 *a = (const U8 *)s1;
-    const U8 *b = (const U8 *)s2;
-    I32 tmp;
+    const U8 *a = (const U8 *)vs1;
+    const U8 *b = (const U8 *)vs2;
+    int tmp;
 
     PERL_ARGS_ASSERT_MY_MEMCMP;
-
-    assert(len >= 0);
 
     while (len--) {
         if ((tmp = *a++ - *b++))
@@ -2329,7 +2437,7 @@ vsprintf(char *dest, const char *pat, void *args)
 PerlIO *
 Perl_my_popen_list(pTHX_ const char *mode, int n, SV **args)
 {
-#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(OS2) && !defined(VMS) && !defined(NETWARE) && !defined(__LIBCATAMOUNT__)
+#if (!defined(DOSISH) || defined(HAS_FORK)) && !defined(OS2) && !defined(VMS) && !defined(NETWARE) && !defined(__LIBCATAMOUNT__) && !defined(__amigaos4__)
     int p[2];
     I32 This, that;
     Pid_t pid;
@@ -2373,7 +2481,7 @@ Perl_my_popen_list(pTHX_ const char *mode, int n, SV **args)
 	/* Close parent's end of error status pipe (if any) */
 	if (did_pipes) {
 	    PerlLIO_close(pp[0]);
-#if defined(HAS_FCNTL) && defined(F_SETFD)
+#if defined(HAS_FCNTL) && defined(F_SETFD) && defined(FD_CLOEXEC)
 	    /* Close error pipe automatically if exec works */
 	    if (fcntl(pp[1], F_SETFD, FD_CLOEXEC) < 0)
                 return NULL;
@@ -2467,8 +2575,8 @@ Perl_my_popen_list(pTHX_ const char *mode, int n, SV **args)
 #endif
 }
 
-    /* VMS' my_popen() is in VMS.c, same with OS/2. */
-#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(VMS) && !defined(__LIBCATAMOUNT__)
+    /* VMS' my_popen() is in VMS.c, same with OS/2 and AmigaOS 4. */
+#if (!defined(DOSISH) || defined(HAS_FORK)) && !defined(VMS) && !defined(__LIBCATAMOUNT__) && !defined(__amigaos4__)
 PerlIO *
 Perl_my_popen(pTHX_ const char *cmd, const char *mode)
 {
@@ -2642,6 +2750,15 @@ Perl_my_popen(pTHX_ const char *cmd, const char *mode)
 /* this is called in parent before the fork() */
 void
 Perl_atfork_lock(void)
+#if defined(USE_ITHREADS)
+#  ifdef USE_PERLIO
+  PERL_TSA_ACQUIRE(PL_perlio_mutex)
+#  endif
+#  ifdef MYMALLOC
+  PERL_TSA_ACQUIRE(PL_malloc_mutex)
+#  endif
+  PERL_TSA_ACQUIRE(PL_op_mutex)
+#endif
 {
 #if defined(USE_ITHREADS)
     dVAR;
@@ -2659,6 +2776,15 @@ Perl_atfork_lock(void)
 /* this is called in both parent and child after the fork() */
 void
 Perl_atfork_unlock(void)
+#if defined(USE_ITHREADS)
+#  ifdef USE_PERLIO
+  PERL_TSA_RELEASE(PL_perlio_mutex)
+#  endif
+#  ifdef MYMALLOC
+  PERL_TSA_RELEASE(PL_malloc_mutex)
+#  endif
+  PERL_TSA_RELEASE(PL_op_mutex)
+#endif
 {
 #if defined(USE_ITHREADS)
     dVAR;
@@ -2688,6 +2814,8 @@ Perl_my_fork(void)
     pid = fork();
 #endif
     return pid;
+#elif defined(__amigaos4__)
+    return amigaos_fork();
 #else
     /* this "canna happen" since nothing should be calling here if !HAS_FORK */
     Perl_croak_nocontext("fork() not available");
@@ -2887,7 +3015,7 @@ Perl_rsignal_restore(pTHX_ int signo, Sigsave_t *save)
 #endif /* !PERL_MICRO */
 
     /* VMS' my_pclose() is in VMS.c; same with OS/2 */
-#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(VMS) && !defined(__LIBCATAMOUNT__)
+#if (!defined(DOSISH) || defined(HAS_FORK)) && !defined(VMS) && !defined(__LIBCATAMOUNT__) && !defined(__amigaos4__)
 I32
 Perl_my_pclose(pTHX_ PerlIO *ptr)
 {
@@ -3233,6 +3361,7 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 	while (deftypes ||
 	       (!hasdir && my_trnlnm("DCL$PATH",tmpbuf,idx++)) )
 	{
+	    Stat_t statbuf;
 	    if (deftypes) {
 		deftypes = 0;
 		*tmpbuf = '\0';
@@ -3259,13 +3388,16 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 #endif
 	    DEBUG_p(PerlIO_printf(Perl_debug_log,
 				  "Looking for %s\n",cur));
-	    if (PerlLIO_stat(cur,&PL_statbuf) >= 0
-		&& !S_ISDIR(PL_statbuf.st_mode)) {
-		dosearch = 0;
-		scriptname = cur;
+	    {
+		Stat_t statbuf;
+		if (PerlLIO_stat(cur,&statbuf) >= 0
+		    && !S_ISDIR(statbuf.st_mode)) {
+		    dosearch = 0;
+		    scriptname = cur;
 #ifdef SEARCH_EXTS
-		break;
+		    break;
 #endif
+		}
 	    }
 #ifdef SEARCH_EXTS
 	    if (cur == scriptname) {
@@ -3291,6 +3423,7 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 
 	bufend = s + strlen(s);
 	while (s < bufend) {
+	    Stat_t statbuf;
 #  ifdef DOSISH
 	    for (len = 0; *s
 		    && *s != ';'; len++, s++) {
@@ -3327,8 +3460,8 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 	    do {
 #endif
 	    	DEBUG_p(PerlIO_printf(Perl_debug_log, "Looking for %s\n",tmpbuf));
-		retval = PerlLIO_stat(tmpbuf,&PL_statbuf);
-		if (S_ISDIR(PL_statbuf.st_mode)) {
+		retval = PerlLIO_stat(tmpbuf,&statbuf);
+		if (S_ISDIR(statbuf.st_mode)) {
 		    retval = -1;
 		}
 #ifdef SEARCH_EXTS
@@ -3339,10 +3472,10 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 #endif
 	    if (retval < 0)
 		continue;
-	    if (S_ISREG(PL_statbuf.st_mode)
-		&& cando(S_IRUSR,TRUE,&PL_statbuf)
+	    if (S_ISREG(statbuf.st_mode)
+		&& cando(S_IRUSR,TRUE,&statbuf)
 #if !defined(DOSISH)
-		&& cando(S_IXUSR,TRUE,&PL_statbuf)
+		&& cando(S_IXUSR,TRUE,&statbuf)
 #endif
 		)
 	    {
@@ -3353,11 +3486,16 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 		xfailed = savepv(tmpbuf);
 	}
 #ifndef DOSISH
-	if (!xfound && !seen_dot && !xfailed &&
-	    (PerlLIO_stat(scriptname,&PL_statbuf) < 0
-	     || S_ISDIR(PL_statbuf.st_mode)))
+	{
+	    Stat_t statbuf;
+	    if (!xfound && !seen_dot && !xfailed &&
+		(PerlLIO_stat(scriptname,&statbuf) < 0
+		 || S_ISDIR(statbuf.st_mode)))
 #endif
-	    seen_dot = 1;			/* Disable message. */
+		seen_dot = 1;			/* Disable message. */
+#ifndef DOSISH
+	}
+#endif
 	if (!xfound) {
 	    if (flags & 1) {			/* do or die? */
 		/* diag_listed_as: Can't execute %s */
@@ -3947,7 +4085,7 @@ return FALSE
 
 =for apidoc getcwd_sv
 
-Fill the sv with current working directory
+Fill C<sv> with current working directory
 
 =cut
 */
@@ -4378,7 +4516,7 @@ Perl_my_socketpair (int family, int type, int protocol, int fd[2]) {
 Dummy routine which "shares" an SV when there is no sharing module present.
 Or "locks" it.  Or "unlocks" it.  In other
 words, ignores its single SV argument.
-Exists to avoid test for a NULL function pointer and because it could
+Exists to avoid test for a C<NULL> function pointer and because it could
 potentially warn under some level of strict-ness.
 
 =cut
@@ -4397,7 +4535,7 @@ Perl_sv_nosharing(pTHX_ SV *sv)
 
 Dummy routine which reports that object can be destroyed when there is no
 sharing module present.  It ignores its single SV argument, and returns
-'true'.  Exists to avoid test for a NULL function pointer and because it
+'true'.  Exists to avoid test for a C<NULL> function pointer and because it
 could potentially warn under some level of strict-ness.
 
 =cut
@@ -4432,6 +4570,9 @@ Perl_parse_unicode_opts(pTHX_ const char **popt)
                     else
                         Perl_croak(aTHX_ "Unknown Unicode option letter '%c'", *p);
                 }
+            }
+            else {
+                Perl_croak(aTHX_ "Invalid number '%s' for -C option.\n", p);
             }
         }
         else {
@@ -4515,16 +4656,10 @@ Perl_seed(pTHX)
     int fd;
 #endif
     U32 u;
-#ifdef VMS
-    /* when[] = (low 32 bits, high 32 bits) of time since epoch
-     * in 100-ns units, typically incremented ever 10 ms.        */
-    unsigned int when[2];
-#else
-#  ifdef HAS_GETTIMEOFDAY
+#ifdef HAS_GETTIMEOFDAY
     struct timeval when;
-#  else
+#else
     Time_t when;
-#  endif
 #endif
 
 /* This test is an escape hatch, this symbol isn't set by Configure. */
@@ -4534,7 +4669,11 @@ Perl_seed(pTHX)
     * if there isn't enough entropy available.  You can compile with
     * PERL_RANDOM_DEVICE to it if you'd prefer Perl to block until there
     * is enough real entropy to fill the seed. */
-#  define PERL_RANDOM_DEVICE "/dev/urandom"
+#  ifdef __amigaos4__
+#    define PERL_RANDOM_DEVICE "RANDOM:SIZE=4"
+#  else
+#    define PERL_RANDOM_DEVICE "/dev/urandom"
+#  endif
 #endif
     fd = PerlLIO_open(PERL_RANDOM_DEVICE, 0);
     if (fd != -1) {
@@ -4546,17 +4685,12 @@ Perl_seed(pTHX)
     }
 #endif
 
-#ifdef VMS
-    _ckvmssts(sys$gettim(when));
-    u = (U32)SEED_C1 * when[0] + (U32)SEED_C2 * when[1];
-#else
-#  ifdef HAS_GETTIMEOFDAY
+#ifdef HAS_GETTIMEOFDAY
     PerlProc_gettimeofday(&when,NULL);
     u = (U32)SEED_C1 * when.tv_sec + (U32)SEED_C2 * when.tv_usec;
-#  else
+#else
     (void)time(&when);
     u = (U32)SEED_C1 * when;
-#  endif
 #endif
     u += SEED_C3 * (U32)PerlProc_getpid();
     u += SEED_C4 * (U32)PTR2UV(PL_stack_sp);
@@ -4805,7 +4939,7 @@ S_mem_log_common(enum mem_log_type mlt, const UV n,
         (void)time(&when);
 #   endif
 	/* If there are other OS specific ways of hires time than
-	 * gettimeofday() (see ext/Time-HiRes), the easiest way is
+	 * gettimeofday() (see dist/Time-HiRes), the easiest way is
 	 * probably that they would be used to fill in the struct
 	 * timeval. */
 	{
@@ -4963,18 +5097,18 @@ Perl_my_sprintf(char *buffer, const char* pat, ...)
 /*
 =for apidoc quadmath_format_single
 
-quadmath_snprintf() is very strict about its format string and will
-fail, returning -1, if the format is invalid.  It acccepts exactly
+C<quadmath_snprintf()> is very strict about its C<format> string and will
+fail, returning -1, if the format is invalid.  It accepts exactly
 one format spec.
 
-quadmath_format_single() checks that the intended single spec looks
+C<quadmath_format_single()> checks that the intended single spec looks
 sane: begins with C<%>, has only one C<%>, ends with C<[efgaEFGA]>,
 and has C<Q> before it.  This is not a full "printf syntax check",
 just the basics.
 
 Returns the format if it is valid, NULL if not.
 
-quadmath_format_single() can and will actually patch in the missing
+C<quadmath_format_single()> can and will actually patch in the missing
 C<Q>, if necessary.  In this case it will return the modified copy of
 the format, B<which the caller will need to free.>
 
@@ -5012,18 +5146,18 @@ Perl_quadmath_format_single(const char* format)
 /*
 =for apidoc quadmath_format_needed
 
-quadmath_format_needed() returns true if the format string seems to
-contain at least one non-Q-prefixed %[efgaEFGA] format specifier,
+C<quadmath_format_needed()> returns true if the C<format> string seems to
+contain at least one non-Q-prefixed C<%[efgaEFGA]> format specifier,
 or returns false otherwise.
 
 The format specifier detection is not complete printf-syntax detection,
 but it should catch most common cases.
 
 If true is returned, those arguments B<should> in theory be processed
-with quadmath_snprintf(), but in case there is more than one such
+with C<quadmath_snprintf()>, but in case there is more than one such
 format specifier (see L</quadmath_format_single>), and if there is
 anything else beyond that one (even just a single byte), they
-B<cannot> be processed because quadmath_snprintf() is very strict,
+B<cannot> be processed because C<quadmath_snprintf()> is very strict,
 accepting only one format spec, and nothing else.
 In this case, the code should probably fail.
 
@@ -5175,13 +5309,11 @@ Perl_my_vsnprintf(char *buffer, const Size_t len, const char *format, va_list ap
     va_list apc;
 
     PERL_ARGS_ASSERT_MY_VSNPRINTF;
-#ifndef HAS_VSNPRINTF
-    PERL_UNUSED_VAR(len);
-#endif
     Perl_va_copy(ap, apc);
 # ifdef HAS_VSNPRINTF
     retval = vsnprintf(buffer, len, format, apc);
 # else
+    PERL_UNUSED_ARG(len);
     retval = vsprintf(buffer, format, apc);
 # endif
     va_end(apc);
@@ -5189,6 +5321,7 @@ Perl_my_vsnprintf(char *buffer, const Size_t len, const char *format, va_list ap
 # ifdef HAS_VSNPRINTF
     retval = vsnprintf(buffer, len, format, ap);
 # else
+    PERL_UNUSED_ARG(len);
     retval = vsprintf(buffer, format, ap);
 # endif
 #endif /* #ifdef NEED_VA_COPY */
@@ -5469,7 +5602,9 @@ Perl_xs_handshake(const U32 key, void * v_my_perl, const char * file, ...)
 	SAVEPPTR(PL_xsubfilename);/* which was require'd from a XSUB BEGIN */
 	PL_xsubfilename = file;   /* so the old name must be restored for
 				     additional XSUBs to register themselves */
-	(void)gv_fetchfile(file);
+	/* XSUBs can't be perl lang/perl5db.pl debugged
+	if (PERLDB_LINE_OR_SAVESRC)
+	    (void)gv_fetchfile(file); */
     }
 
     if(key & HSf_POPMARK) {
@@ -5784,7 +5919,7 @@ Perl_drand48_init_r(perl_drand48_t *random_state, U32 seed)
     PERL_ARGS_ASSERT_DRAND48_INIT_R;
 
 #ifdef PERL_DRAND48_QUAD
-    *random_state = FREEBSD_DRAND48_SEED_0 + ((U64TYPE)seed << 16);
+    *random_state = FREEBSD_DRAND48_SEED_0 + ((U64)seed << 16);
 #else
     random_state->seed[0] = FREEBSD_DRAND48_SEED_0;
     random_state->seed[1] = (U16) seed;
@@ -6144,10 +6279,10 @@ static void atos_symbolize(atos_context* ctx,
 =for apidoc get_c_backtrace
 
 Collects the backtrace (aka "stacktrace") into a single linear
-malloced buffer, which the caller B<must> Perl_free_c_backtrace().
+malloced buffer, which the caller B<must> C<Perl_free_c_backtrace()>.
 
-Scans the frames back by depth + skip, then drops the skip innermost,
-returning at most depth frames.
+Scans the frames back by S<C<depth + skip>>, then drops the C<skip> innermost,
+returning at most C<depth> frames.
 
 =cut
 */
@@ -6394,8 +6529,8 @@ Deallocates a backtrace received from get_c_bracktrace.
 /*
 =for apidoc get_c_backtrace_dump
 
-Returns a SV a dump of |depth| frames of the call stack, skipping
-the |skip| innermost ones.  depth of 20 is usually enough.
+Returns a SV containing a dump of C<depth> frames of the call stack, skipping
+the C<skip> innermost ones.  C<depth> of 20 is usually enough.
 
 The appended output looks like:
 
@@ -6406,12 +6541,12 @@ The appended output looks like:
 
 The fields are tab-separated.  The first column is the depth (zero
 being the innermost non-skipped frame).  In the hex:offset, the hex is
-where the program counter was in S_parse_body, and the :offset (might
-be missing) tells how much inside the S_parse_body the program counter was.
+where the program counter was in C<S_parse_body>, and the :offset (might
+be missing) tells how much inside the C<S_parse_body> the program counter was.
 
-The util.c:1716 is the source code file and line number.
+The C<util.c:1716> is the source code file and line number.
 
-The /usr/bin/perl is obvious (hopefully).
+The F</usr/bin/perl> is obvious (hopefully).
 
 Unknowns are C<"-">.  Unknowns can happen unfortunately quite easily:
 if the platform doesn't support retrieving the information;
@@ -6477,7 +6612,7 @@ Perl_get_c_backtrace_dump(pTHX_ int depth, int skip)
 /*
 =for apidoc dump_c_backtrace
 
-Dumps the C backtrace to the given fp.
+Dumps the C backtrace to the given C<fp>.
 
 Returns true if a backtrace could be retrieved, false if not.
 
@@ -6501,6 +6636,106 @@ Perl_dump_c_backtrace(pTHX_ PerlIO* fp, int depth, int skip)
 }
 
 #endif /* #ifdef USE_C_BACKTRACE */
+
+#ifdef PERL_TSA_ACTIVE
+
+/* pthread_mutex_t and perl_mutex are typedef equivalent
+ * so casting the pointers is fine. */
+
+int perl_tsa_mutex_lock(perl_mutex* mutex)
+{
+    return pthread_mutex_lock((pthread_mutex_t *) mutex);
+}
+
+int perl_tsa_mutex_unlock(perl_mutex* mutex)
+{
+    return pthread_mutex_unlock((pthread_mutex_t *) mutex);
+}
+
+int perl_tsa_mutex_destroy(perl_mutex* mutex)
+{
+    return pthread_mutex_destroy((pthread_mutex_t *) mutex);
+}
+
+#endif
+
+
+#ifdef USE_DTRACE
+
+/* log a sub call or return */
+
+void
+Perl_dtrace_probe_call(pTHX_ CV *cv, bool is_call)
+{
+    const char *func;
+    const char *file;
+    const char *stash;
+    const COP  *start;
+    line_t      line;
+
+    PERL_ARGS_ASSERT_DTRACE_PROBE_CALL;
+
+    if (CvNAMED(cv)) {
+        HEK *hek = CvNAME_HEK(cv);
+        func = HEK_KEY(hek);
+    }
+    else {
+        GV  *gv = CvGV(cv);
+        func = GvENAME(gv);
+    }
+    start = (const COP *)CvSTART(cv);
+    file  = CopFILE(start);
+    line  = CopLINE(start);
+    stash = CopSTASHPV(start);
+
+    if (is_call) {
+        PERL_SUB_ENTRY(func, file, line, stash);
+    }
+    else {
+        PERL_SUB_RETURN(func, file, line, stash);
+    }
+}
+
+
+/* log a require file loading/loaded  */
+
+void
+Perl_dtrace_probe_load(pTHX_ const char *name, bool is_loading)
+{
+    PERL_ARGS_ASSERT_DTRACE_PROBE_LOAD;
+
+    if (is_loading) {
+	PERL_LOADING_FILE(name);
+    }
+    else {
+	PERL_LOADED_FILE(name);
+    }
+}
+
+
+/* log an op execution */
+
+void
+Perl_dtrace_probe_op(pTHX_ const OP *op)
+{
+    PERL_ARGS_ASSERT_DTRACE_PROBE_OP;
+
+    PERL_OP_ENTRY(OP_NAME(op));
+}
+
+
+/* log a compile/run phase change */
+
+void
+Perl_dtrace_probe_phase(pTHX_ enum perl_phase phase)
+{
+    const char *ph_old = PL_phase_names[PL_phase];
+    const char *ph_new = PL_phase_names[phase];
+
+    PERL_PHASE_CHANGE(ph_new, ph_old);
+}
+
+#endif
 
 /*
  * ex: set ts=8 sts=4 sw=4 et:

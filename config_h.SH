@@ -1952,7 +1952,7 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
 /* LONG_DOUBLESIZE:
  *	This symbol contains the size of a long double, so that the
  *	C preprocessor can make decisions based on it.  It is only
- *	defined if the system supports long doubles.   Note that this
+ *	defined if the system supports long doubles.  Note that this
  *	is sizeof(long double), which may include unused bytes.
  */
 /* HAS_LDEXPL:
@@ -2327,6 +2327,48 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  */
 #$d_sigaction HAS_SIGACTION	/**/
 
+/* HAS_SIGINFO_SI_ERRNO:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_errno member
+ */
+#$d_siginfo_si_errno HAS_SIGINFO_SI_ERRNO	/**/
+
+/* HAS_SIGINFO_SI_PID:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_pid member
+ */
+#$d_siginfo_si_pid HAS_SIGINFO_SI_PID	/**/
+
+/* HAS_SIGINFO_SI_UID:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_uid member
+ */
+#$d_siginfo_si_uid HAS_SIGINFO_SI_UID	/**/
+
+/* HAS_SIGINFO_SI_ADDR:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_addr member
+ */
+#$d_siginfo_si_addr HAS_SIGINFO_SI_ADDR	/**/
+
+/* HAS_SIGINFO_SI_STATUS:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_status member
+ */
+#$d_siginfo_si_status HAS_SIGINFO_SI_STATUS	/**/
+
+/* HAS_SIGINFO_SI_BAND:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_band member
+ */
+#$d_siginfo_si_band HAS_SIGINFO_SI_BAND	/**/
+
+/* HAS_SIGINFO_SI_VALUE:
+ *	This symbol, if defined, indicates that siginfo_t has the
+ *	si_value member
+ */
+#$d_siginfo_si_value HAS_SIGINFO_SI_VALUE	/**/
+
 /* HAS_SIGSETJMP:
  *	This variable indicates to the C program that the sigsetjmp()
  *	routine is available to save the calling process's registers
@@ -2366,36 +2408,6 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  *	This symbol, if defined, indicates that the BSD socketpair() call is
  *	supported.
  */
-/* HAS_MSG_CTRUNC:
- *	This symbol, if defined, indicates that the MSG_CTRUNC is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_DONTROUTE:
- *	This symbol, if defined, indicates that the MSG_DONTROUTE is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_OOB:
- *	This symbol, if defined, indicates that the MSG_OOB is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_PEEK:
- *	This symbol, if defined, indicates that the MSG_PEEK is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_MSG_PROXY:
- *	This symbol, if defined, indicates that the MSG_PROXY is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
-/* HAS_SCM_RIGHTS:
- *	This symbol, if defined, indicates that the SCM_RIGHTS is supported.
- *	Checking just with #ifdef might not be enough because this symbol
- *	has been known to be an enum.
- */
 /* HAS_SOCKADDR_SA_LEN:
  *	This symbol, if defined, indicates that the struct sockaddr
  *	structure has a member called sa_len, indicating the length of
@@ -2428,12 +2440,6 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
 #$d_socket	HAS_SOCKET		/**/
 #$d_sockpair	HAS_SOCKETPAIR	/**/
 #$d_sockaddr_sa_len	HAS_SOCKADDR_SA_LEN	/**/
-#$d_msg_ctrunc	HAS_MSG_CTRUNC	/**/
-#$d_msg_dontroute	HAS_MSG_DONTROUTE	/**/
-#$d_msg_oob	HAS_MSG_OOB	/**/
-#$d_msg_peek	HAS_MSG_PEEK	/**/
-#$d_msg_proxy	HAS_MSG_PROXY	/**/
-#$d_scm_rights	HAS_SCM_RIGHTS	/**/
 #$d_sockaddr_in6	HAS_SOCKADDR_IN6	/**/
 #$d_sin6_scope_id	HAS_SIN6_SCOPE_ID	/**/
 #$d_ip_mreq	HAS_IP_MREQ	/**/
@@ -3597,6 +3603,13 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  */
 #$d_fcntl_can_lock FCNTL_CAN_LOCK		/**/
 
+/* HAS_FDCLOSE:
+ *	This symbol, if defined, indicates that the fdclose routine is
+ *	available to free a FILE structure without closing the underlying
+ *	file descriptor.  This function appeared in FreeBSD 10.2.
+ */
+#$d_fdclose HAS_FDCLOSE		/**/
+
 /* HAS_FDIM:
  *	This symbol, if defined, indicates that the fdim routine is
  *	available to do the positive difference function.
@@ -4086,6 +4099,13 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  */
 #$d_malloc_good_size HAS_MALLOC_GOOD_SIZE	/**/
 
+/* HAS_MEMMEM:
+ *	This symbol, if defined, indicates that the memmem routine is
+ *	available to return a pointer to the start of the first occurance
+ *	of a substring in a memory area (or NULL if not found).
+ */
+#$d_memmem HAS_MEMMEM		/**/
+
 /* HAS_MKDTEMP:
  *	This symbol, if defined, indicates that the mkdtemp routine is
  *	available to exclusively create a uniquely named temporary directory.
@@ -4109,16 +4129,8 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  *	a prototype for the modfl() function.  Otherwise, it is up
  *	to the program to supply one.
  */
-/* HAS_MODFL_POW32_BUG:
- *	This symbol, if defined, indicates that the modfl routine is
- *	broken for long doubles >= pow(2, 32).
- *	For example from 4294967303.150000 one would get 4294967302.000000
- *	and 1.150000.  The bug has been seen in certain versions of glibc,
- *	release 2.2.2 is known to be okay.
- */
 #$d_modfl HAS_MODFL		/**/
 #$d_modflproto HAS_MODFL_PROTO		/**/
-#$d_modfl_pow32_bug HAS_MODFL_POW32_BUG		/**/
 
 /* HAS_MPROTECT:
  *	This symbol, if defined, indicates that the mprotect system call is
@@ -4144,6 +4156,23 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  *	the current rounding mode) to x.
  */
 #$d_nearbyint HAS_NEARBYINT		/**/
+
+/* HAS_NEWLOCALE:
+ *	This symbol, if defined, indicates that the newlocale routine is
+ *	available to return a new locale object or modify an existing
+ *	locale object.
+ */
+/* HAS_FREELOCALE:
+ *	This symbol, if defined, indicates that the freelocale routine is
+ *	available to deallocates the resources associated with a locale object.
+ */
+/* HAS_USELOCALE:
+ *	This symbol, if defined, indicates that the uselocale routine is
+ *	available to set the current locale for the calling thread.
+ */
+#$d_newlocale	HAS_NEWLOCALE	/**/
+#$d_freelocale	HAS_FREELOCALE	/**/
+#$d_uselocale	HAS_USELOCALE	/**/
 
 /* HAS_NEXTAFTER:
  *	This symbol, if defined, indicates that the nextafter routine is
@@ -4801,6 +4830,27 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  */
 #$i_ustat	I_USTAT		/**/
 
+/* DOUBLEINFBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes for the double precision infinity.
+ */
+/* DOUBLENANBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes (0xHH) for the double precision not-a-number.
+ */
+/* LONGDBLINFBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes for the long double precision infinity.
+ */
+/* LONGDBLNANBYTES:
+ *	This symbol, if defined, is a comma-separated list of
+ *	hexadecimal bytes (0xHH) for the long double precision not-a-number.
+ */
+#define DOUBLEINFBYTES  $doubleinfbytes		/**/
+#define DOUBLENANBYTES  $doublenanbytes		/**/
+#define LONGDBLINFBYTES $longdblinfbytes		/**/
+#define LONGDBLNANBYTES $longdblnanbytes		/**/
+
 /* PERL_PRIfldbl:
  *	This symbol, if defined, contains the string used by stdio to
  *	format long doubles (format 'f') for output.
@@ -4843,6 +4893,30 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
 #$d_PRIgldbl PERL_PRIgldbl	$sPRIgldbl	/**/
 #$d_PRIeldbl PERL_PRIeldbl	$sPRIeldbl	/**/
 #$d_SCNfldbl PERL_SCNfldbl	$sSCNfldbl	/**/
+
+/* DOUBLEMANTBITS:
+ *	This symbol, if defined, tells how many mantissa bits
+ *	there are in double precision floating point format.
+ *	Note that this is usually DBL_MANT_DIG minus one, since
+ *	with the standard IEEE 754 formats DBL_MANT_DIG includes
+ *	the implicit bit, which doesn't really exist.
+ */
+/* LONGDBLMANTBITS:
+ *	This symbol, if defined, tells how many mantissa bits
+ *	there are in long double precision floating point format.
+ *	Note that this can be LDBL_MANT_DIG minus one,
+ *	since LDBL_MANT_DIG can include the IEEE 754 implicit bit.
+ *	The common x86-style 80-bit long double does not have
+ *	an implicit bit.
+ */
+/* NVMANTBITS:
+ *	This symbol, if defined, tells how many mantissa bits
+ *	(not including implicit bit) there are in a Perl NV.
+ *	This depends on which floating point type was chosen.
+ */
+#define DOUBLEMANTBITS  $doublemantbits
+#define LONGDBLMANTBITS $longdblmantbits
+#define NVMANTBITS      $nvmantbits
 
 /* NEED_VA_COPY:
  *	This symbol, if defined, indicates that the system stores

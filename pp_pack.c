@@ -237,7 +237,7 @@ S_mul128(pTHX_ SV *sv, U8 m)
 #define PACK_SIZE_UNPREDICTABLE		0x40	/* Not a fixed size element */
 #define PACK_SIZE_MASK			0x3F
 
-#include "packsizetables.c"
+#include "packsizetables.inc"
 
 static void
 S_reverse_copy(const char *src, char *dest, STRLEN len)
@@ -791,20 +791,20 @@ first_symbol(const char *pat, const char *patend) {
 
 =for apidoc unpackstring
 
-The engine implementing the unpack() Perl function.
+The engine implementing the C<unpack()> Perl function.
 
-Using the template pat..patend, this function unpacks the string
-s..strend into a number of mortal SVs, which it pushes onto the perl
-argument (@_) stack (so you will need to issue a C<PUTBACK> before and
+Using the template C<pat..patend>, this function unpacks the string
+C<s..strend> into a number of mortal SVs, which it pushes onto the perl
+argument (C<@_>) stack (so you will need to issue a C<PUTBACK> before and
 C<SPAGAIN> after the call to this function).  It returns the number of
 pushed elements.
 
-The strend and patend pointers should point to the byte following the last
-character of each string.
+The C<strend> and C<patend> pointers should point to the byte following the
+last character of each string.
 
 Although this function returns its values on the perl argument stack, it
 doesn't take any parameters from that stack (and thus in particular
-there's no need to do a PUSHMARK before calling it, unlike L</call_pv> for
+there's no need to do a C<PUSHMARK> before calling it, unlike L</call_pv> for
 example).
 
 =cut */
@@ -1573,7 +1573,8 @@ S_unpack_rec(pTHX_ tempsym_t* symptr, const char *s, const char *strbeg, const c
 		    U8 ch;
 		    ch = SHIFT_BYTE(utf8, s, strend, datumtype);
 		    auv = (auv << 7) | (ch & 0x7f);
-		    /* UTF8_IS_XXXXX not right here - using constant 0x80 */
+                    /* UTF8_IS_XXXXX not right here because this is a BER, not
+                     * UTF-8 format - using constant 0x80 */
 		    if (ch < 0x80) {
 			bytes = 0;
 			mPUSHu(auv);
@@ -1825,7 +1826,7 @@ PP(pp_unpack)
 {
     dSP;
     dPOPPOPssrl;
-    I32 gimme = GIMME_V;
+    U8 gimme = GIMME_V;
     STRLEN llen;
     STRLEN rlen;
     const char *pat = SvPV_const(left,  llen);
@@ -1947,7 +1948,7 @@ S_div128(pTHX_ SV *pnum, bool *done)
 /*
 =for apidoc packlist
 
-The engine implementing pack() Perl function.
+The engine implementing C<pack()> Perl function.
 
 =cut
 */

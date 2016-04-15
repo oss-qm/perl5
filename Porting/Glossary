@@ -928,6 +928,11 @@ d_fpgetround (d_fpgetround.U):
 d_fpos64_t (d_fpos64_t.U):
 	This symbol will be defined if the C compiler supports fpos64_t.
 
+d_freelocale (d_newlocale.U):
+	This variable conditionally defines the HAS_FREELOCALE symbol, which
+	indicates to the C program that the freelocale() routine is available
+	to deallocates the resources associated with a locale object.
+
 d_frexpl (d_frexpl.U):
 	This variable conditionally defines the HAS_FREXPL symbol, which
 	indicates to the C program that the frexpl() routine is available.
@@ -1609,6 +1614,12 @@ d_memcpy (d_memcpy.U):
 	indicates to the C program that the memcpy() routine is available
 	to copy blocks of memory.
 
+d_memmem (d_memmem.U):
+	This variable conditionally defines the HAS_MEMMEM symbol, which
+	indicates to the C program that the memmem() routine is available
+	to return a pointer to the start of the first occurance of a
+	substring in a memory area (or NULL if not found).
+
 d_memmove (d_memmove.U):
 	This variable conditionally defines the HAS_MEMMOVE symbol, which
 	indicates to the C program that the memmove() routine is available
@@ -1660,13 +1671,6 @@ d_modfl (d_modfl.U):
 	This variable conditionally defines the HAS_MODFL symbol, which
 	indicates to the C program that the modfl() routine is available.
 
-d_modfl_pow32_bug (d_modfl.U):
-	This variable conditionally defines the HAS_MODFL_POW32_BUG symbol,
-	which indicates that modfl() is broken for long doubles >= pow(2, 32).
-	For example from 4294967303.150000 one would get 4294967302.000000
-	and 1.150000.  The bug has been seen in certain versions of glibc,
-	release 2.2.2 is known to be okay.
-
 d_modflproto (d_modfl.U):
 	This symbol, if defined, indicates that the system provides
 	a prototype for the modfl() function.  Otherwise, it is up
@@ -1680,31 +1684,6 @@ d_mprotect (d_mprotect.U):
 d_msg (d_msg.U):
 	This variable conditionally defines the HAS_MSG symbol, which
 	indicates that the entire msg*(2) library is present.
-
-d_msg_ctrunc (d_socket.U):
-	This variable conditionally defines the HAS_MSG_CTRUNC symbol,
-	which indicates that the MSG_CTRUNC is available.  #ifdef is
-	not enough because it may be an enum, glibc has been known to do this.
-
-d_msg_dontroute (d_socket.U):
-	This variable conditionally defines the HAS_MSG_DONTROUTE symbol,
-	which indicates that the MSG_DONTROUTE is available.  #ifdef is
-	not enough because it may be an enum, glibc has been known to do this.
-
-d_msg_oob (d_socket.U):
-	This variable conditionally defines the HAS_MSG_OOB symbol,
-	which indicates that the MSG_OOB is available.  #ifdef is
-	not enough because it may be an enum, glibc has been known to do this.
-
-d_msg_peek (d_socket.U):
-	This variable conditionally defines the HAS_MSG_PEEK symbol,
-	which indicates that the MSG_PEEK is available.  #ifdef is
-	not enough because it may be an enum, glibc has been known to do this.
-
-d_msg_proxy (d_socket.U):
-	This variable conditionally defines the HAS_MSG_PROXY symbol,
-	which indicates that the MSG_PROXY is available.  #ifdef is
-	not enough because it may be an enum, glibc has been known to do this.
 
 d_msgctl (d_msgctl.U):
 	This variable conditionally defines the HAS_MSGCTL symbol, which
@@ -1764,6 +1743,11 @@ d_nearbyint (d_nearbyint.U):
 	This variable conditionally defines HAS_NEARBYINT if nearbyint()
 	is available to return the integral value closest to (according to
 	the current rounding mode) to x.
+
+d_newlocale (d_newlocale.U):
+	This variable conditionally defines the HAS_NEWLOCALE symbol, which
+	indicates to the C program that the newlocale() routine is available
+	to return a new locale object or modify an existing locale object.
 
 d_nextafter (d_nextafter.U):
 	This variable conditionally defines HAS_NEXTAFTER if nextafter()
@@ -2098,11 +2082,6 @@ d_sched_yield (d_pthread_y.U):
 	This variable conditionally defines the HAS_SCHED_YIELD
 	symbol if the sched_yield routine is available to yield
 	the execution of the current thread.
-
-d_scm_rights (d_socket.U):
-	This variable conditionally defines the HAS_SCM_RIGHTS symbol,
-	which indicates that the SCM_RIGHTS is available.  #ifdef is
-	not enough because it may be an enum, glibc has been known to do this.
 
 d_SCNfldbl (longdblfio.U):
 	This variable conditionally defines the PERL_PRIfldbl symbol, which
@@ -2702,6 +2681,11 @@ d_unsetenv (d_unsetenv.U):
 	This variable conditionally defines the HAS_UNSETENV symbol, which
 	indicates to the C program that the unsetenv () routine is available.
 
+d_uselocale (d_newlocale.U):
+	This variable conditionally defines the HAS_USELOCALE symbol, which
+	indicates to the C program that the uselocale() routine is available
+	to set the current locale for the calling thread.
+
 d_usleep (d_usleep.U):
 	This variable conditionally defines HAS_USLEEP if usleep() is
 	available to do high granularity sleeps.
@@ -2840,17 +2824,32 @@ dlsrc (dlsrc.U):
 	This variable contains the name of the dynamic loading file that
 	will be used with the package.
 
+doubleinfbytes (infnan.U):
+	This variable contains comma-separated list of hexadecimal bytes
+	for the double precision infinity.
+
 doublekind (longdblfio.U):
 	This variable, if defined, encodes the type of a double:
-	1 = IEEE 754 32-bit big little endian,
-	2 = IEEE 754 32-bit big big endian,
-	3 = IEEE 754 64-bit big little endian,
-	4 = IEEE 754 64-bit big big endian,
-	5 = IEEE 754 128-bit big little endian,
-	6 = IEEE 754 128-bit big big endian,
-	7 = IEEE 754 64-bit big mixed endian le-be,
-	8 = IEEE 754 64-bit big mixed endian be-le,
+	1 = IEEE 754 32-bit little endian,
+	2 = IEEE 754 32-bit big endian,
+	3 = IEEE 754 64-bit little endian,
+	4 = IEEE 754 64-bit big endian,
+	5 = IEEE 754 128-bit little endian,
+	6 = IEEE 754 128-bit big endian,
+	7 = IEEE 754 64-bit mixed endian le-be,
+	8 = IEEE 754 64-bit mixed endian be-le,
 	-1 = unknown format.
+
+doublemantbits (mantbits.U):
+	This symbol, if defined, tells how many mantissa bits
+	there are in double precision floating point format.
+	Note that this is usually DBL_MANT_DIG minus one, since
+	with the standard IEEE 754 formats DBL_MANT_DIG includes
+	the implicit bit which doesn't really exist.
+
+doublenanbytes (infnan.U):
+	This variable contains comma-separated list of hexadecimal bytes
+	for the double precision not-a-number.
 
 doublesize (doublesize.U):
 	This variable contains the value of the DOUBLESIZE symbol, which
@@ -4079,12 +4078,28 @@ loclibpth (libpth.U):
 	libraries.  It is prepended to libpth, and is intended to be easily
 	set from the command line.
 
+longdblinfbytes (infnan.U):
+	This variable contains comma-separated list of hexadecimal bytes
+	for the long double precision infinity.
+
 longdblkind (d_longdbl.U):
 	This variable, if defined, encodes the type of a long double:
-	0 = double, 1 = IEEE 754 128-bit big little endian,
-	2 = IEEE 754 128-bit big big endian, 3 = x86 80-bit little endian,
+	0 = double, 1 = IEEE 754 128-bit little endian,
+	2 = IEEE 754 128-bit big endian, 3 = x86 80-bit little endian,
 	4 = x86 80-bit big endian, 5 = double-double 128-bit little endian,
 	6 = double-double 128-bit big endian, -1 = unknown format.
+
+longdblmantbits (longdblmant.U):
+	This symbol, if defined, tells how many mantissa bits
+	there are in long double precision floating point format.
+	Note that this can be LDBL_MANT_DIG minus one,
+	since LDBL_MANT_DIG can include the IEEE 754 implicit bit.
+	The common x86-style 80-bit long double does not have
+	an implicit bit.
+
+longdblnanbytes (infnan.U):
+	This variable contains comma-separated list of hexadecimal bytes
+	for the long double precision not-a-number.
 
 longdblsize (d_longdbl.U):
 	This variable contains the value of the LONG_DOUBLESIZE symbol, which
@@ -4353,6 +4368,10 @@ nvgformat (perlxvf.U):
 nvGUformat (perlxvf.U):
 	This variable contains the format string used for printing
 	a Perl NV using %G-ish floating point format.
+
+nvmantbits (mantbits.U):
+	This variable tells how many bits the mantissa of a Perl NV has,
+	not including the possible implicit bit.
 
 nvsize (perlxv.U):
 	This variable is the size of a Perl NV in bytes.

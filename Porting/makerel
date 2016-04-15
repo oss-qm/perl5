@@ -141,7 +141,7 @@ my @writables = qw(
     proto.h
     embed.h
     embedvar.h
-    overload.c
+    overload.inc
     overload.h
     mg_vtable.h
     perlapi.h
@@ -155,6 +155,7 @@ my @writables = qw(
     regnodes.h
     warnings.h
     lib/warnings.pm
+    win32/GNUmakefile
     win32/Makefile
     win32/Makefile.ce
     win32/makefile.mk

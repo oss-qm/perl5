@@ -5,7 +5,7 @@
 #	Windows SDK 64-bit compiler and tools
 #
 # This is set up to build a perl.exe that runs off a shared library
-# (perl522.dll).  Also makes individual DLLs for the XS extensions.
+# (perl524.dll).  Also makes individual DLLs for the XS extensions.
 #
 
 ##
@@ -38,7 +38,7 @@ INST_TOP	= $(INST_DRV)\perl
 # versioned installation can be obtained by setting INST_TOP above to a
 # path that includes an arbitrary version string.
 #
-#INST_VER	= \5.22.2
+#INST_VER	= \5.24.0
 
 #
 # Comment this out if you DON'T want your perl installation to have
@@ -96,35 +96,42 @@ USE_LARGE_FILES	= define
 #USE_64_BIT_INT	= define
 
 #
+# Uncomment this if you want to disable looking up values from
+# HKEY_CURRENT_USER\Software\Perl and HKEY_LOCAL_MACHINE\Software\Perl in
+# the Registry.
+#
+#USE_NO_REGISTRY = define
+
+#
 # uncomment exactly one of the following
 #
-# Visual C++ 6.x (aka Visual C++ 98)
+# Visual C++ 6.0 (aka Visual C++ 98)
 CCTYPE		= MSVC60
-# Visual C++ .NET 2002/2003 (aka Visual C++ 7.x) (full version)
+# Visual C++ .NET 2002/2003 (aka Visual C++ 7.0/7.1) (full version)
 #CCTYPE		= MSVC70
-# Visual C++ Toolkit 2003 (aka Visual C++ 7.x) (free command-line tools)
+# Visual C++ Toolkit 2003 (aka Visual C++ 7.1) (free command-line tools)
 #CCTYPE		= MSVC70FREE
 # Windows Server 2003 SP1 Platform SDK (April 2005)
 #CCTYPE		= SDK2003SP1
-# Visual C++ 2005 (aka Visual C++ 8.x) (full version)
+# Visual C++ 2005 (aka Visual C++ 8.0) (full version)
 #CCTYPE		= MSVC80
-# Visual C++ 2005 Express Edition (aka Visual C++ 8.x) (free version)
+# Visual C++ 2005 Express Edition (aka Visual C++ 8.0) (free version)
 #CCTYPE		= MSVC80FREE
-# Visual C++ 2008 (aka Visual C++ 9.x) (full version)
+# Visual C++ 2008 (aka Visual C++ 9.0) (full version)
 #CCTYPE		= MSVC90
-# Visual C++ 2008 Express Edition (aka Visual C++ 9.x) (free version)
+# Visual C++ 2008 Express Edition (aka Visual C++ 9.0) (free version)
 #CCTYPE		= MSVC90FREE
-# Visual C++ 2010 (aka Visual C++ 10.x) (full version)
+# Visual C++ 2010 (aka Visual C++ 10.0) (full version)
 #CCTYPE		= MSVC100
-# Visual C++ 2010 Express Edition (aka Visual C++ 10.x) (free version)
+# Visual C++ 2010 Express Edition (aka Visual C++ 10.0) (free version)
 #CCTYPE		= MSVC100FREE
-# Visual C++ 2012 (aka Visual C++ 11.x) (full version)
+# Visual C++ 2012 (aka Visual C++ 11.0) (full version)
 #CCTYPE		= MSVC110
-# Visual C++ 2012 Express Edition (aka Visual C++ 11.x) (free version)
+# Visual C++ 2012 Express Edition (aka Visual C++ 11.0) (free version)
 #CCTYPE		= MSVC110FREE
-# Visual C++ 2013 (aka Visual C++ 12.x) (full version)
+# Visual C++ 2013 (aka Visual C++ 12.0) (full version)
 #CCTYPE		= MSVC120
-# Visual C++ 2013 Express Edition (aka Visual C++ 12.x) (free version)
+# Visual C++ 2013 Express Edition (aka Visual C++ 12.0) (free version)
 #CCTYPE		= MSVC120FREE
 
 #
@@ -185,7 +192,7 @@ CCTYPE		= MSVC60
 # set this to additionally provide a statically linked perl-static.exe.
 # Note that dynamic loading will not work with this perl, so you must
 # include required modules statically using the STATIC_EXT or ALL_STATIC
-# variables below. A static library perl522s.lib will also be created.
+# variables below. A static library perl524s.lib will also be created.
 # Ordinary perl.exe is not affected by this option.
 #
 #BUILD_STATIC	= define
@@ -294,6 +301,10 @@ USE_LARGE_FILES	= undef
 USE_64_BIT_INT	= undef
 !ENDIF
 
+!IF "$(USE_NO_REGISTRY)" == ""
+USE_NO_REGISTRY	= undef
+!ENDIF
+
 !IF "$(USE_IMP_SYS)$(USE_MULTI)" == "defineundef"
 USE_MULTI	= define
 !ENDIF
@@ -312,6 +323,10 @@ BUILDOPT	= $(BUILDOPT) -DPERL_IMPLICIT_CONTEXT
 
 !IF "$(USE_IMP_SYS)" != "undef"
 BUILDOPT	= $(BUILDOPT) -DPERL_IMPLICIT_SYS
+!ENDIF
+
+!IF "$(USE_NO_REGISTRY)" != "undef"
+BUILDOPT	= $(BUILDOPT) -DWIN32_NO_REGISTRY
 !ENDIF
 
 !IF "$(PROCESSOR_ARCHITECTURE)" == ""
@@ -385,13 +400,22 @@ ARCHNAME	= $(ARCHNAME)-64int
 !ENDIF
 !ENDIF
 
-# All but the free version of VC++ 7.x can load DLLs on demand.  Makes the test
+# All but the free version of VC++ 7.1 can load DLLs on demand.  Makes the test
 # suite run in about 10% less time.
 !IF "$(CCTYPE)" != "MSVC70FREE"
+# If no registry, advapi32 is only used for Perl_pp_getlogin/getlogin/GetUserNameA
+# which is rare to execute
+!IF "$(USE_NO_REGISTRY)" != "undef"
+DELAYLOAD	= -DELAYLOAD:ws2_32.dll -DELAYLOAD:advapi32.dll delayimp.lib
+MINIDELAYLOAD	=
+!ELSE
 DELAYLOAD	= -DELAYLOAD:ws2_32.dll delayimp.lib
+#miniperl never does any registry lookups
+MINIDELAYLOAD	= -DELAYLOAD:advapi32.dll
+!ENDIF
 !ENDIF
 
-# Visual C++ 2005 and 2008 (VC++ 8.x and 9.x) create manifest files for EXEs and
+# Visual C++ 2005 and 2008 (VC++ 8.0 and 9.0) create manifest files for EXEs and
 # DLLs. These either need copying everywhere with the binaries, or else need
 # embedding in them otherwise MSVCR80.dll or MSVCR90.dll won't be found. For
 # simplicity, embed them if they exist (and delete them afterwards so that they
@@ -441,7 +465,6 @@ INCLUDES	= -I$(COREDIR) -I.\include -I. -I..
 #PCHFLAGS	= -Fpc:\temp\vcmoduls.pch -YX
 DEFINES		= -DWIN32 -D_CONSOLE -DNO_STRICT
 LOCDEFS		= -DPERLDLL -DPERL_CORE
-SUBSYS		= console
 CXX_FLAG	= -TP -EHsc
 
 LIBC		= msvcrt.lib
@@ -484,7 +507,7 @@ DEFINES		= $(DEFINES) -DWIN64 -DCONSERVATIVE
 OPTIMIZE	= $(OPTIMIZE) -fp:precise
 !ENDIF
 
-# For now, silence warnings from VC++ 8.x onwards about "unsafe" CRT functions
+# For now, silence warnings from VC++ 8.0 onwards about "unsafe" CRT functions
 # and POSIX CRT function names being deprecated.
 !IF "$(PREMSVC80)" == "undef"
 DEFINES		= $(DEFINES) -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
@@ -548,11 +571,28 @@ EXEOUT_FLAG	= -Fe
 CFLAGS_O	= $(CFLAGS) $(BUILDOPT)
 
 !IF "$(PREMSVC80)" == "undef"
-LINK_FLAGS	= $(LINK_FLAGS) "/manifestdependency:type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"
+PRIV_LINK_FLAGS	= $(PRIV_LINK_FLAGS) "/manifestdependency:type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"
 !ELSE
 RSC_FLAGS	= -DINCLUDE_MANIFEST
 !ENDIF
 
+# For XP support in >= VS 2013 (VC++ 12.0), subsystem is always in Config.pm
+# LINK_FLAGS else subsystem is only needed for EXE building, not XS DLL building
+# Console vs GUI makes no difference for DLLs, so use default for cleaner
+# building cmd lines
+!IF "$(CCTYPE)" == "MSVC120" || "$(CCTYPE)" == "MSVC120FREE" \
+    || "$(CCTYPE)" == "MSVC140" || "$(CCTYPE)" == "MSVC140FREE"
+!  IF "$(WIN64)" == "define"
+LINK_FLAGS	= $(LINK_FLAGS) -subsystem:console,"5.02"
+!  ELSE
+LINK_FLAGS	= $(LINK_FLAGS) -subsystem:console,"5.01"
+!  ENDIF
+
+!ELSE
+PRIV_LINK_FLAGS	= $(PRIV_LINK_FLAGS) -subsystem:console
+!ENDIF
+
+BLINK_FLAGS	= $(PRIV_LINK_FLAGS) $(LINK_FLAGS)
 
 #################### do not edit below this line #######################
 ############# NO USER-SERVICEABLE PARTS BEYOND THIS POINT ##############
@@ -578,8 +618,8 @@ o = .obj
 	$(NOOP)
 
 $(o).dll:
-	$(LINK32) -dll -subsystem:windows -implib:$(*B).lib -def:$(*B).def \
-	    -out:$@ $(LINK_FLAGS) $(LIBFILES) $< $(LIBPERL)
+	$(LINK32) -dll -implib:$(*B).lib -def:$(*B).def \
+	    -out:$@ $(BLINK_FLAGS) $(LIBFILES) $< $(LIBPERL)
 	$(EMBED_DLL_MANI)
 
 .rc.res:
@@ -590,9 +630,9 @@ $(o).dll:
 
 # makedef.pl must be updated if this changes, and this should normally
 # only change when there is an incompatible revision of the public API.
-PERLIMPLIB	= ..\perl522.lib
-PERLSTATICLIB	= ..\perl522s.lib
-PERLDLL		= ..\perl522.dll
+PERLIMPLIB	= ..\perl524.lib
+PERLSTATICLIB	= ..\perl524s.lib
+PERLDLL		= ..\perl524.dll
 
 MINIPERL	= ..\miniperl.exe
 MINIDIR		= .\mini
@@ -685,6 +725,7 @@ MICROCORE_SRC	=		\
 		..\deb.c	\
 		..\doio.c	\
 		..\doop.c	\
+		..\dquote.c	\
 		..\dump.c	\
 		..\globals.c	\
 		..\gv.c		\
@@ -713,6 +754,7 @@ MICROCORE_SRC	=		\
 		..\scope.c	\
 		..\sv.c		\
 		..\taint.c	\
+		..\time64.c	\
 		..\toke.c	\
 		..\universal.c	\
 		..\utf8.c	\
@@ -867,14 +909,11 @@ static: $(PERLEXESTATIC)
 #------------------------------------------------------------
 
 $(GLOBEXE) : perlglob$(o)
-	$(LINK32) $(LINK_FLAGS) $(LIBFILES) -out:$@ -subsystem:$(SUBSYS) \
+	$(LINK32) $(BLINK_FLAGS) $(LIBFILES) -out:$@ \
 	    perlglob$(o) setargv$(o)
 	$(EMBED_EXE_MANI)
 
 perlglob$(o)  : perlglob.c
-
-config.w32 : $(CFGSH_TMPL)
-	copy $(CFGSH_TMPL) config.w32
 
 #
 # Copy the template config.h and set configurables at the end of it
@@ -977,8 +1016,8 @@ config.w32 : $(CFGSH_TMPL)
 # make sure that we recompile perl.c if the git version changes
 ..\perl$(o) : ..\git_version.h
 
-..\config.sh : config.w32 $(MINIPERL) config_sh.PL FindExt.pm
-	$(MINIPERL) -I..\lib config_sh.PL $(CFG_VARS) config.w32 > ..\config.sh
+..\config.sh : $(CFGSH_TMPL) config_sh.PL FindExt.pm $(MINIPERL)
+	$(MINIPERL) -I..\lib config_sh.PL $(CFG_VARS) $(CFGSH_TMPL) > ..\config.sh
 
 # This target is for when changes to the main config.sh happen.
 # Edit config.vc, then make perl in a minimal configuration (i.e. with MULTI,
@@ -1003,8 +1042,8 @@ $(CONFIGPM) : $(MINIPERL) ..\config.sh config_h.PL
 $(MINIPERL) : ..\lib\buildcustomize.pl 
 
 ..\lib\buildcustomize.pl : $(MINIDIR) $(MINI_OBJ) ..\write_buildcustomize.pl
-	$(LINK32) -subsystem:console -out:$(MINIPERL) @<<
-	$(LINK_FLAGS) $(DELAYLOAD) $(LIBFILES) $(MINI_OBJ)
+	$(LINK32) -out:$(MINIPERL) @<<
+	$(BLINK_FLAGS) $(DELAYLOAD) $(MINIDELAYLOAD) $(LIBFILES) $(MINI_OBJ)
 <<
 	$(EMBED_EXE_MANI:..\lib\buildcustomize.pl=..\miniperl.exe)
 	$(MINIPERL) -I..\lib -f ..\write_buildcustomize.pl ..
@@ -1041,7 +1080,7 @@ perldll.def : $(MINIPERL) $(CONFIGPM) ..\embed.fnc ..\makedef.pl create_perllibs
 
 $(PERLDLL): perldll.def $(PERLDLL_OBJ) $(PERLDLL_RES) Extensions_static
 	$(LINK32) -dll -def:perldll.def -base:0x28000000 -out:$@ @Extensions_static @<<
-		$(LINK_FLAGS) $(DELAYLOAD) $(LIBFILES) $(PERLDLL_OBJ) $(PERLDLL_RES)
+		$(BLINK_FLAGS) $(DELAYLOAD) $(LIBFILES) $(PERLDLL_OBJ) $(PERLDLL_RES)
 <<
 	$(EMBED_DLL_MANI)
 	$(XCOPY) $(PERLIMPLIB) $(COREDIR)
@@ -1064,8 +1103,8 @@ $(BITCOUNT_H) : $(GENUUDMAP)
 $(GENUUDMAP_OBJ) : ..\mg_raw.h
 
 $(GENUUDMAP) : $(GENUUDMAP_OBJ)
-	$(LINK32) -subsystem:console -out:$@ @<<
-		$(LINK_FLAGS) $(LIBFILES) $(GENUUDMAP_OBJ)
+	$(LINK32) -out:$@ @<<
+		$(BLINK_FLAGS) $(LIBFILES) $(GENUUDMAP_OBJ)
 <<
 	$(EMBED_EXE_MANI)
 
@@ -1082,14 +1121,14 @@ perlmainst$(o) : perlmainst.c
 	$(CC) $(CFLAGS_O) $(OBJOUT_FLAG)$@ -c perlmainst.c
 
 $(PERLEXE): $(PERLDLL) $(CONFIGPM) $(PERLEXE_OBJ) $(PERLEXE_RES)
-	$(LINK32) -subsystem:console -out:$@ $(LINK_FLAGS) \
+	$(LINK32) -out:$@ $(BLINK_FLAGS) \
 	    $(PERLEXE_OBJ) $(PERLEXE_RES) $(PERLIMPLIB) $(LIBFILES) $(SETARGV_OBJ)
 	$(EMBED_EXE_MANI)
 	copy $(PERLEXE) $(WPERLEXE)
 	$(MINIPERL) -I..\lib bin\exetype.pl $(WPERLEXE) WINDOWS
 
 $(PERLEXESTATIC): $(PERLSTATICLIB) $(CONFIGPM) $(PERLEXEST_OBJ) $(PERLEXE_RES)
-	$(LINK32) -subsystem:console -out:$@ $(LINK_FLAGS) \
+	$(LINK32) -out:$@ $(BLINK_FLAGS) \
 	    $(PERLEXEST_OBJ) $(PERLEXE_RES) $(PERLSTATICLIB) $(LIBFILES) $(SETARGV_OBJ)
 	$(EMBED_EXE_MANI)
 
@@ -1176,7 +1215,7 @@ utils: $(PERLEXE) ..\utils\Makefile
 	copy ..\README.tw       ..\pod\perltw.pod
 	copy ..\README.vos      ..\pod\perlvos.pod
 	copy ..\README.win32    ..\pod\perlwin32.pod
-	copy ..\pod\perldelta.pod ..\pod\perl5222delta.pod
+	copy ..\pod\perldelta.pod ..\pod\perl5240delta.pod
 	cd ..\win32
 	$(PERLEXE) $(PL2BAT) $(UTILS)
 	$(MINIPERL) -I..\lib ..\autodoc.pl ..
@@ -1211,6 +1250,7 @@ distclean: realclean
 	-del /f $(LIBDIR)\buildcustomize.pl
 	-del /f $(DISTDIR)\XSLoader\XSLoader.pm
 	-del /f *.def *.map
+	-if exist $(LIBDIR)\Amiga rmdir /s /q $(LIBDIR)\Amiga
 	-if exist $(LIBDIR)\App rmdir /s /q $(LIBDIR)\App
 	-if exist $(LIBDIR)\Archive rmdir /s /q $(LIBDIR)\Archive
 	-if exist $(LIBDIR)\Attribute rmdir /s /q $(LIBDIR)\Attribute
@@ -1237,6 +1277,7 @@ distclean: realclean
 	-if exist $(LIBDIR)\Hash rmdir /s /q $(LIBDIR)\Hash
 	-if exist $(LIBDIR)\HTTP rmdir /s /q $(LIBDIR)\HTTP
 	-if exist $(LIBDIR)\I18N rmdir /s /q $(LIBDIR)\I18N
+	-if exist $(LIBDIR)\inc rmdir /s /q $(LIBDIR)\inc
 	-if exist $(LIBDIR)\IO rmdir /s /q $(LIBDIR)\IO
 	-if exist $(LIBDIR)\IPC rmdir /s /q $(LIBDIR)\IPC
 	-if exist $(LIBDIR)\JSON rmdir /s /q $(LIBDIR)\JSON
@@ -1272,7 +1313,7 @@ distclean: realclean
 	-if exist $(LIBDIR)\Win32API rmdir /s /q $(LIBDIR)\Win32API
 	-if exist $(LIBDIR)\XS rmdir /s /q $(LIBDIR)\XS
 	-cd $(PODDIR) && del /f *.html *.bat roffitall \
-	    perl5222delta.pod perlaix.pod perlamiga.pod perlandroid.pod \
+	    perl5240delta.pod perlaix.pod perlamiga.pod perlandroid.pod \
 	    perlapi.pod perlbs2000.pod perlce.pod perlcn.pod perlcygwin.pod \
 	    perldos.pod perlfreebsd.pod perlhaiku.pod perlhpux.pod \
 	    perlhurd.pod perlintern.pod perlirix.pod perljp.pod perlko.pod \
@@ -1380,7 +1421,6 @@ _clean :
 	-@$(DEL) perlglob$(o)
 	-@$(DEL) perlmain$(o)
 	-@$(DEL) perlmainst$(o)
-	-@$(DEL) config.w32
 	-@$(DEL) config.h
 	-@$(DEL) ..\git_version.h
 	-@$(DEL) $(GLOBEXE)

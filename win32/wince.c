@@ -13,9 +13,7 @@
 
 #define PERLIO_NOT_STDIO 0
 
-#if !defined(PERLIO_IS_STDIO)
 #define PerlIO FILE
-#endif
 
 #define wince_private
 #include "errno.h"
@@ -52,12 +50,6 @@
 #define EXECF_SPAWN_NOWAIT 3
 
 #if defined(PERL_IMPLICIT_SYS)
-#  undef win32_get_privlib
-#  define win32_get_privlib g_win32_get_privlib
-#  undef win32_get_sitelib
-#  define win32_get_sitelib g_win32_get_sitelib
-#  undef win32_get_vendorlib
-#  define win32_get_vendorlib g_win32_get_vendorlib
 #  undef do_spawn
 #  define do_spawn g_do_spawn
 #  undef getlogin
@@ -238,7 +230,7 @@ get_emd_part(SV **prev_pathp, STRLEN *const len, char *trailing_path, ...)
 }
 
 char *
-win32_get_privlib(const char *pl, STRLEN *const len)
+win32_get_privlib(WIN32_NO_REGISTRY_M_(const char *pl) STRLEN *const len)
 {
     dTHX;
     char *stdlib = "lib";
@@ -2713,6 +2705,7 @@ Perl_win32_term(void)
     OP_REFCNT_TERM;
     PERLIO_TERM;
     MALLOC_TERM;
+    LOCALE_TERM;
 }
 
 void

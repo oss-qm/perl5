@@ -59,6 +59,8 @@ my %feature_bundle = (
 		    evalbytes current_sub fc)],
     "5.21"   =>	[qw(say state switch unicode_strings unicode_eval
 		    evalbytes current_sub fc)],
+    "5.23"   =>	[qw(say state switch unicode_strings unicode_eval
+		    evalbytes current_sub fc postderef_qq)],
 );
 
 # not actually used currently
@@ -274,7 +276,7 @@ for (
 	map { (my $__ = uc) =~ y/.//d; $__ } @{$BundleRanges{$_}};
     my $name = $feature{$_};
     my $NAME = uc $name;
-    if ($last && $first eq 'DEFAULT') { #  ‘>= DEFAULT’ warns
+    if ($last && $first eq 'DEFAULT') { #  '>= DEFAULT' warns
 	print $h <<EOI;
 #define FEATURE_$NAME\_IS_ENABLED \\
     ( \\
@@ -365,7 +367,7 @@ read_only_bottom_close_and_rename($h);
 __END__
 package feature;
 
-our $VERSION = '1.40';
+our $VERSION = '1.42';
 
 FEATURES
 
@@ -573,24 +575,30 @@ This feature is available from Perl 5.18 onwards.
 
 =head2 The 'postderef' and 'postderef_qq' features
 
-B<WARNING>: This feature is still experimental and the implementation may
-change in future versions of Perl.  For this reason, Perl will
-warn when you use the feature, unless you have explicitly disabled the
-warning:
+The 'postderef_qq' feature extends the applicability of L<postfix
+dereference syntax|perlref/Postfix Dereference Syntax> so that postfix array
+and scalar dereference are available in double-quotish interpolations. For
+example, it makes the following two statements equivalent:
+
+  my $s = "[@{ $h->{a} }]";
+  my $s = "[$h->{a}->@*]";
+
+This feature is available from Perl 5.20 onwards. In Perl 5.20 and 5.22, it
+was classed as experimental, and Perl emitted a warning for its
+usage, except when explicitly disabled:
 
   no warnings "experimental::postderef";
 
-The 'postderef' feature allows the use of L<postfix dereference
-syntax|perlref/Postfix Dereference Syntax>.  For example, it will make the
-following two statements equivalent:
+As of Perl 5.24, use of this feature no longer triggers a warning, though
+the C<experimental::postderef> warning category still exists (for
+compatibility with code that disables it).
 
-  my @x = @{ $h->{a} };
-  my @x = $h->{a}->@*;
-
-The 'postderef_qq' feature extends this, for array and scalar dereference, to
-working inside of double-quotish interpolations.
-
-This feature is available from Perl 5.20 onwards.
+The 'postderef' feature was used in Perl 5.20 and Perl 5.22 to enable
+postfix dereference syntax outside double-quotish interpolations. In those
+versions, using it triggered the C<experimental::postderef> warning in the
+same way as the 'postderef_qq' feature did. As of Perl 5.24, this syntax is
+not only no longer experimental, but it is enabled for all Perl code,
+regardless of what feature declarations are in scope.
 
 =head2 The 'signatures' feature
 
@@ -720,7 +728,7 @@ bundle is automatically loaded instead.
 =cut
 
 sub import {
-    my $class = shift;
+    shift;
 
     if (!@_) {
         croak("No features specified");
@@ -730,7 +738,7 @@ sub import {
 }
 
 sub unimport {
-    my $class = shift;
+    shift;
 
     # A bare C<no feature> should reset to the default bundle
     if (!@_) {

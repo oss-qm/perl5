@@ -17,7 +17,7 @@ BEGIN {
 use strict;
 use Config;
 
-plan tests => 801;
+plan tests => 808;
 
 $| = 1;
 
@@ -1974,9 +1974,16 @@ foreach my $ord (78, 163, 256) {
           # return a null pointer, which Perl converts into undef. We assume
           # for now that all such platforms support glibc-style selection of
           # a different hashing algorithm.
+          # glibc supports MD5, but OpenBSD only supports Blowfish.
           my $alg = '';       # Use default algorithm
-          if ( !defined(crypt("ab", "cd")) ) {
-              $alg = '$5$';   # Use SHA-256
+          if ( !defined(crypt("ab", $alg."cd")) ) {
+              $alg = '$5$';   # Try SHA-256
+          }
+          if ( !defined(crypt("ab", $alg."cd")) ) {
+              $alg = '$2b$12$FPWWO2RJ3CK4FINTw0Hi';  # Try Blowfish
+          }
+          if ( !defined(crypt("ab", $alg."cd")) ) {
+              $alg = ''; # Nothing worked.  Back to default
           }
           my $x = crypt($_[0], $alg . $_[1]);
           $x
@@ -2348,6 +2355,42 @@ is eval { eval $::x.1 }, 1, 'reset does not taint undef';
      ), "122669\n",
         'tainted constant as logop condition should not prevent "use"';
 }
+
+# optimised SETi etc need to handle tainting
+
+{
+    my ($i1, $i2, $i3) = (1, 1, 1);
+    my ($n1, $n2, $n3) = (1.1, 1.1, 1.1);
+    my $tn = $TAINT0 + 1.1;
+
+    $i1 = $TAINT0 + 2;
+    is_tainted $i1, "+ SETi";
+    $i2 = $TAINT0 - 2;
+    is_tainted $i2, "- SETi";
+    $i3 = $TAINT0 * 2;
+    is_tainted $i3, "* SETi";
+
+    $n1 = $tn + 2.2;
+    is_tainted $n1, "+ SETn";
+    $n2 = $tn - 2.2;
+    is_tainted $n2, "- SETn";
+    $n3 = $tn * 2.2;
+    is_tainted $n3, "* SETn";
+}
+
+# check that localizing something with get magic (e.g. taint) doesn't
+# upgrade pIOK to IOK
+
+{
+    local our $x = 1.1 + $TAINT0;  # $x should be NOK
+    my $ix = int($x);          #          now NOK, pIOK
+    {
+        local $x = 0;
+    }
+    my $x1 = $x * 1;
+    isnt($x, 1); # it should be 1.1, not 1
+}
+
 
 # This may bomb out with the alarm signal so keep it last
 SKIP: {

@@ -1,4 +1,4 @@
-From b78135069edccfd891d82ff134697f4a8f0c84ed Mon Sep 17 00:00:00 2001
+From 3e179b2eebd46d2796cf604e7a8b7e24b50cb0f5 Mon Sep 17 00:00:00 2001
 From: Steven Chamberlain <steven@pyro.eu.org>
 Date: Thu, 17 Dec 2015 02:15:58 +0000
 Subject: Work around Debian Bug#796798
@@ -16,7 +16,7 @@ Patch-Name: debian/kfreebsd-softupdates.diff
  1 file changed, 1 insertion(+)
 
 diff --git a/t/op/stat.t b/t/op/stat.t
-index ad94b3f..469f8ba 100644
+index 637a902..0a7f971 100644
 --- a/t/op/stat.t
 +++ b/t/op/stat.t
 @@ -96,6 +96,7 @@ sleep 3 if $funky_FAT_timestamps;

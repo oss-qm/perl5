@@ -1,8 +1,5 @@
   op.c		AOK
 
-     Use of my $_ is experimental
-	my $_ ;
-
      Found = in conditional, should be ==
 	1 if $a = 1 ;
 
@@ -61,12 +58,6 @@
        format FRED =
        .
  
-     push on reference is experimental			[ck_fun]
-     pop on reference is experimental
-     shift on reference is experimental
-     unshift on reference is experimental
-     splice on reference is experimental
- 
      Statement unlikely to be reached
      	(Maybe you meant system() when you said exec()?
  	exec "true" ; my $a
@@ -81,10 +72,6 @@
      "my %s" used in sort comparison
 
      $[ used in comparison (did you mean $] ?)
-
-     each on reference is experimental			[ck_each]
-     keys on reference is experimental
-     values on reference is experimental
 
      length() used on @array (did you mean "scalar(@array)"?)
      length() used on %hash (did you mean "scalar(keys %hash)"?)
@@ -115,17 +102,6 @@
     
 __END__
 # op.c
-use warnings 'experimental::lexical_topic' ;
-my $_;
-CORE::state $_;
-no warnings 'experimental::lexical_topic' ;
-my $_;
-CORE::state $_;
-EXPECT
-Use of my $_ is experimental at - line 3.
-Use of state $_ is experimental at - line 4.
-########
-# op.c
 use warnings 'syntax' ;
 1 if $a = 1 ;
 1 if $a
@@ -145,6 +121,17 @@ use constant foo => 1;
 no warnings 'syntax' ;
 1 if $a = foo ;
 EXPECT
+########
+# op.c
+# NAME unless with assignment as condition
+use warnings 'syntax';
+1 unless $a = 1;
+unless ($a = 1) {
+    1;
+}
+EXPECT
+Found = in conditional, should be == at - line 3.
+Found = in conditional, should be == at - line 4.
 ########
 # op.c
 use warnings 'syntax' ;
@@ -240,12 +227,6 @@ use constant phoo => 1..3;
 @h{localtime 0};
 @h{gmtime 0};
 @h{eval ""};
-{
-    no warnings 'experimental::autoderef';
-    @h{each $foo} if 0;
-    @h{keys $foo} if 0;
-    @h{values $foo} if 0;
-}
 
 # arrays
 @h[qw"a b c"] = 1..3;
@@ -283,12 +264,6 @@ use constant phoo => 1..3;
 @h[localtime 0];
 @h[gmtime 0];
 @h[eval ""];
-{
-    no warnings 'experimental::autoderef';
-    @h[each $foo] if 0;
-    @h[keys $foo] if 0;
-    @h[values $foo] if 0;
-}
 EXPECT
 ########
 # op.c
@@ -860,6 +835,7 @@ use warnings 'parenthesis' ;
 my $a, $b = (1,2);
 my @foo,%bar,	$quux; # there's a TAB here
 my $x, $y or print;
+my $p, *q;
 no warnings 'parenthesis' ;
 my $c, $d = (1,2);
 EXPECT
@@ -869,6 +845,7 @@ Parentheses missing around "my" list at - line 4.
 # op.c
 use warnings 'parenthesis' ;
 our $a, $b = (1,2);
+our $p, *q;
 no warnings 'parenthesis' ;
 our $c, $d = (1,2);
 EXPECT
@@ -878,11 +855,13 @@ Parentheses missing around "our" list at - line 3.
 use warnings 'parenthesis' ;
 local $a, $b = (1,2);
 local *f, *g;
+local $p, *q;
 no warnings 'parenthesis' ;
 local $c, $d = (1,2);
 EXPECT
 Parentheses missing around "local" list at - line 3.
 Parentheses missing around "local" list at - line 4.
+Parentheses missing around "local" list at - line 5.
 ########
 # op.c
 use warnings 'bareword' ;
@@ -1052,26 +1031,6 @@ format FRED =
 .
 EXPECT
 Format FRED redefined at - line 5.
-########
-# op.c [Perl_ck_fun]
-$fred = [];
-push $fred;
-pop $fred;
-shift $fred;
-unshift $fred;
-splice $fred;
-no warnings 'experimental::autoderef' ;
-push $fred;
-pop $fred;
-shift $fred;
-unshift $fred;
-splice $fred;
-EXPECT
-push on reference is experimental at - line 3.
-pop on reference is experimental at - line 4.
-shift on reference is experimental at - line 5.
-unshift on reference is experimental at - line 6.
-splice on reference is experimental at - line 7.
 ########
 # op.c
 use warnings 'exec' ;
@@ -1393,20 +1352,6 @@ $[ used in numeric lt (<) (did you mean $] ?) at - line 17.
 $[ used in numeric gt (>) (did you mean $] ?) at - line 18.
 $[ used in numeric le (<=) (did you mean $] ?) at - line 19.
 $[ used in numeric ge (>=) (did you mean $] ?) at - line 20.
-########
-# op.c [Perl_ck_each]
-$fred = {};
-keys $fred;
-values $fred;
-each $fred;
-no warnings 'experimental::autoderef' ;
-keys $fred;
-values $fred;
-each $fred;
-EXPECT
-keys on reference is experimental at - line 3.
-values on reference is experimental at - line 4.
-each on reference is experimental at - line 5.
 ########
 # op.c [Perl_ck_length]
 use warnings 'syntax' ;
@@ -2095,3 +2040,20 @@ EXPECT
 Non-finite repeat count does nothing at - line 5.
 Non-finite repeat count does nothing at - line 6.
 Non-finite repeat count does nothing at - line 7.
+########
+# NAME warn on stat @array
+@foo = ("op/stat.t");
+stat @foo;
+my @bar = @foo;
+stat @bar;
+my $ref = \@foo;
+stat @$ref;
+use warnings 'syntax';
+stat @foo;
+stat @bar;
+stat @$ref;
+EXPECT
+Array passed to stat will be coerced to a scalar (did you want stat $foo[0]?) at - line 8.
+Array passed to stat will be coerced to a scalar (did you want stat $bar[0]?) at - line 9.
+Array passed to stat will be coerced to a scalar at - line 10.
+

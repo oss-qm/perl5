@@ -212,7 +212,6 @@ if ($ARGS{PLATFORM} ne 'os2') {
 				PL_generation
 				PL_lastgotoprobe
 				PL_modcount
-				PL_timesbuf
 				main
 				 );
 	}
@@ -253,6 +252,7 @@ unless ($define{'DEBUGGING'}) {
 		    Perl_debstackptrs
 		    Perl_pad_sv
 		    Perl_pad_setsv
+                    Perl__setlocale_debug_string
 		    Perl_set_padlist
 		    Perl_hv_assert
 		    PL_watchaddr
@@ -285,8 +285,7 @@ else {
 			 );
 }
 
-unless ($define{'PERL_OLD_COPY_ON_WRITE'}
-     || $define{'PERL_NEW_COPY_ON_WRITE'}) {
+if (!$define{'PERL_COPY_ON_WRITE'} || $define{'PERL_NO_COW'}) {
     ++$skip{Perl_sv_setsv_cow};
 }
 
@@ -365,6 +364,7 @@ unless ($define{'USE_ITHREADS'}) {
 		    PL_regex_padav
 		    PL_dollarzero_mutex
 		    PL_hints_mutex
+		    PL_locale_mutex
 		    PL_my_ctx_mutex
 		    PL_perlio_mutex
 		    PL_stashpad
@@ -425,6 +425,15 @@ unless ($define{'PERL_IMPLICIT_CONTEXT'}) {
 unless ($define{'PERL_OP_PARENT'}) {
     ++$skip{$_} foreach qw(
 		    Perl_op_parent
+                );
+}
+
+unless ($define{'USE_DTRACE'}) {
+    ++$skip{$_} foreach qw(
+                    Perl_dtrace_probe_call
+                    Perl_dtrace_probe_load
+                    Perl_dtrace_probe_op
+                    Perl_dtrace_probe_phase
                 );
 }
 
@@ -658,33 +667,13 @@ if ($ARGS{PLATFORM} eq 'netware') {
     push(@layer_syms,'PL_def_layerlist','PL_known_layers','PL_perlio');
 }
 
-if ($define{'USE_PERLIO'}) {
-    # Export the symbols that make up the PerlIO abstraction, regardless
-    # of its implementation - read from a file
-    push @syms, 'perlio.sym';
+# Export the symbols that make up the PerlIO abstraction, regardless
+# of its implementation - read from a file
+push @syms, 'perlio.sym';
 
-    # PerlIO with layers - export implementation
-    try_symbols(@layer_syms, 'perlsio_binmode');
-} else {
-	# -Uuseperlio
-	# Skip the PerlIO layer symbols - although
-	# nothing should have exported them anyway.
-	++$skip{$_} foreach @layer_syms;
-	++$skip{$_} foreach qw(
-			perlsio_binmode
-			PL_def_layerlist
-			PL_known_layers
-			PL_perlio
-			PL_perlio_debug_fd
-			PL_perlio_fd_refcnt
-			PL_perlio_fd_refcnt_size
-			PL_perlio_mutex
-			     );
+# PerlIO with layers - export implementation
+try_symbols(@layer_syms, 'perlsio_binmode');
 
-	# Also do NOT add abstraction symbols from $perlio_sym
-	# abstraction is done as #define to stdio
-	# Remaining remnants that _may_ be functions are handled below.
-}
 
 unless ($define{'USE_QUADMATH'}) {
   ++$skip{Perl_quadmath_format_needed};
@@ -955,11 +944,11 @@ elsif ($ARGS{PLATFORM} eq 'vms') {
 		      Perl_my_gconvert
 		      Perl_my_getenv
 		      Perl_my_getenv_len
-		      Perl_my_getlogin
 		      Perl_my_getpwnam
 		      Perl_my_getpwuid
 		      Perl_my_gmtime
 		      Perl_my_kill
+		      Perl_my_killpg
 		      Perl_my_localtime
 		      Perl_my_mkdir
 		      Perl_my_sigaction

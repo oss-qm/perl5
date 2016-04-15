@@ -23,11 +23,6 @@
 #include <acedef.h>
 #include <acldef.h>
 #include <armdef.h>
-#if __CRTL_VER < 70300000
-/* needed for home-rolled utime() */
-#include <atrdef.h>
-#include <fibdef.h>
-#endif
 #include <chpdef.h>
 #include <clidef.h>
 #include <climsgdef.h>
@@ -45,10 +40,9 @@
 #include <lib$routines.h>
 #include <lnmdef.h>
 #include <ossdef.h>
-#if __CRTL_VER >= 70301000 && !defined(__VAX)
 #include <ppropdef.h>
-#endif
 #include <prvdef.h>
+#include <pscandef.h>
 #include <psldef.h>
 #include <rms.h>
 #include <shrdef.h>
@@ -63,14 +57,7 @@
 #include <efndef.h>
 #define NO_EFN EFN$C_ENF
 
-#if  __CRTL_VER < 70301000 && __CRTL_VER >= 70300000
-int   decc$feature_get_index(const char *name);
-char* decc$feature_get_name(int index);
-int   decc$feature_get_value(int index, int mode);
-int   decc$feature_set_value(int index, int mode, int value);
-#else
 #include <unixlib.h>
-#endif
 
 #pragma member_alignment save
 #pragma nomember_alignment longword
@@ -108,7 +95,7 @@ struct item_list_3 {
 #include <libfildef.h>
 #endif
 
-#if !defined(__VAX) && __CRTL_VER >= 80200000
+#if __CRTL_VER >= 80200000
 #ifdef lstat
 #undef lstat
 #endif
@@ -131,18 +118,6 @@ static int (*decw_term_port)
     void * controller,
     void * char_buffer,
     void * char_change_buffer) = 0;
-
-/* gcc's header files don't #define direct access macros
- * corresponding to VAXC's variant structs */
-#ifdef __GNUC__
-#  define uic$v_format uic$r_uic_form.uic$v_format
-#  define uic$v_group uic$r_uic_form.uic$v_group
-#  define uic$v_member uic$r_uic_form.uic$v_member
-#  define prv$v_bypass  prv$r_prvdef_bits0.prv$v_bypass
-#  define prv$v_grpprv  prv$r_prvdef_bits0.prv$v_grpprv
-#  define prv$v_readall prv$r_prvdef_bits0.prv$v_readall
-#  define prv$v_sysprv  prv$r_prvdef_bits0.prv$v_sysprv
-#endif
 
 #if defined(NEED_AN_H_ERRNO)
 dEXT int h_errno;
@@ -216,13 +191,8 @@ static char * int_tovmspath(const char *path, char *buf, int * utf8_fl);
 #define PERL_LNM_MAX_ITER 10
 
   /* New values with 7.3-2*/ /* why does max DCL have 4 byte subtracted from it? */
-#if __CRTL_VER >= 70302000 && !defined(__VAX)
 #define MAX_DCL_SYMBOL		(8192)
 #define MAX_DCL_LINE_LENGTH	(4096 - 4)
-#else
-#define MAX_DCL_SYMBOL		(1024)
-#define MAX_DCL_LINE_LENGTH	(1024 - 4)
-#endif
 
 static char *__mystrtolower(char *str)
 {
@@ -894,6 +864,7 @@ Perl_vmstrnenv(const char *lnm, char *eqv, unsigned long int idx,
     const char *cp1;
     char uplnm[LNM$C_NAMLENGTH+1], *cp2;
     unsigned short int eqvlen, curtab, ivlnm = 0, ivsym = 0, ivenv = 0, secure;
+    bool found_in_crtlenv = 0, found_in_clisym = 0;
     unsigned long int retsts, attr = LNM$M_CASE_BLIND;
     int midx;
     unsigned char acmode;
@@ -949,7 +920,7 @@ Perl_vmstrnenv(const char *lnm, char *eqv, unsigned long int idx,
           for (i = 0; environ[i]; i++) { 
             if ((eq = strchr(environ[i],'=')) && 
                 lnmdsc.dsc$w_length == (eq - environ[i]) &&
-                !strncmp(environ[i],uplnm,eq - environ[i])) {
+                !strncmp(environ[i],lnm,eq - environ[i])) {
               eq++;
               for (eqvlen = 0; eq[eqvlen]; eqvlen++) eqv[eqvlen] = eq[eqvlen];
               if (!eqvlen) continue;
@@ -957,7 +928,10 @@ Perl_vmstrnenv(const char *lnm, char *eqv, unsigned long int idx,
               break;
             }
           }
-          if (retsts != SS$_NOLOGNAM) break;
+          if (retsts != SS$_NOLOGNAM) {
+              found_in_crtlenv = 1;
+              break;
+          }
         }
       }
       else if ((tmpdsc.dsc$a_pointer = tabvec[curtab]->dsc$a_pointer) &&
@@ -991,6 +965,7 @@ Perl_vmstrnenv(const char *lnm, char *eqv, unsigned long int idx,
           _ckvmssts_noperl(lib$sfree1_dd(&eqvdsc));
           if (retsts == LIB$_INVSYMNAM) { ivsym = 1; continue; }
           if (retsts == LIB$_NOSUCHSYM) continue;
+          found_in_clisym = 1;
           break;
         }
       }
@@ -1021,7 +996,14 @@ Perl_vmstrnenv(const char *lnm, char *eqv, unsigned long int idx,
         break;
       }
     }
-    if (retsts & 1) { eqv[eqvlen] = '\0'; return eqvlen; }
+    /* An index only makes sense for logical names, so make sure we aren't
+     * iterating over an index for an environ var or DCL symbol and getting
+     * the same answer ad infinitum.
+     */
+    if (idx > 0 && (found_in_crtlenv || found_in_clisym)) {
+        return 0;
+    }
+    else if (retsts & 1) { eqv[eqvlen] = '\0'; return eqvlen; }
     else if (retsts == LIB$_NOSUCHSYM ||
              retsts == SS$_NOLOGNAM) {
      /* Unsuccessful lookup is normal -- no need to set errno */
@@ -1525,19 +1507,11 @@ Perl_vmssetenv(pTHX_ const char *lnm, const char *eqv, struct dsc$descriptor_s *
             if ((cp1 = strchr(environ[i],'=')) && 
                 lnmdsc.dsc$w_length == (cp1 - environ[i]) &&
                 !strncmp(environ[i],lnm,cp1 - environ[i])) {
-#ifdef HAS_SETENV
-              return setenv(lnm,"",1) ? vaxc$errno : 0;
+              unsetenv(lnm);
+              return 0;
             }
           }
           ivenv = 1; retsts = SS$_NOLOGNAM;
-#else
-              if (ckWARN(WARN_INTERNAL))
-                Perl_warner(aTHX_ packWARN(WARN_INTERNAL),"This Perl can't reset CRTL environ elements (%s)",lnm);
-              ivenv = 1; retsts = SS$_NOSUCHPGM;
-              break;
-            }
-          }
-#endif
         }
         else if ((tmpdsc.dsc$a_pointer = tabvec[curtab]->dsc$a_pointer) &&
                  !str$case_blind_compare(&tmpdsc,&clisym)) {
@@ -1563,13 +1537,7 @@ Perl_vmssetenv(pTHX_ const char *lnm, const char *eqv, struct dsc$descriptor_s *
     }
     else {  /* we're defining a value */
       if (!ivenv && !str$case_blind_compare(tabvec[0],&crtlenv)) {
-#ifdef HAS_SETENV
         return setenv(lnm,eqv,1) ? vaxc$errno : 0;
-#else
-        if (ckWARN(WARN_INTERNAL))
-          Perl_warner(aTHX_ packWARN(WARN_INTERNAL),"This Perl can't set CRTL environ elements (%s=%s)",lnm,eqv);
-        retsts = SS$_NOSUCHPGM;
-#endif
       }
       else {
         eqvdsc.dsc$a_pointer = (char *) eqv; /* cast ok to readonly parameter */
@@ -2082,9 +2050,9 @@ Perl_my_chdir(pTHX_ const char *dir)
   STRLEN dirlen = strlen(dir);
   const char *dir1 = dir;
 
-  /* zero length string sometimes gives ACCVIO */
+  /* POSIX says we should set ENOENT for zero length string. */
   if (dirlen == 0) {
-    SETERRNO(EINVAL, SS$_BADPARAM);
+    SETERRNO(ENOENT, RMS$_DNF);
     return -1;
   }
 
@@ -2207,7 +2175,6 @@ Perl_my_sigaction (pTHX_ int sig, const struct sigaction* act,
 }
 /*}}}*/
 
-#ifdef KILL_BY_SIGPRC
 #include <errnodef.h>
 
 /* We implement our own kill() using the undocumented system service
@@ -2257,11 +2224,7 @@ Perl_sig_to_vmscondition_int(int sig)
         SS$_BREAK,          /*  5 SIGTRAP  */
         SS$_OPCCUS,         /*  6 SIGABRT  */
         SS$_COMPAT,         /*  7 SIGEMT   */
-#ifdef __VAX                      
-        SS$_FLTOVF,         /*  8 SIGFPE VAX */
-#else                             
         SS$_HPARITH,        /*  8 SIGFPE AXP */
-#endif                            
         SS$_ABORT,          /*  9 SIGKILL  */
         SS$_ACCVIO,         /* 10 SIGBUS   */
         SS$_ACCVIO,         /* 11 SIGSEGV  */
@@ -2290,9 +2253,7 @@ Perl_sig_to_vmscondition_int(int sig)
         sig_code[16] = C$_SIGUSR1;
         sig_code[17] = C$_SIGUSR2;
         sig_code[20] = C$_SIGCHLD;
-#if __CRTL_VER >= 70300000
         sig_code[28] = C$_SIGWINCH;
-#endif
     }
 
     if (sig < _SIG_MIN) return 0;
@@ -2311,6 +2272,7 @@ Perl_sig_to_vmscondition(int sig)
 }
 
 
+#ifdef KILL_BY_SIGPRC
 #define sys$sigprc SYS$SIGPRC
 #ifdef __cplusplus
 extern "C" {
@@ -2360,17 +2322,18 @@ Perl_my_kill(int pid, int sig)
         return -1;
     }
 
-    /* Fixme: Per official UNIX specification: If pid = 0, or negative then
+    /* Per official UNIX specification: If pid = 0, or negative then
      * signals are to be sent to multiple processes.
      *  pid = 0 - all processes in group except ones that the system exempts
      *  pid = -1 - all processes except ones that the system exempts
      *  pid = -n - all processes in group (abs(n)) except ... 
-     * For now, just report as not supported.
+     *
+     * Handle these via killpg, which is redundant for the -n case, since OP_KILL
+     * in doio.c already does that. killpg currently does not support the -1 case.
      */
 
     if (pid <= 0) {
-	SETERRNO(ENOTSUP, SS$_UNSUPPORTED);
-        return -1;
+	return killpg(-pid, sig);
     }
 
     iss = sys$sigprc((unsigned int *)&pid,0,code);
@@ -2394,6 +2357,157 @@ Perl_my_kill(int pid, int sig)
     return -1;
 }
 #endif
+
+int
+Perl_my_killpg(pid_t master_pid, int signum)
+{
+    int pid, status, i;
+    unsigned long int jpi_context;
+    unsigned short int iosb[4];
+    struct itmlst_3  il3[3];
+
+    /* All processes on the system?  Seems dangerous, but it looks
+     * like we could implement this pretty easily with a wildcard
+     * input to sys$process_scan.
+     */
+    if (master_pid == -1) {
+        SETERRNO(ENOTSUP, SS$_UNSUPPORTED);
+        return -1;
+    }
+
+    /* All processes in the current process group; find the master
+     * pid for the current process.
+     */
+    if (master_pid == 0) {
+        i = 0;
+        il3[i].buflen   = sizeof( int );
+        il3[i].itmcode   = JPI$_MASTER_PID;
+        il3[i].bufadr   = &master_pid;
+        il3[i++].retlen = NULL;
+
+        il3[i].buflen   = 0;
+        il3[i].itmcode   = 0;
+        il3[i].bufadr   = NULL;
+        il3[i++].retlen = NULL;
+
+        status = sys$getjpiw(EFN$C_ENF, NULL, NULL, il3, iosb, NULL, 0);
+        if ($VMS_STATUS_SUCCESS(status))
+            status = iosb[0];
+
+        switch (status) {
+            case SS$_NORMAL:
+                break;
+            case SS$_NOPRIV:
+            case SS$_SUSPENDED:
+                SETERRNO(EPERM, status);
+                break;
+            case SS$_NOMOREPROC:
+            case SS$_NONEXPR:
+            case SS$_NOSUCHNODE:
+            case SS$_UNREACHABLE:
+                SETERRNO(ESRCH, status);
+                break;
+            case SS$_ACCVIO:
+            case SS$_BADPARAM:
+                SETERRNO(EINVAL, status);
+                break;
+            default:
+                SETERRNO(EVMSERR, status);
+        }
+        if (!$VMS_STATUS_SUCCESS(status))
+            return -1;
+    }
+
+    /* Set up a process context for those processes we will scan
+     * with sys$getjpiw.  Ask for all processes belonging to the
+     * master pid.
+     */
+
+    i = 0;
+    il3[i].buflen   = 0;
+    il3[i].itmcode   = PSCAN$_MASTER_PID;
+    il3[i].bufadr   = (void *)master_pid;
+    il3[i++].retlen = NULL;
+
+    il3[i].buflen   = 0;
+    il3[i].itmcode   = 0;
+    il3[i].bufadr   = NULL;
+    il3[i++].retlen = NULL;
+
+    status = sys$process_scan(&jpi_context, il3);
+    switch (status) {
+        case SS$_NORMAL:
+            break;
+        case SS$_ACCVIO:
+        case SS$_BADPARAM:
+        case SS$_IVBUFLEN:
+        case SS$_IVSSRQ:
+            SETERRNO(EINVAL, status);
+            break;
+        default:
+            SETERRNO(EVMSERR, status);
+    }
+    if (!$VMS_STATUS_SUCCESS(status))
+        return -1;
+
+    i = 0;
+    il3[i].buflen   = sizeof(int);
+    il3[i].itmcode  = JPI$_PID;
+    il3[i].bufadr   = &pid;
+    il3[i++].retlen = NULL;
+
+    il3[i].buflen   = 0;
+    il3[i].itmcode  = 0;
+    il3[i].bufadr   = NULL;
+    il3[i++].retlen = NULL;
+
+    /* Loop through the processes matching our specified criteria
+     */
+
+    while (1) {
+        /* Find the next process...
+         */
+        status = sys$getjpiw( EFN$C_ENF, &jpi_context, NULL, il3, iosb, NULL, 0);
+        if ($VMS_STATUS_SUCCESS(status)) status = iosb[0];
+
+        switch (status) {
+            case SS$_NORMAL:
+                if (kill(pid, signum) == -1)
+                    break;
+
+                continue;     /* next process */
+            case SS$_NOPRIV:
+            case SS$_SUSPENDED:
+                SETERRNO(EPERM, status);
+                break;
+            case SS$_NOMOREPROC:
+                break;
+            case SS$_NONEXPR:
+            case SS$_NOSUCHNODE:
+            case SS$_UNREACHABLE:
+                SETERRNO(ESRCH, status);
+                break;
+            case SS$_ACCVIO:
+            case SS$_BADPARAM:
+                SETERRNO(EINVAL, status);
+                break;
+            default:
+               SETERRNO(EVMSERR, status);
+        }
+
+        if (!$VMS_STATUS_SUCCESS(status))
+            break;
+    }
+
+    /* Release context-related resources.
+     */
+    (void) sys$process_scan(&jpi_context);
+
+    if (status != SS$_NOMOREPROC)
+        return -1;
+
+    return 0;
+}
 
 /* Routine to convert a VMS status code to a UNIX status code.
 ** More tricky than it appears because of conflicting conventions with
@@ -2725,11 +2839,7 @@ Perl_unix_status_to_vms(int unix_status)
 
 
 /* default piping mailbox size */
-#ifdef __VAX
-#  define PERL_BUFSIZ        512
-#else
-#  define PERL_BUFSIZ        8192
-#endif
+#define PERL_BUFSIZ        8192
 
 
 static void
@@ -4588,7 +4698,6 @@ I32 Perl_my_pclose(pTHX_ PerlIO *fp)
 
 }  /* end of my_pclose() */
 
-#if defined(__CRTL_VER) && __CRTL_VER >= 70200000
   /* Roll our own prototype because we want this regardless of whether
    * _VMS_WAIT is defined.
    */
@@ -4601,7 +4710,6 @@ extern "C" {
 }
 #endif
 
-#endif
 /* sort-of waitpid; special handling of pipe clean-up for subprocesses 
    created with popen(); otherwise partially emulate waitpid() unless 
    we have a suitable one from the CRTL that came with VMS 7.2 and later.
@@ -4645,8 +4753,6 @@ Perl_my_waitpid(pTHX_ Pid_t pid, int *statusp, int flags)
 
     /* fall through if this child is not one of our own pipe children */
 
-#if defined(__CRTL_VER) && __CRTL_VER >= 70200000
-
       /* waitpid() became available in the CRTL as of VMS 7.0, but only
        * in 7.2 did we get a version that fills in the VMS completion
        * status as Perl has always tried to do.
@@ -4663,8 +4769,6 @@ Perl_my_waitpid(pTHX_ Pid_t pid, int *statusp, int flags)
        * from DCL) or to wait for a process that is not a subprocess 
        * of the current process.
        */
-
-#endif /* defined(__CRTL_VER) && __CRTL_VER >= 70200000 */
 
     {
       $DESCRIPTOR(intdsc,"0 00:00:01");
@@ -4754,7 +4858,7 @@ my_gconvert(double val, int ndig, int trail, char *buf)
 }
 /*}}}*/
 
-#if defined(__VAX) || !defined(NAML$C_MAXRSS)
+#if !defined(NAML$C_MAXRSS)
 static int
 rms_free_search_context(struct FAB * fab)
 {
@@ -5271,7 +5375,7 @@ Perl_rename(pTHX_ const char *src, const char * dst)
 	new_file_dsc.dsc$b_class = DSC$K_CLASS_S;
 
 	flags = 0;
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
 	flags |= 4; /* LIB$M_FIL_LONG_NAMES (bit 2) */
 #endif
 
@@ -5414,7 +5518,7 @@ int_rmsexpand
            * UNIX output, and that requires long names to be used
            */
           if ((opts & PERL_RMSEXPAND_M_VMS) == 0)
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
               opts |= PERL_RMSEXPAND_M_LONG;
 #else
               NOOP;
@@ -5454,7 +5558,7 @@ int_rmsexpand
   /* Now we need the expansion buffers */
   esa = (char *)PerlMem_malloc(NAM$C_MAXRSS + 1);
   if (esa == NULL) _ckvmssts_noperl(SS$_INSFMEM);
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
   esal = (char *)PerlMem_malloc(VMS_MAXRSS);
   if (esal == NULL) _ckvmssts_noperl(SS$_INSFMEM);
 #endif
@@ -5463,7 +5567,7 @@ int_rmsexpand
   /* If a NAML block is used RMS always writes to the long and short
    * addresses unless you suppress the short name.
    */
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
   outbufl = (char *)PerlMem_malloc(VMS_MAXRSS);
   if (outbufl == NULL) _ckvmssts_noperl(SS$_INSFMEM);
 #endif
@@ -5543,7 +5647,7 @@ int_expanded:
    /* Is a long or a short name expected */
   /*------------------------------------*/
   spec_buf = NULL;
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
   if ((opts & PERL_RMSEXPAND_M_LONG) != 0) {
     if (rms_nam_rsll(mynam)) {
 	spec_buf = outbufl;
@@ -5564,7 +5668,7 @@ int_expanded:
 	spec_buf = esa; /* Not esal */
 	speclen = rms_nam_esl(mynam);
     }
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
   }
 #endif
   spec_buf[speclen] = '\0';
@@ -5589,7 +5693,7 @@ int_expanded:
       defesa = (char *)PerlMem_malloc(VMS_MAXRSS + 1);
       if (defesa != NULL) {
         struct FAB deffab = cc$rms_fab;
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
         defesal = (char *)PerlMem_malloc(VMS_MAXRSS + 1);
         if (defesal == NULL) _ckvmssts_noperl(SS$_INSFMEM);
 #endif
@@ -5669,7 +5773,7 @@ int_expanded:
 
   /* If we just had a directory spec on input, $PARSE "helpfully"
    * adds an empty name and type for us */
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
   if ((opts & PERL_RMSEXPAND_M_LONG) != 0) {
     if (rms_nam_namel(mynam) == rms_nam_typel(mynam) &&
 	rms_nam_verl(mynam)  == rms_nam_typel(mynam) + 1 &&
@@ -5702,7 +5806,7 @@ int_expanded:
   {
   int rsl;
 
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
     if ((opts & PERL_RMSEXPAND_M_LONG) != 0) {
       rsl = rms_nam_rsll(mynam);
     } else
@@ -6145,7 +6249,7 @@ int_fileify_dirspec(const char *dir, char *buf, int *utf8_fl)
       esa = (char *)PerlMem_malloc(NAM$C_MAXRSS + 1);
       if (esa == NULL) _ckvmssts_noperl(SS$_INSFMEM);
       esal = NULL;
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
       esal = (char *)PerlMem_malloc(VMS_MAXRSS);
       if (esal == NULL) _ckvmssts_noperl(SS$_INSFMEM);
 #endif
@@ -6206,7 +6310,7 @@ int_fileify_dirspec(const char *dir, char *buf, int *utf8_fl)
       }
 
       /* Make sure we are using the right buffer */
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
       if (esal != NULL) {
 	my_esa = esal;
 	my_esa_len = rms_nam_esll(dirnam);
@@ -6214,7 +6318,7 @@ int_fileify_dirspec(const char *dir, char *buf, int *utf8_fl)
 #endif
 	my_esa = esa;
         my_esa_len = rms_nam_esl(dirnam);
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
       }
 #endif
       my_esa[my_esa_len] = '\0';
@@ -7322,8 +7426,6 @@ Perl_tounixspec_utf8_ts(pTHX_ const char *spec, char *buf, int * utf8_fl)
     return do_tounixspec(spec,buf,1, utf8_fl);
 }
 
-#if __CRTL_VER >= 70200000 && !defined(__VAX)
-
 /*
  This procedure is used to identify if a path is based in either
  the old SYS$POSIX_ROOT: or the new 8.3 RMS based POSIX root, and
@@ -8282,7 +8384,6 @@ posix_to_vmsspec_hardway(char *vmspath, int vmspath_len, const char *unixpath,
   *vmsptr = '\0';
   return SS$_NORMAL;
 }
-#endif
 
 /* A convenience macro for copying dots in filenames and escaping
  * them when they haven't already been escaped, with guards to
@@ -8349,7 +8450,7 @@ int_tovmsspec(const char *path, char *rslt, int dir_flag, int * utf8_flag)
 
    /* Posix specifications are now a native VMS format */
   /*--------------------------------------------------*/
-#if __CRTL_VER >= 80200000 && !defined(__VAX)
+#if __CRTL_VER >= 80200000
   if (decc_posix_compliant_pathnames) {
     if (strncmp(path,"\"^UP^",5) == 0) {
       posix_to_vmsspec_hardway(rslt, rslt_len, path, dir_flag, utf8_flag);
@@ -9552,7 +9653,6 @@ vms_image_init(int *argcp, char ***argvp)
     Perl_csighandler_init();
 #endif
 
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
     /* This was moved from the pre-image init handler because on threaded */
     /* Perl it was always returning 0 for the default value. */
     status = simple_trnlnm("SYS$POSIX_ROOT", eqv, LNM$C_NAMLENGTH);
@@ -9582,7 +9682,6 @@ vms_image_init(int *argcp, char ***argvp)
 	    }
 	}
     }
-#endif
 
   _ckvmssts_noperl(sys$getjpiw(0,NULL,NULL,jpilist,iosb,NULL,NULL));
   _ckvmssts_noperl(iosb[0]);
@@ -11612,20 +11711,9 @@ Perl_my_localtime(pTHX_ const time_t *timep)
 
 /* my_utime - update modification/access time of a file
  *
- * VMS 7.3 and later implementation
  * Only the UTC translation is home-grown. The rest is handled by the
  * CRTL utime(), which will take into account the relevant feature
  * logicals and ODS-5 volume characteristics for true access times.
- *
- * pre VMS 7.3 implementation:
- * The calling sequence is identical to POSIX utime(), but under
- * VMS with ODS-2, only the modification time is changed; ODS-2 does
- * not maintain access times.  Restrictions differ from the POSIX
- * definition in that the time can be changed as long as the
- * caller has permission to execute the necessary IO$_MODIFY $QIO;
- * no separate checks are made to insure that the caller is the
- * owner of the file or has special privs enabled.
- * Code here is based on Joe Meadows' FILE utility.
  *
  */
 
@@ -11639,7 +11727,6 @@ static const long int utime_baseadjust[2] = { 0x4beb4000, 0x7c9567 };
 int
 Perl_my_utime(pTHX_ const char *file, const struct utimbuf *utimes)
 {
-#if __CRTL_VER >= 70300000
   struct utimbuf utc_utimes, *utc_utimesp;
 
   if (utimes != NULL) {
@@ -11659,160 +11746,6 @@ Perl_my_utime(pTHX_ const char *file, const struct utimbuf *utimes)
   }
 
   return utime(file, utc_utimesp);
-
-#else /* __CRTL_VER < 70300000 */
-
-  int i;
-  int sts;
-  long int bintime[2], len = 2, lowbit, unixtime,
-           secscale = 10000000; /* seconds --> 100 ns intervals */
-  unsigned long int chan, iosb[2], retsts;
-  char vmsspec[NAM$C_MAXRSS+1], rsa[NAM$C_MAXRSS], esa[NAM$C_MAXRSS];
-  struct FAB myfab = cc$rms_fab;
-  struct NAM mynam = cc$rms_nam;
-#if defined (__DECC) && defined (__VAX)
-  /* VAX DEC C atrdef.h has unsigned type for pointer member atr$l_addr,
-   * at least through VMS V6.1, which causes a type-conversion warning.
-   */
-#  pragma message save
-#  pragma message disable cvtdiftypes
-#endif
-  struct atrdef myatr[2] = {{sizeof bintime, ATR$C_REVDATE, bintime}, {0,0,0}};
-  struct fibdef myfib;
-#if defined (__DECC) && defined (__VAX)
-  /* This should be right after the declaration of myatr, but due
-   * to a bug in VAX DEC C, this takes effect a statement early.
-   */
-#  pragma message restore
-#endif
-  /* cast ok for read only parameter */
-  struct dsc$descriptor fibdsc = {sizeof(myfib), DSC$K_DTYPE_Z, DSC$K_CLASS_S,(char *) &myfib},
-                        devdsc = {0,DSC$K_DTYPE_T, DSC$K_CLASS_S,0},
-                        fnmdsc = {0,DSC$K_DTYPE_T, DSC$K_CLASS_S,0};
-	
-  if (file == NULL || *file == '\0') {
-    SETERRNO(ENOENT, LIB$_INVARG);
-    return -1;
-  }
-
-  /* Convert to VMS format ensuring that it will fit in 255 characters */
-  if (int_rmsexpand_tovms(file, vmsspec, 0) == NULL) {
-      SETERRNO(ENOENT, LIB$_INVARG);
-      return -1;
-  }
-  if (utimes != NULL) {
-    /* Convert Unix time    (seconds since 01-JAN-1970 00:00:00.00)
-     * to VMS quadword time (100 nsec intervals since 01-JAN-1858 00:00:00.00).
-     * Since time_t is unsigned long int, and lib$emul takes a signed long int
-     * as input, we force the sign bit to be clear by shifting unixtime right
-     * one bit, then multiplying by an extra factor of 2 in lib$emul().
-     */
-    lowbit = (utimes->modtime & 1) ? secscale : 0;
-    unixtime = (long int) utimes->modtime;
-#   ifdef VMSISH_TIME
-    /* If input was UTC; convert to local for sys svc */
-    if (!VMSISH_TIME) unixtime = _toloc(unixtime);
-#   endif
-    unixtime >>= 1;  secscale <<= 1;
-    retsts = lib$emul(&secscale, &unixtime, &lowbit, bintime);
-    if (!(retsts & 1)) {
-      SETERRNO(EVMSERR, retsts);
-      return -1;
-    }
-    retsts = lib$addx(bintime,utime_baseadjust,bintime,&len);
-    if (!(retsts & 1)) {
-      SETERRNO(EVMSERR, retsts);
-      return -1;
-    }
-  }
-  else {
-    /* Just get the current time in VMS format directly */
-    retsts = sys$gettim(bintime);
-    if (!(retsts & 1)) {
-      SETERRNO(EVMSERR, retsts);
-      return -1;
-    }
-  }
-
-  myfab.fab$l_fna = vmsspec;
-  myfab.fab$b_fns = (unsigned char) strlen(vmsspec);
-  myfab.fab$l_nam = &mynam;
-  mynam.nam$l_esa = esa;
-  mynam.nam$b_ess = (unsigned char) sizeof esa;
-  mynam.nam$l_rsa = rsa;
-  mynam.nam$b_rss = (unsigned char) sizeof rsa;
-  if (decc_efs_case_preserve)
-      mynam.nam$b_nop |= NAM$M_NO_SHORT_UPCASE;
-
-  /* Look for the file to be affected, letting RMS parse the file
-   * specification for us as well.  I have set errno using only
-   * values documented in the utime() man page for VMS POSIX.
-   */
-  retsts = sys$parse(&myfab,0,0);
-  if (!(retsts & 1)) {
-    set_vaxc_errno(retsts);
-    if      (retsts == RMS$_PRV) set_errno(EACCES);
-    else if (retsts == RMS$_DIR) set_errno(ENOTDIR);
-    else                         set_errno(EVMSERR);
-    return -1;
-  }
-  retsts = sys$search(&myfab,0,0);
-  if (!(retsts & 1)) {
-    mynam.nam$b_nop |= NAM$M_SYNCHK;  mynam.nam$l_rlf = NULL;
-    myfab.fab$b_dns = 0;  sts = sys$parse(&myfab,0,0);
-    set_vaxc_errno(retsts);
-    if      (retsts == RMS$_PRV) set_errno(EACCES);
-    else if (retsts == RMS$_FNF) set_errno(ENOENT);
-    else                         set_errno(EVMSERR);
-    return -1;
-  }
-
-  devdsc.dsc$w_length = mynam.nam$b_dev;
-  /* cast ok for read only parameter */
-  devdsc.dsc$a_pointer = (char *) mynam.nam$l_dev;
-
-  retsts = sys$assign(&devdsc,&chan,0,0);
-  if (!(retsts & 1)) {
-    mynam.nam$b_nop |= NAM$M_SYNCHK;  mynam.nam$l_rlf = NULL;
-    myfab.fab$b_dns = 0;  sts = sys$parse(&myfab,0,0);
-    set_vaxc_errno(retsts);
-    if      (retsts == SS$_IVDEVNAM)   set_errno(ENOTDIR);
-    else if (retsts == SS$_NOPRIV)     set_errno(EACCES);
-    else if (retsts == SS$_NOSUCHDEV)  set_errno(ENOTDIR);
-    else                               set_errno(EVMSERR);
-    return -1;
-  }
-
-  fnmdsc.dsc$a_pointer = mynam.nam$l_name;
-  fnmdsc.dsc$w_length = mynam.nam$b_name + mynam.nam$b_type + mynam.nam$b_ver;
-
-  memset((void *) &myfib, 0, sizeof myfib);
-#if defined(__DECC) || defined(__DECCXX)
-  for (i=0;i<3;i++) myfib.fib$w_fid[i] = mynam.nam$w_fid[i];
-  for (i=0;i<3;i++) myfib.fib$w_did[i] = mynam.nam$w_did[i];
-  /* This prevents the revision time of the file being reset to the current
-   * time as a result of our IO$_MODIFY $QIO. */
-  myfib.fib$l_acctl = FIB$M_NORECORD;
-#else
-  for (i=0;i<3;i++) myfib.fib$r_fid_overlay.fib$w_fid[i] = mynam.nam$w_fid[i];
-  for (i=0;i<3;i++) myfib.fib$r_did_overlay.fib$w_did[i] = mynam.nam$w_did[i];
-  myfib.fib$r_acctl_overlay.fib$l_acctl = FIB$M_NORECORD;
-#endif
-  retsts = sys$qiow(0,chan,IO$_MODIFY,iosb,0,0,&fibdsc,&fnmdsc,0,0,myatr,0);
-  mynam.nam$b_nop |= NAM$M_SYNCHK;  mynam.nam$l_rlf = NULL;
-  myfab.fab$b_dns = 0;  sts = sys$parse(&myfab,0,0);
-  _ckvmssts(sys$dassgn(chan));
-  if (retsts & 1) retsts = iosb[0];
-  if (!(retsts & 1)) {
-    set_vaxc_errno(retsts);
-    if (retsts == SS$_NOPRIV) set_errno(EACCES);
-    else                      set_errno(EVMSERR);
-    return -1;
-  }
-
-  return 0;
-
-#endif /* #if __CRTL_VER >= 70300000 */
 
 }  /* end of my_utime() */
 /*}}}*/
@@ -12204,7 +12137,7 @@ Perl_flex_stat_int(pTHX_ const char *fspec, Stat_t *statbufp, int lstat_flag)
 
     SAVE_ERRNO;
 
-#if __CRTL_VER >= 80200000 && !defined(__VAX)
+#if __CRTL_VER >= 80200000
   /*
    * If we are in POSIX filespec mode, accept the filename as is.
    */
@@ -12271,24 +12204,20 @@ Perl_flex_stat_int(pTHX_ const char *fspec, Stat_t *statbufp, int lstat_flag)
          * format unless * DECC$EFS_CHARSET is in effect, so temporarily
          * enable it if it isn't already.
          */
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
         if (!decc_efs_charset && (decc_efs_charset_index > 0))
             decc$feature_set_value(decc_efs_charset_index, 1, 1); 
-#endif
         if (lstat_flag == 0)
 	    retval = stat(fspec, &statbufp->crtl_stat);
         else
 	    retval = lstat(fspec, &statbufp->crtl_stat);
         save_spec = fspec;
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
         if (!decc_efs_charset && (decc_efs_charset_index > 0)) {
             decc$feature_set_value(decc_efs_charset_index, 1, 0); 
             efs_hack = 1;
         }
-#endif
     }
 
-#if __CRTL_VER >= 80200000 && !defined(__VAX)
+#if __CRTL_VER >= 80200000
   } else {
     if (lstat_flag == 0)
       retval = stat(temp_fspec, &statbufp->crtl_stat);
@@ -12298,11 +12227,9 @@ Perl_flex_stat_int(pTHX_ const char *fspec, Stat_t *statbufp, int lstat_flag)
   }
 #endif
 
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
   /* As you were... */
   if (!decc_efs_charset)
     decc$feature_set_value(decc$feature_get_index("DECC$EFS_CHARSET"),1,0); 
-#endif
 
     if (!retval) {
       char *cptr;
@@ -12312,13 +12239,11 @@ Perl_flex_stat_int(pTHX_ const char *fspec, Stat_t *statbufp, int lstat_flag)
       if (lstat_flag)
 	rmsex_flags |= PERL_RMSEXPAND_M_SYMLINK;
 
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
       /* If we used the efs_hack above, we must also use it here for */
       /* perl_cando to work */
       if (efs_hack && (decc_efs_charset_index > 0)) {
           decc$feature_set_value(decc_efs_charset_index, 1, 1);
       }
-#endif
 
       /* If we've got a directory, save a fileified, expanded version of it
        * in st_devnam.  If not a directory, just an expanded version.
@@ -12340,11 +12265,9 @@ Perl_flex_stat_int(pTHX_ const char *fspec, Stat_t *statbufp, int lstat_flag)
                            0,
                            0);
 
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
       if (efs_hack && (decc_efs_charset_index > 0)) {
           decc$feature_set_value(decc_efs_charset, 1, 0);
       }
-#endif
 
       /* Fix me: If this is NULL then stat found a file, and we could */
       /* not convert the specification to VMS - Should never happen */
@@ -12386,17 +12309,6 @@ int
 Perl_flex_lstat(pTHX_ const char *fspec, Stat_t *statbufp)
 {
    return flex_stat_int(fspec, statbufp, 1);
-}
-/*}}}*/
-
-
-/*{{{char *my_getlogin()*/
-/* VMS cuserid == Unix getlogin, except calling sequence */
-char *
-my_getlogin(void)
-{
-    static char user[L_cuserid];
-    return cuserid(user);
 }
 /*}}}*/
 
@@ -12457,7 +12369,7 @@ Perl_rmscopy(pTHX_ const char *spec_in, const char *spec_out, int preserve_dates
     esa = (char *)PerlMem_malloc(VMS_MAXRSS);
     if (esa == NULL) _ckvmssts_noperl(SS$_INSFMEM);
     esal = NULL;
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
     esal = (char *)PerlMem_malloc(VMS_MAXRSS);
     if (esal == NULL) _ckvmssts_noperl(SS$_INSFMEM);
 #endif
@@ -12472,7 +12384,7 @@ Perl_rmscopy(pTHX_ const char *spec_in, const char *spec_out, int preserve_dates
     rsa = (char *)PerlMem_malloc(VMS_MAXRSS);
     if (rsa == NULL) _ckvmssts_noperl(SS$_INSFMEM);
     rsal = NULL;
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
     rsal = (char *)PerlMem_malloc(VMS_MAXRSS);
     if (rsal == NULL) _ckvmssts_noperl(SS$_INSFMEM);
 #endif
@@ -12538,7 +12450,7 @@ Perl_rmscopy(pTHX_ const char *spec_in, const char *spec_out, int preserve_dates
     if (rsa_out == NULL) _ckvmssts_noperl(SS$_INSFMEM);
     esal_out = NULL;
     rsal_out = NULL;
-#if !defined(__VAX) && defined(NAML$C_MAXRSS)
+#if defined(NAML$C_MAXRSS)
     esal_out = (char *)PerlMem_malloc(VMS_MAXRSS);
     if (esal_out == NULL) _ckvmssts_noperl(SS$_INSFMEM);
     rsal_out = (char *)PerlMem_malloc(VMS_MAXRSS);
@@ -12613,13 +12525,7 @@ Perl_rmscopy(pTHX_ const char *spec_in, const char *spec_out, int preserve_dates
     if (preserve_dates & 2) {
       /* sys$close() will process xabrdt, not xabdat */
       xabrdt = cc$rms_xabrdt;
-#ifndef __GNUC__
       xabrdt.xab$q_rdt = xabdat.xab$q_rdt;
-#else
-      /* gcc doesn't like the assignment, since its prototype for xab$q_rdt
-       * is unsigned long[2], while DECC & VAXC use a struct */
-      memcpy(xabrdt.xab$q_rdt,xabdat.xab$q_rdt,sizeof xabrdt.xab$q_rdt);
-#endif
       fab_out.fab$l_xab = (void *) &xabrdt;
     }
 
@@ -13544,7 +13450,7 @@ extern "C" {
 
 /* Hack, use old stat() as fastest way of getting ino_t and device */
 int decc$stat(const char *name, void * statbuf);
-#if !defined(__VAX) && __CRTL_VER >= 80200000
+#if __CRTL_VER >= 80200000
 int decc$lstat(const char *name, void * statbuf);
 #else
 #define decc$lstat decc$stat
@@ -13630,20 +13536,16 @@ int vms_fid_to_name(char * outname, int outlen,
          * format unless * DECC$EFS_CHARSET is in effect, so temporarily
          * enable it if it isn't already.
          */
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
         if (!decc_efs_charset && (decc_efs_charset_index > 0))
             decc$feature_set_value(decc_efs_charset_index, 1, 1); 
-#endif
         ret_spec = int_tovmspath(name, temp_fspec, NULL);
         if (lstat_flag == 0) {
             sts = decc$stat(name, &statbuf);
         } else {
             sts = decc$lstat(name, &statbuf);
         }
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
         if (!decc_efs_charset && (decc_efs_charset_index > 0))
             decc$feature_set_value(decc_efs_charset_index, 1, 0); 
-#endif
     }
 
 
@@ -13953,16 +13855,10 @@ do_vms_case_tolerant(void)
 int
 Perl_vms_case_tolerant(void)
 {
-#if __CRTL_VER >= 70301000 && !defined(__VAX)
     return do_vms_case_tolerant();
-#else
-    return vms_process_case_tolerant;
-#endif
 }
 
  /* Start of DECC RTL Feature handling */
-
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
 
 static int
 set_feature_default(const char *name, int value)
@@ -14002,7 +13898,6 @@ set_feature_default(const char *name, int value)
 
     return 0;
 }
-#endif
 
 
 /* C RTL Feature settings */
@@ -14019,7 +13914,7 @@ vmsperl_set_features(void)
     int status;
     int s;
     char val_str[10];
-#if defined(JPI$_CASE_LOOKUP_PERM) && !defined(__VAX)
+#if defined(JPI$_CASE_LOOKUP_PERM)
     const unsigned long int jpicode1 = JPI$_CASE_LOOKUP_PERM;
     const unsigned long int jpicode2 = JPI$_CASE_LOOKUP_IMAGE;
     unsigned long case_perm;
@@ -14091,7 +13986,6 @@ vmsperl_set_features(void)
 	 vms_unlink_all_versions = 0;
     }
 
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
     /* Detect running under GNV Bash or other UNIX like shell */
     gnv_unix_shell = 0;
     status = simple_trnlnm("GNV$UNIX_SHELL", val_str, sizeof(val_str));
@@ -14111,7 +14005,6 @@ vmsperl_set_features(void)
     set_feature_default("DECC$EFS_CASE_PRESERVE", 1);
     set_feature_default("DECC$ARGV_PARSE_STYLE", 1);     /* Requires extended parse. */
     set_feature_default("DECC$EFS_CHARSET", 1);
-#endif
 
     /* hacks to see if known bugs are still present for testing */
 
@@ -14126,7 +14019,6 @@ vmsperl_set_features(void)
 	  decc_bug_devnull = 0;
     }
 
-#if __CRTL_VER >= 70300000 && !defined(__VAX)
     s = decc$feature_get_index("DECC$DISABLE_TO_VMS_LOGNAME_TRANSLATION");
     if (s >= 0) {
 	decc_disable_to_vms_logname_translation = decc$feature_get_value(s, 1);
@@ -14196,58 +14088,8 @@ vmsperl_set_features(void)
     }
 
 #endif
-#else
-    status = simple_trnlnm
-	("DECC$DISABLE_TO_VMS_LOGNAME_TRANSLATION", val_str, sizeof(val_str));
-    if (status) {
-	val_str[0] = _toupper(val_str[0]);
-	if ((val_str[0] == 'E') || (val_str[0] == '1') || (val_str[0] == 'T')) {
-	   decc_disable_to_vms_logname_translation = 1;
-	}
-    }
 
-#ifndef __VAX
-    status = simple_trnlnm("DECC$EFS_CASE_PRESERVE", val_str, sizeof(val_str));
-    if (status) {
-	val_str[0] = _toupper(val_str[0]);
-	if ((val_str[0] == 'E') || (val_str[0] == '1') || (val_str[0] == 'T')) {
-	   decc_efs_case_preserve = 1;
-	}
-    }
-#endif
-
-    status = simple_trnlnm("DECC$FILENAME_UNIX_REPORT", val_str, sizeof(val_str));
-    if (status) {
-	val_str[0] = _toupper(val_str[0]);
-	if ((val_str[0] == 'E') || (val_str[0] == '1') || (val_str[0] == 'T')) {
-	   decc_filename_unix_report = 1;
-	}
-    }
-    status = simple_trnlnm("DECC$FILENAME_UNIX_ONLY", val_str, sizeof(val_str));
-    if (status) {
-	val_str[0] = _toupper(val_str[0]);
-	if ((val_str[0] == 'E') || (val_str[0] == '1') || (val_str[0] == 'T')) {
-	   decc_filename_unix_only = 1;
-	   decc_filename_unix_report = 1;
-	}
-    }
-    status = simple_trnlnm("DECC$FILENAME_UNIX_NO_VERSION", val_str, sizeof(val_str));
-    if (status) {
-	val_str[0] = _toupper(val_str[0]);
-	if ((val_str[0] == 'E') || (val_str[0] == '1') || (val_str[0] == 'T')) {
-	   decc_filename_unix_no_version = 1;
-	}
-    }
-    status = simple_trnlnm("DECC$READDIR_DROPDOTNOTYPE", val_str, sizeof(val_str));
-    if (status) {
-	val_str[0] = _toupper(val_str[0]);
-	if ((val_str[0] == 'E') || (val_str[0] == '1') || (val_str[0] == 'T')) {
-	   decc_readdir_dropdotnotype = 1;
-	}
-    }
-#endif
-
-#if defined(JPI$_CASE_LOOKUP_PERM) && defined(PPROP$K_CASE_BLIND) && !defined(__VAX)
+#if defined(JPI$_CASE_LOOKUP_PERM) && defined(PPROP$K_CASE_BLIND)
 
      /* Report true case tolerance */
     /*----------------------------*/

@@ -42,11 +42,6 @@
 #define _tolower(c) (((c) < 'A' || (c) > 'Z') ? (c) : (c) | 040)
 
 /* Assorted things to look like Unix */
-#ifdef __GNUC__
-#ifndef _IOLBF /* gcc's stdio.h doesn't define this */
-#define _IOLBF 1
-#endif
-#endif
 #include <processes.h> /* for vfork() */
 #include <unixio.h>
 #include <unixlib.h>
@@ -64,7 +59,6 @@
 /* Set the maximum filespec size here as it is larger for EFS file
  * specifications.
  */
-#ifndef __VAX
 #ifndef VMS_MAXRSS
 #ifdef NAML$C_MAXRSS
 #define VMS_MAXRSS (NAML$C_MAXRSS+1)
@@ -73,7 +67,6 @@
 #endif /* VMS_LONGNAME_SUPPORT */
 #endif /* NAML$C_MAXRSS */
 #endif /* VMS_MAXRSS */
-#endif
 
 #ifndef VMS_MAXRSS
 #define VMS_MAXRSS (NAM$C_MAXRSS + 1)
@@ -157,7 +150,6 @@
 #define my_gconvert(a,b,c,d)		Perl_my_gconvert(a,b,c,d)
 #define my_getenv(a,b)			Perl_my_getenv(aTHX_ a,b)
 #define my_getenv_len(a,b,c)		Perl_my_getenv_len(aTHX_ a,b,c)
-#define my_getlogin			Perl_my_getlogin
 #define my_getpwent()			Perl_my_getpwent(aTHX)
 #define my_getpwnam(a)			Perl_my_getpwnam(aTHX_ a)
 #define my_getpwuid(a)			Perl_my_getpwuid(aTHX_ a)
@@ -323,7 +315,8 @@ struct interp_intern {
 
 #define BIT_BUCKET "/dev/null"
 #define PERL_SYS_INIT_BODY(c,v)	MALLOC_CHECK_TAINT2(*c,*v) vms_image_init((c),(v)); PERLIO_INIT; MALLOC_INIT
-#define PERL_SYS_TERM_BODY()		HINTS_REFCNT_TERM; OP_REFCNT_TERM; PERLIO_TERM; MALLOC_TERM
+#define PERL_SYS_TERM_BODY()    HINTS_REFCNT_TERM; OP_REFCNT_TERM;      \
+                                PERLIO_TERM; MALLOC_TERM; LOCALE_TERM
 #define dXSUB_SYS
 #define HAS_KILL
 #define HAS_WAIT
@@ -365,11 +358,7 @@ struct interp_intern {
  *	getgrgid() routines are available to get group entries.
  *	The getgrent() has a separate definition, HAS_GETGRENT.
  */
-#if __CRTL_VER >= 70302000
 #define HAS_GROUP		/**/
-#else
-#undef HAS_GROUP		/**/
-#endif
 
 /* HAS_PASSWD
  *	This symbol, if defined, indicates that the getpwnam() and
@@ -489,6 +478,7 @@ struct utimbuf {
 #ifdef KILL_BY_SIGPRC
 #  define kill  Perl_my_kill
 #endif
+# define killpg  Perl_my_killpg
 
 
 /* VMS doesn't use a real sys_nerr, but we need this when scanning for error
@@ -503,9 +493,6 @@ struct utimbuf {
 #define ENVgetenv(v) my_getenv(v,FALSE)
 #define ENVgetenv_len(v,l) my_getenv_len(v,l,FALSE)
 
-
-/* Thin jacket around cuserid() to match Unix' calling sequence */
-#define getlogin my_getlogin
 
 /* Ditto for sys$hash_password() . . . */
 #define crypt(a,b)  Perl_my_crypt(aTHX_ a,b)
@@ -729,6 +716,7 @@ int	Perl_my_sigaction (pTHX_ int, const struct sigaction*, struct sigaction*);
 #ifdef KILL_BY_SIGPRC
 unsigned int	Perl_sig_to_vmscondition (int);
 int	Perl_my_kill (int, int);
+int	Perl_my_killpg (int, int);
 void	Perl_csighandler_init (void);
 #endif
 int	Perl_my_utime (pTHX_ const char *, const struct utimbuf *);
@@ -759,7 +747,54 @@ int	Perl_my_flush (pTHX_ FILE *);
 struct passwd *	Perl_my_getpwnam (pTHX_ const char *name);
 struct passwd *	Perl_my_getpwuid (pTHX_ Uid_t uid);
 void	Perl_my_endpwent (pTHX);
-char *	my_getlogin (void);
+
+/*
+ * The following prototypes are in math.h but for some reason they
+ * are ifdefed out for C++.  So we have to repeat them here in order
+ * to build the POSIX extension.
+ */
+
+#ifdef __DECCXX
+
+double exp2(double __x);
+double fdim(double __x, double __y);
+double fma(double __x, double __y, double __z);
+double fmax(double __x, double __y);
+double fmin(double __x, double __y);
+double nexttoward(double __x, long double __y);
+double remainder(double __x, double __y);
+double remquo(double __x, double __y, int *__quo);
+double tgamma(double __x);
+float exp2f(float __x);
+float fdimf(float __x, float __y);
+float fmaf(float __x, float __y, float __z);
+float fmaxf(float __x, float __y);
+float fminf(float __x, float __y);
+float nexttowardf(float __x, long double __y);
+float remainderf(float __x, float __y);
+float remquof(float __x, float __y, int *__quo);
+float tgammaf(float __x);
+long double exp2l(long double __x);
+long double fdiml(long double __x, long double __y);
+long double fmal(long double __x, long double __y, long double __z);
+long double fmaxl(long double __x, long double __y);
+long double fminl(long double __x, long double __y);
+long double nexttowardl(long double __x, long double __y);
+long double remainderl(long double __x, long double __y);
+long double remquol(long double __x, long double __y, int *__quo);
+long double tgammal(long double __x);
+int ilogb(double __x);
+int ilogbf(float __x);
+int ilogbl(long double __x);
+long int lrint(double __x);
+long int lrintf(float __x);
+long int lrintl(long double __x);
+long int lround(double __x);
+long int lroundf(float __x);
+long int lroundl(long double __x);
+
+#endif
+
 
 #ifdef __cplusplus
 }

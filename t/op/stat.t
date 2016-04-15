@@ -25,7 +25,7 @@ if ($^O eq 'MSWin32') {
     ${^WIN32_SLOPPY_STAT} = 0;
 }
 
-plan tests => 115;
+plan tests => 118;
 
 my $Perl = which_perl();
 
@@ -195,7 +195,7 @@ SKIP: {
 	skip "Can't test if an admin user in miniperl", 2,
 	  if $Is_Cygwin && is_miniperl();
         skip "Can't test -r or -w meaningfully if you're superuser", 2
-          if ($Is_Cygwin ? Win32::IsAdminUser : $> == 0);
+          if ($> == 0);
 
         SKIP: {
             skip "Can't test -r meaningfully?", 1 if $Is_Dos;
@@ -631,6 +631,25 @@ SKIP: {
     ok(1, 'can "stat -t" without crashing');
 	eval { lstat -t };
     ok(1, 'can "lstat -t" without crashing');
+}
+
+# [perl #126064] stat stat stack busting
+is join("-", 1,2,3,(stat stat stat),4,5,6), "1-2-3-4-5-6",
+  'stat inside stat gets scalar context';
+
+# [perl #126162] stat an array should not work
+my $Errno_loaded = eval { require Errno };
+my $statfile = './op/stat.t';
+my @statarg = ($statfile, $statfile);
+ok !stat(@statarg),
+  'stat on an array of valid paths should warn and should not return any data';
+my $error = 0+$!;
+SKIP:
+{
+    skip "Errno not available", 1
+      unless $Errno_loaded;
+    is $error, &Errno::ENOENT,
+      'stat on an array of valid paths should return ENOENT';
 }
 
 END {

@@ -6,11 +6,11 @@ BEGIN {
     require './test.pl';
 }
 
-plan tests => 22;
+plan tests => 17;
 
 unless (eval {
     require File::Path;
-    File::Path::rmtree('blurfl');
+    File::Path::rmtree('blurfl') if -d 'blurfl';
     1
 }) {
     diag("$0 may fail if its temporary directory remains from a previous run");
@@ -58,13 +58,3 @@ ok(-d);
 ok(rmdir);
 ok(!-d);
 $_ = 'lfrulb';
-
-{
-    no warnings 'experimental::lexical_topic';
-    my $_ = 'blurfl';
-    ok(mkdir);
-    ok(-d);
-    ok(-d 'blurfl');
-    ok(!-d 'lfrulb');
-    ok(rmdir);
-}

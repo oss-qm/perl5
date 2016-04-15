@@ -136,10 +136,12 @@ a[^]b]c	adc	y	$&	adc
 \By\B	xyz	y	-	-
 \b		n	-	-
 \b{gcb}		n	-	-
+\b{lb}		n	-	-
 \b{sb}		n	-	-
 \b{wb}		n	-	-
 \B		y	-	-
 \B{gcb}		y	-	-
+\B{lb}		y	-	-
 \B{sb}		y	-	-
 \B{wb}		y	-	-
 \w	a	y	-	-
@@ -1756,6 +1758,12 @@ ab[c\\\](??{"x"})]{3}d	ab\\](d	y	-	-
 ^(A)((?(?{return 1})abc|xyz))$	Aabc	y	$1-$2	A-abc	-
 ^(A)((?(?{return 0})abc|xyz))$	Axyz	y	$1-$2	A-xyz	-
 
+# using 'return' in code blocks with additional scopes to pop
+^(A)(?{ { 1; return "xyz"} })B$	AB	y	$1-$^R	A-xyz	-
+^(A)((??{ { 1; return "xyz" } }))$	Axyz	y	$1-$2	A-xyz	-
+^(A)((?(?{ { 1; return 1 } })abc|xyz))$	Aabc	y	$1-$2	A-abc	-
+^(A)((?(?{ { 1; return 0 } })abc|xyz))$	Axyz	y	$1-$2	A-xyz	-
+
 # pattern modifier flags should propagate into returned (??{}) pattern
 # p,d,l not tested
 
@@ -1924,7 +1932,6 @@ A+(*PRUNE)BC(?{})	AAABC	y	$&	AAABC
 /( (?&solution) | % ) \Z (?(DEFINE) (?<solution>7\%\ solution) )/x	7% solution	y	$1	7% solution		# [perl #122890]
 (.)(?{$~=$^N})	\x{100}	y	$~	\x{100}		# [perl #123135]
 
-# pat	string	y/n/etc	expr	expected-expr	skip-reason	comment
 /[a-z]/i	\N{KELVIN SIGN}	y	$&	\N{KELVIN SIGN}
 /[A-Z]/ia	\N{KELVIN SIGN}	y	$&	\N{KELVIN SIGN}
 /[A-Z]/iaa	\N{KELVIN SIGN}	n	-	-
@@ -1935,6 +1942,24 @@ A+(*PRUNE)BC(?{})	AAABC	y	$&	AAABC
 /w\z\R\z/i	\x{100}a\x{80}a	n	-	-
 
 /(a+){1}+a/	aaa	n	-	-		# [perl #125825]
+
+^((?(?=x)xb|ya)z)	xbz	y	$1	xbz
+^((?(?=x)xb|ya)z)	yaz	y	$1	yaz
+^((?(?!y)xb|ya)z)	xbz	y	$1	xbz
+^((?(?!y)xb|ya)z)	yaz	y	$1	yaz
+^((?(?!)xb|ya)z)	xbz	n	-	-
+^((?(?!)xb|ya)z)	yaz	y	$1	yaz		# [perl-126222]
+
+foo(*ACCEPT:foo)	foo	y	$::REGMARK	foo
+(foo(*ACCEPT:foo))	foo	y	$::REGMARK	foo
+A(*FAIL:foo)[BC]	A	n	$::REGERROR	foo
+
+\N(?#comment){SPACE}	A	c	-	Missing braces on \\N{}
+ab(?#Comment){2}c	abbc	y	$&	abbc
+\p A	A	c	-	Character following \\p must be '{' or a single-character Unicode property name		# [perl #126187
+\P:A	A	c	-	Character following \\P must be '{' or a single-character Unicode property name
+\p^	A	c	-	Character following \\p must be '{' or a single-character Unicode property name
+\PU	A	c	-	Can't find Unicode property definition \"U\"
 
 (?i	-	c	-	Sequence (?... not terminated
 (?a-x	-	c	-	Sequence (?... not terminated

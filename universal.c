@@ -205,7 +205,7 @@ Perl_sv_does_sv(pTHX_ SV *sv, SV *namesv, U32 flags)
 	return FALSE;
     }
 
-    if (sv_isobject(sv)) {
+    if (SvROK(sv) && SvOBJECT(SvRV(sv))) {
 	classname = sv_ref(NULL,SvRV(sv),TRUE);
     } else {
 	classname = sv;
@@ -524,7 +524,7 @@ XS(XS_utf8_native_to_unicode)
  if (items > 1)
      croak_xs_usage(cv, "sv");
 
- ST(0) = sv_2mortal(newSViv(NATIVE_TO_UNI(uv)));
+ ST(0) = sv_2mortal(newSVuv(NATIVE_TO_UNI(uv)));
  XSRETURN(1);
 }
 
@@ -537,7 +537,7 @@ XS(XS_utf8_unicode_to_native)
  if (items > 1)
      croak_xs_usage(cv, "sv");
 
- ST(0) = sv_2mortal(newSViv(UNI_TO_NATIVE(uv)));
+ ST(0) = sv_2mortal(newSVuv(UNI_TO_NATIVE(uv)));
  XSRETURN(1);
 }
 
@@ -563,9 +563,6 @@ XS(XS_Internals_SvREADONLY)	/* This is dangerous stuff. */
     }
     else if (items == 2) {
 	if (SvTRUE(ST(1))) {
-#ifdef PERL_OLD_COPY_ON_WRITE
-	    if (SvIsCOW(sv)) sv_force_normal(sv);
-#endif
 	    SvFLAGS(sv) |= SVf_READONLY;
 	    XSRETURN_YES;
 	}
@@ -592,9 +589,6 @@ XS(XS_constant__make_const)	/* This is dangerous stuff. */
 
     sv = SvRV(svz);
 
-#ifdef PERL_OLD_COPY_ON_WRITE
-    if (SvIsCOW(sv)) sv_force_normal(sv);
-#endif
     SvREADONLY_on(sv);
     if (SvTYPE(sv) == SVt_PVAV && AvFILLp(sv) != -1) {
 	/* for constant.pm; nobody else should be calling this
@@ -904,7 +898,7 @@ XS(XS_re_regexp_pattern)
 {
     dXSARGS;
     REGEXP *re;
-    I32 const gimme = GIMME_V;
+    U8 const gimme = GIMME_V;
 
     EXTEND(SP, 2);
     SP -= items;

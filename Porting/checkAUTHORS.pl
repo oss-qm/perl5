@@ -3,6 +3,7 @@ use strict;
 my ($committer, $patch, $author);
 use utf8;
 use Getopt::Long;
+use Unicode::Collate;
 use Text::Wrap;
 $Text::Wrap::columns = 80;
 
@@ -85,9 +86,9 @@ EOS
 sub list_authors {
     my ($patchers, $authors) = @_;
     binmode(STDOUT, ":utf8");
-    print wrap '', '', join(', ', sort { lc $a cmp lc $b }
+    print wrap '', '', join(', ', Unicode::Collate->new(level => 1)->sort(
                       map { $authors->{$_} }
-                      keys %$patchers) . ".\n";
+                      keys %$patchers)) . ".\n";
 }
 
 sub parse_commits_from_stdin {
@@ -257,6 +258,7 @@ sub display_test_output {
             print "ok $count - ".$real_names->{$_} ." $_\n";
         } else {
             print "not ok $count - Contributor not found in AUTHORS: $_ ".($real_names->{$_} || '???' )."\n";
+            print STDERR ($real_names->{$_} || '???' )." <$_> not found in AUTHORS\n";
         }
 
     }
@@ -615,6 +617,7 @@ edwardp\100excitehome.net               epeschko\100den-mdev1
 +                                       esp5\100pge.com
 egf7\100columbia.edu                    efifer\100sanwaint.com
 eggert\100twinsun.com                   eggert\100sea.sm.unisys.com
+etj\100cpan.org                         mohawk2\100users.noreply.github.com
 
 fugazi\100zyx.net                       larrysh\100cpan.org
 +                                       lshatzer\100islanddata.com
@@ -662,6 +665,7 @@ jdhedden\100cpan.org                    jerry\100hedden.us
 +                                       jdhedden\100gmail.com
 +                                       jdhedden\100yahoo.com
 +                                       jhedden\100pn100-02-2-356p.corp.bloomberg.com
++                                       jdhedden\100solydxk
 jeremy\100zawodny.com                   jzawodn\100wcnet.org
 jesse\100sig.bsh.com                    jesse\100ginger
 jfriedl\100yahoo.com                    jfriedl\100yahoo-inc.com
@@ -732,6 +736,7 @@ marnix\100gmail.com                     pttesac!marnix!vanam
 marty+p5p\100kasei.com                  marty\100martian.org
 mats\100sm6sxl.net                      mats\100sm5sxl.net
 mbarbon\100dsi.unive.it                 mattia.barbon\100libero.it
++                                       mattia\100barbon.org
 mcmahon\100ibiblio.org                  mcmahon\100metalab.unc.edu
 me\100davidglasser.net                  glasser\100tang-eleven-seventy-nine.mit.edu
 merijnb\100iloquent.nl                  merijnb\100ms.com
@@ -856,6 +861,7 @@ rootbeer\100teleport.com                rootbeer\100redcat.com
 +                                       tomphoenix\100unknown
 rurban\100x-ray.at                      rurban\100cpan.org
 +                                       rurban\100cpanel.net
+rvtol+news\100isolution.nl              rvtol\100isolution.nl
 sartak\100bestpractical.com             sartak\100gmail.com
 +                                       code\100sartak.org
 sadinoff\100olf.com                     danny-cpan\100sadinoff.com
@@ -910,7 +916,8 @@ stef\100mongueurs.net                   stef\100payrard.net
 +                                       s.payrard\100wanadoo.fr
 +                                       properler\100freesurf.fr
 +                                       stef\100francenet.fr
-stevan\100cpan.org                      stevan.little\100iinteractive.com
+stevan\100cpan.org                      stevan.little\100gmail.com
++                                       stevan.little\100iinteractive.com
 sthoenna\100efn.org                     ysth\100raven.shiftboard.com
 sisyphus1\100optusnet.com.au            sisyphus\100cpan.org
 
