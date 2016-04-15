@@ -28,7 +28,6 @@ debian/cpan-missing-site-dirs.diff
 fixes/memoize_storable_nstore.diff
 debian/regen-skip.diff
 debian/makemaker-pasthru.diff
-fixes/podman-pipe.diff
 debian/makemaker-manext.diff
 debian/devel-ppport-reproducibility.diff
 debian/encode-unicode-bom-doc.diff

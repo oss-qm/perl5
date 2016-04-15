@@ -1,4 +1,4 @@
-From 0b5d8fa8d98c40a54e828b3e1789cd81c8b5afb5 Mon Sep 17 00:00:00 2001
+From dc2207a06b342022237b61c8cc8bfe148dcc56e3 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 21 Dec 2015 19:20:12 +0200
 Subject: Fix a scoping issue with "no autodie" and the "system" sub

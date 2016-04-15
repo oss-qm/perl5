@@ -1756,10 +1756,6 @@ If generating a manual page from standard input, this option is required,
 since there's otherwise no way for Pod::Man to know what to use for the
 manual page name.
 
-If generating a manual page from standard input, this option is required,
-since there's otherwise no way for Pod::Man to know what to use for the
-manual page name.
-
 =item nourls
 
 Normally, LZ<><> formatting codes with a URL but anchor text are formatted
