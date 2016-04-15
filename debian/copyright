@@ -9,11 +9,11 @@ Comment:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
  .
- Last checked against: Perl 5.22.2~rc1
+ Last checked against: Perl 5.24.0~rc1
 
 Files: *
 Copyright:
- Perl is Copyright (C) 1987-2015 by Larry Wall and others. All rights reserved.
+ Perl is Copyright (C) 1987-2016 by Larry Wall and others. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
     This program is free software; you can redistribute it and/or modify
@@ -211,7 +211,7 @@ Comment:
 
 Files: lib/unicore/*.txt
 Copyright:
- Copyright (c) 1991-2014 Unicode, Inc.
+ Copyright (c) 1991-2015 Unicode, Inc.
 License: Unicode
 Comment:
  The license is given as
@@ -377,13 +377,14 @@ Comment:
  code under the same terms as Perl 5.10 itself, or, at your option,
  any later version of Perl 5.
 
-Files: cpan/autodie/lib/autodie/Scope/GuardStack.pm
-Copyright: Copyright 2013, Niels Thykier <niels@thykier.net>
+Files:
+ cpan/autodie/lib/autodie/Scope/GuardStack.pm
+ cpan/autodie/lib/autodie/Util.pm
+Copyright: Copyright 2013-2014, Niels Thykier <niels@thykier.net>
 License: GPL-1+ or Artistic
 Comment:
- This is free software.  You may modify and/or redistribute this
- code under the same terms as Perl 5.10 itself, or, at your option,
- any later version of Perl 5.
+ This module is free software.  You may distribute it under the
+ same terms as Perl itself.
 
 Files: cpan/B-
 Copyright:
@@ -401,7 +402,7 @@ Comment:
  b) the "Artistic License" which comes with this kit.
 
 Files: cpan/Compress-Raw-Bzip2/*
-Copyright: Copyright (c) 2005-2013 Paul Marquess. All rights reserved.
+Copyright: Copyright (c) 2005-2015 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it
@@ -421,7 +422,7 @@ Comment:
 License: BZIP
 
 Files: cpan/Compress-Raw-Zlib/*
-Copyright: Copyright (c) 2005-2013 Paul Marquess. All rights reserved.
+Copyright: Copyright (c) 2005-2015 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it
@@ -632,8 +633,8 @@ Comment:
 
 Files: cpan/File-Path/*
 Copyright:
- This module is copyright (C) Charles Bailey, Tim Bunce and
- David Landgren 1995-2013. All rights reserved.
+ This module is copyright (C) Charles Bailey, Tim Bunce, David Landgren,
+ James Keenan, and Richard Elberger 1995-2015. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This library is free software; you can redistribute it and/or modify
@@ -678,7 +679,7 @@ Comment:
 
 Files: cpan/IO-Compress/*
 Copyright:
- Copyright (c) 1995-2013 Paul Marquess. All rights reserved.
+ Copyright (c) 1995-2015 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it
@@ -712,8 +713,8 @@ Comment:
 
 Files: cpan/libnet/*
 Copyright:
- (C) 1995-2007 Graham Barr. All rights reserved.
- (C) 2013-2014 Steve Hay. All rights reserved.
+ (C) 1995-2011 Graham Barr. All rights reserved.
+ (C) 2013-2015 Steve Hay. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This library is free software; you can redistribute it and/or modify
@@ -867,7 +868,7 @@ Comment:
 
 Files: cpan/Parse-CPAN-Meta/*
 Copyright:
- This software is copyright (c) 2014 by Adam Kennedy and Contributors.
+ This software is copyright (c) 2015 by Adam Kennedy and Contributors.
 License: GPL-1+ or Artistic
 Comment:
  This is free software; you can redistribute it and/or modify it under
@@ -909,9 +910,7 @@ Comment:
 Files: cpan/podlators/*
 Copyright:
  Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-  2010, 2012, 2013 Russ Allbery <rra@stanford.edu>
- Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-  2010, 2012, 2013, 2014, 2015 Russ Allbery <rra@cpan.org>
+  2010, 2012, 2013, 2014, 2015, 2016 Russ Allbery <rra@cpan.org>
  Substantial contributions by Sean Burke <sburke@cpan.org>
 License: GPL-1+ or Artistic
 Comment:
@@ -926,6 +925,43 @@ License: GPL-1+ or Artistic
 Comment:
  This program is free software; you may redistribute it and/or modify it
  under the same terms as Perl itself.
+
+Files: cpan/podlators/t/data/snippets/README
+Copyright:
+ Copyright 2015 Russ Allbery <rra@cpan.org>
+License: RRA-KEEP-THIS-NOTICE
+ The license text can be found at the end of this file.
+
+Files:
+ cpan/podlators/t/docs/pod-spelling.t
+ cpan/podlators/t/docs/pod.t
+ cpan/podlators/t/docs/synopsis.t
+ cpan/podlators/t/lib/Test/RRA.pm
+ cpan/podlators/t/lib/Test/RRA/Config.pm
+ cpan/podlators/t/style/minimum-version.t
+ cpan/podlators/t/style/strict.t
+Copyright: Copyright 2012, 2013, 2014
+ The Board of Trustees of the Leland Stanford Junior University
+License: Expat
+
+Files: cpan/podlators/t/lib/Test/RRA/ModuleVersion.pm
+Copyright: Copyright 2016 Russ Allbery <eagle@eyrie.org>
+License: Expat
+
+Files: cpan/podlators/t/man/no-encode.t
+Copyright:
+ Copyright 2016 Niko Tyni <ntyni@iki.fi>
+ Copyright 2016 Russ Allbery <rra@cpan.org>
+License: GPL-1+ or Artistic
+Comment:
+ This program is free software; you may redistribute it and/or modify it
+ under the same terms as Perl itself.
+
+Files: cpan/podlators/t/style/module-version.t
+Copyright: 
+ Copyright 2014, 2015, 2016 Russ Allbery <eagle@eyrie.org>
+ Copyright 2012, 2013, 2014 The Board of Trustees of the Leland Stanford Junior University
+License: Expat
 
 Files: cpan/Pod-Parser/*
 Copyright:
@@ -1011,9 +1047,10 @@ Comment:
 Files: cpan/Pod-Usage/*
 Copyright:
  Copyright (C) 1996-2000 by Bradford Appleton. All rights reserved.
+ Copyright (c) 2001-2016 by Marek Rouchal.
 License: GPL-1+ or Artistic
 Comment:
- This file is part of "PodParser". PodParser is free software;
+ This file is part of "Pod-Usage". Pod-Usage is free software;
  you can redistribute it and/or modify it under the same terms
  as Perl itself.
 
@@ -1052,21 +1089,12 @@ Files: cpan/Term-ANSIColor/*
 Copyright:
  Copyright 1996 Zenin
  Copyright 1996, 1997, 1998, 2000, 2001, 2002, 2005, 2006, 2008, 2009,
-     2010, 2011, 2012, 2013 Russ Allbery <rra@stanford.edu>
+     2010, 2011, 2012, 2013, 2014, 2015 Russ Allbery <rra@stanford.edu>
  Copyright 2012 Kurt Starsinic <kstarsinic@gmail.com>
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you may redistribute it and/or modify
  it under the same terms as Perl itself.
-
-Files: cpan/Term-ANSIColor/t/stringify.t
-Copyright:
- Copyright 2011 Revilo Reegiles
- Copyright 2011 Russ Allbery <rra@stanford.edu>
-License: GPL-1+ or Artistic
-Comment:
- This program is free software; you may redistribute it and/or modify it
- under the same terms as Perl itself.
 
 Files:
  cpan/Term-ANSIColor/t/lib/Test/RRA.pm
@@ -1075,34 +1103,11 @@ Copyright: 2013, 2014 The Board of Trustees of the Leland Stanford Junior Univer
 License: Expat
 
 Files: cpan/Term-Cap/*
-Copyright: unknown
+Copyright: 1995-2015 (c) perl5 porters.
 License: GPL-1+ or Artistic
 Comment:
- ----------------------------------------
- There are no copyright or license notices included. The file
- cpan/Term-Cap/Cap.pm refers to a README file, but that has apparently
- been filtered out when bundling the software into the Perl core
- distribution.
- .
- The referenced README file is available at
- <http://cpansearch.perl.org/src/JSTOWE/Term-Cap-1.12/README>, and it
- states:
- .
-  Copyright 1995-2007 (c) perl5 porters.
- .
-  This software is free software and can be modified and distributed under
-  the same terms as Perl itself.
-
-Files: cpan/Test/*
-Copyright:
- Copyright (c) 1998-2000 Joshua Nathaniel Pritikin.
- Copyright (c) 2001-2002 Michael G. Schwern.
- Copyright (c) 2002-2004 Sean M. Burke.
-License: GPL-1+ or Artistic
-Comment:
- This package is free software and is provided "as is" without express
- or implied warranty.  It may be used, redistributed and/or modified
- under the same terms as Perl itself.
+ This software is free software and can be modified and distributed under
+ the same terms as Perl itself.
 
 Files: cpan/Test-Harness/*
 Copyright:
@@ -1254,9 +1259,9 @@ Comment:
  Public License.
 
 Files:
+ cpan/bignum/*
  cpan/Tie-RefHash/*
  cpan/Win32API-File/*
- dist/bignum/*
  dist/ExtUtils-Install/*
  dist/Math-BigInt/*
  dist/Math-BigInt-FastCalc/*
@@ -1270,17 +1275,6 @@ Comment:
  ----------------------------------------
  These distributions include no copyright notices but have
  the same explicit licensing information.
-
-Files: cpan/Time-HiRes/*
-Copyright:
- Copyright (c) 1996-2002 Douglas E. Wegscheid.  All rights reserved.
- Copyright (c) 2002-2010 Jarkko Hietaniemi.
- Copyright (c) 2011, 2012 Andrew Main (Zefram) <zefram@fysh.org>
- All rights reserved.
-License: GPL-1+ or Artistic
-Comment:
- This program is free software; you can redistribute it and/or modify
- it under the same terms as Perl itself.
 
 Files: cpan/Time-Local/*
 Copyright:
@@ -1364,7 +1358,6 @@ Files:
  dist/ExtUtils-Command/*
  dist/ExtUtils-Manifest/*
  dist/I18N-Collate/*
- dist/if/*
  dist/Safe/*
  ext/Fcntl/*
  ext/FileCache/*
@@ -1403,8 +1396,8 @@ Comment:
 
 Files: dist/Carp/*
 Copyright:
- Copyright (c) 1994-2012 Larry Wall
- Copyright (c) 2011, 2012 Andrew Main (Zefram) <zefram@fysh.org>
+ Copyright (c) 1994-2013 Larry Wall
+ Copyright (c) 2011, 2012, 2013 Andrew Main (Zefram) <zefram@fysh.org>
 License: GPL-1+ or Artistic
 Comment:
  This module is free software. It may be used, redistributed
@@ -1421,7 +1414,7 @@ Comment:
 Files: dist/ExtUtils-CBuilder/*
 Copyright:
  Copyright (c) 2003-2005 Ken Williams.  All rights reserved.
- Copyright (c) 2012 Ken Williams.  All rights reserved.
+ Copyright (c) 2012-2015 Ken Williams.  All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This library is free software; you can redistribute it and/or
@@ -1446,6 +1439,13 @@ License: GPL-1+ or Artistic
 Comment:
  This module is free software. It may be used, redistributed
  and/or modified under the same terms as Perl itself.
+
+Files: dist/if/*
+Copyright: This software is copyright (c) 2002 by Ilya Zakharevich.
+License: GPL-1+ or Artistic
+Comment:
+ This is free software; you can redistribute it and/or modify it under
+ the same terms as the Perl 5 programming language system itself.
 
 Files: dist/I18N-LangTags/*
 Copyright:
@@ -1644,6 +1644,28 @@ Comment:
  You may distribute under the terms of either the GNU General Public
  License or the Artistic License, as specified in the README file.
 
+Files: dist/Test/*
+Copyright:
+ Copyright (c) 1998-2000 Joshua Nathaniel Pritikin.
+ Copyright (c) 2001-2002 Michael G. Schwern.
+ Copyright (c) 2002-2004 Sean M. Burke.
+License: GPL-1+ or Artistic
+Comment:
+ This package is free software and is provided "as is" without express
+ or implied warranty.  It may be used, redistributed and/or modified
+ under the same terms as Perl itself.
+
+Files: dist/Time-HiRes/*
+Copyright:
+ Copyright (c) 1996-2002 Douglas E. Wegscheid.  All rights reserved.
+ Copyright (c) 2002-2010 Jarkko Hietaniemi.
+ Copyright (c) 2011, 2012, 2013 Andrew Main (Zefram) <zefram@fysh.org>
+ All rights reserved.
+License: GPL-1+ or Artistic
+Comment:
+ This program is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself.
+
 Files: dist/XSLoader/*
 Copyright:
  Copyright (C) 1990-2011 by Larry Wall and others.
@@ -1660,6 +1682,16 @@ License: GPL-1+ or Artistic
 Comment:
  You may distribute under the terms of either the GNU General Public
  License or the Artistic License, as specified in the README file.
+
+Files:
+ ext/Amiga-ARexx/*
+ ext/Amiga-Exec/*
+Copyright:
+ Copyright (C) 2013 by Andy Broad.
+License: GPL-1+ or Artistic
+Comment:
+ There is no license information included. It is assumed that this
+ distribution is licensed under the same terms as Perl itself.
 
 Files: ext/B/*
 Copyright:
@@ -1943,12 +1975,11 @@ Comment:
 
 Files: pod/perlpodstyle.pod
 Copyright:
- Copyright 1999, 2000, 2001, 2004, 2006, 2008, 2010 Russ Allbery
- <rra@stanford.edu>.
-License: GPL-1+ or Artistic
+ Copyright 1999, 2000, 2001, 2004, 2006, 2008, 2010, 2015 Russ Allbery
+ <rra@cpan.org>
+License: RRA-KEEP-THIS-NOTICE
 Comment:
- This documentation is free software; you may redistribute it and/or modify
- it under the same terms as Perl itself.
+ The license text can be found at the end of this file.
 
 Files: pod/perlreapi.pod
 Copyright:
@@ -2717,3 +2748,9 @@ Comment:
  This license text was retrieved from
  <http://creativecommons.org/publicdomain/zero/1.0/>
  on Fri, 05 Feb 2016 20:30:28 +0200
+
+License: RRA-KEEP-THIS-NOTICE
+ Copying and distribution of this file, with or without modification, are
+ permitted in any medium without royalty provided the copyright notice and
+ this notice are preserved.  This file is offered as-is, without any
+ warranty.
