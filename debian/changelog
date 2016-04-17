@@ -1,3 +1,15 @@
+perl (5.22.1-10) unstable; urgency=medium
+
+  * Replace libperl5.22 manual ldconfig calls with an explicit trigger.
+    (Closes: #820500)
+  * Only conflict with versioned (i.e. non-virtual) perl-modules packages.
+    (Closes: #821161)
+  * Emulate 'uname -m' output for reproducibility regardless of kernel arch.
+    (Closes: #821182)
+  * Add cross build support files for m68k, powerpcspe and sh4.
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 17 Apr 2016 22:08:08 +0300
+
 perl (5.22.1-9) unstable; urgency=medium
 
   * Add cross build support files for alpha, hppa, sparc64, x32, mips,
