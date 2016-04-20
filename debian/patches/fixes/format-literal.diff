@@ -1,4 +1,4 @@
-From 04f0370d7ce21a989c00aedec55898fec77d3fb8 Mon Sep 17 00:00:00 2001
+From 98e58efe70a2c90766955fc06903f3d4357fde58 Mon Sep 17 00:00:00 2001
 From: Aaron Crane <arc@cpan.org>
 Date: Thu, 14 Apr 2016 11:23:12 +0100
 Subject: Avoid passing non-literal to format function
@@ -16,7 +16,7 @@ op.c:9754:58: error: format not a string literal and no format arguments [-Werro
 In addition, the string in question is now made const.
 
 Patch-Name: fixes/format-literal.diff
-Origin: http://code.activestate.com/lists/perl5-porters/228281/
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/5068f264e5db925e43c1b4fab9c9c9a44f9a1926
 ---
  op.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
