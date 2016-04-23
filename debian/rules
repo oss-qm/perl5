@@ -593,6 +593,9 @@ endif
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \
 	done
+ifeq ($(installtype),static)
+	dpkg-gensymbols -plibperl$(version) -P$(build)/libperl$(version)
+endif
 	# dpkg-shlibdeps needs to be run only after all the shlibs are present
 	for p in $(arch_pkgs); \
 	do \
