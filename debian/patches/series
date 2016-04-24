@@ -36,5 +36,4 @@ fixes/autodie-scope.diff
 fixes/crosscompile-no-targethost.diff
 fixes/memoize-pod.diff
 fixes/ok-pod.diff
-fixes/format-literal.diff
 debian/makemaker_customized.diff

@@ -1,4 +1,4 @@
-From dc24f350e67d57f096242dbe1df7be7c2e23688d Mon Sep 17 00:00:00 2001
+From b4896099ea909cd036ea6af0496b014910504e8e Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 10 Jan 2016 22:35:53 +0200
 Subject: Fix the Configure escape with usecrosscompile but no targethost
@@ -20,10 +20,10 @@ Patch-Name: fixes/crosscompile-no-targethost.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Configure b/Configure
-index be25580..2a40f40 100755
+index a00df64..42f7c21 100755
 --- a/Configure
 +++ b/Configure
-@@ -2971,7 +2971,7 @@ $define|true|[yY]*)
+@@ -2972,7 +2972,7 @@ $define|true|[yY]*)
  	*)  echo "Using targetarch $targetarch." >&4 ;;
  	esac
  	case "$targethost" in

@@ -1,9 +1,10 @@
-perl (5.24.0~rc1-1) UNRELEASED; urgency=medium
+perl (5.24.0~rc2-1) UNRELEASED; urgency=medium
 
   * New upstream release candidate.
   * Add symbols file for libperl5.24 (Closes: #702752)
+  * New upstream release candidate
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 11 Apr 2016 19:57:15 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 24 Apr 2016 16:39:56 +0300
 
 perl (5.22.2~rc1-1) experimental; urgency=medium
 

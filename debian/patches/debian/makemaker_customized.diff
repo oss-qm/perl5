@@ -1,4 +1,4 @@
-From 09f326fd3808e1221dc65f2596996cadc47887b6 Mon Sep 17 00:00:00 2001
+From 1fbdbfe190cc5df4c59948cc9aecc911fcfe030d Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 15 Apr 2016 23:53:22 +0300
 Subject: Update t/porting/customized.dat for files patched in Debian

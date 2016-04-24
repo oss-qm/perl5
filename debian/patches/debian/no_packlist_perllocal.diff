@@ -1,4 +1,4 @@
-From 310469e9959a3aae216add51f4f3cce53bc2d06c Mon Sep 17 00:00:00 2001
+From bac61fc8a88a1bf4ca738a14aa7e4ced005ef8dd Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Don't install .packlist or perllocal.pod for perl or vendor
