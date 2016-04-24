@@ -2,6 +2,8 @@ perl (5.20.2-3+deb8u5) UNRELEASED; urgency=medium
 
   * Apply patch from Niko Tyni fixing debugperl crashes with XS
     modules (Closes: #816280)
+  * [SECURITY] CVE-2015-8853 fix regexp engine hang on illegal UTF8
+    input (Closes: #821848)
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 01 Apr 2016 22:13:30 +0100
 

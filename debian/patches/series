@@ -46,3 +46,4 @@ debian/encode-unicode-bom-doc.diff
 debian/kfreebsd-softupdates.diff
 fixes/CVE-2016-2381_duplicate_env.diff
 debian/debugperl-compat-fix.diff
+fixes/CVE-2015-8853_regexp_hang.diff
