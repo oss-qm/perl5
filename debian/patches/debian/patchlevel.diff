@@ -1,4 +1,4 @@
-From 0be37c92dd44e75efe77cd4e4a34b6296ec0f0d1 Mon Sep 17 00:00:00 2001
+From cb898d584c8ba8a416dce41891b53b8b0059eb22 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 15 May 2011 19:35:58 +0300
 Subject: List packaged patches in patchlevel.h
@@ -15,7 +15,7 @@ Patch-Name: debian/patchlevel.diff
  1 file changed, 3 insertions(+)
 
 diff --git a/patchlevel.h b/patchlevel.h
-index 2a7c7a3..1fbbceb 100644
+index 62563e9..b8a9dcb 100644
 --- a/patchlevel.h
 +++ b/patchlevel.h
 @@ -138,6 +138,9 @@ static const char * const local_patches[] = {
