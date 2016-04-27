@@ -1,4 +1,4 @@
-perl (5.24.0~rc3-1) UNRELEASED; urgency=medium
+perl (5.24.0~rc3-1) experimental; urgency=medium
 
   * New upstream release candidate.
   * No longer Provide perl-modules. (Closes: #822064)
@@ -6,8 +6,9 @@ perl (5.24.0~rc3-1) UNRELEASED; urgency=medium
   * Provide perlapi-5.24.0-exp1 (and set $Config{debian_abi} accordingly):
     while no further ABI changes are planned, this helps if some turn
     out to be necessary before 5.24 enters unstable.
+  * Upload to experimental.
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 24 Apr 2016 16:39:56 +0300
+ -- Niko Tyni <ntyni@debian.org>  Wed, 27 Apr 2016 22:59:49 +0300
 
 perl (5.22.2~rc1-1) experimental; urgency=medium
 
