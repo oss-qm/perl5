@@ -1,4 +1,4 @@
-perl (5.24.0~rc2-1) UNRELEASED; urgency=medium
+perl (5.24.0~rc3-1) UNRELEASED; urgency=medium
 
   * New upstream release candidate.
   * Add symbols file for libperl5.24 (Closes: #702752)
