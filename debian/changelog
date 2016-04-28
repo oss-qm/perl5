@@ -1,6 +1,9 @@
 perl (5.24.0~rc3-1) experimental; urgency=medium
 
   * New upstream release candidate.
+    + fixes Makefile.SH quoting (Closes: #754057)
+    + includes Time::Piece documentation improvements
+      (Closes: #762816, #796089, #782655)
   * No longer Provide perl-modules. (Closes: #822064)
   * Add symbols file for libperl5.24 (Closes: #702752)
   * Provide perlapi-5.24.0-exp1 (and set $Config{debian_abi} accordingly):
