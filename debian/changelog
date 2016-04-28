@@ -5,6 +5,7 @@ perl (5.22.2~rc1-2) UNRELEASED; urgency=medium
   * Add cross build support files for ppc64.
   * Merge 5.22.1-10 from unstable.
   * Fix libperl5.22.triggers permissions.
+  * Work around t/op/stat.t problems on GNU/Hurd. (Closes: #822735)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 11 Apr 2016 19:57:15 +0300
 

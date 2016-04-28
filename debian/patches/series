@@ -53,3 +53,4 @@ debian/cross-time-hires.diff
 fixes/encode-unicode-pod.diff
 fixes/memoize-pod.diff
 fixes/ok-pod.diff
+debian/hurd-softupdates.diff
