@@ -98,6 +98,7 @@ print FOO "Now is the time for all good men to come to.\n";
 close(FOO);
 
 stat($tmpfile) if $^O =~ /^gnukfreebsd/;	# Work around Debian Bug#796798
+stat($tmpfile) if $^O eq 'gnu';         	# Work around Debian Bug#822735
 sleep 2;
 
 my $has_link = 1;
