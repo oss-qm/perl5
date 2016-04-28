@@ -930,6 +930,7 @@ Files: cpan/podlators/t/data/snippets/README
 Copyright:
  Copyright 2015 Russ Allbery <rra@cpan.org>
 License: RRA-KEEP-THIS-NOTICE
+Comment:
  The license text can be found at the end of this file.
 
 Files:
