@@ -200,9 +200,6 @@ install-stamp: build-stamp
 		$(lib)/Config.pm $(lib)/Config_heavy.pl \
 		$(lib)/Config.pm.static $(lib)/Config_heavy.pl.static
 
-	# rip away CGI::Fast, which has a separate source package now
-	rm -f $(share)/CGI/Fast.pm $(man)/man3/CGI::Fast.3perl
-
 ifeq (,$(perlabi))
 else
 	# add \$Config{debian_abi}
