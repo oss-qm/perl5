@@ -59,6 +59,7 @@ myhostname=localhost
 # 32-bit vs 64-bit kernel
 #
 # this is silly but oh well
+# see #821182
 
 host_arch=${DEB_HOST_ARCH:-$(dpkg-architecture -qDEB_HOST_ARCH)}
 
