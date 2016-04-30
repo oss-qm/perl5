@@ -69,3 +69,13 @@ fixes/5.20.3/possessive_quantifier.diff
 fixes/5.20.3/quoted_code_crash.diff
 fixes/5.20.3/checking_sub_inwhat.diff
 fixes/5.20.3/yylex_loop.diff
+fixes/5.20.3/docs/op.diff
+fixes/5.20.3/docs/encoding.diff
+fixes/5.20.3/docs/SvPV_set.diff
+fixes/5.20.3/docs/autodie.diff
+fixes/5.20.3/docs/autodie_2_26.diff
+fixes/5.20.3/docs/setenv.diff
+fixes/5.20.3/docs/clib_caution.diff
+fixes/5.20.3/docs/perlunicook_typos.diff
+fixes/5.20.3/docs/ook_example.diff
+fixes/5.20.3/docs/study_noop.diff
