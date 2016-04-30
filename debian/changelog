@@ -10,6 +10,8 @@ perl (5.22.2-1) UNRELEASED; urgency=medium
 
   [ Dominic Hargreaves ]
   * New upstream release
+    + update version of libmodule-corelist-perl Breaks and Replaces
+      for 5.22.2
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 11 Apr 2016 19:57:15 +0300
 
