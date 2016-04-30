@@ -608,7 +608,7 @@ or the midpoint if you know the end points:
   ($thetam, $phim) =
     great_circle_midpoint($theta0, $phi0, $theta1, $phi1);
 
-The great_circle_midpoint() is just a special case of
+The great_circle_midpoint() is just a special case (with $way = 0.5) of
 
 =head2 great_circle_waypoint
 
