@@ -1,4 +1,4 @@
-From 5a5386cabb56b43f8687e74e5b8cb37e589eb71a Mon Sep 17 00:00:00 2001
+From abb15a807feb2e97d758aad5f50496cdc518d77a Mon Sep 17 00:00:00 2001
 From: Russ Allbery <rra@cpan.org>
 Date: Sat, 7 Feb 2015 19:03:34 -0800
 Subject: Better errors for man pages from standard input

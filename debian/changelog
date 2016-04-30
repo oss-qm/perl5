@@ -1,11 +1,15 @@
-perl (5.22.2~rc1-2) UNRELEASED; urgency=medium
+perl (5.22.2-1) UNRELEASED; urgency=medium
 
+  [ Niko Tyni ]
   * Refresh cross build support files for alpha, amd64, arm64, i386
     kfreebsd-amd64, kfreebsd-i386, powerpc, ppc64el and s390x.
   * Add cross build support files for ppc64.
   * Merge 5.22.1-10 from unstable.
   * Fix libperl5.22.triggers permissions.
   * Work around t/op/stat.t problems on GNU/Hurd. (Closes: #822735)
+
+  [ Dominic Hargreaves ]
+  * New upstream release
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 11 Apr 2016 19:57:15 +0300
 

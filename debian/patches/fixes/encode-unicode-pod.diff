@@ -1,4 +1,4 @@
-From 7806ea2facb46afe3791a5bda0115e0dfbda836a Mon Sep 17 00:00:00 2001
+From afa88549d349dbe1a1e1a7946db46f03476fefa0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Ville=20Skytt=C3=A4?= <ville.skytta@iki.fi>
 Date: Sat, 7 Nov 2015 13:49:58 +0200
 Subject: Unicode.pm: Fix POD error

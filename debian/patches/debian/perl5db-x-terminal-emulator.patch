@@ -1,4 +1,4 @@
-From 4e73fb9f805f7b4e0e95658083bea61244b49c0f Mon Sep 17 00:00:00 2001
+From 529d818ac179a63bb8f8b4ce79cb9bff7f2ccd12 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 14 Apr 2012 11:34:05 +0100
 Subject: Invoke x-terminal-emulator rather than xterm in perl5db.pl

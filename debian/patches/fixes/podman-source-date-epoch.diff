@@ -1,4 +1,4 @@
-From 5cab48eca3e9e5c3d39128ee94a74588e263ed82 Mon Sep 17 00:00:00 2001
+From b0396baf6c61b73a56aca19f5e0a7c53e5ec2703 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 12 Oct 2015 17:39:33 +0300
 Subject: Make Pod::Man honor the SOURCE_DATE_EPOCH environment variable

@@ -1,4 +1,4 @@
-From b78135069edccfd891d82ff134697f4a8f0c84ed Mon Sep 17 00:00:00 2001
+From 2d7a25a05b8f1c542d88016fe18752ef22eb230c Mon Sep 17 00:00:00 2001
 From: Steven Chamberlain <steven@pyro.eu.org>
 Date: Thu, 17 Dec 2015 02:15:58 +0000
 Subject: Work around Debian Bug#796798

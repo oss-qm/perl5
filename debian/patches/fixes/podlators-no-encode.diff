@@ -1,4 +1,4 @@
-From 7ec3ee17860f74aac50f1de155d2e40b565cbbcc Mon Sep 17 00:00:00 2001
+From 13fb1a9e4f3e8a30bee6940e6290a666e0aff5fb Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 13 Jan 2016 22:57:14 +0200
 Subject: Degrade gracefully if utf8 is requested but Encode is not available

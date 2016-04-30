@@ -1,4 +1,4 @@
-From 097cbfd5e73dea49852411a98616efa559ab8043 Mon Sep 17 00:00:00 2001
+From c4a542d891f17d702d901a94f9434f7b2692726c Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 12 Jul 2015 22:23:00 +0300
 Subject: Allow overriding the compile time in "perl -V" output
@@ -20,7 +20,7 @@ Patch-Name: debian/do-not-record-build-date.diff
  1 file changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/perl.c b/perl.c
-index d9f410a..ed25429 100644
+index d9f410a..ed254293 100644
 --- a/perl.c
 +++ b/perl.c
 @@ -1795,15 +1795,20 @@ S_Internals_V(pTHX_ CV *cv)

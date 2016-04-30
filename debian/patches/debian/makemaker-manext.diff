@@ -1,4 +1,4 @@
-From 700a0ed19b808ba0942c5780b7adb79ee4606e18 Mon Sep 17 00:00:00 2001
+From c7758f1fc2d20c6994715155746d25fa640469bb Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 1 Jul 2015 22:23:53 +0300
 Subject: Make EU::MakeMaker honour MANnEXT settings in generated manpage
