@@ -263,6 +263,11 @@ core Perl which defines only the C<sin()> and C<cos()>.  The constant
 B<pi> is also defined as are a few convenience functions for angle
 conversions, and I<great circle formulas> for spherical movement.
 
+=head1 ANGLES
+
+All angles are defined in radians, except where otherwise specified
+(for example in the deg/rad conversion functions).
+
 =head1 TRIGONOMETRIC FUNCTIONS
 
 The tangent
