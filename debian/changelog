@@ -1,4 +1,4 @@
-perl (5.22.2-1) UNRELEASED; urgency=medium
+perl (5.22.2-1) unstable; urgency=medium
 
   [ Niko Tyni ]
   * Refresh cross build support files for alpha, amd64, arm64, i386
@@ -12,8 +12,9 @@ perl (5.22.2-1) UNRELEASED; urgency=medium
   * New upstream release
     + update version of libmodule-corelist-perl Breaks and Replaces
       for 5.22.2
+  * Upload to unstable
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 11 Apr 2016 19:57:15 +0300
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Apr 2016 13:20:51 +0100
 
 perl (5.22.2~rc1-1) experimental; urgency=medium
 
