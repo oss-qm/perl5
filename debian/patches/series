@@ -47,3 +47,5 @@ debian/kfreebsd-softupdates.diff
 fixes/CVE-2016-2381_duplicate_env.diff
 debian/debugperl-compat-fix.diff
 fixes/CVE-2015-8853_regexp_hang.diff
+fixes/utf8_regexp_crash.diff
+fixes/regcomp_whitespace_fix.diff
