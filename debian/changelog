@@ -6,6 +6,8 @@ perl (5.20.2-3+deb8u5) UNRELEASED; urgency=medium
     input (Closes: #821848)
   * Fix UTF8-related regexp engine crash (Closes: #820328)
   * Apply selected bug-fix patches taken from 5.20.3 (Closes: #822336)
+    - /usr/share/doc/perl/perldebdelta.pod describes the changes in
+      more detail
 
  -- Dominic Hargreaves <dom@earth.li>  Fri, 01 Apr 2016 22:13:30 +0100
 
