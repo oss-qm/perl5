@@ -37,3 +37,4 @@ fixes/crosscompile-no-targethost.diff
 fixes/memoize-pod.diff
 fixes/ok-pod.diff
 debian/makemaker_customized.diff
+debian/hurd-softupdates.diff
