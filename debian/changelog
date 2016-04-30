@@ -1,3 +1,9 @@
+perl (5.24.0~rc3-3) UNRELEASED; urgency=medium
+
+  * Merge 5.22.2-1 from unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Apr 2016 15:46:30 +0100
+
 perl (5.24.0~rc3-2) experimental; urgency=medium
 
   * Fix libperl5.24.triggers permissions.
@@ -19,6 +25,24 @@ perl (5.24.0~rc3-1) experimental; urgency=medium
   * Upload to experimental.
 
  -- Niko Tyni <ntyni@debian.org>  Wed, 27 Apr 2016 22:59:49 +0300
+
+perl (5.22.2-1) unstable; urgency=medium
+
+  [ Niko Tyni ]
+  * Refresh cross build support files for alpha, amd64, arm64, i386
+    kfreebsd-amd64, kfreebsd-i386, powerpc, ppc64el and s390x.
+  * Add cross build support files for ppc64.
+  * Merge 5.22.1-10 from unstable.
+  * Fix libperl5.22.triggers permissions.
+  * Work around t/op/stat.t problems on GNU/Hurd. (Closes: #822735)
+
+  [ Dominic Hargreaves ]
+  * New upstream release
+    + update version of libmodule-corelist-perl Breaks and Replaces
+      for 5.22.2
+  * Upload to unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Apr 2016 13:20:51 +0100
 
 perl (5.22.2~rc1-1) experimental; urgency=medium
 
