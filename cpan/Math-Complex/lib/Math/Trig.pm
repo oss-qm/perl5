@@ -263,6 +263,11 @@ core Perl which defines only the C<sin()> and C<cos()>.  The constant
 B<pi> is also defined as are a few convenience functions for angle
 conversions, and I<great circle formulas> for spherical movement.
 
+=head1 ANGLES
+
+All angles are defined in radians, except where otherwise specified
+(for example in the deg/rad conversion functions).
+
 =head1 TRIGONOMETRIC FUNCTIONS
 
 The tangent
@@ -608,7 +613,7 @@ or the midpoint if you know the end points:
   ($thetam, $phim) =
     great_circle_midpoint($theta0, $phi0, $theta1, $phi1);
 
-The great_circle_midpoint() is just a special case of
+The great_circle_midpoint() is just a special case (with $way = 0.5) of
 
 =head2 great_circle_waypoint
 
@@ -742,6 +747,8 @@ cannot be completely avoided if we want things like C<asin(2)> to give
 an answer instead of giving a fatal runtime error.
 
 Do not attempt navigation using these formulas.
+
+=head1 SEE ALSO
 
 L<Math::Complex>
 

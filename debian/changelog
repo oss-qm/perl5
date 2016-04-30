@@ -1,6 +1,8 @@
 perl (5.24.0~rc3-3) UNRELEASED; urgency=medium
 
   * Merge 5.22.2-1 from unstable
+  * Apply various minor documentation improvements in dual-lived
+    modules (Closes: #817925, #367291, #731505, #697568, #51962)
 
  -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Apr 2016 15:46:30 +0100
 

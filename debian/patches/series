@@ -38,3 +38,9 @@ fixes/memoize-pod.diff
 fixes/ok-pod.diff
 debian/makemaker_customized.diff
 debian/hurd-softupdates.diff
+fixes/nntp_docs.diff
+fixes/math_complex_doc_great_circle.diff
+fixes/math_complex_doc_see_also.diff
+fixes/math_complex_doc_angle_units.diff
+fixes/cpan_web_link.diff
+fixes/time_piece_doc.diff
