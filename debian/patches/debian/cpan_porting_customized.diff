@@ -1,0 +1,20 @@
+From 3e53d750f50df7f576024bd8f4dcc046d6678811 Mon Sep 17 00:00:00 2001
+From: Dominic Hargreaves <dom@earth.li>
+Date: Mon, 2 May 2016 23:22:17 +0100
+Subject: Update t/porting/customised.dat for CPAN change
+
+Patch-Name: debian/cpan_porting_customized.diff
+---
+ t/porting/customized.dat | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/t/porting/customized.dat b/t/porting/customized.dat
+index 4017556..4dfed61 100644
+--- a/t/porting/customized.dat
++++ b/t/porting/customized.dat
+@@ -1,4 +1,4 @@
+-CPAN cpan/CPAN/lib/CPAN.pm ce62c43d72f101c011184dbbc59e21c2790826f0
++CPAN cpan/CPAN/lib/CPAN.pm 1e0e35a36eec961e4be1f142a111d55e5696d9f9
+ Encode cpan/Encode/encoding.pm 51c19efc9bfe8467d6ae12a4654f6e7f980715bf
+ ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm 8d772fbc6a57637ab24d12a02794073ee71b489c
