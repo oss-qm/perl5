@@ -2,7 +2,7 @@ perl (5.24.0~rc4-1) UNRELEASED; urgency=medium
 
   * Merge 5.22.2-1 from unstable
   * Apply various minor documentation improvements in dual-lived
-    modules (Closes: #817925, #367291, #731505, #697568, #51962)
+    modules (Closes: #51962, #367291, #697567, #697568, #731505, #817925)
   * New upstream release candidate
     + documentation tweaks (Closes: #246542, #494590, #776614, #810156)
 
