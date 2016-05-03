@@ -1,4 +1,4 @@
-perl (5.24.0~rc4-1) UNRELEASED; urgency=medium
+perl (5.24.0~rc4-1) experimental; urgency=medium
 
   * Merge 5.22.2-1 from unstable
   * Apply various minor documentation improvements in dual-lived
@@ -6,7 +6,7 @@ perl (5.24.0~rc4-1) UNRELEASED; urgency=medium
   * New upstream release candidate
     + documentation tweaks (Closes: #246542, #494590, #776614, #810156)
 
- -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Apr 2016 15:46:30 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 03 May 2016 22:29:06 +0100
 
 perl (5.24.0~rc3-2) experimental; urgency=medium
 
