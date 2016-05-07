@@ -1,4 +1,4 @@
-From d6994fffe58156da0439ec0389d42c9e9dc72f67 Mon Sep 17 00:00:00 2001
+From 51d42e4045df504fdf2af7685afb12a41b91b42f Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 11 Oct 2015 19:27:56 +0300
 Subject: Sort the list of XS code files when generating RealPPPort.xs

@@ -1,4 +1,4 @@
-From dcc910e660e81a58ccbeb66d43345a8fe153a044 Mon Sep 17 00:00:00 2001
+From 9c02758f2ab8f8c6a207b0bf19d612f70903992f Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 22:56:56 +0100
 Subject: Math::Trig: document angle units

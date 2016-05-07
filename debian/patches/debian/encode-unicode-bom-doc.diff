@@ -1,4 +1,4 @@
-From 0b996ce50ef54ec3d62314219ae94cf87c1fee0a Mon Sep 17 00:00:00 2001
+From ccbd365782f0bff011be29cfd3ee3fd826560e35 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 12 Dec 2015 16:09:32 +0200
 Subject: Document Debian backport of Encode::Unicode fix
