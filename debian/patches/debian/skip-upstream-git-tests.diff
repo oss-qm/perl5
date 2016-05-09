@@ -1,4 +1,4 @@
-From c1d13180059a21f5403c8e7e2d19b3d6a1716871 Mon Sep 17 00:00:00 2001
+From 0196feeb79d4e7e94cb1247f69da440c9925a186 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 22 Apr 2011 11:15:32 +0300
 Subject: Skip tests specific to the upstream Git repository

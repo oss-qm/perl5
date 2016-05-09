@@ -1,4 +1,4 @@
-From b668118b823f9a7e183df6ad0cdda20a70d1c3dd Mon Sep 17 00:00:00 2001
+From da4908b2623c16a5fc35f42dbe3ceac4ff4b2612 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Set location of libnet.cfg to /etc/perl/Net as /usr may not be

@@ -1,4 +1,4 @@
-From 4bd08f3523a97ca0d9edd3380a8320c88a5a7306 Mon Sep 17 00:00:00 2001
+From 186cd8a19d4272ed0ee89fa524641bba4bc325e3 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 15 May 2011 19:35:58 +0300
 Subject: List packaged patches in patchlevel.h
@@ -15,10 +15,10 @@ Patch-Name: debian/patchlevel.diff
  1 file changed, 3 insertions(+)
 
 diff --git a/patchlevel.h b/patchlevel.h
-index 82aa264..85c9422 100644
+index bcb921f..f0ac06c 100644
 --- a/patchlevel.h
 +++ b/patchlevel.h
-@@ -138,6 +138,9 @@ static const char * const local_patches[] = {
+@@ -137,6 +137,9 @@ static const char * const local_patches[] = {
  	,"uncommitted-changes"
  #endif
  	PERL_GIT_UNPUSHED_COMMITS    	/* do not remove this line */
