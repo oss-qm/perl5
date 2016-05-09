@@ -179,7 +179,7 @@ Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: libperl5.24 (= ${binary:Version}),
+Depends: perl:any (= ${binary:Version}), libperl5.24 (= ${binary:Version}),
  libc6-dev | libc-dev
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter.
@@ -367,7 +367,7 @@ Multi-Arch: allowed
 Pre-Depends: dpkg (>= 1.17.17)
 Depends: perl-base (= ${binary:Version}), perl-modules-5.24 (>= ${source:Version}), libperl5.24 (= ${binary:Version}), ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
-Breaks: perl-doc (<< ${Upstream-Version}-1)
+Breaks: perl-doc (<< ${Upstream-Version}-1), libperl-dev (<< 5.24.0~)
 Replaces: perl-modules (<< 5.22.0~)
 Recommends: netbase, rename
 Suggests: perl-doc, libterm-readline-gnu-perl | libterm-readline-perl-perl,
