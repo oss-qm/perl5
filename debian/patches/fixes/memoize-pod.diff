@@ -1,4 +1,4 @@
-From 6e9ea3729870810e3862f51ab7de2843da4a4722 Mon Sep 17 00:00:00 2001
+From 3d09b127c3bd4439d4a8061ed5f715e0c7cb1845 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 6 Feb 2016 20:15:19 +0200
 Subject: Fix POD errors in Memoize

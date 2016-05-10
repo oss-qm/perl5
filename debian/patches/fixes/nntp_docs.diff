@@ -1,4 +1,4 @@
-From 8b1fed985d10c3fbadaf2c4a9ca8e385a3c7d2f7 Mon Sep 17 00:00:00 2001
+From c40ec9f381415b3bf662101531a2ed882cd58aef Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 22:46:41 +0100
 Subject: Net::NNTP: Correct innd/nnrpd confusion in relation to Reader option

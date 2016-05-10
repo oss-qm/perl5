@@ -1,4 +1,4 @@
-From 74ae660285b0faef32c95063d4af4dfe04a6922e Mon Sep 17 00:00:00 2001
+From 3039af19dd2c3b561d89b3d9cd6b60774b6e0d7c Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Apr 2016 16:31:39 +0300
 Subject: Fix t/op/stat.t failures on hurd

@@ -1,4 +1,4 @@
-From fab3b18ab0e68aef120475e8439c0a6be3f63958 Mon Sep 17 00:00:00 2001
+From 1c7029bd467d96bf227f6f8ed49c11f700dd0e17 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 10 Jan 2016 22:35:53 +0200
 Subject: Fix the Configure escape with usecrosscompile but no targethost
@@ -14,6 +14,7 @@ suitable for the target platform, avoiding the need for configuration
 probes.
 
 Bug: https://rt.perl.org/Ticket/Display.html?id=127234
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/23695c073f41fdac9d20d873827ba8b2a3dda710
 Patch-Name: fixes/crosscompile-no-targethost.diff
 ---
  Configure | 2 +-
