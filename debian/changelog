@@ -5,6 +5,7 @@ perl (5.24.0-1) UNRELEASED; urgency=medium
   * Make libperl-dev depend on perl:any of the same version.
     This makes sure that versions of headers and libraries match
     while keeping cross building possible. (Closes: #823861)
+  * Wrap long lines in perlbug messages. (Closes: #822463)
 
   [ Dominic Hargreaves ]
   * Add deprecation warning to bundled version of rename program

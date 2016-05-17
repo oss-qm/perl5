@@ -45,3 +45,5 @@ fixes/math_complex_doc_angle_units.diff
 fixes/cpan_web_link.diff
 fixes/time_piece_doc.diff
 debian/cpan_porting_customized.diff
+fixes/perlbug-refactor.diff
+fixes/perlbug-linewrap.diff
