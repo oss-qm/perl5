@@ -1,4 +1,4 @@
-perl (5.24.0-1) UNRELEASED; urgency=medium
+perl (5.24.0-1) experimental; urgency=medium
 
   [ Niko Tyni ]
   * New upstream release.
@@ -11,7 +11,7 @@ perl (5.24.0-1) UNRELEASED; urgency=medium
   * Add deprecation warning to bundled version of rename program
     (see #735134)
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 09 May 2016 12:20:29 +0300
+ -- Niko Tyni <ntyni@debian.org>  Tue, 17 May 2016 22:32:32 +0300
 
 perl (5.24.0~rc5-1) experimental; urgency=medium
 
