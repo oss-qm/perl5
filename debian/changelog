@@ -2,6 +2,8 @@ perl (5.24.0-2) UNRELEASED; urgency=medium
 
   * Add Breaks for older verions of texinfo which didn't work
     with perl 5.24 (Closes: #825223)
+  * Skip some POSIX uid and pid tests on GNU/Hurd. Thanks to
+    Samuel Thibault for the report (Closes: #825016)
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 25 May 2016 00:18:19 +0100
 

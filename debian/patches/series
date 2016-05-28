@@ -47,3 +47,4 @@ fixes/time_piece_doc.diff
 debian/cpan_porting_customized.diff
 fixes/perlbug-refactor.diff
 fixes/perlbug-linewrap.diff
+fixes/hurd_sigaction.diff
