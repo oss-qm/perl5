@@ -20,7 +20,7 @@ Patch-Name: debian/do-not-record-build-date.diff
  1 file changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/perl.c b/perl.c
-index d9f410a..ed254293 100644
+index d9f410a..ed25429 100644
 --- a/perl.c
 +++ b/perl.c
 @@ -1795,15 +1795,20 @@ S_Internals_V(pTHX_ CV *cv)
