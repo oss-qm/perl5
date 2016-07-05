@@ -55,3 +55,4 @@ fixes/memoize-pod.diff
 fixes/ok-pod.diff
 debian/hurd-softupdates.diff
 fixes/xsloader-eval.diff
+fixes/extutils-parsexs-reproducibility.diff
