@@ -8,7 +8,7 @@
 
 # Package name      : perl5
 # Source directory  : .
-# Configuration time: Sun Apr 10 20:35:40 UTC 2016
+# Configuration time: Sat Apr 30 12:20:51 UTC 2016
 # Configured by     : Debian Project
 # Target system     : linux localhost 3.16.0 #1 smp debian 3.16.0 ppc64 gnulinux 
 
@@ -107,7 +107,7 @@ ccsymbols='system=linux system=posix system=unix'
 ccversion=''
 cf_by='Debian Project'
 cf_email='perl@packages.debian.org'
-cf_time='Sun Apr 10 20:35:40 UTC 2016'
+cf_time='Sat Apr 30 12:20:51 UTC 2016'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1226,4 +1226,4 @@ PERL_PATCHLEVEL=''
 PERL_CONFIG_SH=true
 : Variables propagated from previous config.sh file.
 libdb_needs_pthread='N'
-# Extracted from Debian package version 5.22.2~rc1-1
+# Extracted from Debian package version 5.22.2-1

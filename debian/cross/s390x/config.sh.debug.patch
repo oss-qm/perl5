@@ -1,5 +1,5 @@
---- config.sh.static	2016-04-11 19:32:34.049884530 +0300
-+++ config.sh.debug	2016-04-11 19:32:33.885828915 +0300
+--- config.sh.static	2016-07-07 20:32:31.515862404 +0200
++++ config.sh.debug	2016-07-07 20:32:31.443860362 +0200
 @@ -17,2 +17,2 @@
 -config_args='-Dusethreads -Duselargefiles -Dcc=s390x-linux-gnu-gcc -Dcpp=s390x-linux-gnu-cpp -Dld=s390x-linux-gnu-gcc -Dccflags=-DDEBIAN -Wdate-time -D_FORTIFY_SOURCE=2 -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Dldflags= -Wl,-z,relro -Dlddlflags=-shared -Wl,-z,relro -Dcccdlflags=-fPIC -Darchname=s390x-linux-gnu -Dprefix=/usr -Dprivlib=/usr/share/perl/5.22 -Darchlib=/usr/lib/s390x-linux-gnu/perl/5.22 -Dvendorprefix=/usr -Dvendorlib=/usr/share/perl5 -Dvendorarch=/usr/lib/s390x-linux-gnu/perl5/5.22 -Dsiteprefix=/usr/local -Dsitelib=/usr/local/share/perl/5.22.2 -Dsitearch=/usr/local/lib/s390x-linux-gnu/perl/5.22.2 -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 -Dsiteman1dir=/usr/local/man/man1 -Dsiteman3dir=/usr/local/man/man3 -Duse64bitint -Dman1ext=1 -Dman3ext=3perl -Dpager=/usr/bin/sensible-pager -Uafs -Ud_csh -Ud_ualarm -Uusesfio -Uusenm -Ui_libutil -Uversiononly -DDEBUGGING=-g -Doptimize=-O2 -dEs -Uuseshrplib -Dotherlibdirs=/usr/lib/s390x-linux-gnu/perl-base'
 -config_argc=39
@@ -23,4 +23,4 @@
 -otherlibdirs='/usr/lib/s390x-linux-gnu/perl-base'
 +otherlibdirs=' '
 @@ -1229 +1227,0 @@
--# Extracted from Debian package version 5.22.2~rc1-1
+-# Extracted from Debian package version 5.22.2-1
