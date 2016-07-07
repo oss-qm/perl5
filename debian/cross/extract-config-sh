@@ -46,7 +46,7 @@ for deb in "$@"; do
         '*/config.sh.static.gz' \
         '*/config.sh.debug.gz'  \
         '*/config.sh.shared.gz' \
-        --to-command='sh -c "gzip -dc > debian/cross/'${arch}'/$(basename \"$TAR_FILENAME\" .gz)"' 2>/dev/null
+        --to-command='sh -c "gzip -dc > debian/cross/'${arch}'/$(basename $TAR_FILENAME .gz)"'
     then
         echo "no config.sh.* files in $deb, skipping" 1>&2
         continue
