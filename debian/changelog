@@ -4,6 +4,7 @@ perl (5.22.2-2) UNRELEASED; urgency=medium
   * Make XSLoader skip relative paths not on @INC. (Closes: #829578)
   * Add patch from Chris Lamb making the output of ExtUtils::ParseXS
     reproducible. (Closes: #829296)
+  * Refresh cross build support files for all architectures.
 
   [ Dominic Hargreaves ]
   * Update wrong-path-for-interpreter override for 5.22.2, fixing
