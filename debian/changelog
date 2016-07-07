@@ -8,6 +8,7 @@ perl (5.22.2-2) UNRELEASED; urgency=medium
   [ Dominic Hargreaves ]
   * Update wrong-path-for-interpreter override for 5.22.2, fixing
     Lintian error introduced in previous upload
+  * Switch Vcs-Browser from gitweb to cgit and Vcs-Git to https
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 04 Jul 2016 15:50:27 +0200
 
