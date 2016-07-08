@@ -49,3 +49,5 @@ fixes/perlbug-refactor.diff
 fixes/perlbug-linewrap.diff
 fixes/hurd_sigaction.diff
 fixes/hurd_hints.diff
+fixes/xsloader-eval.diff
+fixes/extutils-parsexs-reproducibility.diff
