@@ -1,7 +1,8 @@
 perl (5.22.2-2) unstable; urgency=medium
 
   [ Niko Tyni ]
-  * Make XSLoader skip relative paths not on @INC. (Closes: #829578)
+  * [SECURITY] CVE-2016-6185: Make XSLoader skip relative paths not
+    on @INC. (Closes: #829578)
   * Add patch from Chris Lamb making the output of ExtUtils::ParseXS
     reproducible. (Closes: #829296)
   * Refresh cross build support files for all architectures.
