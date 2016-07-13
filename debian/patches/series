@@ -79,3 +79,8 @@ fixes/5.20.3/docs/clib_caution.diff
 fixes/5.20.3/docs/perlunicook_typos.diff
 fixes/5.20.3/docs/ook_example.diff
 fixes/5.20.3/docs/study_noop.diff
+fixes/CVE-2016-1238/remove-dot-when-loading.diff
+fixes/CVE-2016-1238/remove-dot-in-padwalker.diff
+fixes/CVE-2016-1238/remove-dot-in-dist.diff
+fixes/CVE-2016-1238/remove-dot-in-cpan.diff
+fixes/CVE-2016-1238/customized-encode.diff

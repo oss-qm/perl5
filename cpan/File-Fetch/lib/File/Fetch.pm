@@ -567,6 +567,8 @@ sub _lwp_fetch {
 
     };
 
+    local @INC = @INC;
+    pop @INC if $INC[-1] eq '.';
     unless( can_load( modules => $use_list ) ) {
         $METHOD_FAIL->{'lwp'} = 1;
         return;
