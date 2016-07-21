@@ -1,5 +1,6 @@
 perl (5.20.2-3+deb8u6test4) UNRELEASED; urgency=medium
 
+  [ Niko Tyni ]
   * [SECURITY] CVE-2016-1238: opportunistic loading of optional
     modules can make many programs unintentionally load code
     from the current working directory.
@@ -7,6 +8,10 @@ perl (5.20.2-3+deb8u6test4) UNRELEASED; urgency=medium
       /etc/perl/sitecustomize.pl for now. (Closes: #588017)
     + backport patches from [perl #127834] to fix known vulnerabilities
       even if the default decision is overridden locally
+
+  [ Dominic Hargreaves ]
+  * [SECURITY] CVE-2016-6185: Make XSLoader skip relative paths not
+    on @INC. (Closes: #829578)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 05 Jul 2016 16:24:09 +0200
 
