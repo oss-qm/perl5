@@ -1,4 +1,4 @@
-perl (5.20.2-3+deb8u6test4) UNRELEASED; urgency=medium
+perl (5.20.2-3+deb8u6) jessie-security; urgency=high
 
   [ Niko Tyni ]
   * [SECURITY] CVE-2016-1238: opportunistic loading of optional
@@ -17,7 +17,7 @@ perl (5.20.2-3+deb8u6test4) UNRELEASED; urgency=medium
   * [SECURITY] CVE-2016-6185: Make XSLoader skip relative paths not
     on @INC. (Closes: #829578)
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 05 Jul 2016 16:24:09 +0200
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Jul 2016 16:30:45 +0100
 
 perl (5.20.2-3+deb8u5) jessie; urgency=medium
 
