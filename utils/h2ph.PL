@@ -1,6 +1,5 @@
 #!/usr/local/bin/perl
 
-BEGIN { pop @INC if $INC[-1] eq '.' }
 use Config;
 use File::Basename qw(basename dirname);
 use Cwd;
@@ -36,6 +35,8 @@ $Config{startperl}
 # In the following, perl variables are not expanded during extraction.
 
 print OUT <<'!NO!SUBS!';
+
+BEGIN { pop @INC if $INC[-1] eq '.' }
 
 use strict;
 

@@ -1,4 +1,4 @@
-From 8cb6a82b7953b3f2d5826c9a4aeb6479b24e2659 Mon Sep 17 00:00:00 2001
+From e9ce534bb46de10f0aa84d72969591b86d95ce94 Mon Sep 17 00:00:00 2001
 From: Father Chrysostomos <sprout@cpan.org>
 Date: Sat, 2 Jul 2016 22:56:51 -0700
 Subject: =?UTF-8?q?Don=E2=80=99t=20let=20XSLoader=20load=20relative=20path?=

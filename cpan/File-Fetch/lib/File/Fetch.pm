@@ -621,6 +621,8 @@ sub _httptiny_fetch {
 
     };
 
+    local @INC = @INC;
+    pop @INC if $INC[-1] eq '.';
     unless( can_load(modules => $use_list) ) {
         $METHOD_FAIL->{'httptiny'} = 1;
         return;
@@ -660,6 +662,8 @@ sub _httplite_fetch {
 
     };
 
+    local @INC = @INC;
+    pop @INC if $INC[-1] eq '.';
     unless( can_load(modules => $use_list) ) {
         $METHOD_FAIL->{'httplite'} = 1;
         return;
@@ -735,6 +739,8 @@ sub _iosock_fetch {
         'IO::Select'       => '0.0',
     };
 
+    local @INC = @INC;
+    pop @INC if $INC[-1] eq '.';
     unless( can_load(modules => $use_list) ) {
         $METHOD_FAIL->{'iosock'} = 1;
         return;
@@ -816,6 +822,8 @@ sub _netftp_fetch {
     check( $tmpl, \%hash ) or return;
 
     ### required modules ###
+    local @INC = @INC;
+    pop @INC if $INC[-1] eq '.';
     my $use_list = { 'Net::FTP' => 0 };
 
     unless( can_load( modules => $use_list ) ) {
