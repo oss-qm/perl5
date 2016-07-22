@@ -3,7 +3,8 @@ perl (5.20.2-3+deb8u6test4) UNRELEASED; urgency=medium
   [ Niko Tyni ]
   * [SECURITY] CVE-2016-1238: opportunistic loading of optional
     modules can make many programs unintentionally load code
-    from the current working directory.
+    from the current working directory (which might be changed to
+    another directory without the user realising).
     + allow user configurable removal of "." from @INC in
       /etc/perl/sitecustomize.pl for a transitional period. (See: #588017)
     + backport patches from [perl #127834] to fix known vulnerabilities
