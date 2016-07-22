@@ -8,6 +8,9 @@ perl (5.20.2-3+deb8u6test4) UNRELEASED; urgency=medium
       /etc/perl/sitecustomize.pl for a transitional period. (See: #588017)
     + backport patches from [perl #127834] to fix known vulnerabilities
       even if the user does not configure "." to be removed from @INC
+    + backport patches from [perl #127810] to fix various classes of
+      build failures in perl and CPAN modules if "." is removed from
+      @INC
 
   [ Dominic Hargreaves ]
   * [SECURITY] CVE-2016-6185: Make XSLoader skip relative paths not
