@@ -56,3 +56,7 @@ fixes/ok-pod.diff
 debian/hurd-softupdates.diff
 fixes/xsloader-eval.diff
 fixes/extutils-parsexs-reproducibility.diff
+fixes/CVE-2016-1238/remove-dot-when-loading.diff
+fixes/CVE-2016-1238/remove-dot-in-padwalker.diff
+fixes/CVE-2016-1238/remove-dot-in-dist.diff
+fixes/CVE-2016-1238/remove-dot-in-cpan.diff
