@@ -468,7 +468,7 @@ endif
 	  ln -s ../$(fullversion)/Config_heavy.pl $$ccdir
 
 	# example to strip "." from @INC (CVE-2016-1238)
-	cp debian/sitecustomize.pl $(build)/perl-modules/etc/perl
+	cp debian/sitecustomize.pl $(build)/perl/etc/perl
 
 	# compress
 	find $(build)/*/usr/share/man -type f -print | xargs -r gzip -n9
