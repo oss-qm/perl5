@@ -1,4 +1,4 @@
-perl (5.22.2-3) UNRELEASED; urgency=medium
+perl (5.22.2-3) unstable; urgency=high
 
   * [SECURITY] CVE-2016-1238: opportunistic loading of optional
     modules can make many programs unintentionally load code
@@ -12,7 +12,7 @@ perl (5.22.2-3) UNRELEASED; urgency=medium
       build failures in perl and CPAN modules if "." is removed from
       @INC
 
- -- Dominic Hargreaves <dom@earth.li>  Mon, 25 Jul 2016 14:25:06 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 25 Jul 2016 16:00:43 +0100
 
 perl (5.22.2-2) unstable; urgency=medium
 
