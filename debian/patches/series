@@ -93,3 +93,6 @@ fixes/CVE-2016-1238/remove-dot-when-loading.diff
 fixes/CVE-2016-1238/remove-dot-in-padwalker.diff
 fixes/CVE-2016-1238/remove-dot-in-dist.diff
 fixes/CVE-2016-1238/remove-dot-in-cpan.diff
+debian/CVE-2016-1238/test-suite-without-dot.diff
+debian/CVE-2016-1238/eumm-without-dot.diff
+debian/CVE-2016-1238/cpan-without-dot.diff
