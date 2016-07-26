@@ -1995,7 +1995,12 @@ S_parse_body(pTHX_ char **env, XSINIT_t xsinit)
 	}
 #  else
 	/* SITELIB_EXP is a function call on Win32.  */
+    #ifdef DEBIAN
+    /* temporary transition mechanism for dropping "." from @INC */
+    const char *const sitelib = "/etc/perl";
+    #else
 	const char *const sitelib = SITELIB_EXP;
+    #endif
 	(void)Perl_av_create_and_unshift_one(aTHX_ &PL_preambleav,
 					     Perl_newSVpvf(aTHX_
 							   "BEGIN { do {local $!; -f '%s/sitecustomize.pl'} && do '%s/sitecustomize.pl' }", sitelib, sitelib));
