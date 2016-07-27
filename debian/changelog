@@ -11,6 +11,7 @@ perl (5.14.2-21+deb7u4) UNRELEASED; urgency=medium
     + backport patches from [perl #127810] to fix various classes of
       build failures in perl and CPAN modules if "." is removed from
       @INC
+  * Make XSLoader skip relative paths not on @INC. (Closes: #829578)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 26 Jul 2016 12:59:35 +0100
 
