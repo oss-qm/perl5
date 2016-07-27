@@ -1,4 +1,4 @@
-perl (5.14.2-21+deb7u4) UNRELEASED; urgency=medium
+perl (5.14.2-21+deb7u4) wheezy-security; urgency=high
 
   * [SECURITY] CVE-2016-1238: opportunistic loading of optional
     modules can make many programs unintentionally load code
@@ -13,7 +13,7 @@ perl (5.14.2-21+deb7u4) UNRELEASED; urgency=medium
       @INC
   * Make XSLoader skip relative paths not on @INC. (Closes: #829578)
 
- -- Dominic Hargreaves <dom@earth.li>  Tue, 26 Jul 2016 12:59:35 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 27 Jul 2016 14:34:39 +0100
 
 perl (5.14.2-21+deb7u3) wheezy-security; urgency=high
 
