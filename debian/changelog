@@ -1,3 +1,9 @@
+perl (5.22.2-4) UNRELEASED; urgency=medium
+
+  * Fix test failure when '.' has been removed from @INC
+
+ -- Dominic Hargreaves <dom@earth.li>  Wed, 27 Jul 2016 12:07:25 +0100
+
 perl (5.22.2-3) unstable; urgency=high
 
   * [SECURITY] CVE-2016-1238: opportunistic loading of optional

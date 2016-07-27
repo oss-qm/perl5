@@ -65,3 +65,4 @@ debian/CVE-2016-1238/eumm-without-dot.diff
 debian/CVE-2016-1238/cpan-without-dot.diff
 debian/CVE-2016-1238/sitecustomize-in-etc.diff
 debian/CVE-2016-1238/customized.diff
+debian/CVE-2016-1238/remove-inc-test.diff
