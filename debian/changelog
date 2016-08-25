@@ -2,6 +2,8 @@ perl (5.22.2-4) UNRELEASED; urgency=low
 
   * Fix test failure when '.' has been removed from @INC
   * Remove '.' from @INC by default (Closes: #588017)
+    + this behaviour can (for now) be disabled by commenting out the
+      last line of /etc/perl/sitecustomize.pl
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 27 Jul 2016 12:07:25 +0100
 
