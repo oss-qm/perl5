@@ -1,3 +1,9 @@
+perl (5.22.2-5) UNRELEASED; urgency=medium
+
+  * Document in perlvar that we remove '.' from @INC by default
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 01 Sep 2016 14:57:07 +0100
+
 perl (5.22.2-4) unstable; urgency=low
 
   * Fix test failure when '.' has been removed from @INC
