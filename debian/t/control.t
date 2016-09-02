@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use lib "dist/Module-CoreList/lib";
+use lib "./dist/Module-CoreList/lib";
 
 # Copyright 2011 Niko Tyni
 # 
@@ -24,7 +24,7 @@ use lib "dist/Module-CoreList/lib";
 
 # get the list of deprecated packages
 my %deprecated;
-require 'lib/deprecate.pm';
+require './lib/deprecate.pm';
 { 
 	no warnings 'once';
 	%deprecated = reverse %deprecate::DEBIAN_PACKAGES;
