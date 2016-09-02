@@ -224,14 +224,14 @@ endif
 		for flag in $(shell dpkg-buildflags --get CPPFLAGS) \
 		         $(shell dpkg-buildflags --get CFLAGS); do \
 			case "$$flag" in -fstack-protector) ;; \
-			     *) $(PERL_TO_USE) -i -pe "/^(cc|cpp)flags/ and \
-			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
+			     *) export flag; $(PERL_TO_USE) -i -pe "/^(cc|cpp)flags/ and \
+			          s/(['\s])\Q\$$ENV{flag}\E(['\s])/\1\2/ and s/  +/ /" \
 		            $(lib)/Config.pm $(lib)/Config_heavy.pl \
 		            $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ;; \
 		    esac; done; \
 		for flag in $(shell dpkg-buildflags --get LDFLAGS); do \
-			$(PERL_TO_USE) -i -pe "/^ld(dl)?flags/ and \
-			          s/(['\s])\Q$$flag\E(['\s])/\1\2/ and s/  +/ /" \
+			export flag; $(PERL_TO_USE) -i -pe "/^ld(dl)?flags/ and \
+			          s/(['\s])\Q\$$ENV{flag}\E(['\s])/\1\2/ and s/  +/ /" \
 		          $(lib)/Config.pm $(lib)/Config_heavy.pl \
 		          $(lib)/Config.pm.static $(lib)/Config_heavy.pl.static ; \
 		done; \
