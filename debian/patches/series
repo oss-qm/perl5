@@ -48,3 +48,7 @@ fixes/perlbug-linewrap.diff
 fixes/hurd_sigaction.diff
 fixes/hurd_hints.diff
 fixes/extutils-parsexs-reproducibility.diff
+debian/CVE-2016-1238/sitecustomize-in-etc.diff
+debian/CVE-2016-1238/test-suite-without-dot.diff
+debian/CVE-2016-1238/eumm-without-dot.diff
+debian/CVE-2016-1238/cpan-without-dot.diff
