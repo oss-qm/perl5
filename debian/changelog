@@ -1,6 +1,13 @@
 perl (5.22.2-5) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * Document in perlvar that we remove '.' from @INC by default
+
+  [ Niko Tyni ]
+  * Fix dpkg-buildflags filtering to handle slash characters.
+    (Closes: #836378)
+  * Break libencode-perl (<< 2.86) to make sure CVE-2016-1238 fixes are
+    active. (Closes: #836138)
 
  -- Dominic Hargreaves <dom@earth.li>  Thu, 01 Sep 2016 14:57:07 +0100
 
