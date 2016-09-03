@@ -14,6 +14,8 @@ perl (5.24.1~rc3-1) UNRELEASED; urgency=medium
   * Add patch from Chris Lamb making the output of ExtUtils::ParseXS
     reproducible. (Closes: #829296)
   * Import new upstream release candidate.
+    + provide perlapi-5.24.0-exp1 for compatibility with test packages
+  * Merge 5.22.2-5 from unstable.
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 25 May 2016 00:18:19 +0100
 
