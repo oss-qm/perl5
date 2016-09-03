@@ -1,4 +1,4 @@
-From abc90256fa17a7aed8324d685fa11c1b75625012 Mon Sep 17 00:00:00 2001
+From 131c88b1f4dcb486b389096a1db201804c1874d5 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 28 May 2016 15:51:53 +0100
 Subject: ext/POSIX/t/sigaction.t: Skip uid and pid tests on GNU/Hurd

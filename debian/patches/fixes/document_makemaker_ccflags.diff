@@ -1,4 +1,4 @@
-From 00f752a232cf2f2afcfb200f2c6a00d4550ee595 Mon Sep 17 00:00:00 2001
+From 9f560bcfd3ae80fb95bbbc306911128f5be354ab Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 30 May 2011 22:54:24 +0300
 Subject: Document that CCFLAGS should include $Config{ccflags}
@@ -15,7 +15,7 @@ Patch-Name: fixes/document_makemaker_ccflags.diff
  1 file changed, 4 insertions(+)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
-index f9fb8fe..b43e6fa 100644
+index 42b174f..5a9fce2 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
 @@ -1771,6 +1771,10 @@ currently used by MakeMaker but may be handy in Makefile.PLs.

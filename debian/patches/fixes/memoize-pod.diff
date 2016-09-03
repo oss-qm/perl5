@@ -1,4 +1,4 @@
-From 3d09b127c3bd4439d4a8061ed5f715e0c7cb1845 Mon Sep 17 00:00:00 2001
+From 731a5eb6c90aa8f499ee2908db2a862ef59579a2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 6 Feb 2016 20:15:19 +0200
 Subject: Fix POD errors in Memoize
@@ -11,10 +11,10 @@ Patch-Name: fixes/memoize-pod.diff
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/Memoize/Memoize.pm b/cpan/Memoize/Memoize.pm
-index 9a58c4a..96bd50c 100644
+index f4e6522d4..2f28b36 100644
 --- a/cpan/Memoize/Memoize.pm
 +++ b/cpan/Memoize/Memoize.pm
-@@ -748,6 +748,8 @@ cache that was populated by the first call.  C<complicated> ends up
+@@ -752,6 +752,8 @@ cache that was populated by the first call.  C<complicated> ends up
  being called only once, and both subsequent calls return C<3> from the
  cache, regardless of the calling context.
  
@@ -23,7 +23,7 @@ index 9a58c4a..96bd50c 100644
  =head3 List values in scalar context
  
  Consider this function:
-@@ -797,8 +799,6 @@ This normalizer function will store scalar context return values in
+@@ -801,8 +803,6 @@ This normalizer function will store scalar context return values in
  the disk file under keys that begin with C<S:>, and list context
  return values under keys that begin with C<L:>.
  

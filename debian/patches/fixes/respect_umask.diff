@@ -1,4 +1,4 @@
-From 7d997d1f68fa8b9849279624c8e1ba3ce79e8ecc Mon Sep 17 00:00:00 2001
+From 6fce5524476ea1a95702863be84bbef09795570e Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Respect umask during installation
@@ -88,7 +88,7 @@ index 1e8ac4c..3e79121 100644
          if ($need_filtering) {
              run_filter($pm_filter, $from, $to);
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index e24a61b..8f8f415 100644
+index 009b18e..1f4542e 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -2119,7 +2119,7 @@ doc__install : doc_site_install

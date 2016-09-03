@@ -1,4 +1,4 @@
-From 538a0af2a8a54b7bb52eaaad60bc3639a29d0c5d Mon Sep 17 00:00:00 2001
+From 106e3713e04fa1690c213e9c77a6e5d6217c37e7 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Wed, 1 Jul 2015 22:23:53 +0300
 Subject: Make EU::MakeMaker honour MANnEXT settings in generated manpage
@@ -15,7 +15,7 @@ Bug-Debian: https://bugs.debian.org/247370
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
-index 129ad9e..63ad0ec 100644
+index 7679dc4..b13c748 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm
 @@ -928,7 +928,7 @@ END

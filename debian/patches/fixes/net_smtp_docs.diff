@@ -1,4 +1,4 @@
-From 3c85d89b2632c17557b5320954934e27fd7e3745 Mon Sep 17 00:00:00 2001
+From f1fa327f1eb07045a9a98b198d100a6879d14fe5 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Thu, 20 Sep 2007 19:47:14 +1000
 Subject: Document the Net::SMTP 'Port' option
@@ -12,7 +12,7 @@ Patch-Name: fixes/net_smtp_docs.diff
  1 file changed, 1 insertion(+)
 
 diff --git a/cpan/libnet/lib/Net/SMTP.pm b/cpan/libnet/lib/Net/SMTP.pm
-index 6d3e4c2..6b5b0eb 100644
+index 0130a2f..05dfbf9 100644
 --- a/cpan/libnet/lib/Net/SMTP.pm
 +++ b/cpan/libnet/lib/Net/SMTP.pm
 @@ -752,6 +752,7 @@ Net::SMTP will attempt to extract the address from the value passed.

@@ -1,4 +1,4 @@
-From 441bea4853b9a5becec8929531ab2c21b4dc0c3e Mon Sep 17 00:00:00 2001
+From 4244468efd962ea3a35371fad14ba0f78e3ecdd8 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 25 Apr 2016 16:31:00 +0300
 Subject: perlbug: wrap overly long lines
@@ -32,10 +32,10 @@ Patch-Name: fixes/perlbug-linewrap.diff
  1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/utils/perlbug.PL b/utils/perlbug.PL
-index 6d6c780..6bc5bad 100644
+index 100bc02..235313b 100644
 --- a/utils/perlbug.PL
 +++ b/utils/perlbug.PL
-@@ -76,6 +76,8 @@ BEGIN {
+@@ -77,6 +77,8 @@ BEGIN {
      $::HaveTemp = ($@ eq "");
      eval { require Module::CoreList; };
      $::HaveCoreList = ($@ eq "");
@@ -44,7 +44,7 @@ index 6d6c780..6bc5bad 100644
  };
  
  my $Version = "1.40";
-@@ -1082,7 +1084,16 @@ sub _read_report {
+@@ -1083,7 +1085,16 @@ sub _read_report {
      my $content;
      open( REP, "<:raw", $fname ) or die "Couldn't open file '$fname': $!\n";
      binmode(REP, ':raw :crlf') if $Is_MSWin32;

@@ -1,4 +1,4 @@
-From b7aca0b15cbef687f40cc485c9d9170fa4a9f90d Mon Sep 17 00:00:00 2001
+From 90c8b5f0c9f1619da91046920a41165ff7cd64e3 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 16 Dec 2005 01:32:14 +1100
 Subject: Remove overly restrictive DB_File version check.

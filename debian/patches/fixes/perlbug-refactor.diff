@@ -1,4 +1,4 @@
-From cd322817a1edf17ce1f3300489eb3484be0ebc92 Mon Sep 17 00:00:00 2001
+From 89f8cd16bac82eada9d3fe3510ab96d9bd0cef76 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Apr 2016 18:50:17 +0300
 Subject: perlbug: Refactor duplicated file reading code
@@ -16,10 +16,10 @@ Patch-Name: fixes/perlbug-refactor.diff
  1 file changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/utils/perlbug.PL b/utils/perlbug.PL
-index 885785a..6d6c780 100644
+index ae8c343..100bc02 100644
 --- a/utils/perlbug.PL
 +++ b/utils/perlbug.PL
-@@ -834,10 +834,7 @@ EOF
+@@ -835,10 +835,7 @@ EOF
              if ( SaveMessage() ) { exit }
  	    } elsif ($action =~ /^(d|l|sh)/i ) { # <D>isplay, <L>ist, <Sh>ow
  		# Display the message
@@ -31,7 +31,7 @@ index 885785a..6d6c780 100644
  		if ($have_attachment) {
  		    print "\n\n---\nAttachment(s):\n";
  		    for my $att (split /\s*,\s*/, $attachments) { print "    $att\n"; }
-@@ -1080,13 +1077,20 @@ ATTACHMENT
+@@ -1081,13 +1078,20 @@ ATTACHMENT
      return $attach;
  }
  
@@ -56,7 +56,7 @@ index 885785a..6d6c780 100644
      $content .= _add_attachments() if $have_attachment;
      return $content;
  }
-@@ -1137,10 +1141,7 @@ sub _send_message_mailsend {
+@@ -1138,10 +1142,7 @@ sub _send_message_mailsend {
      $fh = $msg->open;
      binmode($fh, ':raw');
      print $fh _add_body_start() if $have_attachment;

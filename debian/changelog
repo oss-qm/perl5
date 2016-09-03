@@ -1,4 +1,4 @@
-perl (5.24.0-2) UNRELEASED; urgency=medium
+perl (5.24.1~rc3-1) UNRELEASED; urgency=medium
 
   [ Dominic Hargreaves ]
   * Add Breaks for older verions of texinfo which didn't work
@@ -13,6 +13,7 @@ perl (5.24.0-2) UNRELEASED; urgency=medium
     on @INC. (Closes: #829578)
   * Add patch from Chris Lamb making the output of ExtUtils::ParseXS
     reproducible. (Closes: #829296)
+  * Import new upstream release candidate.
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 25 May 2016 00:18:19 +0100
 

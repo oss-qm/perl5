@@ -1,4 +1,4 @@
-From da4908b2623c16a5fc35f42dbe3ceac4ff4b2612 Mon Sep 17 00:00:00 2001
+From 7db034fb649981bf2cd66bda42a5ad6058dba369 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Set location of libnet.cfg to /etc/perl/Net as /usr may not be
@@ -10,10 +10,10 @@ Patch-Name: debian/libnet_config_path.diff
  1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/cpan/libnet/lib/Net/Config.pm b/cpan/libnet/lib/Net/Config.pm
-index 3aa547e..5ab626c 100644
+index 3e4ab0a..295a333 100644
 --- a/cpan/libnet/lib/Net/Config.pm
 +++ b/cpan/libnet/lib/Net/Config.pm
-@@ -69,9 +69,8 @@ my %nc = (
+@@ -74,9 +74,8 @@ my %nc = (
  TRY_INTERNET_CONFIG
  }
  
@@ -24,7 +24,7 @@ index 3aa547e..5ab626c 100644
  if (-f $file) {
    $ref = eval { local $SIG{__DIE__}; do $file };
    if (ref($ref) eq 'HASH') {
-@@ -143,8 +142,8 @@ Net::Config - Local configuration data for libnet
+@@ -148,8 +147,8 @@ Net::Config - Local configuration data for libnet
  C<Net::Config> holds configuration data for the modules in the libnet
  distribution. During installation you will be asked for these values.
  

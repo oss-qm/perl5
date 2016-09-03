@@ -1,4 +1,4 @@
-From fd6a78b7500cc98868ba52dc71bb270c6cc826aa Mon Sep 17 00:00:00 2001
+From c5cdf8cc5079cadf636905432a07eded8b3c6e85 Mon Sep 17 00:00:00 2001
 From: Samuel Thibault <sthibault@debian.org>
 Date: Mon, 30 May 2016 11:11:00 -0400
 Subject: Modify hints for Hurd per Debian ticket 825020.

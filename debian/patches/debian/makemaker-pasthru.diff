@@ -1,4 +1,4 @@
-From e5aa171397bd4b22f9b43be86a42b71dc7ca3e80 Mon Sep 17 00:00:00 2001
+From 1b3946d2124a2cf1b16287ff2d161600767595aa Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 24 Aug 2014 12:56:11 -0700
 Subject: Pass LD settings through to subdirectories
@@ -16,7 +16,7 @@ Patch-Name: debian/makemaker-pasthru.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 1590e56..544f055 100644
+index ff7bf2a..80f95ab 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -2794,7 +2794,7 @@ sub pasthru {

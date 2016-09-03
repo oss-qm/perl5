@@ -1,4 +1,4 @@
-From c40ec9f381415b3bf662101531a2ed882cd58aef Mon Sep 17 00:00:00 2001
+From 3606f36985a1cfcff14ff3f67208552613a2413e Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 22:46:41 +0100
 Subject: Net::NNTP: Correct innd/nnrpd confusion in relation to Reader option
@@ -14,7 +14,7 @@ Patch-Name: fixes/nntp_docs.diff
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/cpan/libnet/lib/Net/NNTP.pm b/cpan/libnet/lib/Net/NNTP.pm
-index 0d690de..4086774 100644
+index 675b1e6..e043b3b 100644
 --- a/cpan/libnet/lib/Net/NNTP.pm
 +++ b/cpan/libnet/lib/Net/NNTP.pm
 @@ -845,10 +845,10 @@ NNTP server, a value of zero will cause all IO operations to block.
