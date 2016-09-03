@@ -52,3 +52,6 @@ debian/CVE-2016-1238/sitecustomize-in-etc.diff
 debian/CVE-2016-1238/test-suite-without-dot.diff
 debian/CVE-2016-1238/eumm-without-dot.diff
 debian/CVE-2016-1238/cpan-without-dot.diff
+debian/document_inc_removal.diff
+fixes/extutils_makemaker_reproducible.diff
+debian/CVE-2016-1238/remove-inc-test.diff
