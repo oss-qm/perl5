@@ -1,4 +1,4 @@
-perl (5.24.1~rc3-1) UNRELEASED; urgency=medium
+perl (5.24.1~rc3-1) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
   * Add Breaks for older verions of texinfo which didn't work
@@ -17,7 +17,7 @@ perl (5.24.1~rc3-1) UNRELEASED; urgency=medium
     + provide perlapi-5.24.0-exp1 for compatibility with test packages
   * Merge 5.22.2-5 from unstable.
 
- -- Dominic Hargreaves <dom@earth.li>  Wed, 25 May 2016 00:18:19 +0100
+ -- Niko Tyni <ntyni@debian.org>  Sat, 03 Sep 2016 14:18:56 +0300
 
 perl (5.24.0-1) experimental; urgency=medium
 
