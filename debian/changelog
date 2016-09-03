@@ -1,4 +1,4 @@
-perl (5.22.2-5) UNRELEASED; urgency=medium
+perl (5.22.2-5) unstable; urgency=low
 
   [ Dominic Hargreaves ]
   * Document in perlvar that we remove '.' from @INC by default
@@ -9,7 +9,7 @@ perl (5.22.2-5) UNRELEASED; urgency=medium
   * Break libencode-perl (<< 2.86) to make sure CVE-2016-1238 fixes are
     active. (Closes: #836138)
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 01 Sep 2016 14:57:07 +0100
+ -- Niko Tyni <ntyni@debian.org>  Sat, 03 Sep 2016 12:48:53 +0300
 
 perl (5.22.2-4) unstable; urgency=low
 
