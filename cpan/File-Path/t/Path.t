@@ -8,6 +8,7 @@ use Config;
 use Fcntl ':mode';
 use lib 't/';
 use FilePathTest;
+use Errno qw(:POSIX);
 
 BEGIN {
     use_ok('Cwd');
@@ -656,7 +657,7 @@ is(
 {
     my ($x, $message, $object, $expect, $rv, $arg, $error);
     my ($k, $v, $second_error, $third_error);
-    local $! = 2;
+    local $! = ENOENT;
     $x = $!;
 
     $message = 'message in a bottle';
