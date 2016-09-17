@@ -5,6 +5,7 @@ perl (5.24.1~rc3-2) UNRELEASED; urgency=medium
     relevant (Closes: #836892)
   * Fix test failure in Hurd due to hard-coded ENOENT.
     Thanks to Pino Toscano for the fix
+  * Fix symbols file for Hurd. Thanks to Pino Toscano
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 07 Sep 2016 14:57:12 +0100
 
