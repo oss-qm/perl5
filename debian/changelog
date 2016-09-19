@@ -1,11 +1,15 @@
 perl (5.24.1~rc3-2) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * Build-Depends on netbase for hurd to fix FTBFS. The original
     reason for the conditional exclude in #89406 is no longer
     relevant (Closes: #836892)
   * Fix test failure in Hurd due to hard-coded ENOENT.
     Thanks to Pino Toscano for the fix
   * Fix symbols file for Hurd. Thanks to Pino Toscano
+
+  [ Niko Tyni ]
+  * Refresh cross build support files.
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 07 Sep 2016 14:57:12 +0100
 
