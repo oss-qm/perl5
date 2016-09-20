@@ -11,6 +11,9 @@ perl (5.24.1~rc3-2) UNRELEASED; urgency=medium
   [ Niko Tyni ]
   * Refresh cross build support files.
 
+  [ Dominic Hargreaves ]
+  * Activate perl-major-upgrade trigger
+
  -- Dominic Hargreaves <dom@earth.li>  Wed, 07 Sep 2016 14:57:12 +0100
 
 perl (5.24.1~rc3-1) experimental; urgency=medium
