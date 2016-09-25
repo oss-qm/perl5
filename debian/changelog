@@ -1,3 +1,9 @@
+perl (5.24.1~rc3-3) UNRELEASED; urgency=medium
+
+  * Reinstate perl-modules virtual package (Closes: #838855)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 25 Sep 2016 23:20:02 +0300
+
 perl (5.24.1~rc3-2) unstable; urgency=medium
 
   [ Dominic Hargreaves ]
