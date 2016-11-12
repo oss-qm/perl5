@@ -57,3 +57,4 @@ fixes/extutils_makemaker_reproducible.diff
 debian/CVE-2016-1238/remove-inc-test.diff
 debian/customized.diff
 fixes/file_path_hurd_errno.diff
+debian/hppa_op_optimize_workaround.diff

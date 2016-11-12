@@ -2,6 +2,7 @@ perl (5.24.1~rc3-4) UNRELEASED; urgency=medium
 
   * Fix Vcs-Git header. Thanks to Axel Beckert (Closes: #839057)
   * Add Breaks on dh-haskell (<< 0.3) (Closes: #839018)
+  * Add workaround for optimization test failure on HPPA (Closes: #838613)
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 05 Oct 2016 21:47:14 +0100
 
