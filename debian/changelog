@@ -9,6 +9,8 @@ perl (5.24.1~rc4-1) UNRELEASED; urgency=medium
   * Import new upstream release candidate with improved @INC localizing
     in base.pm.
   * Patch Test::Builder to fix a 'used only once' warning. (Closes: #840968)
+  * Sort the binary package conffile lists for reproducibility.
+  * Break amanda-common versions built against perlapi-5.22. (See #843700)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 18 Nov 2016 15:07:20 +0200
 
