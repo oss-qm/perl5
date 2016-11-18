@@ -8,6 +8,7 @@ perl (5.24.1~rc4-1) UNRELEASED; urgency=medium
   [ Niko Tyni ]
   * Import new upstream release candidate with improved @INC localizing
     in base.pm.
+  * Patch Test::Builder to fix a 'used only once' warning. (Closes: #840968)
 
  -- Niko Tyni <ntyni@debian.org>  Fri, 18 Nov 2016 15:07:20 +0200
 
