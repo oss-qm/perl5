@@ -1,4 +1,4 @@
-From c932b5a4a62fdce791bcf486bee181bda726847a Mon Sep 17 00:00:00 2001
+From 79a577b3d0d2d342dadb4cb2fce0b8f587b329d3 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Thu, 1 Sep 2016 14:54:15 +0100
 Subject: Document in perlvar that we remove '.' from @INC by default

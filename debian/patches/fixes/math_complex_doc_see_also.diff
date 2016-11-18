@@ -1,4 +1,4 @@
-From 0cf71535fcf4fc3ff5f19530220f486e4c0ddfcf Mon Sep 17 00:00:00 2001
+From 7678c1c6dd868d28821cb00af561fc58b6303db2 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 22:53:44 +0100
 Subject: Math::Trig: add missing SEE ALSO

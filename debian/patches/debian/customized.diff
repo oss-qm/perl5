@@ -1,4 +1,4 @@
-From 4d9ecd0c234da8fbd4da32d7b8f115513e62ecaf Mon Sep 17 00:00:00 2001
+From 6c88160e6fe956b2c1b5f63b7b51078966ff92fe Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 3 Sep 2016 14:10:22 +0300
 Subject: Update customized.dat for files patched in Debian
@@ -9,7 +9,7 @@ Patch-Name: debian/customized.diff
  1 file changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/t/porting/customized.dat b/t/porting/customized.dat
-index 2532e30..d207acf 100644
+index 6b6bbbd..820554b 100644
 --- a/t/porting/customized.dat
 +++ b/t/porting/customized.dat
 @@ -5,12 +5,12 @@ Archive::Tar cpan/Archive-Tar/lib/Archive/Tar.pm b7e13134a5bcabe8c33fb0729d2f2f8

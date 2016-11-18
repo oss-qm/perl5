@@ -1,4 +1,4 @@
-From 1b3946d2124a2cf1b16287ff2d161600767595aa Mon Sep 17 00:00:00 2001
+From 1f15e512f7678cccd064f74bcab8a7184242252f Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 24 Aug 2014 12:56:11 -0700
 Subject: Pass LD settings through to subdirectories

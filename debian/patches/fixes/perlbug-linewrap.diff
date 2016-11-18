@@ -1,4 +1,4 @@
-From 4244468efd962ea3a35371fad14ba0f78e3ecdd8 Mon Sep 17 00:00:00 2001
+From bc5f588fc139209748d5b6d78c7d953e617f9d0d Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 25 Apr 2016 16:31:00 +0300
 Subject: perlbug: wrap overly long lines
