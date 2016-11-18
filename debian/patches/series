@@ -59,3 +59,4 @@ debian/customized.diff
 fixes/file_path_hurd_errno.diff
 debian/hppa_op_optimize_workaround.diff
 0061-Silence-a-used-only-once-warning-in-Test-Builder.patch
+fixes/longdblinf-randomness.diff
