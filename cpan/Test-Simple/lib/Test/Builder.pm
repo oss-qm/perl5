@@ -2246,6 +2246,7 @@ sub find_TODO {
     return unless $pack;
 
     no strict 'refs';    ## no critic
+    no warnings 'once';
     my $old_value = ${ $pack . '::TODO' };
     $set and ${ $pack . '::TODO' } = $new_value;
     return $old_value;
