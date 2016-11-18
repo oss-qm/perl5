@@ -1,4 +1,4 @@
-From 2042666fc606e7c0262137999de4714bdbeb36ad Mon Sep 17 00:00:00 2001
+From 1970a8587729b7aab42b16f44bd3880d5e962d55 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 18 Nov 2016 15:22:04 +0200
 Subject: Silence a 'used only once' warning in Test::Builder
@@ -11,6 +11,8 @@ Symptom of the problem:
 
 Origin: backport, https://github.com/Test-More/test-more/commit/0f0c7d4d6c1b1953244b96ba4a367c27d85837b7#diff-e07e049db6ba650cd1605f4a5513b0ddR1342
 Bug-Debian: https://bugs.debian.org/840968
+
+Patch-Name: fixes/test-builder-warning.diff
 ---
  cpan/Test-Simple/lib/Test/Builder.pm | 1 +
  1 file changed, 1 insertion(+)

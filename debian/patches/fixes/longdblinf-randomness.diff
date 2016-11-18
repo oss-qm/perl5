@@ -1,4 +1,4 @@
-From bf9ee888b6c343fa91ff0eb9032fb9c56b661d57 Mon Sep 17 00:00:00 2001
+From 26c59743bdc310a2fe756e4c13079cdb8a821c9a Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 18 Nov 2016 18:36:34 +0200
 Subject: Configure: fix garbage filtering with 80-bit long doubles
