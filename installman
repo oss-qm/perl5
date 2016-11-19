@@ -153,6 +153,7 @@ sub pod2man {
 	$manpage = "${mandir}/${manpage}.${manext}";
 
         my $parser = Pod::Man->new( section => $manext,
+                                    utf8    => 1,
                                     official=> 1,
                                     center  => 'Perl Programmers Reference Guide'
                                   );
