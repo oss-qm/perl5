@@ -60,3 +60,4 @@ fixes/file_path_hurd_errno.diff
 debian/hppa_op_optimize_workaround.diff
 fixes/test-builder-warning.diff
 fixes/longdblinf-randomness.diff
+debian/installman-utf8.diff
