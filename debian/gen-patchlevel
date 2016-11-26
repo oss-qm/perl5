@@ -56,7 +56,7 @@ do
     s|^Bug: .*https\?://rt\.cpan\.org/.*id=\(.*\).*|[rt.cpan.org #\1]|; tprepend;
     s|^Bug-Debian: [^0-9]*\([0-9]\{5,\}\)|http://bugs.debian.org/\1|; tprepend;
     s/^\(Subject\|Description\): //; tappend;
-    s|^Origin: .*http://perl5\.git\.perl\.org/perl\.git/commit\(diff\)\?/\(.......\).*|[\2]|; tprepend;
+    s|^Origin: .*https\?://perl5\.git\.perl\.org/perl\.git/commit\(diff\)\?/\(.......\).*|[\2]|; tprepend;
 
     # post-process at the end of input
     $ { x;
