@@ -1,4 +1,4 @@
-From 26c59743bdc310a2fe756e4c13079cdb8a821c9a Mon Sep 17 00:00:00 2001
+From 7fdf20fcf1785bbc68c722f32dd15f8179ee9dac Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 18 Nov 2016 18:36:34 +0200
 Subject: Configure: fix garbage filtering with 80-bit long doubles
@@ -10,6 +10,7 @@ $Config{longdblinfbytes}, observed on Debian with GCC 6.2.0 (but not
 
 Bug-Debian: https://bugs.debian.org/844752
 Bug: https://rt.perl.org/Ticket/Display.html?id=130133
+Origin: upstream, https://perl5.git.perl.org/perl.git/commit/dd6885360b15e763e0706dc28555eea328de432d
 
 Patch-Name: fixes/longdblinf-randomness.diff
 ---
