@@ -1,4 +1,4 @@
-perl (5.24.1~rc4-1) UNRELEASED; urgency=medium
+perl (5.24.1~rc4-1) unstable; urgency=medium
 
   [ Dominic Hargreaves ]
   * Fix Vcs-Git header. Thanks to Axel Beckert (Closes: #839057)
@@ -16,7 +16,7 @@ perl (5.24.1~rc4-1) UNRELEASED; urgency=medium
   * Patch installman to generate man pages with UTF-8 characters.
     (Closes: #840211)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 18 Nov 2016 15:07:20 +0200
+ -- Niko Tyni <ntyni@debian.org>  Sat, 26 Nov 2016 23:12:44 +0200
 
 perl (5.24.1~rc3-3) unstable; urgency=medium
 
