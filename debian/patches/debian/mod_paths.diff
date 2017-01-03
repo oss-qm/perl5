@@ -1,4 +1,4 @@
-From 25d500a8a8de28ed81a81f1b123249546077e805 Mon Sep 17 00:00:00 2001
+From 444ca566af543fa3deeed1e56029b47d54089edf Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
@@ -22,7 +22,7 @@ Patch-Name: debian/mod_paths.diff
  1 file changed, 58 insertions(+)
 
 diff --git a/perl.c b/perl.c
-index 8b1b83c..633584a 100644
+index 6197ea0..1e543e7 100644
 --- a/perl.c
 +++ b/perl.c
 @@ -4483,6 +4483,11 @@ S_init_perllib(pTHX)

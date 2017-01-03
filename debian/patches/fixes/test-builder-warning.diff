@@ -1,4 +1,4 @@
-From 1970a8587729b7aab42b16f44bd3880d5e962d55 Mon Sep 17 00:00:00 2001
+From c64ce45b75d4a554bfa2023173c9a415bd17922a Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 18 Nov 2016 15:22:04 +0200
 Subject: Silence a 'used only once' warning in Test::Builder

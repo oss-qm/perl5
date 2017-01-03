@@ -1,3 +1,10 @@
+perl (5.24.1~rc5-1) UNRELEASED; urgency=medium
+
+  * New upstream release candidate which reverts the base.pm @INC fixes
+    pending a patch which does not break legitimate use cases.
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 03 Jan 2017 21:18:25 +0000
+
 perl (5.24.1~rc4-1) unstable; urgency=medium
 
   [ Dominic Hargreaves ]

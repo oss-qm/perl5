@@ -1,4 +1,4 @@
-From 6c88160e6fe956b2c1b5f63b7b51078966ff92fe Mon Sep 17 00:00:00 2001
+From b786aa809dbb4bf7b1c346e17bed0720324af73c Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 3 Sep 2016 14:10:22 +0300
 Subject: Update customized.dat for files patched in Debian
@@ -9,7 +9,7 @@ Patch-Name: debian/customized.diff
  1 file changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/t/porting/customized.dat b/t/porting/customized.dat
-index 6b6bbbd..820554b 100644
+index defeae1..2c0d988 100644
 --- a/t/porting/customized.dat
 +++ b/t/porting/customized.dat
 @@ -5,12 +5,12 @@ Archive::Tar cpan/Archive-Tar/lib/Archive/Tar.pm b7e13134a5bcabe8c33fb0729d2f2f8
@@ -72,7 +72,7 @@ index 6b6bbbd..820554b 100644
  Parse::CPAN::Meta cpan/Parse-CPAN-Meta/lib/Parse/CPAN/Meta.pm 2de9f411463eda2bd5f57163c12edab9a00dc598
  Parse::CPAN::Meta cpan/Parse-CPAN-Meta/t/02_api.t a692c9a7e52b08a14a954d6c405a22c0dab1cd43
  Pod::Perldoc cpan/Pod-Perldoc/lib/Pod/Perldoc.pm ba3072a6af793b410b02594ed8fe109ac16a1d43
-@@ -166,7 +166,7 @@ bignum cpan/bignum/lib/bigrat.pm 7fccc9df30e43dbbae6e5ea91b26c8046545c9a9
+@@ -165,7 +165,7 @@ bignum cpan/bignum/lib/bigrat.pm 7fccc9df30e43dbbae6e5ea91b26c8046545c9a9
  bignum cpan/bignum/lib/Math/BigFloat/Trace.pm a6b4b995e18f4083252e6dc72e9bef69671893dd
  bignum cpan/bignum/lib/Math/BigInt/Trace.pm d9596963673760cae3eeeb752c1eeeec50bb2290
  libnet cpan/libnet/lib/Net/Cmd.pm a44a10c939a4c35f923c4638054178c32f1d283a
@@ -81,7 +81,7 @@ index 6b6bbbd..820554b 100644
  libnet cpan/libnet/lib/Net/Domain.pm 1bbed50f70fd1ff3e1cdf087b19a9349cddfaced
  libnet cpan/libnet/lib/Net/FTP.pm 40dba553c8d44e1530daec2d07a6e50910401f2e
  libnet cpan/libnet/lib/Net/FTP/A.pm c570b10730b168990034dcf9cb00e305a100f336
-@@ -175,8 +175,8 @@ libnet cpan/libnet/lib/Net/FTP/E.pm 1ec473a8601f7c8d1584c833202f90744b471f41
+@@ -174,8 +174,8 @@ libnet cpan/libnet/lib/Net/FTP/E.pm 1ec473a8601f7c8d1584c833202f90744b471f41
  libnet cpan/libnet/lib/Net/FTP/I.pm b1d50346092915ca177af988917dbae54b1bd000
  libnet cpan/libnet/lib/Net/FTP/L.pm ac1599c775faee0474710e4f75051c8949f13df2
  libnet cpan/libnet/lib/Net/Netrc.pm 009cfc08f8a5bf247257acb64a21e1b6ad8b2c9c

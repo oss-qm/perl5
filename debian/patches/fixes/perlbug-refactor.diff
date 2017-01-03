@@ -1,4 +1,4 @@
-From d3b86e3fe2413aec6839d61449e69cb2c5350eae Mon Sep 17 00:00:00 2001
+From 4a3e2838a5cb1523f959733f34d990e8a13c9bbe Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Thu, 28 Apr 2016 18:50:17 +0300
 Subject: perlbug: Refactor duplicated file reading code

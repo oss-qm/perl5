@@ -1,4 +1,4 @@
-From b428a5ac5a1b6f0072acaf878a7b730122162d92 Mon Sep 17 00:00:00 2001
+From 265f6e8ced142e43856e60788bec3436aaed1d3a Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.

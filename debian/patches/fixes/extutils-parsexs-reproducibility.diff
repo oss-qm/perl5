@@ -1,4 +1,4 @@
-From c949d9bf6837b621752fc70ed6673e8a2954ed25 Mon Sep 17 00:00:00 2001
+From 4c3af19d39e2a9c9af0edd4b67bcd420e842b727 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Tue, 5 Jul 2016 12:09:59 +0200
 Subject: Make the output of ExtUtils::ParseXS reproducible
