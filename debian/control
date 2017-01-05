@@ -5,7 +5,7 @@ Maintainer: Niko Tyni <ntyni@debian.org>
 Uploaders: Dominic Hargreaves <dom@earth.li>
 Standards-Version: 3.9.8
 Homepage: http://dev.perl.org/perl5/
-Build-Depends: file <!nocheck>,
+Build-Depends: file,
  cpio,
  libdb-dev,
  libgdbm-dev,
