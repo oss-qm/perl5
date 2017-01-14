@@ -1,4 +1,4 @@
-From 55ffce249ab7751423054f7d8f5ef92f44f9bbd6 Mon Sep 17 00:00:00 2001
+From a8214c368321ad22931caf06767e6d54ef142552 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 10 Jan 2016 22:35:53 +0200
 Subject: Fix the Configure escape with usecrosscompile but no targethost

@@ -1,4 +1,4 @@
-perl (5.24.1~rc5-2) UNRELEASED; urgency=medium
+perl (5.24.1-1) UNRELEASED; urgency=medium
 
   [ Dominic Hargreaves ]
   * Break libexception-class-perl (<< 1.42) since this version fixes an
@@ -10,6 +10,9 @@ perl (5.24.1~rc5-2) UNRELEASED; urgency=medium
   [ Niko Tyni ]
   * Use https for URLs in the patchlevel list.
   * Refresh cross build support files.
+
+  [ Dominic Hargreaves ]
+  * New upstream release
 
  -- Dominic Hargreaves <dom@earth.li>  Wed, 04 Jan 2017 23:05:19 +0000
 
