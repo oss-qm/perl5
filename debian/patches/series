@@ -61,3 +61,4 @@ debian/hppa_op_optimize_workaround.diff
 fixes/test-builder-warning.diff
 fixes/longdblinf-randomness.diff
 debian/installman-utf8.diff
+fixes/list_assign_leak.diff
