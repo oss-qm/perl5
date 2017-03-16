@@ -1,10 +1,11 @@
-From bda59878b9c15463c76606c85d15cc1bb4b56ac4 Mon Sep 17 00:00:00 2001
+From 110dc54dba5563a5feb59c870b071f134e6fd440 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 21 Feb 2017 23:45:26 +0000
 Subject: Documentation fixes for '.' possibly no longer being in @INC
 
 Bug: https://rt.perl.org/Ticket/Display.html?id=130832
 Bug-Debian: https://bugs.debian.org/839536
+Origin: upstream, https://perl5.git.perl.org/perl.git/commit/a03e9f8a07a84c3d506eb4b6cce401a71f7d41f9
 Patch-Name: fixes/perlfunc_inc_doc.diff
 ---
  pod/perlfunc.pod | 28 +++++++++++++++++++---------
