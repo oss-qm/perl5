@@ -3,7 +3,7 @@
 
 use strict;
 
-use Test::More tests => 127;
+use Test::More tests => 126;
 use Config;
 use Fcntl ':mode';
 use lib 't/';
@@ -17,6 +17,13 @@ BEGIN {
 }
 
 my $Is_VMS = $^O eq 'VMS';
+
+my $fchmod_supported = 0;
+if (open my $fh, curdir()) {
+    my ($perm) = (stat($fh))[2];
+    $perm &= 07777;
+    eval { $fchmod_supported = chmod( $perm, $fh); };
+}
 
 # first check for stupid permissions second for full, so we clean up
 # behind ourselves
@@ -299,16 +306,19 @@ is($created[0], $dir, "created directory (old style 3 mode undef) cross-check");
 
 is(rmtree($dir, 0, undef), 1, "removed directory 3 verbose undef");
 
-$dir = catdir($tmp_base,'G');
-$dir = VMS::Filespec::unixify($dir) if $Is_VMS;
+SKIP: {
+    skip "fchmod of directories not supported on this platform", 3 unless $fchmod_supported;
+    $dir = catdir($tmp_base,'G');
+    $dir = VMS::Filespec::unixify($dir) if $Is_VMS;
 
-@created = mkpath($dir, undef, 0200);
+    @created = mkpath($dir, undef, 0400);
 
-is(scalar(@created), 1, "created write-only dir");
+    is(scalar(@created), 1, "created read-only dir");
 
-is($created[0], $dir, "created write-only directory cross-check");
+    is($created[0], $dir, "created read-only directory cross-check");
 
-is(rmtree($dir), 1, "removed write-only dir");
+    is(rmtree($dir), 1, "removed read-only dir");
+}
 
 # borderline new-style heuristics
 if (chdir $tmp_base) {
@@ -450,26 +460,28 @@ SKIP: {
 }
 
 SKIP : {
-    my $skip_count = 19;
+    my $skip_count = 18;
     # this test will fail on Windows, as per:
     #   http://perldoc.perl.org/perlport.html#chmod
 
     skip "Windows chmod test skipped", $skip_count
         if $^O eq 'MSWin32';
+    skip "fchmod() on directories is not supported on this platform", $skip_count
+        unless $fchmod_supported;
     my $mode;
     my $octal_mode;
     my @inputs = (
-      0777, 0700, 0070, 0007,
-      0333, 0300, 0030, 0003,
-      0111, 0100, 0010, 0001,
-      0731, 0713, 0317, 0371, 0173, 0137,
-      00 );
+      0777, 0700, 0470, 0407,
+      0433, 0400, 0430, 0403,
+      0111, 0100, 0110, 0101,
+      0731, 0713, 0317, 0371,
+      0173, 0137);
     my $input;
     my $octal_input;
-    $dir = catdir($tmp_base, 'chmod_test');
 
     foreach (@inputs) {
         $input = $_;
+        $dir = catdir($tmp_base, sprintf("chmod_test%04o", $input));
         # We can skip from here because 0 is last in the list.
         skip "Mode of 0 means assume user defaults on VMS", 1
           if ($input == 0 && $Is_VMS);
