@@ -16,6 +16,13 @@ my $has_Test_Output = $@ ? 0 : 1;
 
 my $Is_VMS = $^O eq 'VMS';
 
+my $fchmod_supported = 0;
+if (open my $fh, curdir()) {
+    my ($perm) = (stat($fh))[2];
+    $perm &= 07777;
+    eval { $fchmod_supported = chmod( $perm, $fh); };
+}
+
 # first check for stupid permissions second for full, so we clean up
 # behind ourselves
 for my $perm (0111,0777) {
@@ -258,13 +265,16 @@ is(scalar(@created), 1, "created directory (old style 3 mode undef)");
 is($created[0], $dir, "created directory (old style 3 mode undef) cross-check");
 is(rmtree($dir, 0, undef), 1, "removed directory 3 verbose undef");
 
-$dir = catdir($tmp_base,'G');
-$dir = VMS::Filespec::unixify($dir) if $Is_VMS;
+SKIP: {
+    skip "fchmod of directories not supported on this platform", 3 unless $fchmod_supported;
+    $dir = catdir($tmp_base,'G');
+    $dir = VMS::Filespec::unixify($dir) if $Is_VMS;
 
-@created = mkpath($dir, undef, 0200);
-is(scalar(@created), 1, "created write-only dir");
-is($created[0], $dir, "created write-only directory cross-check");
-is(rmtree($dir), 1, "removed write-only dir");
+    @created = mkpath($dir, undef, 0400);
+    is(scalar(@created), 1, "created read-only dir");
+    is($created[0], $dir, "created read-only directory cross-check");
+    is(rmtree($dir), 1, "removed read-only dir");
+}
 
 # borderline new-style heuristics
 if (chdir $tmp_base) {
