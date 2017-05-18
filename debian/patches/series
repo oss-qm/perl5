@@ -20,7 +20,6 @@ debian/deprecate-with-apt.diff
 debian/squelch-locale-warnings.diff
 debian/skip-upstream-git-tests.diff
 debian/patchlevel.diff
-debian/skip-kfreebsd-crash.diff
 fixes/document_makemaker_ccflags.diff
 debian/find_html2text.diff
 debian/perl5db-x-terminal-emulator.patch
@@ -29,7 +28,6 @@ fixes/memoize_storable_nstore.diff
 debian/regen-skip.diff
 debian/makemaker-pasthru.diff
 debian/makemaker-manext.diff
-debian/devel-ppport-reproducibility.diff
 debian/kfreebsd-softupdates.diff
 fixes/autodie-scope.diff
 fixes/memoize-pod.diff
