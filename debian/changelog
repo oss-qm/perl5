@@ -1,6 +1,6 @@
-perl (5.24.1-3) UNRELEASED; urgency=medium
+perl (5.26.0~rc1-1) UNRELEASED; urgency=medium
 
-  * 5.26.0~rc1-1 new upstream version
+  * Import new upstream release candidate.
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 18 May 2017 18:45:20 +0300
 
