@@ -9,7 +9,7 @@ Comment:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
  .
- Last checked against: Perl 5.24.1
+ Last checked against: Perl 5.26.0~rc1
 
 Files: *
 Copyright:
@@ -112,93 +112,9 @@ Comment:
   You may distribute under the terms of either the GNU General Public
   License or the Artistic License, as specified in the README file.
 
-Files: hv_func.h
-Copyright:
- Paul Hsieh (c) 2004
-License: HSIEH-DERIVATIVE or HSIEH-BSD or LGPL-2.1
-Comment:
- ----------------------------------------
- The first two alternative licenses, as retrieved at
-  Thu, 09 May 2013 00:00:38 +0300
- are included at the end of this file.
- .
- Part of this file carries the following comment:
- .
-  FYI: This is the "Super-Fast" algorithm mentioned by Bob Jenkins in
-  (http://burtleburtle.net/bob/hash/doobs.html)
-  It is by Paul Hsieh (c) 2004 and is analysed here
-  http://www.azillionmonkeys.com/qed/hash.html
-  license terms are here:
-  http://www.azillionmonkeys.com/qed/weblicense.html
- .
- As of Thu, 09 May 2013 00:02:53 +0300, the "weblicense.html" document
- states:
- .
-  Unless otherwise accompanied by another included license, the text
-  and explicitly rendered exposition of all content under this website
-  is covered by the Paul Hsieh exposition license.
- .
-  For the specific coverage of raw source code (only) obtained from
-  this website, you have the option of using the old-style BSD license
-  to use the code instead of other the licenses. This option has been
-  provided for people who can't figure out what I talking about with my
-  derivative license, or who are using a old-style BSD compatible license.
- .
-  Unless otherwise accompanied by another included license, derivative
-  work by taking portions or ideas from the above mentioned exposition
-  are covered by the Paul Hsieh derivative license.
- .
-  Examples: Unless covered by another accompanying license, source code
-  shown on my website can be used freely under the derivative license,
-  (and may be distributed under a public domain license, whether compiled
-  into another program or not, for example) however the font, comments,
-  colors or any layout details associated to that source code in its
-  exposition are covered by the exposition license.
- .
-  The entire English text describing the code is also covered under the
-  exposition license and thus cannot be copied at all outside the limits
-  of fair use.
- .
-  Images and graphics shown on this website are entirely covered by the
-  exposition license.
- .
-  If a proprietary vendor wishes to create a closed source object code
-  based product using source covered by the derivative license they may
-  do so. However if this vendor then wished to distribute the original
-  source code, they may not apply any licensing terms which contradict
-  the original derivative license covering the derivative code.
- .
-  If your code is compatible with the old style BSD license and you
-  wish to avoid the burden of explicitely protecting code you obtained
-  from here from misrepresentation then you can simply cover it with
-  the old-style BSD license.
- .
- It is therefore assumed that the relevant part of the Perl source
- is licensed under either the "Paul Hsieh derivative license" or
- the "the old-style BSD license", which have been included at
- the end of file with the codenames HSIEH-DERIVATIVE and HSIEH-BSD.
- .
- Additionally, the "hash.html" document has this statement for the
- relevant source code:
- .
-  IMPORTANT NOTE: Since there has been a lot of interest for the code
-  below, I have decided to additionally provide it under the LGPL 2.1
-  license. This provision applies to the code below only and not to any
-  other code including other source archives or listings from this site
-  unless otherwise specified.
- .
-  The LGPL 2.1 is not necessarily a more liberal license than my
-  derivative license, but this additional licensing makes the code
-  available to more developers. Note that this does not give you
-  multi-licensing rights. You can only use the code under one of the
-  licenses at a time.
- .
- and links to the full LGPL 2.1 license terms at
- http://www.gnu.org/licenses/lgpl-2.1.txt
-
 Files: perly.h
 Copyright:
- Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
+ Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 License: GPL-3+-WITH-BISON-EXCEPTION
 
 Files: mkppport
@@ -211,7 +127,7 @@ Comment:
 
 Files: lib/unicore/*.txt
 Copyright:
- Copyright (c) 1991-2015 Unicode, Inc.
+ © 1991-2016 Unicode®, Inc.
 License: Unicode
 Comment:
  The license is given as
@@ -402,7 +318,7 @@ Comment:
  b) the "Artistic License" which comes with this kit.
 
 Files: cpan/Compress-Raw-Bzip2/*
-Copyright: Copyright (c) 2005-2015 Paul Marquess. All rights reserved.
+Copyright: Copyright (c) 2005-2017 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it
@@ -422,7 +338,7 @@ Comment:
 License: BZIP
 
 Files: cpan/Compress-Raw-Zlib/*
-Copyright: Copyright (c) 2005-2015 Paul Marquess. All rights reserved.
+Copyright: Copyright (c) 2005-2017 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it
@@ -435,7 +351,7 @@ License: ZLIB
 
 Files: cpan/Config-Perl-V/*
 Copyright:
- Copyright (C) 2009-2015 H.Merijn Brand
+ Copyright (C) 2009-2016 H.Merijn Brand
 License: GPL-1+ or Artistic
 Comment:
  This library is free software; you can redistribute it and/or modify
@@ -451,14 +367,15 @@ Comment:
 Files:
  cpan/CPAN/lib/App/Cpan.pm
  cpan/CPAN/scripts/cpan
-Copyright: (c) 2001-2014, brian d foy, All Rights Reserved.
+Copyright: (c) 2001-2015, brian d foy, All Rights Reserved.
 License: GPL-1+ or Artistic
 Comment:
  You may redistribute this under the same terms as Perl itself.
 
 Files: cpan/CPAN-Meta/*
 Copyright:
- This software is copyright (c) 2010 by David Golden and Ricardo Signes.
+ This software is copyright (c) 2010 by David Golden, Ricardo Signes,
+ Adam Kennedy and Contributors.
 License: GPL-1+ or Artistic
 Comment:
  This is free software; you can redistribute it and/or modify it under
@@ -493,7 +410,7 @@ Comment:
  the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/DB_File/*
-Copyright: Copyright (c) 1995-2014 Paul Marquess. All rights reserved.
+Copyright: Copyright (c) 1995-2016 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it and/or modify
@@ -547,7 +464,7 @@ Comment:
 
 Files: cpan/Digest-SHA/*
 Copyright:
- Copyright (C) 2003-2015 Mark Shelor, All Rights Reserved
+ Copyright (C) 2003-2016 Mark Shelor, All Rights Reserved
 License: GPL-1+ or Artistic
 Comment:
  This library is free software; you can redistribute it and/or modify
@@ -671,7 +588,7 @@ Comment:
 
 Files: cpan/HTTP-Tiny/*
 Copyright:
- This software is copyright (c) 2015 by Christian Hansen.
+ This software is copyright (c) 2016 by Christian Hansen.
 License: GPL-1+ or Artistic
 Comment:
  This is free software; you can redistribute it and/or modify it under
@@ -679,7 +596,7 @@ Comment:
 
 Files: cpan/IO-Compress/*
 Copyright:
- Copyright (c) 1995-2015 Paul Marquess. All rights reserved.
+ Copyright (c) 1995-2017 Paul Marquess. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it
@@ -705,7 +622,7 @@ Comment:
 
 Files: cpan/JSON-PP/*
 Copyright:
- Copyright 2007-2014 by Makamaka Hannyaharamitu
+ Copyright 2007-2016 by Makamaka Hannyaharamitu
 License: GPL-1+ or Artistic
 Comment:
  This library is free software; you can redistribute it and/or modify
@@ -759,7 +676,7 @@ Files: cpan/Locale-Codes/*
 Copyright:
  Copyright (C) 1997-2001 Canon Research Centre Europe (CRE).
  Copyright (C) 2001-2010 Neil Bowers
- Copyright (c) 1996-2015 Sullivan Beck
+ Copyright (c) 1996-2016 Sullivan Beck
  Copyright (c) 2001      Michael Hennecke
 License: GPL-1+ or Artistic
 Comment:
@@ -884,7 +801,7 @@ Comment:
 
 Files: cpan/Perl-OSType/*
 Copyright:
- This software is copyright (c) 2015 by David Golden.
+ This software is copyright (c) 2016 by David Golden.
 License: GPL-1+ or Artistic
 Comment:
  This is free software; you can redistribute it and/or modify it under
@@ -1055,6 +972,14 @@ Comment:
  you can redistribute it and/or modify it under the same terms
  as Perl itself.
 
+Files: cpan/Pod-Usage/t/inc/Pod/PlainText.pm
+Copyright:
+ Copyright 1999-2000 by Russ Allbery <rra@stanford.edu>
+License: GPL-1+ or Artistic
+Comment:
+ This program is free software; you can redistribute it and/or modify it
+ under the same terms as Perl itself.
+
 Files: cpan/Shell/*
 Copyright: unknown
 License: GPL-1+ or Artistic
@@ -1090,7 +1015,7 @@ Files: cpan/Term-ANSIColor/*
 Copyright:
  Copyright 1996 Zenin
  Copyright 1996, 1997, 1998, 2000, 2001, 2002, 2005, 2006, 2008, 2009,
-     2010, 2011, 2012, 2013, 2014, 2015 Russ Allbery <rra@stanford.edu>
+     2010, 2011, 2012, 2013, 2014, 2015, 2016 Russ Allbery <rra@cpan.org>
  Copyright 2012 Kurt Starsinic <kstarsinic@gmail.com>
 License: GPL-1+ or Artistic
 Comment:
@@ -1099,8 +1024,14 @@ Comment:
 
 Files:
  cpan/Term-ANSIColor/t/lib/Test/RRA.pm
- cpan/Term-ANSIColor/t/lib/Test/RRA/*
 Copyright: 2013, 2014 The Board of Trustees of the Leland Stanford Junior University
+License: Expat
+
+Files:
+ cpan/Term-ANSIColor/t/lib/Test/RRA/Config.pm
+Copyright:
+ Copyright 2015, 2016 Russ Allbery <eagle@eyrie.org>
+ Copyright 2013, 2014 The Board of Trustees of the Leland Stanford Junior University
 License: Expat
 
 Files: cpan/Term-Cap/*
@@ -1138,6 +1069,7 @@ Comment:
 Files: cpan/Test-Simple/*
 Copyright:
  Copyright 2001-2008 by Michael G Schwern <schwern@pobox.com>.
+ Copyright 2016 Chad Granum <exodist@cpan.org>.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it and/or
@@ -1279,12 +1211,11 @@ Comment:
 
 Files: cpan/Time-Local/*
 Copyright:
- Copyright (c) 1997-2003 Graham Barr, 2003-2007 David Rolsky.
- All rights reserved.
+ Copyright (c) 1997 - 2016 by Graham Barr & Dave Rolsky.
 License: GPL-1+ or Artistic
 Comment:
- This program is free software; you can redistribute it and/or modify
- it under the same terms as Perl itself.
+ This is free software; you can redistribute it and/or modify it under
+ the same terms as the Perl 5 programming language system itself.
 
 Files: cpan/Time-Piece/*
 Copyright: unknown
@@ -1306,7 +1237,7 @@ Comment:
 
 Files: cpan/Unicode-Collate/*
 Copyright:
- This module is Copyright(C) 2001-2014, SADAHIRO Tomoyuki. Japan. All
+ This module is Copyright(C) 2001-2016, SADAHIRO Tomoyuki. Japan. All
  rights reserved.
 License: GPL-1+ or Artistic
 Comment:
@@ -1315,7 +1246,7 @@ Comment:
 
 Files: cpan/Unicode-Collate/Collate/allkeys.txt
 Copyright:
- Copyright (c) 2001-2014 Unicode, Inc.
+ Copyright (c) 2001-2015 Unicode, Inc.
 License: Unicode
 Comment:
  For terms of use, see http://www.unicode.org/terms_of_use.html
@@ -1406,7 +1337,7 @@ Comment:
 
 Files: dist/Data-Dumper/*
 Copyright:
- Copyright (c) 1996-98 Gurusamy Sarathy. All rights reserved.
+ Copyright (c) 1996-2017 Gurusamy Sarathy. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
  This program is free software; you can redistribute it and/or
@@ -1532,6 +1463,8 @@ Comment:
 
 Files: dist/Net-Ping/*
 Copyright:
+ Copyright (c) 2016, cPanel Inc.  All rights reserved.
+ Copyright (c) 2012, Steve Peters.  All rights reserved.
  Copyright (c) 2002-2003, Rob Brown.  All rights reserved.
  Copyright (c) 2001, Colin McMillen.  All rights reserved.
 License: GPL-1+ or Artistic
@@ -1580,7 +1513,7 @@ Copyright:
  Copyright (c) 2002-2007 Sean M. Burke.
  Copyright (c) 2011 Mark Allen.  All rights reserved.
  Copyright (c) 2011 brian d foy. All rights reserved.
- Copyright (c) 2011 Mark Allen.
+ Copyright (c) 2017 Mark Allen.
 License: GPL-1+ or Artistic
 Comment:
  This library is free software; you can redistribute it and/or modify it
