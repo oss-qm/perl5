@@ -1,4 +1,4 @@
-From 25757e5d5fffbec10990c7f1dac5f0cb6f32581a Mon Sep 17 00:00:00 2001
+From 8e9e783a98306b2ec82cbeb70276fe2562851ce1 Mon Sep 17 00:00:00 2001
 From: Pino Toscano <pino@debian.org>
 Date: Thu, 8 Sep 2016 10:26:59 +0100
 Subject: File-Path: Fix test failure in Hurd due to hard-coded ENOENT
@@ -9,7 +9,7 @@ Patch-Name: fixes/file_path_hurd_errno.diff
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/cpan/File-Path/t/Path.t b/cpan/File-Path/t/Path.t
-index 5644f57..ff52fd6 100644
+index 5644f57a5..ff52fd69e 100644
 --- a/cpan/File-Path/t/Path.t
 +++ b/cpan/File-Path/t/Path.t
 @@ -8,6 +8,7 @@ use Config;

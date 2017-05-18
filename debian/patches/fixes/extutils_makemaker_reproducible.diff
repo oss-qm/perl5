@@ -1,4 +1,4 @@
-From 97af46406a2ca0857af9905efff92efb2018bf3f Mon Sep 17 00:00:00 2001
+From f8ae7f687d09b2b145ac116424dbe1951b88db19 Mon Sep 17 00:00:00 2001
 From: Chris Lamb <lamby@debian.org>
 Date: Sun, 28 Aug 2016 17:22:10 +0100
 Subject: Make perllocal.pod files reproducible
@@ -12,24 +12,24 @@ Patch-Name: fixes/extutils_makemaker_reproducible.diff
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm
-index b4385fc..b76f2a4 100644
+index 69779b291..bf53ad571 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm
-@@ -213,7 +213,8 @@ sub perllocal_install {
+@@ -219,7 +219,8 @@ sub perllocal_install {
                             : @ARGV;
  
      my $pod;
--    $pod = sprintf <<POD, scalar localtime;
+-    $pod = sprintf <<'POD', scalar(localtime), $type, $name, $name;
 +    my $time = gmtime($ENV{SOURCE_DATE_EPOCH} || time);
-+    $pod = sprintf <<POD, $time;
-  =head2 %s: C<$type> L<$name|$name>
++    $pod = sprintf <<'POD', $time, $type, $name, $name;
+  =head2 %s: C<%s> L<%s|%s>
  
   =over 4
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index cf4d3e9..65cf05a 100644
+index c39865e9e..697bbc083 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -3682,7 +3682,7 @@ Obsolete, deprecated method. Not used since Version 5.21.
+@@ -3840,7 +3840,7 @@ Obsolete, deprecated method. Not used since Version 5.21.
  sub writedoc {
  # --- perllocal.pod section ---
      my($self,$what,$name,@attribs)=@_;

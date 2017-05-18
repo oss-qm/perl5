@@ -1,4 +1,4 @@
-From a2343b798cfdd34d1666f4e1ba25be35f683b5e8 Mon Sep 17 00:00:00 2001
+From d6d1ad2570d35b2cc173d95468cedbf337e861e9 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 19 Nov 2016 21:30:46 +0200
 Subject: Generate man pages with UTF-8 characters
@@ -15,7 +15,7 @@ Patch-Name: debian/installman-utf8.diff
  1 file changed, 1 insertion(+)
 
 diff --git a/installman b/installman
-index 60fbce3..fa7ac92 100755
+index 53117ab57..80d9bc400 100755
 --- a/installman
 +++ b/installman
 @@ -153,6 +153,7 @@ sub pod2man {

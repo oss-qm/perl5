@@ -1,4 +1,4 @@
-From d3fcf623508ee904b8391eb0aa77c8be60415719 Mon Sep 17 00:00:00 2001
+From 051811fb684f54b9fba491863a90e6f230e1a089 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 23:13:34 +0100
 Subject: CPAN: Add link to main CPAN web site
@@ -11,10 +11,10 @@ Patch-Name: fixes/cpan_web_link.diff
  1 file changed, 3 insertions(+)
 
 diff --git a/cpan/CPAN/lib/CPAN.pm b/cpan/CPAN/lib/CPAN.pm
-index 25bf349..6d11629 100644
+index 4f028505f..088cf611b 100644
 --- a/cpan/CPAN/lib/CPAN.pm
 +++ b/cpan/CPAN/lib/CPAN.pm
-@@ -3950,6 +3950,9 @@ your operating system) then typing C<cpan> in a console window will
+@@ -3981,6 +3981,9 @@ your operating system) then typing C<cpan> in a console window will
  work for you as well. Above that the utility provides several
  commandline shortcuts.
  

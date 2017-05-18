@@ -20,7 +20,7 @@ chdir dirname($0);
 $file = basename($0, '.PL');
 $file .= '.com' if $^O eq 'VMS';
 
-open OUT, ">$file" or die "Can't create $file: $!";
+open OUT, ">", $file or die "Can't create $file: $!";
 
 # get patchlevel.h timestamp
 
@@ -96,6 +96,8 @@ my( $file, $usefile, $cc, $address, $bugaddress, $testaddress, $thanksaddress,
     %opt, $have_attachment, $attachments, $has_patch, $mime_boundary
 );
 
+my $running_noninteractively = !-t STDIN;
+
 my $perl_version = $^V ? sprintf("%vd", $^V) : $];
 
 my $config_tag2 = "$perl_version - $Config{cf_time}";
@@ -104,7 +106,7 @@ Init();
 
 if ($opt{h}) { Help(); exit; }
 if ($opt{d}) { Dump(*STDOUT); exit; }
-if (!-t STDIN && !($ok and not $opt{n})) {
+if ($running_noninteractively && !$opt{t} && !($ok and not $opt{n})) {
     paraprint <<"EOF";
 Please use $progname interactively. If you want to
 include a file, you can use the -f switch.
@@ -754,7 +756,7 @@ sub Edit {
 	$ed = $entry unless $entry eq '';
     }
 
-    _edit_file($ed);
+    _edit_file($ed) unless $running_noninteractively;
 }
 
 sub _edit_file {
@@ -831,7 +833,8 @@ a few options. You can:
 EOF
       retry:
         print $menu;
-	    my $action =  _prompt('', "Action (Send/Display/Edit/Subject/Save to File)");;
+	    my $action =  _prompt('', "Action (Send/Display/Edit/Subject/Save to File)",
+	        $opt{t} ? 'q' : '');
         print "\n";
 	    if ($action =~ /^(f|sa)/i) { # <F>ile/<Sa>ve
             if ( SaveMessage() ) { exit }
@@ -879,7 +882,7 @@ sub TrivialSubject {
     if ($subject =~
 	/^(y(es)?|no?|help|perl( (bug|problem))?|bug|problem)$/i ||
 	length($subject) < 4 ||
-	$subject !~ /\s/) {
+	($subject !~ /\s/ && ! $opt{t})) { # non-whitespace is accepted in test mode
 	print "\nThe subject you entered wasn't very descriptive. Please try again.\n\n";
         return 1;
     } else {
@@ -1014,6 +1017,7 @@ sub _prompt {
     }
     print $prompt. ($default ? " [$default]" :''). ": ";
 	my $result = scalar(<>);
+    return $default if !defined $result; # got eof
     chomp($result);
 	$result =~ s/^\s*(.*?)\s*$/$1/s;
     if ($default && $result eq '') {
@@ -1539,6 +1543,8 @@ supply one on the command line.
 =item B<-t>
 
 Test mode.  The target address defaults to B<perlbug-test@perl.org>.
+Also makes it possible to command perlbug from a pipe or file, for
+testing purposes.
 
 =item B<-T>
 

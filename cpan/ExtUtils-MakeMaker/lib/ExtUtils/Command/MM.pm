@@ -10,14 +10,20 @@ our @ISA = qw(Exporter);
 
 our @EXPORT  = qw(test_harness pod2man perllocal_install uninstall
                   warn_if_old_packlist test_s cp_nonempty);
-our $VERSION = '7.10_02';
+our $VERSION = '7.24';
+$VERSION = eval $VERSION;
 
 my $Is_VMS = $^O eq 'VMS';
 
-eval {  require Time::HiRes; die unless Time::HiRes->can("stat"); };
-*mtime = $@ ?
- sub { [             stat($_[0])]->[9] } :
- sub { [Time::HiRes::stat($_[0])]->[9] } ;
+sub mtime {
+  no warnings 'redefine';
+  local $@;
+  *mtime = (eval { require Time::HiRes } && defined &Time::HiRes::stat)
+    ? sub { (Time::HiRes::stat($_[0]))[9] }
+    : sub { (             stat($_[0]))[9] }
+  ;
+  goto &mtime;
+}
 
 =head1 NAME
 
@@ -214,8 +220,8 @@ sub perllocal_install {
 
     my $pod;
     my $time = gmtime($ENV{SOURCE_DATE_EPOCH} || time);
-    $pod = sprintf <<POD, $time;
- =head2 %s: C<$type> L<$name|$name>
+    $pod = sprintf <<'POD', $time, $type, $name, $name;
+ =head2 %s: C<%s> L<%s|%s>
 
  =over 4
 

@@ -1,4 +1,4 @@
-From 236fd7b91130359c4e2d282f067616c765610729 Mon Sep 17 00:00:00 2001
+From 20b2451c955798cb9271f0c29f5bf144826dcf55 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 11 Oct 2015 19:27:56 +0300
 Subject: Sort the list of XS code files when generating RealPPPort.xs
@@ -15,7 +15,7 @@ Patch-Name: debian/devel-ppport-reproducibility.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/Devel-PPPort/PPPort_xs.PL b/cpan/Devel-PPPort/PPPort_xs.PL
-index 5f18940..149f2fe 100644
+index 5f18940ef..149f2fe07 100644
 --- a/cpan/Devel-PPPort/PPPort_xs.PL
 +++ b/cpan/Devel-PPPort/PPPort_xs.PL
 @@ -38,7 +38,7 @@ END

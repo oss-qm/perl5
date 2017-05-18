@@ -1,4 +1,4 @@
-From 09efd81c1fac98401241646b2bafcb2bcb027654 Mon Sep 17 00:00:00 2001
+From bcddc4ca102595111701ebd2b153d2f4c2cba6a3 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 22:56:56 +0100
 Subject: Math::Trig: document angle units
@@ -11,7 +11,7 @@ Patch-Name: fixes/math_complex_doc_angle_units.diff
  1 file changed, 5 insertions(+)
 
 diff --git a/cpan/Math-Complex/lib/Math/Trig.pm b/cpan/Math-Complex/lib/Math/Trig.pm
-index acad31f..bc7ac78 100644
+index acad31ff4..bc7ac780e 100644
 --- a/cpan/Math-Complex/lib/Math/Trig.pm
 +++ b/cpan/Math-Complex/lib/Math/Trig.pm
 @@ -263,6 +263,11 @@ core Perl which defines only the C<sin()> and C<cos()>.  The constant

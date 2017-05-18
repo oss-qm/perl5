@@ -1,4 +1,4 @@
-From 7af226758575bcb5baf15b16551fa3dc5ad0d96a Mon Sep 17 00:00:00 2001
+From 8942a954885fd64337dbba2f4c35a2730a706a0e Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 22:53:44 +0100
 Subject: Math::Trig: add missing SEE ALSO
@@ -11,7 +11,7 @@ Patch-Name: fixes/math_complex_doc_see_also.diff
  1 file changed, 2 insertions(+)
 
 diff --git a/cpan/Math-Complex/lib/Math/Trig.pm b/cpan/Math-Complex/lib/Math/Trig.pm
-index efc2ff8..acad31f 100644
+index efc2ff80a..acad31ff4 100644
 --- a/cpan/Math-Complex/lib/Math/Trig.pm
 +++ b/cpan/Math-Complex/lib/Math/Trig.pm
 @@ -743,6 +743,8 @@ an answer instead of giving a fatal runtime error.

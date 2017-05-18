@@ -1,4 +1,4 @@
-From 2ec7b263f8410846b355a6c27738cffa5b2e6b0e Mon Sep 17 00:00:00 2001
+From a1bda49e7212724e42469a9ad4e605a2e7e988ea Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 23:20:45 +0100
 Subject: Time::Piece: Improve documentation for add_months and add_years
@@ -14,7 +14,7 @@ Patch-Name: fixes/time_piece_doc.diff
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/Time-Piece/Piece.pm b/cpan/Time-Piece/Piece.pm
-index 6dbf4d6..d3b62ce 100644
+index 6dbf4d69c..d3b62ce5f 100644
 --- a/cpan/Time-Piece/Piece.pm
 +++ b/cpan/Time-Piece/Piece.pm
 @@ -783,8 +783,8 @@ days, weeks and years in that delta, using the Time::Seconds API.

@@ -165,7 +165,7 @@ SWTEST
     is( $r, 'foo1', '-s on the shebang line' );
 }
 
-# Bug ID 20011106.084
+# Bug ID 20011106.084 (#7876)
 $filename = tempfile();
 SKIP: {
     open my $f, ">$filename" or skip( "Can't write temp file $filename: $!" );
@@ -204,7 +204,7 @@ SWTESTPM
     );
     is( $r, "<$package><foo>", '-M with import parameter' );
     $r = runperl(
-	switches    => [ "-I.", "-m$package" ],
+	switches    => [ "-m$package" ],
 	prog	    => '1',
     );
 
@@ -213,7 +213,7 @@ SWTESTPM
         is( $r, '', '-m' );
     }
     $r = runperl(
-	switches    => [ "-m$package=foo,bar" ],
+	switches    => [ "-I.", "-m$package=foo,bar" ],
 	prog	    => '1',
     );
     is( $r, "<$package><foo><bar>", '-m with import parameters' );
