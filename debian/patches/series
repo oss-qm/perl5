@@ -30,7 +30,6 @@ debian/regen-skip.diff
 debian/makemaker-pasthru.diff
 debian/makemaker-manext.diff
 debian/devel-ppport-reproducibility.diff
-debian/encode-unicode-bom-doc.diff
 debian/kfreebsd-softupdates.diff
 fixes/autodie-scope.diff
 fixes/memoize-pod.diff
@@ -41,8 +40,8 @@ fixes/math_complex_doc_angle_units.diff
 fixes/cpan_web_link.diff
 fixes/time_piece_doc.diff
 debian/CVE-2016-1238/sitecustomize-in-etc.diff
-debian/CVE-2016-1238/eumm-without-dot.diff
 fixes/extutils_makemaker_reproducible.diff
 fixes/file_path_hurd_errno.diff
 debian/hppa_op_optimize_workaround.diff
 debian/installman-utf8.diff
+debian/customized.diff

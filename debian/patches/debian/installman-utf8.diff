@@ -1,4 +1,4 @@
-From d6d1ad2570d35b2cc173d95468cedbf337e861e9 Mon Sep 17 00:00:00 2001
+From 6457511bf4d14846d6b7997199a498b490299d43 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 19 Nov 2016 21:30:46 +0200
 Subject: Generate man pages with UTF-8 characters

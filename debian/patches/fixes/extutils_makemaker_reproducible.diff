@@ -1,4 +1,4 @@
-From f8ae7f687d09b2b145ac116424dbe1951b88db19 Mon Sep 17 00:00:00 2001
+From cb2ce27a4af29a7d8e4a5b45635d84725de8c701 Mon Sep 17 00:00:00 2001
 From: Chris Lamb <lamby@debian.org>
 Date: Sun, 28 Aug 2016 17:22:10 +0100
 Subject: Make perllocal.pod files reproducible
@@ -26,7 +26,7 @@ index 69779b291..bf53ad571 100644
  
   =over 4
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index c39865e9e..697bbc083 100644
+index 304519443..cab58483a 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -3840,7 +3840,7 @@ Obsolete, deprecated method. Not used since Version 5.21.
