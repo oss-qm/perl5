@@ -15,7 +15,7 @@ Build-Depends: file,
  libbz2-dev,
  dpkg-dev (>= 1.17.14),
  libc6-dev (>= 2.19-9) [s390x]
-Vcs-Git: https://anonscm.debian.org/git/perl/perl.git -b debian-5.24
+Vcs-Git: https://anonscm.debian.org/git/perl/perl.git -b debian-5.26
 Vcs-Browser: https://anonscm.debian.org/cgit/perl/perl.git
 
 Package: perl-base
@@ -72,7 +72,7 @@ Description: minimal Perl system
  .
  This package provides a Perl interpreter and the small subset of the
  standard run-time library required to perform basic tasks. For a full
- Perl installation, install "perl" (and its dependencies, "perl-modules-5.24"
+ Perl installation, install "perl" (and its dependencies, "perl-modules-5.26"
  and "perl-doc").
 
 Package: perl-doc
@@ -99,11 +99,11 @@ Description: debug-enabled Perl interpreter
  than perl programs, which may be traced/debugged using the standard
  perl binary using the -d switch (see perldebug(1)).
 
-Package: libperl5.24
+Package: libperl5.26
 Section: libs
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, perl-modules-5.24 (>= ${source:Version})
+Depends: ${shlibs:Depends}, perl-modules-5.26 (>= ${source:Version})
 Breaks: libdigest-md5-perl (<< 2.55),
  libmime-base64-perl (<< 3.15),
  libtime-hires-perl (<< 1.9741),
@@ -176,19 +176,19 @@ Description: shared Perl library
  which embed a Perl interpreter.
  .
  It also contains the architecture-dependent parts of the standard
- library (and depends on perl-modules-5.24 which contains the
+ library (and depends on perl-modules-5.26 which contains the
  architecture-independent parts).
 
 Package: libperl-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: perl:any (= ${binary:Version}), libperl5.24 (= ${binary:Version}),
+Depends: perl:any (= ${binary:Version}), libperl5.26 (= ${binary:Version}),
  libc6-dev | libc-dev
 Description: Perl library: development files
  Files for developing applications which embed a Perl interpreter.
 
-Package: perl-modules-5.24
+Package: perl-modules-5.26
 Priority: standard
 Architecture: all
 Multi-Arch: foreign
@@ -362,15 +362,15 @@ Description: Core Perl modules
  .
  Note that this package only exists to save archive space and should be
  considered an internal implementation detail of the `perl' package.
- Other packages should not depend on `perl-modules-5.24' directly, they
- should use `perl' (which depends on `perl-modules-5.24') instead.
+ Other packages should not depend on `perl-modules-5.26' directly, they
+ should use `perl' (which depends on `perl-modules-5.26') instead.
 
 Package: perl
 Priority: standard
 Architecture: any
 Multi-Arch: allowed
 Pre-Depends: dpkg (>= 1.17.17)
-Depends: perl-base (= ${binary:Version}), perl-modules-5.24 (>= ${source:Version}), libperl5.24 (= ${binary:Version}), ${shlibs:Depends}
+Depends: perl-base (= ${binary:Version}), perl-modules-5.26 (>= ${source:Version}), libperl5.26 (= ${binary:Version}), ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
 Breaks: perl-doc (<< ${Upstream-Version}-1), libperl-dev (<< 5.24.0~)
 Replaces: perl-modules (<< 5.22.0~)
