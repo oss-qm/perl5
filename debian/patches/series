@@ -39,9 +39,9 @@ fixes/math_complex_doc_see_also.diff
 fixes/math_complex_doc_angle_units.diff
 fixes/cpan_web_link.diff
 fixes/time_piece_doc.diff
-debian/CVE-2016-1238/sitecustomize-in-etc.diff
 fixes/extutils_makemaker_reproducible.diff
 fixes/file_path_hurd_errno.diff
 debian/hppa_op_optimize_workaround.diff
 debian/installman-utf8.diff
 debian/customized.diff
+debian/CVE-2016-1238/sitecustomize-in-etc.diff
