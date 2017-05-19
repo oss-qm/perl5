@@ -1,6 +1,7 @@
 perl (5.26.0~rc1-1) UNRELEASED; urgency=medium
 
   * Import new upstream release candidate.
+  * Adopt versioned Provides for the dual lived modules. (Closes: #758100)
 
  -- Niko Tyni <ntyni@debian.org>  Thu, 18 May 2017 18:45:20 +0300
 
