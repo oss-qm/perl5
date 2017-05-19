@@ -505,13 +505,13 @@ libperl.so.5.26 libperl5.26 #MINVER#
  Perl_do_gv_dump@Base 5.26.0~rc1
  Perl_do_gvgv_dump@Base 5.26.0~rc1
  Perl_do_hv_dump@Base 5.26.0~rc1
- Perl_do_ipcctl@Base 5.26.0~rc1
- Perl_do_ipcget@Base 5.26.0~rc1
+ (arch=!hurd-any)Perl_do_ipcctl@Base 5.26.0~rc1
+ (arch=!hurd-any)Perl_do_ipcget@Base 5.26.0~rc1
  Perl_do_join@Base 5.26.0~rc1
  Perl_do_kv@Base 5.26.0~rc1
  Perl_do_magic_dump@Base 5.26.0~rc1
- Perl_do_msgrcv@Base 5.26.0~rc1
- Perl_do_msgsnd@Base 5.26.0~rc1
+ (arch=!hurd-any)Perl_do_msgrcv@Base 5.26.0~rc1
+ (arch=!hurd-any)Perl_do_msgsnd@Base 5.26.0~rc1
  Perl_do_ncmp@Base 5.26.0~rc1
  Perl_do_op_dump@Base 5.26.0~rc1
  Perl_do_open6@Base 5.26.0~rc1
@@ -523,8 +523,8 @@ libperl.so.5.26 libperl5.26 #MINVER#
  Perl_do_print@Base 5.26.0~rc1
  Perl_do_readline@Base 5.26.0~rc1
  Perl_do_seek@Base 5.26.0~rc1
- Perl_do_semop@Base 5.26.0~rc1
- Perl_do_shmio@Base 5.26.0~rc1
+ (arch=!hurd-any)Perl_do_semop@Base 5.26.0~rc1
+ (arch=!hurd-any)Perl_do_shmio@Base 5.26.0~rc1
  Perl_do_sprintf@Base 5.26.0~rc1
  Perl_do_sv_dump@Base 5.26.0~rc1
  Perl_do_sysseek@Base 5.26.0~rc1
