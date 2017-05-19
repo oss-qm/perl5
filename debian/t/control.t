@@ -129,7 +129,7 @@ my %is_perl_binary;
 
 my %deps_found;
 my $breaks_total = 0;
-my $tests_per_breaks = 4;
+my $tests_per_breaks = 5;
 
 for my $perl_package_info ($control->get_packages) {
 	my $perl_package_name = $perl_package_info->{Package};
@@ -214,6 +214,13 @@ for my $perl_package_name (keys %deps_found) {
 			} else {
 				ok(exists $dep_found->{Provides}{$broken},
 					"Breaks for $broken in $perl_package_name implies Provides");
+				my $provided_version = $dep_found->{Provides}{$broken}{version};
+				$provided_version =~ s/-\d+$//; # remove the Debian revision to mirror $broken_version
+				is($provided_version, $broken_version,
+				    "Provides version for $broken in $perl_package_name matches Breaks");
+				if ($provided_version ne $corelist_version) {
+				    diag("s/$broken (= $provided_version)/$broken (= $corelist_version)/");
+			    }
 			}
 		}
 	}
