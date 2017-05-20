@@ -50,11 +50,15 @@ my %ok = (
                "3.56_01" => "3.5601",
                "3.63"    => "3.6300",
                "3.63_01" => "3.6301",
+               "3.67"    => "3.6700",
        },
        # bug #808629
        "libautodie-perl" => {
                 "2.26"   => "2.29",
-       }
+       },
+       "libtime-local-perl" => {
+                "1.25"   => "1.2500",
+       },
 );
 
 # list special cases where a Breaks entry doesn't need to imply
