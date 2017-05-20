@@ -14,7 +14,6 @@ debian/ld_run_path.diff
 debian/libnet_config_path.diff
 debian/mod_paths.diff
 debian/prune_libs.diff
-fixes/net_smtp_docs.diff
 debian/perlivp.diff
 debian/deprecate-with-apt.diff
 debian/squelch-locale-warnings.diff

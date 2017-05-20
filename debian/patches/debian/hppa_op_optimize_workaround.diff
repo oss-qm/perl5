@@ -1,4 +1,4 @@
-From cc1f8661e16012b9ecbe527f3aaff197fce1c193 Mon Sep 17 00:00:00 2001
+From cdcd048e505594d05beff0a6d978f4fe9f3b6405 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sun, 25 Sep 2016 09:59:22 +0200
 Subject: Temporarily lower the optimization of op.c on hppa due to gcc-6
