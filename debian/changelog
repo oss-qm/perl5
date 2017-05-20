@@ -1,9 +1,10 @@
-perl (5.26.0~rc1-1) UNRELEASED; urgency=medium
+perl (5.26.0~rc1-1) experimental; urgency=low
 
   * Import new upstream release candidate.
   * Adopt versioned Provides for the dual lived modules. (Closes: #758100)
+  * Upload to experimental from the Debian Perl Sprint in Lloret de Mar.
 
- -- Niko Tyni <ntyni@debian.org>  Thu, 18 May 2017 18:45:20 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 20 May 2017 11:24:07 +0300
 
 perl (5.24.1-2) unstable; urgency=medium
 
