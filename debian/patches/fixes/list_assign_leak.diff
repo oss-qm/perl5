@@ -1,4 +1,4 @@
-From beb52c1ac46469ab20a3e612f9f69c9258587bec Mon Sep 17 00:00:00 2001
+From b7c23d2e295b87bb55ec1f8eb8226c5be7bac24b Mon Sep 17 00:00:00 2001
 From: David Mitchell <davem@iabyn.com>
 Date: Wed, 15 Feb 2017 15:58:24 +0000
 Subject: avoid a leak in list assign from/to magic values

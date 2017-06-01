@@ -1,4 +1,4 @@
-From 110dc54dba5563a5feb59c870b071f134e6fd440 Mon Sep 17 00:00:00 2001
+From 80f85a43b6319ada4c7693b21da5a25da6a7942b Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Tue, 21 Feb 2017 23:45:26 +0000
 Subject: Documentation fixes for '.' possibly no longer being in @INC

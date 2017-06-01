@@ -52,11 +52,13 @@ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MY.pm 6fefe99045b644599
 ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/testlib.pm 172778ad21c065a89cd270668eb9f99a7364b41c
 ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/cd.t 0a71fbd646a7be8358b07b6f64f838243cc0aef4
 ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/echo.t 37aec8f794c52e037540757eb5b2556f79419ff7
+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/eu_command.t 0d9cd9a75ed6bd2e134d1deac3761a1a4bac7dbd
 ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/NoXS.pm 371cdff1b2375017907cfbc9c8f4a31f5ad10582
 ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/prereq.t 53bda2c549fd13a6b6c13a070ca6bc79883081c0
 ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/vstrings.t 90035a2bdbf45f15b9c3196d072d7cba7e662871
 File::Fetch cpan/File-Fetch/lib/File/Fetch.pm bd0b64a1d8ee2ffac39e017f9fa9f78f95514b4d
-File::Path cpan/File-Path/lib/File/Path.pm fd8ce4420a0c113d3f47dd3223859743655c1da8
+File::Path cpan/File-Path/lib/File/Path.pm 9076753d797a3d0d21b6092ff871fcdac1840872
+File::Path cpan/File-Path/t/Path.t 56f800cd70fa355c655dbd84d6160e80a4f3b3f6
 File::Path cpan/File-Path/t/Path_win32.t 94b9276557ce7f80b91f6fd9bfa7a0cd9bf9683e
 HTTP::Tiny cpan/HTTP-Tiny/lib/HTTP/Tiny.pm 3c899ab6938b588f6a2823a6aa59edc81fc2a387
 IO-Compress cpan/IO-Compress/bin/zipdetails 381ba2a6ae5bd21c8d2e994316e3e13f2f0a4f41

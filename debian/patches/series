@@ -55,7 +55,6 @@ debian/CVE-2016-1238/cpan-without-dot.diff
 debian/document_inc_removal.diff
 fixes/extutils_makemaker_reproducible.diff
 debian/CVE-2016-1238/remove-inc-test.diff
-debian/customized.diff
 fixes/file_path_hurd_errno.diff
 debian/hppa_op_optimize_workaround.diff
 fixes/test-builder-warning.diff
@@ -63,3 +62,6 @@ fixes/longdblinf-randomness.diff
 debian/installman-utf8.diff
 fixes/list_assign_leak.diff
 fixes/perlfunc_inc_doc.diff
+fixes/file_path_chmod_race.diff
+fixes/extutils_file_path_compat.diff
+debian/customized.diff
