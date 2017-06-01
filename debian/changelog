@@ -1,10 +1,10 @@
-perl (5.24.1-3) UNRELEASED; urgency=medium
+perl (5.24.1-3) unstable; urgency=high
 
   * [CVE-2017-6512] Fix file permissions race condition in File-Path;
     patch from John Lightsey (Closes: #863870)
   * Also fix test logic in ExtUtils-MakeMaker required for the above
 
- -- Dominic Hargreaves <dom@earth.li>  Thu, 01 Jun 2017 16:05:19 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 01 Jun 2017 16:09:52 +0100
 
 perl (5.24.1-2) unstable; urgency=medium
 
