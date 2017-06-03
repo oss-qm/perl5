@@ -368,7 +368,7 @@ index e3eb181..ddda561 100644
  =head1 SYNOPSIS
  
 diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Shell/Default.pm b/cpan/CPANPLUS/lib/CPANPLUS/Shell/Default.pm
-index 35c02af..6544007 100644
+index 35c02aff..6544007 100644
 --- a/cpan/CPANPLUS/lib/CPANPLUS/Shell/Default.pm
 +++ b/cpan/CPANPLUS/lib/CPANPLUS/Shell/Default.pm
 @@ -73,7 +73,7 @@ my $Prompt  = $Brand . '> ';
