@@ -1,4 +1,4 @@
-From 99c628746df28ba5a2c3942de58b59961bf99bed Mon Sep 17 00:00:00 2001
+From cd32bd61cc8d15d1ff7ad1b65ff37940683d2954 Mon Sep 17 00:00:00 2001
 From: Chris Lamb <lamby@debian.org>
 Date: Sun, 28 Aug 2016 17:22:10 +0100
 Subject: Make perllocal.pod files reproducible

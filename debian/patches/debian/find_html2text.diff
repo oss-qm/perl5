@@ -1,4 +1,4 @@
-From 746b82ee004b43722f7a4e918c43587394ec386c Mon Sep 17 00:00:00 2001
+From 67ba64bf94b3e76391988bed1fc7d2a41b4e7c31 Mon Sep 17 00:00:00 2001
 From: Andreas Marschke <andreas.marschke@googlemail.com>
 Date: Sat, 17 Sep 2011 11:38:42 +0100
 Subject: Configure CPAN::Distribution with correct name of html2text
