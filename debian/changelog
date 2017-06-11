@@ -1,7 +1,12 @@
 perl (5.26.0~rc1-2) UNRELEASED; urgency=medium
 
+  [ Niko Tyni ]
   * Make perl-base Break debconf (<< 1.5.61) due to POSIX::tmpnam() usage.
     (See #863071)
+
+  [ Dominic Hargreaves ]
+  * Remove /etc/perl/sitecustomize.pl as the interpreter's initial @INC
+    no longer contains '.'
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 21 May 2017 23:00:18 +0300
 
