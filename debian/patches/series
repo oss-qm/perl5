@@ -40,4 +40,6 @@ fixes/extutils_makemaker_reproducible.diff
 fixes/file_path_hurd_errno.diff
 debian/hppa_op_optimize_workaround.diff
 debian/installman-utf8.diff
+fixes/file_path_chmod_race.diff
+fixes/extutils_file_path_compat.diff
 debian/customized.diff
