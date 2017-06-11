@@ -15,7 +15,7 @@ Patch-Name: debian/patchlevel.diff
  1 file changed, 3 insertions(+)
 
 diff --git a/patchlevel.h b/patchlevel.h
-index 5e7533366..fe370c5e6 100644
+index 5e75333..fe370c5 100644
 --- a/patchlevel.h
 +++ b/patchlevel.h
 @@ -138,6 +138,9 @@ static const char * const local_patches[] = {

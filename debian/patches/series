@@ -41,4 +41,3 @@ fixes/file_path_hurd_errno.diff
 debian/hppa_op_optimize_workaround.diff
 debian/installman-utf8.diff
 debian/customized.diff
-debian/CVE-2016-1238/sitecustomize-in-etc.diff

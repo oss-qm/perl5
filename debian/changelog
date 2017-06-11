@@ -7,6 +7,7 @@ perl (5.26.0~rc1-2) UNRELEASED; urgency=medium
   [ Dominic Hargreaves ]
   * Remove /etc/perl/sitecustomize.pl as the interpreter's initial @INC
     no longer contains '.'
+  * Revert local patch setting sitecustomize path
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 21 May 2017 23:00:18 +0300
 

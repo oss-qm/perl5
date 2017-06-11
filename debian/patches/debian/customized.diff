@@ -9,7 +9,7 @@ Patch-Name: debian/customized.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/t/porting/customized.dat b/t/porting/customized.dat
-index 5014b3e21..054ff105f 100644
+index 5014b3e..054ff10 100644
 --- a/t/porting/customized.dat
 +++ b/t/porting/customized.dat
 @@ -11,7 +11,7 @@ Locale::Maketext::Simple cpan/Locale-Maketext-Simple/lib/Locale/Maketext/Simple.

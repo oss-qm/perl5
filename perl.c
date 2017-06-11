@@ -2189,12 +2189,7 @@ S_parse_body(pTHX_ char **env, XSINIT_t xsinit)
 	}
 #  else
 	/* SITELIB_EXP is a function call on Win32.  */
-#ifdef DEBIAN
-	/* temporary transition mechanism for dropping "." from @INC */
-	const char *const raw_sitelib = "/etc/perl";
-#else
 	const char *const raw_sitelib = SITELIB_EXP;
-#endif
 	if (raw_sitelib) {
 	    /* process .../.. if PERL_RELOCATABLE_INC is defined */
 	    SV *sitelib_sv = mayberelocate(raw_sitelib, strlen(raw_sitelib),
