@@ -8,6 +8,10 @@ perl (5.26.0~rc1-2) UNRELEASED; urgency=medium
   * Remove /etc/perl/sitecustomize.pl as the interpreter's initial @INC
     no longer contains '.'
   * Revert local patch setting sitecustomize path
+  * Merged 5.24.1-3 from unstable:
+    + [CVE-2017-6512] Fix file permissions race condition in File-Path;
+      patch from John Lightsey (Closes: #863870)
+    + Also fix test logic in ExtUtils-MakeMaker required for the above
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 21 May 2017 23:00:18 +0300
 
@@ -18,6 +22,14 @@ perl (5.26.0~rc1-1) experimental; urgency=low
   * Upload to experimental from the Debian Perl Sprint in Lloret de Mar.
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 20 May 2017 11:24:07 +0300
+
+perl (5.24.1-3) unstable; urgency=high
+
+  * [CVE-2017-6512] Fix file permissions race condition in File-Path;
+    patch from John Lightsey (Closes: #863870)
+  * Also fix test logic in ExtUtils-MakeMaker required for the above
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 01 Jun 2017 16:09:52 +0100
 
 perl (5.24.1-2) unstable; urgency=medium
 
