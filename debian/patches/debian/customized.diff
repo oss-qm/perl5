@@ -9,7 +9,7 @@ Patch-Name: debian/customized.diff
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/t/porting/customized.dat b/t/porting/customized.dat
-index 5014b3e..e70714f 100644
+index 5014b3e21..e70714fe5 100644
 --- a/t/porting/customized.dat
 +++ b/t/porting/customized.dat
 @@ -1,7 +1,9 @@
