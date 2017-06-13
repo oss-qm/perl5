@@ -1110,10 +1110,29 @@ sub FindOption ($$$$$) {
 
     # Check if there is an option argument available.
     if ( $gnu_compat ) {
-	my $optargtype = 0; # 0 = none, 1 = empty, 2 = nonempty
-	$optargtype = ( !defined($optarg) ? 0 : ( (length($optarg) == 0) ? 1 : 2 ) );
-	return (1, $opt, $ctl, undef)
-	  if (($optargtype == 0) && !$mand);
+	my $optargtype = 0; # none, 1 = empty, 2 = nonempty, 3 = aux
+	if ( defined($optarg) ) {
+	    $optargtype = (length($optarg) == 0) ? 1 : 2;
+	}
+	elsif ( defined $rest || @$argv > 0 ) {
+	    # GNU getopt_long() does not accept the (optional)
+	    # argument to be passed to the option without = sign.
+	    # We do, since not doing so breaks existing scripts.
+	    $optargtype = 3;
+	}
+	if(($optargtype == 0) && !$mand) {
+	    if ( $type eq 'I' ) {
+		# Fake incremental type.
+		my @c = @$ctl;
+		$c[CTL_TYPE] = '+';
+		return (1, $opt, \@c, 1);
+	    }
+	    my $val
+	      = defined($ctl->[CTL_DEFAULT]) ? $ctl->[CTL_DEFAULT]
+	      : $type eq 's'                 ? ''
+	      :                                0;
+	    return (1, $opt, $ctl, $val);
+	}
 	return (1, $opt, $ctl, $type eq 's' ? '' : 0)
 	  if $optargtype == 1;  # --foo=  -> return nothing
     }
@@ -2322,11 +2341,14 @@ do. Without C<gnu_compat>, C<--opt=> gives an error. With C<gnu_compat>,
 C<--opt=> will give option C<opt> and empty value.
 This is the way GNU getopt_long() does it.
 
+Note that C<--opt value> is still accepted, even though GNU
+getopt_long() doesn't.
+
 =item gnu_getopt
 
 This is a short way of setting C<gnu_compat> C<bundling> C<permute>
 C<no_getopt_compat>. With C<gnu_getopt>, command line handling should be
-fully compatible with GNU getopt_long().
+reasonably compatible with GNU getopt_long().
 
 =item require_order
 
