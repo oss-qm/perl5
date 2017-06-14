@@ -1,6 +1,7 @@
 perl (5.24.1-3+deb9u1) UNRELEASED; urgency=medium
 
-  * 
+  * Backport various Getopt-Long fixes from upstream 2.49..2.51.
+    (Closes: #855532, #864544)
 
  -- Niko Tyni <ntyni@debian.org>  Tue, 13 Jun 2017 23:12:02 +0300
 
