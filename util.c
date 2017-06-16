@@ -806,6 +806,8 @@ Perl_fbm_instr(pTHX_ unsigned char *big, unsigned char *bigend, SV *littlestr, U
 
     PERL_ARGS_ASSERT_FBM_INSTR;
 
+    assert(bigend >= big);
+
     if ((STRLEN)(bigend - big) < littlelen) {
 	if ( SvTAIL(littlestr)
 	     && ((STRLEN)(bigend - big) == littlelen - 1)
