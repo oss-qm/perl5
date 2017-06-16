@@ -23,7 +23,7 @@ BEGIN {
     skip_all_without_unicode_tables();
 }
 
-plan tests => 789;  # Update this when adding/deleting tests.
+plan tests => 790;  # Update this when adding/deleting tests.
 
 run_tests() unless caller;
 
@@ -1758,6 +1758,17 @@ EOP
                 fresh_perl_is($code, $expect, {}, "$bug - $test_name" );
             }
         }
+
+    {
+        # RT #131575 intuit skipping back from the end to find the highest
+        # possible start point, was potentially hopping back beyond pos()
+        # and crashing by calling fbm_instr with a negative length
+
+        my $text = "=t=\x{5000}";
+        pos($text) = 3;
+        ok(scalar($text !~ m{(~*=[a-z]=)}g), "RT #131575");
+    }
+
 } # End of sub run_tests
 
 1;
