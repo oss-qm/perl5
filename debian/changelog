@@ -1,11 +1,13 @@
-perl (5.24.1-4) UNRELEASED; urgency=medium
+perl (5.24.1-4) unstable; urgency=medium
 
   * Backport various Getopt-Long fixes from upstream 2.49..2.51.
     (Closes: #855532, #864544)
   * Backport upstream patch fixing regexp "Malformed UTF-8 character"
     crashes. (Closes: #864782)
+  * Update the kernel versions in $Config{myuname} et al.
+  * Refresh cross build support files.
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 18 Jun 2017 20:16:09 +0300
+ -- Niko Tyni <ntyni@debian.org>  Tue, 20 Jun 2017 20:26:51 +0300
 
 perl (5.24.1-3) unstable; urgency=high
 
