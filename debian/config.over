@@ -127,17 +127,17 @@ esac
 
 case "$osname" in
   linux)
-      osvers=3.16.0
+      osvers=4.9.0
       osdesc="#1 smp debian $osvers"
       os=gnulinux
       ;;
   gnu)
-      osvers=0.6
+      osvers=0.9
       osdesc="gnu-mach"
       os=gnu
       ;;
   gnukfreebsd)
-      osvers=9.0
+      osvers=10.1
       osdesc="#0"
       os=gnukfreebsd
       ;;
