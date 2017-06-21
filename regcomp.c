@@ -11792,6 +11792,7 @@ tryagain:
                             goto loopdone;
                         }
                         p = RExC_parse;
+                        RExC_parse = parse_start;
                         if (ender > 0xff) {
                             REQUIRE_UTF8;
                         }
