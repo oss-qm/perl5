@@ -65,3 +65,7 @@ fixes/perlfunc_inc_doc.diff
 fixes/file_path_chmod_race.diff
 fixes/extutils_file_path_compat.diff
 debian/customized.diff
+fixes/getopt-long-1.diff
+fixes/getopt-long-2.diff
+fixes/getopt-long-3.diff
+fixes/getopt-long-4.diff
