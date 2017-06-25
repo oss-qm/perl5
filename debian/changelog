@@ -3,8 +3,17 @@ perl (5.26.0-2) UNRELEASED; urgency=medium
   * Update Breaks/Replaces versions for libmodule-corelist-perl.
   * No longer configure with -Dusesitecustomize, unnecessary with the
     5.26.0-1 changes.
+  * Synchronize with 5.24.1-4 from unstable:
+    + Update the kernel versions in $Config{myuname} et al.
+    + Backport various Getopt-Long fixes from upstream 2.50..2.51.
+      (Closes: #855532, #864544)
+    + Backport upstream patch fixing regexp "Malformed UTF-8 character"
+      crashes. (Closes: #864782)
+  * Backport upstream Test-Simple patch unbreaking the
+    libapache2-authcookie-perl test suite. (Closes: #865894)
+  * Refresh cross build support files with 5.26.0-1 results.
 
- -- Niko Tyni <ntyni@debian.org>  Tue, 13 Jun 2017 22:44:07 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 25 Jun 2017 22:24:55 +0300
 
 perl (5.26.0-1) experimental; urgency=medium
 
