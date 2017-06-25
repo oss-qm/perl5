@@ -1,4 +1,4 @@
-perl (5.26.0-2) UNRELEASED; urgency=medium
+perl (5.26.0-2) experimental; urgency=medium
 
   * Update Breaks/Replaces versions for libmodule-corelist-perl.
   * No longer configure with -Dusesitecustomize, unnecessary with the
@@ -13,7 +13,7 @@ perl (5.26.0-2) UNRELEASED; urgency=medium
     libapache2-authcookie-perl test suite. (Closes: #865894)
   * Refresh cross build support files with 5.26.0-1 results.
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 25 Jun 2017 22:24:55 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 25 Jun 2017 22:46:11 +0300
 
 perl (5.26.0-1) experimental; urgency=medium
 
