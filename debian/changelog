@@ -1,4 +1,4 @@
-perl (5.24.1-5) UNRELEASED; urgency=medium
+perl (5.24.1-5) unstable; urgency=medium
 
   * Remove a leftover Replaces entry for libpackage-constants-perl.
   * Fix Breaks and Replaces versions for podlators-perl and libnet-perl.
@@ -6,7 +6,7 @@ perl (5.24.1-5) UNRELEASED; urgency=medium
     entries.
   * Adopt versioned Provides for the dual lived modules (Closes: #758100)
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 02 Jul 2017 22:06:35 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 02 Jul 2017 22:34:19 +0300
 
 perl (5.24.1-4) unstable; urgency=medium
 
