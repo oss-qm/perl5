@@ -61,6 +61,11 @@ my %ok = (
        },
 );
 
+# epochs we used to have in the archive
+my %old_epochs = (
+	"libnet-perl" => "1",
+);
+
 # list special cases where a Breaks entry doesn't need to imply
 # Replaces+Provides
 my %triplet_check_skip = (
@@ -76,6 +81,8 @@ my %special_modules = (
 	"libio-compress-zlib-perl" => "IO::Compress::Gzip",
 	"liblocale-codes-perl" => "Locale::Country",
 	"libscalar-list-utils-perl" => "List::Util",
+	"podlators-perl" => "Pod::Man",
+	"libnet-perl" => "Net::Cmd",
 );
 
 # list special cases where we're not providing a dual-lived module from
@@ -174,6 +181,9 @@ for my $perl_package_name (keys %deps_found) {
 	for my $broken (keys %{$dep_found->{$breaksname}}) {
 		my $module = deb2cpan($broken);
 		my ($archive_epoch, $archive_digits) = get_archive_info($broken);
+
+		$archive_epoch = $old_epochs{$broken}
+			if exists $old_epochs{$broken};
 
 		SKIP: {
 			my $broken_version = $dep_found->{$breaksname}{$broken}{version};
