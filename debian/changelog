@@ -1,3 +1,12 @@
+perl (5.26.0-3) UNRELEASED; urgency=medium
+
+  * Merge 5.24.1-5 from unstable:
+    + fix Breaks and Replaces versions for podlators-perl and libnet-perl.
+    + drop obsolete libversion-requirements-perl Breaks/Replaces/Provides
+      entries.
+
+ -- Niko Tyni <ntyni@debian.org>  Mon, 03 Jul 2017 00:26:26 +0300
+
 perl (5.26.0-2) experimental; urgency=medium
 
   * Update Breaks/Replaces versions for libmodule-corelist-perl.
