@@ -1,9 +1,9 @@
-perl (5.24.1-6) UNRELEASED; urgency=medium
+perl (5.24.1-6) unstable; urgency=medium
 
   * Apply upstream base.pm no-dot-in-inc fix (from 5.24.2-RC1)
     (Closes: #867170)
 
- -- Dominic Hargreaves <dom@earth.li>  Tue, 04 Jul 2017 14:52:52 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 04 Jul 2017 16:27:07 +0100
 
 perl (5.24.1-5) unstable; urgency=medium
 
