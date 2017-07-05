@@ -1,3 +1,9 @@
+perl (5.24.1-7) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Niko Tyni <ntyni@debian.org>  Wed, 05 Jul 2017 19:07:34 +0300
+
 perl (5.24.1-6) unstable; urgency=medium
 
   * Apply upstream base.pm no-dot-in-inc fix (from 5.24.2-RC1)
