@@ -4,6 +4,8 @@ perl (5.26.0-3) UNRELEASED; urgency=medium
     + fix Breaks and Replaces versions for podlators-perl and libnet-perl.
     + drop obsolete libversion-requirements-perl Breaks/Replaces/Provides
       entries.
+  * Apply upstream base.pm no-dot-in-inc fix (from 5.24.2-RC1)
+     (Closes: #867170)
 
  -- Niko Tyni <ntyni@debian.org>  Mon, 03 Jul 2017 00:26:26 +0300
 
