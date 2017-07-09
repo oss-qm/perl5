@@ -54,6 +54,20 @@ perl (5.26.0~rc1-1) experimental; urgency=low
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 20 May 2017 11:24:07 +0300
 
+perl (5.24.1-7) unstable; urgency=medium
+
+  * Revert "Adopt versioned Provides for the dual lived modules",
+    hopefully temporarily. (Closes: #867313, reopens: #758100).
+    .
+    We cannot use versioned Provides in unstable before wanna-build
+    is fixed to consider a versioned virtual package coinstallable
+    with a real package of the same name. See #867104.
+    .
+    This restores libperl5.2[24] coinstallability as a side effect.
+    (Closes: #867089)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 09 Jul 2017 18:55:39 +0300
+
 perl (5.24.1-6) unstable; urgency=medium
 
   * Apply upstream base.pm no-dot-in-inc fix (from 5.24.2-RC1)
