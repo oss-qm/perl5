@@ -493,7 +493,7 @@ for file do
     # or customize here
 
     case "$file" in
-    op) : work around http://bugs.debian.org/838613
+    op|opmini) : work around http://bugs.debian.org/838613 and 869122
         case $archname in
         hppa-*)
             optimize="$optimize -O0";;
