@@ -493,9 +493,9 @@ for file do
     # or customize here
 
     case "$file" in
-    op) : work around http://bugs.debian.org/838613
+    op|opmini) : work around http://bugs.debian.org/838613 869122 869373
         case $archname in
-        hppa-*)
+        hppa-*|sh4-*)
             optimize="$optimize -O0";;
         esac;;
 

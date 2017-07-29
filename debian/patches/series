@@ -49,3 +49,5 @@ fixes/getopt-long-4.diff
 fixes/fbm-instr-crash.diff
 fixes/test-builder-reset.diff
 debian/CVE-2016-1238/base-pm-amends-pt2.diff
+debian/hppa_opmini_optimize_workaround.diff
+debian/sh4_op_optimize_workaround.diff
