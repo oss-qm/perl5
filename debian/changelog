@@ -1,4 +1,4 @@
-perl (5.26.0-5) UNRELEASED; urgency=medium
+perl (5.26.0-5) unstable; urgency=medium
 
   * Make perl-base Break intltool (<< 0.51.0-4). (Closes: #869612)
   * Amend debian/CVE-2016-1238/base-pm-amends-pt2.diff description based
@@ -7,7 +7,7 @@ perl (5.26.0-5) UNRELEASED; urgency=medium
   * Also lower the optimization level of op.c and opmini.c on sh4.
     (Closes: #869373)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 29 Jul 2017 23:45:20 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 30 Jul 2017 19:15:47 +0300
 
 perl (5.26.0-4) unstable; urgency=medium
 
