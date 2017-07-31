@@ -1,3 +1,9 @@
+perl (5.26.0-6) UNRELEASED; urgency=medium
+
+  * Remove dangling pstruct.1 symlink (Closes: #870295)
+
+ -- Niko Tyni <ntyni@debian.org>  Mon, 31 Jul 2017 21:40:05 +0300
+
 perl (5.26.0-5) unstable; urgency=medium
 
   * Make perl-base Break intltool (<< 0.51.0-4). (Closes: #869612)
