@@ -1,8 +1,9 @@
 perl (5.26.0-6) UNRELEASED; urgency=medium
 
   * Remove dangling pstruct.1 symlink (Closes: #870295)
+  * Unbreak Configure calls in cross builds (Closes: #872471)
 
- -- Niko Tyni <ntyni@debian.org>  Mon, 31 Jul 2017 21:40:05 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sat, 19 Aug 2017 16:42:58 +0300
 
 perl (5.26.0-5) unstable; urgency=medium
 
