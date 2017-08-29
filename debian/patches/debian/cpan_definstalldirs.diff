@@ -14,7 +14,7 @@ Patch-Name: debian/cpan_definstalldirs.diff
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/CPAN/lib/CPAN/FirstTime.pm b/cpan/CPAN/lib/CPAN/FirstTime.pm
-index 531c1152a..3ccaeecfe 100644
+index 531c115..3ccaeec 100644
 --- a/cpan/CPAN/lib/CPAN/FirstTime.pm
 +++ b/cpan/CPAN/lib/CPAN/FirstTime.pm
 @@ -1033,7 +1033,7 @@ sub init {

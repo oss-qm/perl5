@@ -1,4 +1,4 @@
-From 1e5cc9cfdb7bbec14c364978cb78d8505365f0d7 Mon Sep 17 00:00:00 2001
+From 3f2f791b01acf35b5462b0a46143daaf02a5a3e1 Mon Sep 17 00:00:00 2001
 From: Kenichi Ishigaki <ishigaki@cpan.org>
 Date: Sat, 27 Aug 2016 22:59:58 +0900
 Subject: fix RT-92793: bug in SYNOPSIS
@@ -12,7 +12,7 @@ Patch-Name: fixes/json-pp-example.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/JSON-PP/lib/JSON/PP.pm b/cpan/JSON-PP/lib/JSON/PP.pm
-index 9337ce9a7..ff0e88a32 100644
+index 9337ce9..ff0e88a 100644
 --- a/cpan/JSON-PP/lib/JSON/PP.pm
 +++ b/cpan/JSON-PP/lib/JSON/PP.pm
 @@ -1613,7 +1613,7 @@ JSON::PP - JSON::XS compatible pure-Perl module.

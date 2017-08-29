@@ -6,7 +6,7 @@ File::Path cpan/File-Path/lib/File/Path.pm 9076753d797a3d0d21b6092ff871fcdac1840
 File::Path cpan/File-Path/t/Path.t 56f800cd70fa355c655dbd84d6160e80a4f3b3f6
 File::Path cpan/File-Path/t/Path_win32.t 94b9276557ce7f80b91f6fd9bfa7a0cd9bf9683e
 JSON::PP cpan/JSON-PP/bin/json_pp a7b8de6c201ef177ee82624ee4ca6a47cc1a3b4f
-JSON::PP cpan/JSON-PP/lib/JSON/PP.pm 86f697dae482106270fdd659b18c95a54af764ba
+JSON::PP cpan/JSON-PP/lib/JSON/PP.pm 95024ac4b77d1a13b46c0369f3b7cccebd82f773
 JSON::PP cpan/JSON-PP/t/011_pc_expo.t e4c896d5f06ca380ddb6b4d6cd5714ea3003ada6
 JSON::PP cpan/JSON-PP/t/018_json_checker.t 6c3615e1a55f76b1635c62d3d36c5686a3ae8d30
 Locale::Maketext::Simple cpan/Locale-Maketext-Simple/lib/Locale/Maketext/Simple.pm 57ed38905791a17c150210cd6f42ead22a7707b6

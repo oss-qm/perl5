@@ -1,4 +1,4 @@
-From a90f62e19288fc62f274e50ec20f0334f3d3740c Mon Sep 17 00:00:00 2001
+From 8592519731943ea7e3cabcd4cf27332b2772f941 Mon Sep 17 00:00:00 2001
 From: Johan Vromans <jvromans@squirrel.nl>
 Date: Wed, 22 Feb 2017 12:10:34 +0100
 Subject: Withdraw part of commit 5d9947fb445327c7299d8beb009d609bc70066c0,
@@ -15,7 +15,7 @@ Patch-Name: fixes/getopt-long-2.diff
  1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/cpan/Getopt-Long/lib/Getopt/Long.pm b/cpan/Getopt-Long/lib/Getopt/Long.pm
-index 5e1834f3c..9d3867322 100644
+index 5e1834f..9d38673 100644
 --- a/cpan/Getopt-Long/lib/Getopt/Long.pm
 +++ b/cpan/Getopt-Long/lib/Getopt/Long.pm
 @@ -1110,9 +1110,17 @@ sub FindOption ($$$$$) {

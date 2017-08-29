@@ -42,7 +42,6 @@ debian/hppa_op_optimize_workaround.diff
 debian/installman-utf8.diff
 fixes/file_path_chmod_race.diff
 fixes/extutils_file_path_compat.diff
-debian/customized.diff
 fixes/getopt-long-2.diff
 fixes/getopt-long-3.diff
 fixes/getopt-long-4.diff
@@ -52,3 +51,4 @@ debian/CVE-2016-1238/base-pm-amends-pt2.diff
 debian/hppa_opmini_optimize_workaround.diff
 debian/sh4_op_optimize_workaround.diff
 fixes/json-pp-example.diff
+debian/customized.diff

@@ -1,4 +1,4 @@
-From c0c85d6e8cc68b126dfa22fc98ff467a041ce0fe Mon Sep 17 00:00:00 2001
+From 422d086434b62291abe7097a75596758b76e98c7 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 29 Jul 2017 23:32:51 +0300
 Subject: Also lower the optimization level of op.c and opmini.c on sh4
@@ -14,7 +14,7 @@ Patch-Name: debian/sh4_op_optimize_workaround.diff
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cflags.SH b/cflags.SH
-index ae3b1e88f..daa73a165 100755
+index ae3b1e8..daa73a1 100755
 --- a/cflags.SH
 +++ b/cflags.SH
 @@ -493,9 +493,9 @@ for file do

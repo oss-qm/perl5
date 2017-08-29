@@ -12,7 +12,7 @@ Patch-Name: fixes/extutils_makemaker_reproducible.diff
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm
-index 69779b291..bf53ad571 100644
+index 69779b2..bf53ad5 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm
 @@ -219,7 +219,8 @@ sub perllocal_install {
@@ -26,7 +26,7 @@ index 69779b291..bf53ad571 100644
  
   =over 4
 diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-index 304519443..cab58483a 100644
+index 3045194..cab5848 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 @@ -3840,7 +3840,7 @@ Obsolete, deprecated method. Not used since Version 5.21.

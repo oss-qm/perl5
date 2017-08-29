@@ -1,4 +1,4 @@
-From fd0acd5dc9c01cb4d2f9df15114526d7f8889438 Mon Sep 17 00:00:00 2001
+From a1e23edce28dc94dc05db1b8802116aa9e943493 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 29 Jul 2017 23:30:20 +0300
 Subject: Lower the optimization level of opmini.c on hppa
@@ -14,7 +14,7 @@ Patch-Name: debian/hppa_opmini_optimize_workaround.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cflags.SH b/cflags.SH
-index 7a57d7e0c..ae3b1e88f 100755
+index 7a57d7e..ae3b1e8 100755
 --- a/cflags.SH
 +++ b/cflags.SH
 @@ -493,7 +493,7 @@ for file do
