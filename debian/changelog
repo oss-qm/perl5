@@ -1,4 +1,4 @@
-perl (5.26.0-6) UNRELEASED; urgency=medium
+perl (5.26.0-6) experimental; urgency=medium
 
   [ Niko Tyni ]
   * Remove dangling pstruct.1 symlink (Closes: #870295)
@@ -10,7 +10,7 @@ perl (5.26.0-6) UNRELEASED; urgency=medium
   * Remove rename, which is now provided by the separate 'rename' package
     instead (Closes: #735134)
 
- -- Niko Tyni <ntyni@debian.org>  Sat, 19 Aug 2017 16:53:35 +0300
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 29 Aug 2017 19:39:52 +0100
 
 perl (5.26.0-5) unstable; urgency=medium
 
