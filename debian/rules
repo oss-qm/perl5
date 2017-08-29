@@ -403,13 +403,6 @@ endif
 	cp debian/perl.perldoc $(build)/perl/usr/bin/perldoc
 	chmod 755 $(build)/perl/usr/bin/perldoc
 
-	# install rename script to bin (as prename, alternative configured)
-	cp debian/rename $(build)/perl/usr/bin/prename
-	chmod 755 $(build)/perl/usr/bin/prename
-
-	$(PERL_TO_USE) $(build)/perl/usr/bin/pod2man --official \
-	    debian/rename >$(build)/perl/usr/share/man/man1/prename.1
-
 	# install docs
 	for p in $(packages); \
 	do \

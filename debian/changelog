@@ -1,9 +1,14 @@
 perl (5.26.0-6) UNRELEASED; urgency=medium
 
+  [ Niko Tyni ]
   * Remove dangling pstruct.1 symlink (Closes: #870295)
   * Unbreak Configure calls in cross builds (Closes: #872471)
   * Fix an example in JSON::PP documentation (Closes: #871837)
   * Break older versions of slic3r (see #869360)
+
+  [ Dominic Hargreaves ]
+  * Remove rename, which is now provided by the separate 'rename' package
+    instead (Closes: #735134)
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 19 Aug 2017 16:53:35 +0300
 
