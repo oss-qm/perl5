@@ -2,6 +2,7 @@ perl (5.26.0-7) unstable; urgency=medium
 
   * Upload to unstable
   * Break older versions of slic3r-prusa (Closes: #873728)
+  * Remove Recommends: rename according to announced deprecation plan
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 05 Sep 2017 21:48:47 +0100
 
