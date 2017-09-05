@@ -1,3 +1,9 @@
+perl (5.26.0-7) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Tue, 05 Sep 2017 21:48:47 +0100
+
 perl (5.26.0-6) experimental; urgency=medium
 
   [ Niko Tyni ]
