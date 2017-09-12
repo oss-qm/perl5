@@ -1,3 +1,13 @@
+perl (5.24.1-3+deb9u2) stretch-security; urgency=high
+
+  * Update upstream base.pm no-dot-in-inc fix patch description.
+  * [SECURITY] CVE-2017-12837: Fix a heap buffer overflow in regular
+    expression compiler. (Closes: #875596)
+  * [SECURITY] CVE-2017-12883: Fix a buffer over-read in regular
+    expression parser.   (Closes: #875597)
+
+ -- Niko Tyni <ntyni@debian.org>  Tue, 12 Sep 2017 19:37:26 +0300
+
 perl (5.24.1-3+deb9u1) stretch; urgency=medium
 
   * Backport various Getopt-Long fixes from upstream 2.49..2.51.
