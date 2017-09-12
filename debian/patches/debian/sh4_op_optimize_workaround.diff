@@ -14,7 +14,7 @@ Patch-Name: debian/sh4_op_optimize_workaround.diff
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cflags.SH b/cflags.SH
-index ae3b1e8..daa73a1 100755
+index ae3b1e88f..daa73a165 100755
 --- a/cflags.SH
 +++ b/cflags.SH
 @@ -493,9 +493,9 @@ for file do

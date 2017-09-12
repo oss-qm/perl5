@@ -14,7 +14,7 @@ Patch-Name: debian/hppa_opmini_optimize_workaround.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cflags.SH b/cflags.SH
-index 7a57d7e..ae3b1e8 100755
+index 7a57d7e0c..ae3b1e88f 100755
 --- a/cflags.SH
 +++ b/cflags.SH
 @@ -493,7 +493,7 @@ for file do

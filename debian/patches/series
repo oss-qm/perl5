@@ -52,3 +52,5 @@ debian/hppa_opmini_optimize_workaround.diff
 debian/sh4_op_optimize_workaround.diff
 fixes/json-pp-example.diff
 debian/customized.diff
+fixes/CVE-2017-12837.diff
+fixes/CVE-2017-12883.diff

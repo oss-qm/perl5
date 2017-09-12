@@ -13,7 +13,7 @@ Patch-Name: debian/hurd-softupdates.diff
  1 file changed, 1 insertion(+)
 
 diff --git a/t/op/stat.t b/t/op/stat.t
-index ce86a74..71888ee 100644
+index ce86a7451..71888ee29 100644
 --- a/t/op/stat.t
 +++ b/t/op/stat.t
 @@ -98,6 +98,7 @@ print FOO "Now is the time for all good men to come to.\n";

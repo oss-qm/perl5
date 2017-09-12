@@ -12,7 +12,7 @@ Patch-Name: fixes/json-pp-example.diff
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cpan/JSON-PP/lib/JSON/PP.pm b/cpan/JSON-PP/lib/JSON/PP.pm
-index 9337ce9..ff0e88a 100644
+index 9337ce9a7..ff0e88a32 100644
 --- a/cpan/JSON-PP/lib/JSON/PP.pm
 +++ b/cpan/JSON-PP/lib/JSON/PP.pm
 @@ -1613,7 +1613,7 @@ JSON::PP - JSON::XS compatible pure-Perl module.
