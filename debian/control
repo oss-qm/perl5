@@ -85,6 +85,7 @@ Priority: optional
 Architecture: all
 Depends: perl (>= ${Upstream-Version}-1)
 Suggests: man-browser, groff-base
+Multi-Arch: foreign
 Description: Perl documentation
  Perl manual pages, POD documentation and the `perldoc' program.  If you are
  writing Perl programs, you almost certainly need this.
