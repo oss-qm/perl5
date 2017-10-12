@@ -1,4 +1,4 @@
-From 43381cb1ced725069a23c47544fd126423705b4e Mon Sep 17 00:00:00 2001
+From e0899c62b0776950f5505f2c506729662d560a9c Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Tue, 8 Mar 2005 19:30:38 +1100
 Subject: Debian policy doesn't install .packlist files for core or vendor.

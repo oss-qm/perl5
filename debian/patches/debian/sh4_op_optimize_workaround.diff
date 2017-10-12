@@ -1,4 +1,4 @@
-From 422d086434b62291abe7097a75596758b76e98c7 Mon Sep 17 00:00:00 2001
+From cdec4df5f343ef0d57666685bee66799ad66cdc3 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 29 Jul 2017 23:32:51 +0300
 Subject: Also lower the optimization level of op.c and opmini.c on sh4

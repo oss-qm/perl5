@@ -5598,6 +5598,7 @@ S_regmatch(pTHX_ regmatch_info *reginfo, char *startpos, regnode *prog)
                 if (scan->flags == EXACTL || scan->flags == EXACTFLU8) {
                     _CHECK_AND_WARN_PROBLEMATIC_LOCALE;
                     if (utf8_target
+                        && nextchr >= 0 /* guard against negative EOS value in nextchr */
                         && UTF8_IS_ABOVE_LATIN1(nextchr)
                         && scan->flags == EXACTL)
                     {
@@ -9754,6 +9755,8 @@ S_to_byte_substr(pTHX_ regexp *prog)
     return TRUE;
 }
 
+#ifndef PERL_IN_XSUB_RE
+
 bool
 Perl__is_grapheme(pTHX_ const U8 * strbeg, const U8 * s, const U8 * strend, const UV cp)
 {
@@ -9809,6 +9812,7 @@ Perl__is_grapheme(pTHX_ const U8 * strbeg, const U8 * s, const U8 * strend, cons
     return isGCB(cp_gcb_val, next_cp_gcb_val, strbeg, s, TRUE);
 }
 
+#endif
 
 
 

@@ -45,12 +45,8 @@ fixes/extutils_file_path_compat.diff
 fixes/getopt-long-2.diff
 fixes/getopt-long-3.diff
 fixes/getopt-long-4.diff
-fixes/fbm-instr-crash.diff
 fixes/test-builder-reset.diff
-debian/CVE-2016-1238/base-pm-amends-pt2.diff
 debian/hppa_opmini_optimize_workaround.diff
 debian/sh4_op_optimize_workaround.diff
 fixes/json-pp-example.diff
 debian/customized.diff
-fixes/CVE-2017-12837.diff
-fixes/CVE-2017-12883.diff

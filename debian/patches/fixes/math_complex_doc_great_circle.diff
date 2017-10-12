@@ -1,4 +1,4 @@
-From 0d829cfc58c4993718477d5fc51ffe12b1032963 Mon Sep 17 00:00:00 2001
+From 0f6cd36dc4b3912cdb7c7a4de95b3de9b58a5177 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 22:50:52 +0100
 Subject: Math::Trig: clarify definition of great_circle_midpoint

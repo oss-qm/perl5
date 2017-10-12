@@ -1,4 +1,4 @@
-From 544f769cc2e05158cdf6d1c967db710e5c6f224f Mon Sep 17 00:00:00 2001
+From b095caf9999d140b93af826ee0f1a2ba7c545dad Mon Sep 17 00:00:00 2001
 From: James E Keenan <jkeenan@cpan.org>
 Date: Thu, 11 May 2017 04:23:40 -0400
 Subject: Correct the order of tests of chmod(). (#294)

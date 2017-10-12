@@ -1,4 +1,4 @@
-From e52b74157faddcd28610f9d3e6a90c29c6479d4b Mon Sep 17 00:00:00 2001
+From cc0ab7b6d069ca39a3535316cc24b3892001be25 Mon Sep 17 00:00:00 2001
 From: Pino Toscano <pino@debian.org>
 Date: Thu, 8 Sep 2016 10:26:59 +0100
 Subject: File-Path: Fix test failure in Hurd due to hard-coded ENOENT

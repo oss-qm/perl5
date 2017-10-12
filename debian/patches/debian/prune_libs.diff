@@ -1,4 +1,4 @@
-From da1c32f437939974616ed23fd99a84605b3136c9 Mon Sep 17 00:00:00 2001
+From 6e399db92dd928294adbe1be97b26a89814a9d24 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.
@@ -14,7 +14,7 @@ Patch-Name: debian/prune_libs.diff
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Configure b/Configure
-index 325924950..0a660c0d4 100755
+index bdcfaf17e..aa3becece 100755
 --- a/Configure
 +++ b/Configure
 @@ -1497,8 +1497,7 @@ archname=''

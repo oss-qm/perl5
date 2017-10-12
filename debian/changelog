@@ -1,6 +1,7 @@
-perl (5.26.0-9) UNRELEASED; urgency=medium
+perl (5.26.1-1) UNRELEASED; urgency=medium
 
   * Mark perl-doc as Multi-Arch: foreign (Closes: #876062)
+  * New upstream release
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 03 Oct 2017 11:49:34 +0100
 
