@@ -1,7 +1,13 @@
 perl (5.26.1-1) UNRELEASED; urgency=medium
 
+  [ Dominic Hargreaves ]
   * Mark perl-doc as Multi-Arch: foreign (Closes: #876062)
   * New upstream release
+
+  [ Niko Tyni ]
+  * Patch Pod::Perldoc::ToTerm to set LESS=-R with sensible-pager.
+    This is a hopefully temporary fix while upstream is working on the
+    bigger issue. (Closes: #870340)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 03 Oct 2017 11:49:34 +0100
 

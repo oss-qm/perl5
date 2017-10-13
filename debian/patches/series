@@ -50,3 +50,4 @@ debian/hppa_opmini_optimize_workaround.diff
 debian/sh4_op_optimize_workaround.diff
 fixes/json-pp-example.diff
 debian/customized.diff
+debian/perldoc-pager.diff
