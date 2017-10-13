@@ -32,7 +32,7 @@ sub pager_configuration {
   # do not modify anything on Windows or DOS
   return if ( $perldoc->is_mswin32 || $perldoc->is_dos );
 
-  if ( $pager =~ /less/ ) {
+  if ( $pager =~ /sensible-pager|less/ ) {
     $self->_maybe_modify_environment('LESS');
   }
   elsif ( $pager =~ /more/ ) {
