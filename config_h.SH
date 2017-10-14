@@ -571,6 +571,13 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  */
 #$d_strcoll HAS_STRCOLL	/**/
 
+/* USE_STRUCT_COPY:
+ *	This symbol, if defined, indicates that this C compiler knows how
+ *	to copy structures.  If undefined, you'll need to use a block copy
+ *	routine of some sort instead.
+ */
+#$d_strctcpy	USE_STRUCT_COPY	/**/
+
 /* HAS_STRTOD:
  *	This symbol, if defined, indicates that the strtod routine is
  *	available to provide better numeric string conversion than atof().
@@ -2174,13 +2181,6 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
 #ifndef USE_STAT_BLOCKS
 #$d_statblks USE_STAT_BLOCKS 	/**/
 #endif
-
-/* USE_STRUCT_COPY:
- *	This symbol, if defined, indicates that this C compiler knows how
- *	to copy structures.  If undefined, you'll need to use a block copy
- *	routine of some sort instead.
- */
-#$d_strctcpy	USE_STRUCT_COPY	/**/
 
 /* HAS_STRERROR:
  *	This symbol, if defined, indicates that the strerror routine is
