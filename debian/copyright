@@ -1,4 +1,5 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Files-Excluded-regen-configure: bin/*
 Upstream-Name: perl
 Source: http://www.perl.com/CPAN/src/5.0/
 Comment:
