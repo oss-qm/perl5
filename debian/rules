@@ -109,7 +109,24 @@ install: install-stamp
 build-arch: build
 build-indep: build
 
-build-stamp: $(patchlevel) perl.static perl.debug libperl.so.$(fullversion)
+build-stamp: verify-configure-stamp $(patchlevel) perl.static perl.debug libperl.so.$(fullversion)
+	touch $@
+
+update-configure: update-configure-stamp
+
+verify-configure-stamp: update-configure-stamp
+	if ! diff -u Configure.orig Configure || ! diff -u config_h.SH.orig config_h.SH; then \
+	    echo "Unexpected modifications after rebuilding Configure, aborting" 1>&2; \
+	    exit 1; \
+	fi
+
+update-configure-stamp:
+	mv Configure Configure.orig
+	mv config_h.SH config_h.SH.orig
+	ln -s regen-configure/U
+	ln -s regen-configure/.package
+	metaconfig -m -L regen-configure/dist
+	./Porting/config_h.pl # reorders config_h.SH
 	touch $@
 
 $(patchlevel): $(patches)
@@ -175,10 +192,13 @@ clean:
 	$(checkroot)
 	test -f $(patches)	# maintainer sanity check
 	[ ! -f Makefile ] || $(MAKE) distclean
+	[ ! -f Configure.orig ] || mv Configure.orig Configure
+	[ ! -f config_h.SH.orig ] || mv config_h.SH.orig config_h.SH
 	rm -rf config.over perl.static perl.debug libperl-static libperl.so* \
 	    $(patchlevel) build-stamp install-stamp t/auto debian/shlibs.local \
 	    debian/perl-base.shlibs debian/libperl$(version).shlibs \
 	    build-miniperl build-generate_uudmap optdef.sh config.sh.* \
+	    U .package Wanted Obsolete update-configure-stamp verify-configure-stamp \
 	    debian/substvars debian/files debian/list.tmp $(tmp) $(build)
 
 install-stamp: build-stamp
@@ -604,4 +624,4 @@ binary: binary-indep binary-arch
 
 .NOTPARALLEL:
 
-.PHONY: build clean binary-indep binary-arch binary install build-arch build-indep
+.PHONY: build clean binary-indep binary-arch binary install build-arch build-indep update-configure
