@@ -1,0 +1,73 @@
+From 20731e3ca2d96a22582fb6b83e395478abffa5e1 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sat, 14 Oct 2017 17:47:09 +0300
+Subject: Regenerate Configure and config_h.SH after probe unit changes
+
+The Configure changes correspond 1:1 to the older prune_libs.diff patch.
+The config_h.SH reordering seems unavoidable but one time only.
+
+Patch-Name: debian/configure-regen.diff
+Bug-Debian: https://bugs.debian.org/762638
+---
+ Configure   |  5 ++---
+ config_h.SH | 14 +++++++-------
+ 2 files changed, 9 insertions(+), 10 deletions(-)
+ mode change 100755 => 100644 config_h.SH
+
+diff --git a/Configure b/Configure
+index bdcfaf17e..aa3becece 100755
+--- a/Configure
++++ b/Configure
+@@ -1497,8 +1497,7 @@ archname=''
+ usereentrant='undef'
+ : List of libraries we want.
+ : If anyone needs extra -lxxx, put those in a hint file.
+-libswanted="cl pthread socket bind inet nsl ndbm gdbm dbm db malloc dl ld"
+-libswanted="$libswanted sun m crypt sec util c cposix posix ucb bsd BSD"
++libswanted='gdbm gdbm_compat db dl m c crypt'
+ : We probably want to search /usr/shlib before most other libraries.
+ : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
+ glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
+@@ -24254,7 +24253,7 @@ sunos*X4*)
+     ;;
+ *) case "$usedl" in
+     $define|true|[yY]*)
+-	    set X `echo " $libs " | sed -e 's@ -lndbm @ @' -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldbm @ @' -e 's@ -ldb @ @'`
++	    set X `echo " $libs " | sed -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldb @ @'`
+ 	    shift
+ 	    perllibs="$*"
+ 	    ;;
+diff --git a/config_h.SH b/config_h.SH
+old mode 100755
+new mode 100644
+index e9b144f02..a294c29cb
+--- a/config_h.SH
++++ b/config_h.SH
+@@ -571,6 +571,13 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
+  */
+ #$d_strcoll HAS_STRCOLL	/**/
+ 
++/* USE_STRUCT_COPY:
++ *	This symbol, if defined, indicates that this C compiler knows how
++ *	to copy structures.  If undefined, you'll need to use a block copy
++ *	routine of some sort instead.
++ */
++#$d_strctcpy	USE_STRUCT_COPY	/**/
++
+ /* HAS_STRTOD:
+  *	This symbol, if defined, indicates that the strtod routine is
+  *	available to provide better numeric string conversion than atof().
+@@ -2175,13 +2182,6 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
+ #$d_statblks USE_STAT_BLOCKS 	/**/
+ #endif
+ 
+-/* USE_STRUCT_COPY:
+- *	This symbol, if defined, indicates that this C compiler knows how
+- *	to copy structures.  If undefined, you'll need to use a block copy
+- *	routine of some sort instead.
+- */
+-#$d_strctcpy	USE_STRUCT_COPY	/**/
+-
+ /* HAS_STRERROR:
+  *	This symbol, if defined, indicates that the strerror routine is
+  *	available to translate error numbers to strings. See the writeup

@@ -1,4 +1,4 @@
-From 0621451253b81f03974284f00ed57457315a3d39 Mon Sep 17 00:00:00 2001
+From 6a0da1b7356da9fd59bb26051f9c06632eec1e80 Mon Sep 17 00:00:00 2001
 From: Kenichi Ishigaki <ishigaki@cpan.org>
 Date: Sat, 27 Aug 2016 22:59:58 +0900
 Subject: fix RT-92793: bug in SYNOPSIS

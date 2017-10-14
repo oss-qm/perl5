@@ -1,4 +1,4 @@
-From 8a4fb0915066182bc69fc649eb804fef9f36ebe0 Mon Sep 17 00:00:00 2001
+From c3f3f594cda6f695759a4dc294ad5d321d7fb244 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Tue, 16 Oct 2012 23:07:56 +0300
 Subject: Fix CPAN::FirstTime defaults with nonexisting site dirs if a parent

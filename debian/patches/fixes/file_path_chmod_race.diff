@@ -1,4 +1,4 @@
-From 7bd1c53172dce82d6c3dc8eee0908c4f89daf955 Mon Sep 17 00:00:00 2001
+From 1cbf8bd2a02bc877c91c4541e099116d9af538ef Mon Sep 17 00:00:00 2001
 From: John Lightsey <john@nixnuts.net>
 Date: Tue, 2 May 2017 12:03:52 -0500
 Subject: Prevent directory chmod race attack.
