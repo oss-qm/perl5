@@ -536,6 +536,13 @@
  */
 /*#define HAS_STRCOLL	/ **/
 
+/* USE_STRUCT_COPY:
+ *	This symbol, if defined, indicates that this C compiler knows how
+ *	to copy structures.  If undefined, you'll need to use a block copy
+ *	routine of some sort instead.
+ */
+/*#define	USE_STRUCT_COPY	/ **/
+
 /* HAS_STRTOD:
  *	This symbol, if defined, indicates that the strtod routine is
  *	available to provide better numeric string conversion than atof().
@@ -2139,13 +2146,6 @@
 #ifndef USE_STAT_BLOCKS
 /*#define USE_STAT_BLOCKS 	/ **/
 #endif
-
-/* USE_STRUCT_COPY:
- *	This symbol, if defined, indicates that this C compiler knows how
- *	to copy structures.  If undefined, you'll need to use a block copy
- *	routine of some sort instead.
- */
-/*#define	USE_STRUCT_COPY	/ **/
 
 /* HAS_STRERROR:
  *	This symbol, if defined, indicates that the strerror routine is
@@ -5354,6 +5354,6 @@
 #endif
 
 /* Generated from:
- * a0cea6273c16c1c5d8625665c84bda01926ce960c26873d4e5596b5b02a53e92 config_h.SH
+ * 28ca1428da5d95db9e1c446562e21f67c6f2d4094eed684418c6854460c8a926 config_h.SH
  * b1c042726e6a17692921b6947c4e7c196c5c0cee011667ba719b15af7c31e669 uconfig.sh
  * ex: set ro: */

@@ -1497,8 +1497,7 @@ archname=''
 usereentrant='undef'
 : List of libraries we want.
 : If anyone needs extra -lxxx, put those in a hint file.
-libswanted="cl pthread socket bind inet nsl ndbm gdbm dbm db malloc dl ld"
-libswanted="$libswanted sun m crypt sec util c cposix posix ucb bsd BSD"
+libswanted='gdbm gdbm_compat db dl m c crypt'
 : We probably want to search /usr/shlib before most other libraries.
 : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
 glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
@@ -11127,8 +11126,15 @@ $cat >attrib.c <<EOCP
 #ifdef I_STDLIB
 #include <stdlib.h>
 #endif
+#$i_inttypes I_INTTYPES
+#ifdef I_INTTYPES
+#include <inttypes.h>
+#endif
+#ifndef INTPTR_MAX
+#define intptr_t int
+#endif
 int null_printf (char* pat,...) __attribute__((__format__(__printf__,1,2)));
-int null_printf (char* pat,...) { return (int)pat; }
+int null_printf (char* pat,...) { return (int)(intptr_t)pat; }
 int main () { exit(null_printf(NULL)); }
 EOCP
 	if $cc $ccflags -o attrib attrib.c >attrib.out 2>&1 ; then
@@ -24254,7 +24260,7 @@ sunos*X4*)
     ;;
 *) case "$usedl" in
     $define|true|[yY]*)
-	    set X `echo " $libs " | sed -e 's@ -lndbm @ @' -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldbm @ @' -e 's@ -ldb @ @'`
+	    set X `echo " $libs " | sed -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldb @ @'`
 	    shift
 	    perllibs="$*"
 	    ;;
