@@ -1979,6 +1979,104 @@ Comment:
  This program is free software; you can redistribute it and/or
  modify it under the same terms as Perl itself.
 
+Files: regen-configure/*
+Copyright:
+ Copyright (c) 1996-1998, Andy Dougherty
+ Copyright (c) 1999-2011, H.Merijn Brand
+License: GPL-1+ or Artistic or Artistic-dist
+Comment:
+ This directory is a snapshot of the upstream metaconfig repository,
+ containing code originally forked from 'dist' upstream by Larry
+ Wall and Raphael Manfredi. The 'dist/' subdirectory is unmodified
+ upstream code, but the other subdirectories contain mixed code.
+ Some units are dual licensed and some are specifically Artistic-only.
+ .
+ The bin/ subdirectory is being filtered from the upstream snapshot
+ (with the Files-Excluded mechanism at the top of this copyright file)
+ because it contains files generated from dist sources. The Debian
+ package build uses the tools from the separate 'dist' package.
+ .
+ From regen-configure/U/README:
+ .
+ You may distribute the files contained in this distribution
+ under the terms of either
+ .
+    a) the "Artistic License" which comes with Perl, or
+ .
+    b) the "Artistic License" which comes with dist, or
+ .
+    c) the GNU General Public License as published by the Free
+    Software Foundation; either version 1, or (at your option) any
+    later version (see the file "Copying" that comes with the
+    Perl distribution).
+ .
+ The full text of the "Artistic License" which comes with dist
+ differs slightly from the one that is in /usr/share/common-licenses
+ on Debian systems, and can be found later in this file under the
+ "Artistic-dist" tag.
+
+Files: regen-configure/dist/*
+Copyright:
+ Copyright (c) 1991-1997, 2004-2006, 2012 Raphael Manfredi
+ Copyright (c) 1996,1998 Andy Dougherty
+ Copyright (c) 1996, Cygnus Support
+ Copyright (c) 1996, Spider Boardman
+ Copyright (c) 1996, Sven Verdoolaege
+ Copyright (c) 1997, Chip Salzenberg
+ Copyright (c) 1998 Andy Dougherty
+ Copyright (c) 1999-2001 Jarkko Hietaniemi
+License: Artistic-dist
+Comment:
+ This subdirectory contains unmodified 'dist' code that is
+ licensed under the modified Artistic license detailed below
+ under the "Artistic-dist" tag. The different files have
+ separate copyright notices, collected above.
+
+Files: regen-configure/U/*
+Copyright:
+ Copyright (c) 1991-1997, 2004-2006, Raphael Manfredi
+ Copyright (c) 1996-2010, Andy Dougherty
+ Copyright (c) 1996, Sven Verdoolaege
+ Copyright (c) 1998-2016 Jarkko Hietaniemi
+ Copyright (c) 2004-2016 H.Merijn Brand
+ Copyright (c) 2006-2006, H.Merijn Brand & Nicholas Clark
+ Copyright (c) 2011, H.Merijn Brand & Tony Cook
+ Copyright (c) 2014-2014, Karl Williamson & H.Merijn Brand
+ Copyright (c) 2016 H.Merijn Brand & Todd Rinaldo
+ Copyright (c) 2016 Tony Cook
+License: Artist | GPL-1+ | Artistic-dist
+Comment:
+ From regen-configure/U/README:
+ .
+  The units in the "modified" directory have been derived from units
+  associated with the metaconfig program of Raphael Manfredi's "dist"
+  distribution.  These units list Raphael Manfredi as the Copyright holder.
+  dist is distributed under a modified version of the Perl Artistic License.
+  Clause 7 of this modified license as contained in dist-3.0-pl60 provides:
+ .
+    7. You may reuse parts of this Package in your own programs, provided
+    that you explicitly state where you got them from, in the source code
+    (and, left to your courtesy, in the documentation), duplicating
+    all the associated copyright notices and disclaimers. Besides
+    your changes, if any, must be clearly marked as such. Parts reused
+    that way will no longer fall under this license if, and only if,
+    the name of your program(s) have no immediate connection with the
+    name of the Package itself or its associated programs.  You may then
+    apply whatever restrictions you wish on the reused parts or choose
+    to place them in the Public Domain--this will apply only within the
+    context of your package.
+ .
+  In accordance with this clause, the versions of these units
+  contained here are made available under the same terms as the
+  rest of the units.
+ .
+ It is assumed that the above relicensing also applies to all files in
+ the other subdirectories that are declared to be licensed under the
+ same modified Artistic license.
+ .
+ The modified license can be found later in this file under the
+ "Artistic-dist" tag.
+
 Files: debian/*
 Copyright:
  Portions of the Debian packaging are
@@ -2689,3 +2787,134 @@ License: RRA-KEEP-THIS-NOTICE
  permitted in any medium without royalty provided the copyright notice and
  this notice are preserved.  This file is offered as-is, without any
  warranty.
+
+License: Artistic-dist
+                       The "Artistic License"
+ .
+                              Preamble
+ .
+ The intent of this document is to state the conditions under which a
+ Package may be copied, such that the Copyright Holder maintains some
+ semblance of artistic control over the development of the Package,
+ while giving the users of the package the right to use and distribute
+ the Package in a more-or-less customary fashion, plus the right to make
+ reasonable modifications.
+ .
+ It also grants you the rights to reuse parts of a Package in your own
+ programs without transferring this License to those programs, provided
+ that you meet some reasonable requirements.
+ .
+ Definitions:
+ .
+         "Package" refers to the collection of files distributed by the
+         Copyright Holder, and derivatives of that collection of files
+         created through textual modification.
+ .
+         "Standard Version" refers to such a Package if it has not been
+         modified, or has been modified in accordance with the wishes
+         of the Copyright Holder as specified below.
+ .
+         "Copyright Holder" is whoever is named in the copyright or
+         copyrights for the package.
+ .
+         "You" is you, if you're thinking about copying or distributing
+         this Package.
+ .
+         "Reasonable copying fee" is whatever you can justify on the
+         basis of media cost, duplication charges, time of people involved,
+         and so on.  (You will not be required to justify it to the
+         Copyright Holder, but only to the computing community at large
+         as a market that must bear the fee.)
+ .
+         "Freely Available" means that no fee is charged for the item
+         itself, though there may be fees involved in handling the item.
+         It also means that recipients of the item may redistribute it
+         under the same conditions they received it.
+ .
+ 1. You may make and give away verbatim copies of the source form of the
+ Standard Version of this Package without restriction, provided that you
+ duplicate all of the original copyright notices and associated disclaimers.
+ .
+ 2. You may apply bug fixes, portability fixes and other modifications
+ derived from the Public Domain or from the Copyright Holder.  A Package
+ modified in such a way shall still be considered the Standard Version.
+ .
+ 3. You may otherwise modify your copy of this Package in any way, provided
+ that you insert a prominent notice in each changed file stating how and
+ when you changed that file, and provided that you do at least ONE of the
+ following:
+ .
+     a) place your modifications in the Public Domain or otherwise make them
+     Freely Available, such as by posting said modifications to Usenet or
+     an equivalent medium, or placing the modifications on a major archive
+     site such as uunet.uu.net, or by allowing the Copyright Holder to include
+     your modifications in the Standard Version of the Package.
+ .
+     b) use the modified Package only within your corporation or organization.
+ .
+     c) rename any non-standard executables so the names do not conflict
+     with standard executables, which must also be provided, and provide
+     a separate manual page for each non-standard executable that clearly
+     documents how it differs from the Standard Version.
+ .
+     d) make other distribution arrangements with the Copyright Holder.
+ .
+ 4. You may distribute the programs of this Package in object code or
+ executable form, provided that you do at least ONE of the following:
+ .
+     a) distribute a Standard Version of the executables and library files,
+     together with instructions (in the manual page or equivalent) on where
+     to get the Standard Version.
+ .
+     b) accompany the distribution with the machine-readable source of
+     the Package with your modifications.
+ .
+     c) give non-standard executables non-standard names, and clearly
+     document the differences in manual pages (or equivalent), together
+     with instructions on where to get the Standard Version.
+ .
+     d) make other distribution arrangements with the Copyright Holder.
+ .
+ 5. You may charge a reasonable copying fee for any distribution of this
+ Package.  You may charge any fee you choose for support of this
+ Package.  You may not charge a fee for this Package itself.  However,
+ you may distribute this Package in aggregate with other (possibly
+ commercial) programs as part of a larger (possibly commercial) software
+ distribution provided that you do not advertise this Package as a
+ product of your own.
+ .
+ 6. The scripts and library files supplied as input to or produced as
+ output from the programs of this Package do not automatically fall
+ under the copyright of this Package, but belong to whoever generated
+ them, and may be sold commercially, and may be aggregated with this
+ Package.  If such scripts or library files are aggregated with this
+ Package via the so-called "undump" or "unexec" methods of producing a
+ binary executable image, then distribution of such an image shall
+ neither be construed as a distribution of this Package nor shall it
+ fall under the restrictions of Paragraphs 3 and 4, provided that you do
+ not represent such an executable image as a Standard Version of this
+ Package.
+ .
+ 7. You may reuse parts of this Package in your own programs, provided that
+ you explicitly state where you got them from, in the source code (and, left
+ to your courtesy, in the documentation), duplicating all the associated
+ copyright notices and disclaimers. Besides your changes, if any, must be
+ clearly marked as such. Parts reused that way will no longer fall under this
+ license if, and only if, the name of your program(s) have no immediate
+ connection with the name of the Package itself or its associated programs.
+ You may then apply whatever restrictions you wish on the reused parts or
+ choose to place them in the Public Domain--this will apply only within the
+ context of your package.
+ .
+ 8. The name of the Copyright Holder may not be used to endorse or promote
+ products derived from this software without specific prior written permission.
+ .
+ 9. THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ .
+                                 The End
+Comment:
+ This license was copied from the upstream 'dist' repository,
+  https://github.com/rmanfredi/dist.git
+ at Sun, 15 Oct 2017 13:07:36 +0300.
