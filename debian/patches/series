@@ -52,3 +52,5 @@ debian/customized.diff
 debian/perldoc-pager.diff
 debian/prune_libs.diff
 debian/configure-regen.diff
+fixes/rename-filexp.U-phase1.diff
+fixes/rename-filexp.U-phase2.diff
