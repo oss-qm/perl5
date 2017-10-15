@@ -117,6 +117,7 @@ update-configure: update-configure-stamp
 verify-configure-stamp: update-configure-stamp
 	if ! diff -u Configure.orig Configure || ! diff -u config_h.SH.orig config_h.SH; then \
 	    echo "Unexpected modifications after rebuilding Configure, aborting" 1>&2; \
+	    echo '(See "A special note on patching Configure" in README.source for details)' 1>&2; \
 	    exit 1; \
 	fi
 
