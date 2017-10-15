@@ -1,18 +1,19 @@
-From 20731e3ca2d96a22582fb6b83e395478abffa5e1 Mon Sep 17 00:00:00 2001
+From a1cc8a5514956af3c281d07ed0f6e3f23148e3c7 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 14 Oct 2017 17:47:09 +0300
-Subject: Regenerate Configure and config_h.SH after probe unit changes
+Subject: Regenerate Configure et al. after probe unit changes
 
 The Configure changes correspond 1:1 to the older prune_libs.diff patch.
-The config_h.SH reordering seems unavoidable but one time only.
+The config_h.SH reordering seems unavoidable but one time only, and also
+propagates to uconfig.h.
 
 Patch-Name: debian/configure-regen.diff
 Bug-Debian: https://bugs.debian.org/762638
 ---
  Configure   |  5 ++---
  config_h.SH | 14 +++++++-------
- 2 files changed, 9 insertions(+), 10 deletions(-)
- mode change 100755 => 100644 config_h.SH
+ uconfig.h   | 16 ++++++++--------
+ 3 files changed, 17 insertions(+), 18 deletions(-)
 
 diff --git a/Configure b/Configure
 index bdcfaf17e..aa3becece 100755
@@ -38,9 +39,7 @@ index bdcfaf17e..aa3becece 100755
  	    perllibs="$*"
  	    ;;
 diff --git a/config_h.SH b/config_h.SH
-old mode 100755
-new mode 100644
-index e9b144f02..a294c29cb
+index e9b144f02..a294c29cb 100755
 --- a/config_h.SH
 +++ b/config_h.SH
 @@ -571,6 +571,13 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
@@ -71,3 +70,43 @@ index e9b144f02..a294c29cb
  /* HAS_STRERROR:
   *	This symbol, if defined, indicates that the strerror routine is
   *	available to translate error numbers to strings. See the writeup
+diff --git a/uconfig.h b/uconfig.h
+index 6832f6f73..a5cd2dd44 100644
+--- a/uconfig.h
++++ b/uconfig.h
+@@ -536,6 +536,13 @@
+  */
+ /*#define HAS_STRCOLL	/ **/
+ 
++/* USE_STRUCT_COPY:
++ *	This symbol, if defined, indicates that this C compiler knows how
++ *	to copy structures.  If undefined, you'll need to use a block copy
++ *	routine of some sort instead.
++ */
++/*#define	USE_STRUCT_COPY	/ **/
++
+ /* HAS_STRTOD:
+  *	This symbol, if defined, indicates that the strtod routine is
+  *	available to provide better numeric string conversion than atof().
+@@ -2140,13 +2147,6 @@
+ /*#define USE_STAT_BLOCKS 	/ **/
+ #endif
+ 
+-/* USE_STRUCT_COPY:
+- *	This symbol, if defined, indicates that this C compiler knows how
+- *	to copy structures.  If undefined, you'll need to use a block copy
+- *	routine of some sort instead.
+- */
+-/*#define	USE_STRUCT_COPY	/ **/
+-
+ /* HAS_STRERROR:
+  *	This symbol, if defined, indicates that the strerror routine is
+  *	available to translate error numbers to strings. See the writeup
+@@ -5354,6 +5354,6 @@
+ #endif
+ 
+ /* Generated from:
+- * a0cea6273c16c1c5d8625665c84bda01926ce960c26873d4e5596b5b02a53e92 config_h.SH
++ * 28ca1428da5d95db9e1c446562e21f67c6f2d4094eed684418c6854460c8a926 config_h.SH
+  * b1c042726e6a17692921b6947c4e7c196c5c0cee011667ba719b15af7c31e669 uconfig.sh
+  * ex: set ro: */
