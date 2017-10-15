@@ -128,6 +128,7 @@ update-configure-stamp:
 	ln -s regen-configure/.package
 	metaconfig -m -L regen-configure/dist
 	./Porting/config_h.pl # reorders config_h.SH
+	chmod +x config_h.SH Configure # placate t/porting/exec-bit.t
 	touch $@
 
 $(patchlevel): $(patches)
