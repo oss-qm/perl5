@@ -8,6 +8,11 @@ perl (5.26.1-1) UNRELEASED; urgency=medium
   * Patch Pod::Perldoc::ToTerm to set LESS=-R with sensible-pager.
     This is a hopefully temporary fix while upstream is working on the
     bigger issue. (Closes: #870340)
+  * Include sources of Configure in a separate tarball component called
+    "regen-configure", and verify them by regenerating Configure on every
+    build using 'makeconfig' from the 'dist' package and checking for
+    any changes. Special thanks to H.Merijn Brand (upstream) for helping
+    with this at the Perl 5 Hackathon in Amsterdam. (Closes: #762638)
 
  -- Dominic Hargreaves <dom@earth.li>  Tue, 03 Oct 2017 11:49:34 +0100
 
