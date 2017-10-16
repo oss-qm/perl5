@@ -1,4 +1,4 @@
-From 6a2499efb666fd882719305bdbe13db34841952f Mon Sep 17 00:00:00 2001
+From e31e30211cd53f2293cc1a1bb4a813fbbb30fa24 Mon Sep 17 00:00:00 2001
 From: Jonathan Nieder <jrnieder@gmail.com>
 Date: Fri, 27 Jul 2012 10:35:07 -0500
 Subject: Memoize::Storable: respect 'nstore' option not respected

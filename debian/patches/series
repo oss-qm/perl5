@@ -16,14 +16,12 @@ debian/mod_paths.diff
 debian/perlivp.diff
 debian/deprecate-with-apt.diff
 debian/squelch-locale-warnings.diff
-debian/skip-upstream-git-tests.diff
 debian/patchlevel.diff
 fixes/document_makemaker_ccflags.diff
 debian/find_html2text.diff
 debian/perl5db-x-terminal-emulator.patch
 debian/cpan-missing-site-dirs.diff
 fixes/memoize_storable_nstore.diff
-debian/regen-skip.diff
 debian/makemaker-pasthru.diff
 debian/makemaker-manext.diff
 debian/kfreebsd-softupdates.diff
@@ -48,9 +46,9 @@ fixes/test-builder-reset.diff
 debian/hppa_opmini_optimize_workaround.diff
 debian/sh4_op_optimize_workaround.diff
 fixes/json-pp-example.diff
-debian/customized.diff
 debian/perldoc-pager.diff
 debian/prune_libs.diff
 debian/configure-regen.diff
 fixes/rename-filexp.U-phase1.diff
 fixes/rename-filexp.U-phase2.diff
+fixes/packaging_test_skips.diff
