@@ -1,4 +1,4 @@
-perl (5.26.1-1) UNRELEASED; urgency=medium
+perl (5.26.1-1) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
   * Mark perl-doc as Multi-Arch: foreign (Closes: #876062)
@@ -16,8 +16,9 @@ perl (5.26.1-1) UNRELEASED; urgency=medium
 
   [ Dominic Hargreaves ]
   * Replace various test skips with an upstreamable patch
+  * Upload to experimental
 
- -- Dominic Hargreaves <dom@earth.li>  Tue, 03 Oct 2017 11:49:34 +0100
+ -- Dominic Hargreaves <dom@earth.li>  Mon, 16 Oct 2017 14:07:36 +0200
 
 perl (5.26.0-8) unstable; urgency=high
 
