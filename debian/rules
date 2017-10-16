@@ -103,6 +103,9 @@ export BUILD_BZIP2=0
 export BZIP2_INCLUDE=/usr/include
 export BZIP2_LIB=/usr/lib
 
+# disable tests declared upstream as not useful for packaging
+export PERL_BUILD_PACKAGING=1
+
 build: build-stamp
 install: install-stamp
 
