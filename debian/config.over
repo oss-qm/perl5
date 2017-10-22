@@ -55,13 +55,29 @@ perladmin=root@localhost
 mydomain=
 myhostname=localhost
 
+host_arch=${DEB_HOST_ARCH:-$(dpkg-architecture -qDEB_HOST_ARCH)}
+
+# re-add SIGUNUSED for the 5.26 series to keep binary compatibility
+# regardless of glibc 2.26 changes
+# see #875927
+
+if [ "$api_version" = "26" ] && ! echo "$sig_name" | grep -q UNUSED; then
+   case "$host_arch" in
+    amd64|arm64|armel|armhf|hppa|i386|m68k|powerpc|powerpcspe|ppc64|ppc64el|s390x|sh4|x32)
+        sig_name="${sig_name}UNUSED "
+        sig_name_init=$(echo ${sig_name_init} | sed 's#, 0#, "UNUSED", 0#')
+        sig_num="${sig_num}31 "
+        sig_num_init=$(echo ${sig_num_init} | sed 's#, 0#, 31, 0#')
+        sig_size=$(expr $sig_size + 1)
+    ;;
+   esac
+fi
+
 # emulate 'uname -m' output for reproducibility regardless of (for example)
 # 32-bit vs 64-bit kernel
 #
 # this is silly but oh well
 # see #821182
-
-host_arch=${DEB_HOST_ARCH:-$(dpkg-architecture -qDEB_HOST_ARCH)}
 
 case "$host_arch" in
     # hardcoded machine names on known architectures based on debian/cross results
