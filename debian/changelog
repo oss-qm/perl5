@@ -1,3 +1,9 @@
+perl (5.26.1-2) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Niko Tyni <ntyni@debian.org>  Wed, 25 Oct 2017 18:19:46 +0300
+
 perl (5.26.1-1) experimental; urgency=medium
 
   [ Dominic Hargreaves ]
