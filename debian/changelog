@@ -1,8 +1,9 @@
 perl (5.26.1-3) UNRELEASED; urgency=medium
 
-  * 
+  * Restore SIGUNUSED on glibc >= 2.26 to preserve ABI compatibility.
+    (Closes: #875927)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 27 Oct 2017 18:36:33 +0300
+ -- Niko Tyni <ntyni@debian.org>  Sun, 29 Oct 2017 23:05:27 +0200
 
 perl (5.26.1-2) unstable; urgency=medium
 
