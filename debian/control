@@ -104,6 +104,9 @@ Description: debug-enabled Perl interpreter
  Note that this package is primarily of use in debugging *Perl* rather
  than perl programs, which may be traced/debugged using the standard
  perl binary using the -d switch (see perldebug(1)).
+ .
+ In addition, this package also includes debugging information for the normal
+ Perl interpreter.
 
 Package: libperl5.26
 Section: libs
