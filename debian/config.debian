@@ -136,6 +136,7 @@ then
     -Uusesfio					\
     -Uusenm					\
     -Ui_libutil					\
+    -Ui_xlocale					\
     -Uversiononly \
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
