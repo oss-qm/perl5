@@ -2044,7 +2044,7 @@ Copyright:
  Copyright (c) 2014-2014, Karl Williamson & H.Merijn Brand
  Copyright (c) 2016 H.Merijn Brand & Todd Rinaldo
  Copyright (c) 2016 Tony Cook
-License: Artistic | GPL-1+ | Artistic-dist
+License: Artistic or GPL-1+ or Artistic-dist
 Comment:
  From regen-configure/U/README:
  .
