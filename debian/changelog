@@ -1,9 +1,15 @@
-perl (5.26.1-3) UNRELEASED; urgency=medium
+perl (5.26.1-3) unstable; urgency=medium
 
+  [ Dominic Hargreaves ]
   * Include a note about debugging information in perl-debug in the package
     description (Closes: #880117)
 
- -- Dominic Hargreaves <dom@earth.li>  Wed, 01 Nov 2017 13:25:04 +0000
+  [ Niko Tyni ]
+  * Restore SIGUNUSED on glibc >= 2.26 to preserve ABI compatibility.
+    (Closes: #875927)
+  * No longer use xlocale.h, removed in glibc 2.26. (Closes: #882978)
+
+ -- Niko Tyni <ntyni@debian.org>  Tue, 28 Nov 2017 19:44:14 +0200
 
 perl (5.26.1-2) unstable; urgency=medium
 
