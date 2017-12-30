@@ -1,3 +1,10 @@
+perl (5.26.1-4) UNRELEASED; urgency=medium
+
+  * Use dpkg-vendor to configure perl with a vendor-specific
+    "configured by" string (Closes: #884924)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 30 Dec 2017 18:28:19 +0000
+
 perl (5.26.1-3) unstable; urgency=medium
 
   [ Dominic Hargreaves ]

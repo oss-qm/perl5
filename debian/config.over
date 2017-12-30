@@ -49,7 +49,7 @@ fi
 # set configuration time to latest debian/changelog entry
 cf_time=$(LC_ALL=C date --utc -d "$(dpkg-parsechangelog | sed -n -e 's/^Date: //p')")
 # set generic email addresses, host/domain names
-cf_by='Debian Project'
+cf_by="$(dpkg-vendor --query vendor)"
 cf_email=perl@packages.debian.org
 perladmin=root@localhost
 mydomain=
