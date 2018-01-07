@@ -1,4 +1,4 @@
-From c9003b2b10762f055bb28753d3e089d10c6e1f09 Mon Sep 17 00:00:00 2001
+From 225dfcdd794826bb28aba4711d9dd7cff676a9db Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 30 May 2011 22:54:24 +0300
 Subject: Document that CCFLAGS should include $Config{ccflags}

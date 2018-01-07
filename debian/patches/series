@@ -12,7 +12,6 @@ debian/fakeroot.diff
 debian/instmodsh_doc.diff
 debian/ld_run_path.diff
 debian/libnet_config_path.diff
-debian/mod_paths.diff
 debian/perlivp.diff
 debian/deprecate-with-apt.diff
 debian/squelch-locale-warnings.diff
@@ -52,3 +51,4 @@ debian/configure-regen.diff
 fixes/rename-filexp.U-phase1.diff
 fixes/rename-filexp.U-phase2.diff
 fixes/packaging_test_skips.diff
+debian/mod_paths.diff

@@ -4675,14 +4675,14 @@ S_init_perllib(pTHX)
 	   subdirectory of sitelib */
 	for (p = vers; *p; p++)
 	{
-	    if (arch_vers)
+	    if (arch_vers && !strchr(*p, '/')) /* skip arch-specific subdirs */
 	    {
 		my_snprintf(arch_vers, 16, "%s", *p);
 		if (PerlLIO_stat(sitearch, &s) >= 0 && S_ISDIR(s.st_mode))
 		    S_incpush_use_sep(aTHX_ sitearch, strlen(sitearch), 0x0);
 	    }
 
-	    if (lib_vers)
+	    if (lib_vers && !strchr(*p, '/')) /* skip arch-specific subdirs */
 	    {
 		my_snprintf(lib_vers, 16, "%s", *p);
 		if (PerlLIO_stat(sitelib, &s) >= 0 && S_ISDIR(s.st_mode))

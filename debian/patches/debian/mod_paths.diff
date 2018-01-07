@@ -1,4 +1,4 @@
-From ad864079e54c40566a226a6b9973f4ef0bc3be3e Mon Sep 17 00:00:00 2001
+From 166bc9ebdc697d9aedfc16543d1f330730035b83 Mon Sep 17 00:00:00 2001
 From: Brendan O'Dea <bod@debian.org>
 Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
@@ -16,13 +16,15 @@ The rationale being that an admin (via site), or module packager
 (vendor) can chose to shadow core modules when there is a newer
 version than is included in core.
 
+(later updates by Niko Tyni)
+
 Patch-Name: debian/mod_paths.diff
 ---
  perl.c | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 58 insertions(+)
 
 diff --git a/perl.c b/perl.c
-index 658f26099..897b4b2d4 100644
+index 658f26099..9c76825a2 100644
 --- a/perl.c
 +++ b/perl.c
 @@ -4518,6 +4518,11 @@ S_init_perllib(pTHX)
@@ -76,14 +78,14 @@ index 658f26099..897b4b2d4 100644
 +	   subdirectory of sitelib */
 +	for (p = vers; *p; p++)
 +	{
-+	    if (arch_vers)
++	    if (arch_vers && !strchr(*p, '/')) /* skip arch-specific subdirs */
 +	    {
 +		my_snprintf(arch_vers, 16, "%s", *p);
 +		if (PerlLIO_stat(sitearch, &s) >= 0 && S_ISDIR(s.st_mode))
 +		    S_incpush_use_sep(aTHX_ sitearch, strlen(sitearch), 0x0);
 +	    }
 +
-+	    if (lib_vers)
++	    if (lib_vers && !strchr(*p, '/')) /* skip arch-specific subdirs */
 +	    {
 +		my_snprintf(lib_vers, 16, "%s", *p);
 +		if (PerlLIO_stat(sitelib, &s) >= 0 && S_ISDIR(s.st_mode))

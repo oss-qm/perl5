@@ -1,4 +1,4 @@
-From 54f5f303d43c2e82fd5a0a36754eccbeb3ecc6a7 Mon Sep 17 00:00:00 2001
+From 067fb0eedc28fd033eae867b9d4cd75f898ebb54 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Mon, 16 Oct 2017 01:56:02 +0300
 Subject: regen-configure: rename filexp.U to filexp_path.U, phase 1

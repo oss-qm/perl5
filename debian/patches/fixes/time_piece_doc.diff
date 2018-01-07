@@ -1,4 +1,4 @@
-From 3bf977a21316d2f4fd91a1e0658002c31b1686fc Mon Sep 17 00:00:00 2001
+From 6e53b136e99ad89ad53ebbb2ed788b803b4dc8f7 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 30 Apr 2016 23:20:45 +0100
 Subject: Time::Piece: Improve documentation for add_months and add_years

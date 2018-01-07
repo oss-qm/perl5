@@ -12,18 +12,18 @@ diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm b/cpan/ExtUtils-Mak
 index c3f555396..5f9673e6f 100644
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -2227,11 +2227,6 @@ pure_perl_install :: all
+@@ -2226,11 +2226,6 @@ pure_perl_install :: all
+ 	$(NOECHO) umask 022; $(MOD_INSTALL) \
  };
  
-     push @m,
+-    push @m,
 -q{		read "}.$self->catfile('$(PERL_ARCHLIB)','auto','$(FULLEXT)','.packlist').q{" \
 -		write "}.$self->catfile('$(DESTINSTALLARCHLIB)','auto','$(FULLEXT)','.packlist').q{" \
 -} unless $self->{NO_PACKLIST};
 -
--    push @m,
+     push @m,
  q{		"$(INST_LIB)" "$(DESTINSTALLPRIVLIB)" \
  		"$(INST_ARCHLIB)" "$(DESTINSTALLARCHLIB)" \
- 		"$(INST_BIN)" "$(DESTINSTALLBIN)" \
 @@ -2263,10 +2258,6 @@ q{		"$(INST_LIB)" "$(DESTINSTALLSITELIB)" \
  pure_vendor_install :: all
  	$(NOECHO) umask 022; $(MOD_INSTALL) \

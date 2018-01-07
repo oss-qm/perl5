@@ -1,4 +1,4 @@
-From ead62a9c4b49180bbf3ab540b687838e96b6b10d Mon Sep 17 00:00:00 2001
+From 9752b4339c8c28f0d4563eeba6a5bcfea218714b Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Fri, 13 Oct 2017 11:59:34 +0300
 Subject: Fix perldoc terminal escapes when sensible-pager is less
