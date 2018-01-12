@@ -7,6 +7,8 @@ perl (5.26.1-4) UNRELEASED; urgency=medium
   [ Niko Tyni ]
   * Also look in <version>/<archname> subdirectories for binary compatible
     modules built for older Perl versions. (Closes: #886494)
+  * Backport upstream Encode patch fixing find_encoding() infinite recursion.
+    (Closes: #880085)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 07 Jan 2018 10:18:11 +0200
 
