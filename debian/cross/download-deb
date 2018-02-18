@@ -29,7 +29,7 @@ if [ ! -n "$package" ] && [ -r debian/control ]; then
 fi
 
 if [ ! -n "$package" ]; then
-    echo "cannot guess name of package to download, aborting 1>&2"
+    echo "cannot guess name of package to download, aborting" 1>&2
     exit 1
 fi
 
