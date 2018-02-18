@@ -1809,7 +1809,7 @@ libperl.so.5.26 libperl5.26 #MINVER#
  XS_utf8_unicode_to_native@Base 5.26.0~rc1
  XS_utf8_upgrade@Base 5.26.0~rc1
  XS_utf8_valid@Base 5.26.0~rc1
- _LIB_VERSION@Base 5.26.0~rc1
+ (optional)_LIB_VERSION@Base 5.26.0~rc1
  boot_DynaLoader@Base 5.26.0~rc1
  cv_flags_names@Base 5.26.0~rc1
  first_sv_flags_names@Base 5.26.0~rc1
