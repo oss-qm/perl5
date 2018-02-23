@@ -1,3 +1,9 @@
+perl (5.26.1-6) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 23 Feb 2018 20:24:22 +0200
+
 perl (5.26.1-5) unstable; urgency=medium
 
   * Mark _LIB_VERSION as an optional symbol for glibc 2.27 compatibility.
