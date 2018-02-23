@@ -1,0 +1,28 @@
+From b99ec15c9958f14efdab2b9a3cc14401d8277bf0 Mon Sep 17 00:00:00 2001
+From: Yves Orton <demerphq@gmail.com>
+Date: Fri, 23 Feb 2018 04:13:49 +0100
+Subject: perl #132892: avoid leak by mortalizing temporary copy of pattern
+
+Bug: https://rt.perl.org/Public/Bug/Display.html?id=132892
+Bug-Debian: https://bugs.debian.org/891196
+Origin: upstream, https://perl5.git.perl.org/perl.git/commit/910a6a8be166fb3780dcd2520e3526e537383ef2
+Patch-Name: fixes/regex-memory-leak.diff
+---
+ regcomp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/regcomp.c b/regcomp.c
+index b2de7f05e..9641f03f4 100644
+--- a/regcomp.c
++++ b/regcomp.c
+@@ -6394,8 +6394,8 @@ S_concat_pat(pTHX_ RExC_state_t * const pRExC_state,
+                     pat = msv;
+                 } else {
+                     /* a string with no trailing null, we need to copy it
+-                     * so it we have a trailing null */
+-                    pat = newSVsv(msv);
++                     * so it has a trailing null */
++                    pat = sv_2mortal(newSVsv(msv));
+                 }
+             }
+ 
