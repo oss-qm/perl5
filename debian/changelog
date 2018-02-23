@@ -1,8 +1,14 @@
 perl (5.26.1-5) UNRELEASED; urgency=medium
 
-  * 
+  * Mark _LIB_VERSION as an optional symbol for glibc 2.27 compatibility.
+    Patch by Aurelien Jarno. (Closes: #890242)
+  * Refresh cross build support files.
+  * Apply an upstream patch by Yves Orton to fix a regexp related memory
+    leak, regressed in 5.26. (Closes: #891196)
+  * Build-Depend on libgdbm-compat-dev to restore the NDBM_File and
+    ODBM_File modules. (Closes: #891229)
 
- -- Niko Tyni <ntyni@debian.org>  Sun, 18 Feb 2018 18:52:35 +0200
+ -- Niko Tyni <ntyni@debian.org>  Fri, 23 Feb 2018 17:22:01 +0200
 
 perl (5.26.1-4) unstable; urgency=medium
 
