@@ -73,3 +73,8 @@ fixes/fbm-instr-crash.diff
 debian/CVE-2016-1238/base-pm-amends-pt2.diff
 fixes/CVE-2017-12837.diff
 fixes/CVE-2017-12883.diff
+fixes/CVE-2018-6797.diff
+fixes/CVE-2018-6798/pt1.diff
+fixes/CVE-2018-6798/pt2.diff
+fixes/CVE-2018-6798/pt3.diff
+fixes/CVE-2018-6913.diff
