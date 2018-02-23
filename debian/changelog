@@ -1,4 +1,4 @@
-perl (5.26.1-5) UNRELEASED; urgency=medium
+perl (5.26.1-5) unstable; urgency=medium
 
   * Mark _LIB_VERSION as an optional symbol for glibc 2.27 compatibility.
     Patch by Aurelien Jarno. (Closes: #890242)
@@ -8,7 +8,7 @@ perl (5.26.1-5) UNRELEASED; urgency=medium
   * Build-Depend on libgdbm-compat-dev to restore the NDBM_File and
     ODBM_File modules. (Closes: #891229)
 
- -- Niko Tyni <ntyni@debian.org>  Fri, 23 Feb 2018 17:22:01 +0200
+ -- Niko Tyni <ntyni@debian.org>  Fri, 23 Feb 2018 17:23:43 +0200
 
 perl (5.26.1-4) unstable; urgency=medium
 
