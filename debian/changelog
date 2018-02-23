@@ -1,6 +1,10 @@
 perl (5.24.1-3+deb9u3) UNRELEASED; urgency=medium
 
-  * 
+  * [SECURITY] CVE-2018-6797: buffer overflow related to regex
+                              unicode semantics.
+  * [SECURITY] CVE-2018-6798: heap buffer overflow when matching
+                              malformed UTF-8 characters.
+  * [SECURITY] CVE-2018-6913: heap buffer overflow with large data blocks.
 
  -- Niko Tyni <ntyni@debian.org>  Sat, 24 Feb 2018 15:52:45 +0200
 
