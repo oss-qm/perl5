@@ -1,3 +1,13 @@
+perl (5.26.2-1) UNRELEASED; urgency=medium
+
+  * Import new upstream minor release.
+  * Apply Configure patch from James Cowgill fixing a pointer to integer
+    cast in null_printf check. (Closes: #893601)
+  * Update cross build support files for glibc 2.27 _LIB_VERSION removal.
+    (Closes: #890242)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 15 Apr 2018 11:49:02 +0300
+
 perl (5.26.1-6) unstable; urgency=high
 
   * [SECURITY] CVE-2018-6797: buffer overflow related to regex
