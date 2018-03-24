@@ -47,10 +47,11 @@ debian/sh4_op_optimize_workaround.diff
 fixes/json-pp-example.diff
 debian/perldoc-pager.diff
 debian/prune_libs.diff
-debian/configure-regen.diff
 fixes/rename-filexp.U-phase1.diff
 fixes/rename-filexp.U-phase2.diff
 fixes/packaging_test_skips.diff
 debian/mod_paths.diff
 fixes/encode-alias-regexp.diff
 fixes/CVE-2018-6797-testcase.diff
+fixes/test-printf-null.diff
+debian/configure-regen.diff

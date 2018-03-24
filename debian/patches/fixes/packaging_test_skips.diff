@@ -1,4 +1,4 @@
-From a5e00cc2454e653e8fada8c6db2ffe643b6b3ffa Mon Sep 17 00:00:00 2001
+From 41946a7ff425786d1ba38cbe0337e35bafb33a54 Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 14 Oct 2017 16:27:53 +0200
 Subject: Skip various tests if PERL_BUILD_PACKAGING is set
