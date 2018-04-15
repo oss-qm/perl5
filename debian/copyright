@@ -10,11 +10,11 @@ Comment:
  .
     Larry Wall et. al. (see /usr/share/doc/perl/AUTHORS).
  .
- Last checked against: Perl 5.26.1
+ Last checked against: Perl 5.26.2
 
 Files: *
 Copyright:
- Perl is Copyright (C) 1987-2017 by Larry Wall and others. All rights reserved.
+ Perl is Copyright (C) 1987-2018 by Larry Wall and others. All rights reserved.
 License: GPL-1+ or Artistic
 Comment:
     This program is free software; you can redistribute it and/or modify
@@ -73,7 +73,7 @@ Comment:
 
 Files: perl.c
 Copyright:
- Copyright 1987-2011, Larry Wall
+ Copyright 1987-2018, Larry Wall
  MS-DOS port Copyright (c) 1989, 1990, Diomidis Spinellis
  OS/2 port Copyright (c) 1990, 1991, Raymond Chen, Kai Uwe Rommel
  Version 5 port Copyright (c) 1994-2002, Andreas Kaiser, Ilya Zakharevich
