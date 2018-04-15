@@ -4,7 +4,7 @@ perl (5.26.2-1) experimental; urgency=medium
   * Apply Configure patch from James Cowgill fixing a pointer to integer
     cast in null_printf check. (Closes: #893601)
   * Update cross build support files for glibc 2.27 _LIB_VERSION removal.
-    (Closes: #890242)
+    (Closes: #893469)
 
  -- Niko Tyni <ntyni@debian.org>  Sun, 15 Apr 2018 12:07:39 +0300
 
