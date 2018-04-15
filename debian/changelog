@@ -1,3 +1,9 @@
+perl (5.14.2-21+deb7u6) wheezy-security; urgency=medium
+
+  * [SECURITY] CVE-2018-6913: heap buffer overflow with large data blocks.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Sat, 14 Apr 2018 18:36:17 +0200
+
 perl (5.14.2-21+deb7u5) wheezy-security; urgency=high
 
   * [CVE-2017-6512] Fix file permissions race condition in File-Path;

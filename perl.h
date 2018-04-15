@@ -1774,6 +1774,8 @@ typedef UVTYPE UV;
 #	define UV_MAX (4294967295u)
 #endif
 
+#define SSize_t_MAX (SSize_t)(~(size_t)0 >> 1)
+
 #define IV_DIG (BIT_DIGITS(IVSIZE * 8))
 #define UV_DIG (BIT_DIGITS(UVSIZE * 8))
 
