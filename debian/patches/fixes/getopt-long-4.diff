@@ -1,4 +1,4 @@
-From aea201a8d995762d30f3656b1f50ab81c95e1f21 Mon Sep 17 00:00:00 2001
+From de48c71ed4bb1fb2ada0c6c5a62dbce3c3fb1f5f Mon Sep 17 00:00:00 2001
 From: Johan Vromans <jvromans@squirrel.nl>
 Date: Tue, 13 Jun 2017 13:26:00 +0200
 Subject: Fix issue #122068.

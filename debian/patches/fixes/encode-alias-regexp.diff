@@ -1,4 +1,4 @@
-From 6928321d150451d8b6013ce6f141ba25ca4ed3d8 Mon Sep 17 00:00:00 2001
+From d85858a563af470c51e4034fe8922f28827c77f6 Mon Sep 17 00:00:00 2001
 From: Dan Kogai <dankogai+github@gmail.com>
 Date: Tue, 9 Jan 2018 14:39:26 +0900
 Subject: fix https://github.com/dankogai/p5-encode/issues/127

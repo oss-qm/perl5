@@ -1,4 +1,4 @@
-From f9141b63ff7972c4153bc887186cc16b7b3edb6a Mon Sep 17 00:00:00 2001
+From a5e00cc2454e653e8fada8c6db2ffe643b6b3ffa Mon Sep 17 00:00:00 2001
 From: Dominic Hargreaves <dom@earth.li>
 Date: Sat, 14 Oct 2017 16:27:53 +0200
 Subject: Skip various tests if PERL_BUILD_PACKAGING is set
@@ -19,7 +19,7 @@ Patch-Name: fixes/packaging_test_skips.diff
  create mode 100644 PACKAGING
 
 diff --git a/INSTALL b/INSTALL
-index 4ed6c4c4a..560c29942 100644
+index 0544b420c..6af71dcda 100644
 --- a/INSTALL
 +++ b/INSTALL
 @@ -2724,4 +2724,5 @@ This document is part of the Perl package and may be distributed under
@@ -30,10 +30,10 @@ index 4ed6c4c4a..560c29942 100644
 +and the contact information to match your distribution. Additional
 +information for packagers is in F<PACKAGING>.
 diff --git a/MANIFEST b/MANIFEST
-index 2998179ca..d4989b83f 100644
+index e102bf927..37f901f4d 100644
 --- a/MANIFEST
 +++ b/MANIFEST
-@@ -4862,6 +4862,7 @@ os2/perlrexx.c			Support perl interpreter embedded in REXX
+@@ -4864,6 +4864,7 @@ os2/perlrexx.c			Support perl interpreter embedded in REXX
  os2/perlrexx.cmd		Test perl interpreter embedded in REXX
  overload.h			generated overload enum (public)
  overload.inc			generated overload name table (implementation)

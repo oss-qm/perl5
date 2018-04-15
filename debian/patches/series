@@ -53,10 +53,4 @@ fixes/rename-filexp.U-phase2.diff
 fixes/packaging_test_skips.diff
 debian/mod_paths.diff
 fixes/encode-alias-regexp.diff
-fixes/regex-memory-leak.diff
-fixes/CVE-2018-6797.diff
-fixes/CVE-2018-6798/pt1.diff
-fixes/CVE-2018-6798/pt2.diff
-fixes/CVE-2018-6798/pt3.diff
-fixes/CVE-2018-6798/pt4.diff
-fixes/CVE-2018-6913.diff
+fixes/CVE-2018-6797-testcase.diff

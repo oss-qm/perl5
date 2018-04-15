@@ -1,4 +1,4 @@
-From 5b4d37fe08e031a51cb5afb37c804c45dc3ebc31 Mon Sep 17 00:00:00 2001
+From 175890b807337d91b56c5cb9d98ec7e545ad7597 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 14 Oct 2017 17:47:09 +0300
 Subject: Regenerate Configure et al. after probe unit changes

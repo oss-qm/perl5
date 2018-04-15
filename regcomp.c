@@ -5879,8 +5879,12 @@ Perl_re_printf( aTHX_  "LHS=%" UVuf " RHS=%" UVuf "\n",
                     data->longest = &(data->longest_float);
             }
             min += min1;
-            if (delta != SSize_t_MAX)
-                delta += max1 - min1;
+            if (delta != SSize_t_MAX) {
+                if (SSize_t_MAX - (max1 - min1) >= delta)
+                    delta += max1 - min1;
+                else
+                    delta = SSize_t_MAX;
+            }
             if (flags & SCF_DO_STCLASS_OR) {
                 ssc_or(pRExC_state, data->start_class, (regnode_charclass *) &accum);
                 if (min1) {
@@ -6389,7 +6393,7 @@ S_concat_pat(pTHX_ RExC_state_t * const pRExC_state,
                  * it is properly null terminated or we will fail asserts
                  * later. In theory we probably shouldn't get such SV's,
                  * but if we do we should handle it gracefully. */
-                if ( SvTYPE(msv) != SVt_PV || (SvLEN(msv) > SvCUR(msv) && *(SvEND(msv)) == 0) ) {
+                if ( SvTYPE(msv) != SVt_PV || (SvLEN(msv) > SvCUR(msv) && *(SvEND(msv)) == 0) || SvIsCOW_shared_hash(msv) ) {
                     /* not a string, or a string with a trailing null */
                     pat = msv;
                 } else {
@@ -11724,6 +11728,7 @@ S_regpiece(pTHX_ RExC_state_t *pRExC_state, I32 *flagp, U32 depth)
             if (max < min) {    /* If can't match, warn and optimize to fail
                                    unconditionally */
                 reginsert(pRExC_state, OPFAIL, orig_emit, depth+1);
+                orig_emit->flags = 0;
                 if (PASS2) {
                     ckWARNreg(RExC_parse, "Quantifier {n,m} with n > m can't match");
                     NEXT_OFF(orig_emit)= regarglen[OPFAIL] + NODE_STEP_REGNODE;
@@ -16209,6 +16214,8 @@ S_regclass(pTHX_ RExC_state_t *pRExC_state, I32 *flagp, U32 depth,
 	    case 'P':
 		{
 		char *e;
+                char *i;
+
 
                 /* We will handle any undefined properties ourselves */
                 U8 swash_init_flags = _CORE_SWASH_INIT_RETURN_IF_UNDEF
@@ -16252,6 +16259,14 @@ S_regclass(pTHX_ RExC_state_t *pRExC_state, I32 *flagp, U32 depth,
 		    n = e - RExC_parse;
 		    while (isSPACE(*(RExC_parse + n - 1)))
 		        n--;
+
+                    for (i = RExC_parse; i < RExC_parse + n; i++) {
+                        if (isCNTRL(*i) && *i != '\t') {
+                            char * name = Perl_form(aTHX_ "%.*s", (int)n, RExC_parse);
+                            RExC_parse = e + 1;
+                            vFAIL2("Can't find Unicode property definition \"%s\"", name);
+                        }
+                    }
 		}   /* The \p isn't immediately followed by a '{' */
 		else if (! isALPHA(*RExC_parse)) {
                     RExC_parse += (UTF) ? UTF8SKIP(RExC_parse) : 1;
@@ -19355,8 +19370,11 @@ Perl_regprop(pTHX_ const regexp *prog, SV *sv, const regnode *o, const regmatch_
 
     /* add on the verb argument if there is one */
     if ( ( k == VERB || OP(o) == ACCEPT || OP(o) == OPFAIL ) && o->flags) {
-        Perl_sv_catpvf(aTHX_ sv, ":%" SVf,
+        if ( ARG(o) )
+            Perl_sv_catpvf(aTHX_ sv, ":%" SVf,
                        SVfARG((MUTABLE_SV(progi->data->data[ ARG( o ) ]))));
+        else
+            sv_catpvs(sv, ":NULL");
     }
 #else
     PERL_UNUSED_CONTEXT;

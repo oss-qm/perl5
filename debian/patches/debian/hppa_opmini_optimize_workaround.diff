@@ -1,4 +1,4 @@
-From 1e9cc05150c8d2797955b3b931b46ce4266d8eb0 Mon Sep 17 00:00:00 2001
+From 4504a9bbc3802a6aa32b1a3e89644ae2865cb82a Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
 Date: Sat, 29 Jul 2017 23:30:20 +0300
 Subject: Lower the optimization level of opmini.c on hppa
