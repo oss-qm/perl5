@@ -15,7 +15,7 @@ Package: perl-base
 Essential: yes
 Priority: required
 Architecture: any
-Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.17.17)
+Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.17)
 Conflicts: safe-rm (<< 0.8),
  update-inetd (<< 4.41),
  defoma (<< 0.11.12),
@@ -110,7 +110,7 @@ Priority: standard
 Architecture: all
 Multi-Arch: foreign
 Depends: perl-base (>= ${Upstream-Version}-1)
-Pre-Depends: dpkg (>= 1.17.17)
+Pre-Depends: dpkg (>= 1.17)
 Recommends: perl (>= ${Upstream-Version}-1),
  libarchive-extract-perl,
  libmodule-pluggable-perl,
@@ -295,7 +295,7 @@ Package: perl
 Priority: standard
 Architecture: any
 Multi-Arch: allowed
-Pre-Depends: dpkg (>= 1.17.17)
+Pre-Depends: dpkg (>= 1.17)
 Depends: perl-base (= ${binary:Version}), perl-modules (>= ${source:Version}), ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
 Breaks: perl-doc (<< ${Upstream-Version}-1),
